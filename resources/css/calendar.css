@@ -1,0 +1,80 @@
+@media (min-width: 1024px) {
+    /* Garante que o calendário ocupe sempre 100% da tela */
+    #calendar {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    /* Garante borda arredondada ao botão e margem dos botões à sua esquerda */
+    .fc .fc-toolbar .fc-today-button {
+        border-radius: 0.3rem !important;
+        margin: 0 3rem;
+    }
+    /* Arredonda as bordas esquerdas do botão prev */
+    .fc .fc-toolbar .fc-prev-button {
+        border-top-left-radius: 0.3rem !important;
+        border-bottom-left-radius: 0.3rem !important;
+    }
+    /* Ajusta a posição do title já que o botão today foi reposicionado */
+    .fc .fc-toolbar-title {
+        margin: 0 0 0 4.5rem;
+    }
+}
+@media (min-width: 601px) {
+    /* Ajusta o tamanho da fonte do título */
+    .fc .fc-toolbar-title {
+        font-size: 1.5rem;
+    }
+}
+
+@media (min-width: 371px) and (max-width: 600px) {
+    .fc .fc-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+    }
+    /* Botões de navegação esquerda (left/start) */
+    .fc .fc-toolbar > .fc-toolbar-chunk:nth-child(1) {
+        order: 1;
+        flex: 1 1 45%;
+        min-width: 0;
+        display: flex;
+        justify-content: flex-start;
+    }
+    /* Botões de navegação direita (right/end) */
+    .fc .fc-toolbar > .fc-toolbar-chunk:nth-child(3) {
+        order: 1;
+        flex: 1 1 45%;
+        min-width: 0;
+        display: flex;
+        justify-content: flex-end;
+    }
+    /* Título centralizado abaixo */
+    .fc .fc-toolbar > .fc-toolbar-chunk:nth-child(2) {
+        order: 2;
+        flex: 1 1 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: 0.5rem;
+    }
+    /* Ajusta o tamanho da fonte do título */
+    .fc .fc-toolbar-title {
+        font-size: 1.3rem;
+    }
+
+}
+@media (max-width: 370px) {
+    /* Ajusta o container cabeçalho do calendário para coluna */
+    .fc .fc-toolbar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+    }
+    /* Ajusta o tamanho da fonte do título */
+    .fc .fc-toolbar-title {
+        font-size: 1.125rem;
+    }
+}
