@@ -1,14 +1,15 @@
 <?php
-
+// Common
 use Illuminate\Support\Facades\Route;
+//Calendar
 use App\Http\Controllers\EventController;
+// Users
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\ProfessorController;
+use App\Http\Controllers\CoordinatorController;
 
 Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
 Route::get('/policy', function () {
@@ -21,14 +22,6 @@ Route::get('/terms', function () {
     return view('terms', compact('terms'));
 });
 
-Route::get('/check', function () {
-    return auth()->check() ? 'Autenticado' : 'Não autenticado';
-});
-
-Route::get('/test', function () {
-    return view('test');
-});
-
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -37,7 +30,14 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+
+    //  calendar
     Route::get('/calendar', [EventController::class, 'index'])->name('calendar');
     Route::get('/events', [EventController::class, 'events'])->name('events');
-    Route::get('/events', [EventController::class, 'events'])->name('events');
+
+    //  users -> StudentController/Student.php ProfessorController/Professor.php CoordinatorController/Coordinator.php
+    Route::get('/users/students', [StudentController::class, 'index'])->name('users.students-table');
+    Route::get('/users/professors', [ProfessorController::class, 'index'])->name('users.professors-table');
+
+    Route::get('/users/coordinators', [CoordinatorController::class, 'index'])->name('users.coordinators-table');
 });

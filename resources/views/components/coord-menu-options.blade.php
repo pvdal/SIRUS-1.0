@@ -1,11 +1,22 @@
-<div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-    <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+@props(['menuComponent','menuClass'])
+
+<div class="{{ $menuClass }}">
+    <x-dynamic-component :component="$menuComponent" href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
         {{ __('Dashboard') }}
-    </x-nav-link>
+    </x-dynamic-component>
 </div>
 
-<div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-    <x-nav-link href="{{ route('calendar') }}" :active="request()->routeIs('calendar')">
-        {{ __('Calendar') }}
-    </x-nav-link>
+<div class="{{ $menuClass }}">
+    <x-dynamic-component :component="$menuComponent" href="{{ route('calendar') }}" :active="request()->routeIs('calendar')">
+        {{ __('Agenda') }}
+    </x-dynamic-component>
 </div>
+
+<div class="{{ $menuClass }}">
+    <x-dynamic-component :component="$menuComponent" href="{{ route('users.students-table') }}" :active="request()->routeIs('users.students-table', 'users.professors-table', 'users.coordinators-table')">
+        {{ __('Usuários') }}
+    </x-dynamic-component>
+</div>
+
+
+

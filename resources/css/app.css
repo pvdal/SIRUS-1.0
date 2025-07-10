@@ -6,3 +6,12 @@
 [x-cloak] {
     display: none;
 }
+
+:root {
+    --primary-color: #2563eb;
+    --secondary-color: #1e40af;
+    --accent-color: #3b82f6;
+    --text-dark: #1f2937;
+    --text-light: #6b7280;
+    --shadow: #ccc;
+}

@@ -1,0 +1,198 @@
+:root {
+    --primary-color: #2563eb;
+    --secondary-color: #1e40af;
+    --accent-color: #3b82f6;
+    --text-dark: #1f2937;
+    --text-light: #6b7280;
+    --shadow: #ccc;
+}
+
+body {
+    font-family: "Inter", sans-serif;
+    line-height: 1.6;
+}
+
+.hero-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: 1;
+    z-index: 0;    /* garante que fique atrás do conteúdo */
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    background-color: white;
+    border-radius: 23px;
+    padding: 0;
+    box-shadow: 3px 3px var(--shadow);
+    border: 2px solid var(--text-dark);
+}
+
+.logo-container {
+    background: linear-gradient(
+        190deg,
+        var(--primary-color) 0%,
+        var(--secondary-color) 100%
+    );
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 5rem 2rem;
+}
+
+.text-welcome {
+    padding: 2rem 2rem;
+}
+
+.feature-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    height: 100%;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.feature-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(
+        135deg,
+        var(--accent-color),
+        var(--primary-color)
+    );
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.btn-primary-custom {
+    background: linear-gradient(
+        135deg,
+        var(--primary-color),
+        var(--accent-color)
+    );
+    border: none;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary-custom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+}
+
+.stats-section {
+    background: #f8fafc;
+    padding: 4rem 0;
+}
+/*Formatação do texto sobre o SIMBAJU*/
+.stat-item {
+    text-align: justify;
+    padding: 2rem;
+}
+/*Tabulação da primeira linha*/
+.stat-item p:first-of-type {
+    text-indent: 2em;
+}
+/*
+.stat-number {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    display: block;
+}
+*/
+.section-title {
+    position: relative;
+    margin-bottom: 3rem;
+}
+
+.section-title::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(
+        135deg,
+        var(--primary-color),
+        var(--accent-color)
+    );
+    border-radius: 2px;
+}
+
+
+/* =================
+   RESPONSIVIDADE
+   ================= */
+
+/* Tablets e dispositivos médios
+@media (max-width: 992px) {
+    .hero-content {
+        padding: 2rem;
+    }
+}*/
+
+/* Mobile (celulares pequenos) */
+@media (max-width: 576px) {
+    /* Hero Content */
+    .hero-content {
+        border-radius: 10px;
+    }
+
+    /* Logo Container */
+    .logo-container {
+        padding: 2rem 1rem;
+        border-radius: 15px;
+    }
+
+    /* Feature Card */
+    .feature-card {
+        padding: 1rem;
+    }
+
+    /* Botão */
+    .btn-primary-custom {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+
+    /* Títulos menores */
+    .section-title {
+        margin-bottom: 2rem;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+    }
+}
+
+/* Ajuste altura hero-section para evitar problemas em mobile */
+@media (max-width: 576px) {
+    .hero-section {
+        min-height: auto;
+        padding: 2rem 1rem;
+    }
+}

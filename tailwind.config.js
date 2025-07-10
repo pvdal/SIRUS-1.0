@@ -8,6 +8,7 @@ export default {
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './vendor/laravel/jetstream/**/*.blade.php',
         './storage/framework/views/*.php',
+        './storage/app/public/**/*.html',
         './resources/views/**/*.blade.php',
     ],
 
@@ -15,6 +16,9 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+            },
+            screens: {
+                'xs': '480px',  // novo breakpoint xs a partir de 480px
             },
         },
     },

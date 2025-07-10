@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
         editable: true, //Permite redimensioanr e arrastar eventos,
         locale: ptBrLocale, // Linguagem: portugês
         timeZone: 'local', // Fuso horário local
-        contentHeight: 1200, // faz altura ajustar conforme conteúdo
+        contentHeight: 'auto', // faz altura ajustar conforme conteúdo
         aspectRatio: 1, // opcional para ajustar a proporção
         events: '/events'
 

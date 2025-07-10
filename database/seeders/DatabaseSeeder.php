@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Coordinator;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -17,11 +18,18 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
         $this->call(EventsTableSeeder::class);
 
-        User::factory()->create([
+        $user = User::factory()->create([
             'name' => 'Pedro Lima',
             'email' => 'root@root.com',
             'email_verified_at' => now(),  // Adicionado para simular e-mail verificado
             'password' => Hash::make('123456789'),
+        ]);
+
+        Coordinator::create([
+            'coordinator_cpf' => '12345678900',
+            'user_id' => $user->id,
+            'access_level' => 1,
+            'state' => true,
         ]);
     }
 }
