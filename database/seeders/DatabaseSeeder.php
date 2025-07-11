@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
         $user = User::factory()->create([
             'name' => 'Pedro Lima',
             'email' => 'root@root.com',
+            'access_level' => 1,
+            'state' => true,
             'email_verified_at' => now(),  // Adicionado para simular e-mail verificado
             'password' => Hash::make('123456789'),
         ]);
@@ -28,8 +30,6 @@ class DatabaseSeeder extends Seeder
         Coordinator::create([
             'coordinator_cpf' => '12345678900',
             'user_id' => $user->id,
-            'access_level' => 1,
-            'state' => true,
         ]);
     }
 }

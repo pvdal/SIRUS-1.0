@@ -15,3 +15,20 @@
     --text-light: #6b7280;
     --shadow: #ccc;
 }
+/* Customização do link de paginação */
+ nav[role="navigation"] > div {
+     flex-direction: column;
+     align-items: center;
+ }
+
+nav[role="navigation"] .relative.inline-flex.items-center {
+    background-color: #2563eb; /* azul */
+    color: #ffffff;
+    border:none;
+}
+
+nav[role="navigation"] .relative.inline-flex.items-center:hover {
+    background-color: #1e40af; /* azul escuro no hover */
+    color: #ffffff;
+}
+

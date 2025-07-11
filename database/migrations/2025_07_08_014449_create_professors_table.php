@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('professors', function (Blueprint $table) {
             $table->string('professor_cpf', 11)->primary();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->integer('access_level');
-            $table->boolean('state',)->default(true);
             $table->timestamps();
         });
     }

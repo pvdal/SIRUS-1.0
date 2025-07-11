@@ -4,20 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Coordinator extends Model
+class Student extends Model
 {
-    protected $primaryKey = 'coordinator_cpf'; // Chave primária personalizada (string)
+    protected $primaryKey = 'ra'; // Chave primária personalizada (string)
     public $incrementing = false; // Impede autoincremento
     protected $keyType = 'string'; // Define como string
-
     protected $fillable = [
-        'coordinator_cpf',
+        'ra',
         'user_id',
+        'semester',
+        'course_id',
+        'group_id'
     ];
-
-    // Relacionamento com o User
+    // Relacionamento com User
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
 }

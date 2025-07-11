@@ -7,7 +7,7 @@
 
     <x-main-content>
         <x-nav-users-table>
-            @livewire('users.students-table')
+            @livewire('users.professors-table')
         </x-nav-users-table>
     </x-main-content>
 

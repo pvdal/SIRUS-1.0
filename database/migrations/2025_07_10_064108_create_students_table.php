@@ -12,13 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('students', function (Blueprint $table) {
-            $table->string('ra', 11)->primary();
+            $table->string('ra', 13)->primary();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->tinyInteger('semester');
             $table->foreignId('course_id')->nullable()->constrained('courses');
-            $table->foreignId('group_id')->nullable()->constrained('groups')->onDelete('cascade');
-            $table->tinyInteger('access_level');
-            $table->boolean('state',)->default(false);
+            $table->foreignId('group_id')->nullable()->constrained('groups');
             $table->timestamps();
         });
     }
