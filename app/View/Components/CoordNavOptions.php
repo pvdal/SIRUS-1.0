@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class CoordMenuOptions extends Component
+class CoordNavOptions extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class CoordMenuOptions extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.coord-menu-options');
+        return view('components.nav-options.coord-nav-options');
     }
 }

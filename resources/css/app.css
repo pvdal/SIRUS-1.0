@@ -6,13 +6,21 @@
 [x-cloak] {
     display: none;
 }
+:root {
+    --primary-blue: #1E3A5F;
+    --secondary-blue: #3B5D82;
+    --primary-orange: #C75B12;
+    --secondary-orange: #E07B3C;
+    --neutral-dark: #2D2D2D;
+    --neutral-light: #B0B0B0;
+}
 
 :root {
     --primary-color: #2563eb;
     --secondary-color: #1e40af;
     --accent-color: #3b82f6;
-    --text-dark: #1f2937;
-    --text-light: #6b7280;
+    --dark: #1f2937;
+    --light: #6b7280;
     --shadow: #ccc;
 }
 /* Customização do link de paginação */
@@ -21,14 +29,17 @@
      align-items: center;
  }
 
-nav[role="navigation"] .relative.inline-flex.items-center {
-    background-color: #2563eb; /* azul */
-    color: #ffffff;
-    border:none;
+/**********************************
+    Retirar setas do campo number
+***********************************/
+/* Chrome, Safari, Edge, Opera */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
-nav[role="navigation"] .relative.inline-flex.items-center:hover {
-    background-color: #1e40af; /* azul escuro no hover */
-    color: #ffffff;
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
 }
-

@@ -2,28 +2,28 @@
 
 namespace App\Livewire\Users;
 
+use App\Models\Professor;
 use Livewire\Component;
 
 class ProfessorsTable extends Component
 {
-    public $showModal = false;
-    public function open()
+    public $showCreateModal = false;
+    public function openCreateModal()
     {
-        $this->showModal = true;
+        $this->showCreateModal = true;
     }
-    public function close()
+    public function closeCreateModal()
     {
-        $this->showModal = false;
+        $this->showCreateModal = false;
     }
     public $users = [];
     public function mount() {
         $this->users = [
-            ['ra' => 1254659857458, 'name' => 'João Silva', 'email' => 'joao@example.com', 'semestre' => '3', 'grupo' => 1, 'curso' => 'Gestão de Tecnologia da Informação', 'estado' => 1],
-            ['ra' => 1254659858458, 'name' => 'Maria Souza', 'email' => 'maria@example.com', 'semestre' => '3', 'grupo' => 1, 'curso' => 'Gestão de Tecnologia da Informação', 'estado' => 1],
-            ['ra' => 1250099857458, 'name' => 'Carlos Lima', 'email' => 'carlos@example.com', 'semestre' => '3', 'grupo' => 1, 'curso' => 'Gestão de Tecnologia da Informação', 'estado' => 1],
-            ['ra' => 1250099117458, 'name' => 'Ana Costa', 'email' => 'ana@example.com', 'semestre' => '3', 'grupo' => 1, 'curso' => 'Gestão de Tecnologia da Informação', 'estado' => 1],
+            ['cpf' => '12345678900', 'name' => 'João Silva', 'email' => 'joao@example.com', 'estado' => 'SP'],
+            ['cpf' => '98765432100', 'name' => 'Maria Souza', 'email' => 'maria@example.com', 'estado' => 'RJ'],
+            ['cpf' => '45678912300', 'name' => 'Carlos Lima', 'email' => 'carlos@example.com', 'estado' => 'MG'],
+            ['cpf' => '32165498700', 'name' => 'Ana Costa', 'email' => 'ana@example.com', 'estado' => 'BA'],
         ];
-
     }
     public function render()
     {

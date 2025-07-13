@@ -6,12 +6,12 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-application-mark class="block h-9 w-auto" />
+                        <x-application-mark size="40" />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
-                <x-coord-menu-options :menuComponent="'nav-link'" :menuClass="'hidden space-x-8 sm:-my-px sm:ms-10 sm:flex'"/>
+                <x-coord-nav-options :menuComponent="'nav-link'" :menuClass="'hidden space-x-8 sm:-my-px sm:ms-10 sm:flex'"/>
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">
@@ -135,7 +135,7 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <!-- Navigation Links -->
-        <x-coord-menu-options :menuComponent="'responsive-nav-link'" :menuClass="'pt-2 pb-3 space-y-1'" />
+        <x-coord-nav-options :menuComponent="'responsive-nav-link'" :menuClass="'pt-2 pb-3 space-y-1'" />
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">

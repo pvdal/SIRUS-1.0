@@ -6,7 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{config('app.name') . ($title ?? '' ? ' | ' .$title : '')}}</title>
-
+        <link rel="icon" type="image/png" href="{{ asset('logo.png') }}?v=1">
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -18,7 +18,11 @@
         @livewireStyles
     </head>
     <body class="font-sans antialiased">
-        <x-banner />
+        {{-- Feedback messages: success, fail...
+            <x-banner />
+        --}}
+        {{-- Impede que o usuário tenha acesso ao sistema caso não aceite os termos de uso e políticas de privacidade juntamente com o middleware 'terms-accepted' --}}
+        @livewire('legal.terms-accept')
 
         <div class="min-h-screen bg-gray-100">
             @livewire('navigation-menu')

@@ -20,6 +20,14 @@ export default {
             screens: {
                 'xs': '480px',  // novo breakpoint xs a partir de 480px
             },
+            colors: {
+                'primary-blue': '#1E3A5F',
+                'secondary-blue': '#3B5D82',
+                'primary-orange': '#C75B12',
+                'secondary-orange': '#E07B3C',
+                'dark': '#1F2937',
+                'light': '#B0B0B0',
+            }
         },
     },
 

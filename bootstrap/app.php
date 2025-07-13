@@ -1,8 +1,12 @@
 <?php
 
+use App\Http\Middleware\EnsureUserHasAccessLevel;
+use App\Http\Middleware\EnsureTermsAccepted;
+
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -12,7 +16,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Middleware que identifica o nível de acesso do usuário: App\Http\Middleware\EnsureUserHasAccessLevel
+        $middleware->alias([
+            'access.level' => EnsureUserHasAccessLevel::class,
+        ]);
+
+        // adicionar seu middleware ao grupo web, junto com os padrões já existentes
+        $middleware->appendToGroup('web', EnsureTermsAccepted::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

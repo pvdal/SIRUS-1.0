@@ -2,8 +2,9 @@
 <html lang="pt-BR">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
         <title>SIRUS - Sistema de Avaliação Acadêmica</title>
+        <link rel="icon" type="image/png" href="{{ asset('logo.png') }}?v=1">
 
         <!-- Bootstrap 5 CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -15,12 +16,12 @@
     </head>
     <body>
         <!-- Hero Section -->
-        <section class="hero-section" style="background-image: url('{{ asset('img/FATEC_Franco.jpg') }}');">
+        <section class="hero-section" >
             <div class="container hero-content">
                 <div class="row align-items-center">
                     <div class="col-lg-6">
                         <div class="logo-container text-center">
-                            <img src="{{ asset('/img/logoSirus.png') }}" alt="Logo SIRUS" style="max-width: 180px;">
+                            <x-authentication-card-logo />
                             <h1 class=" text-white mt-3 mb-0" style="font-size: 3.5rem; font-weight: 700;">SIRUS</h1>
                             <p class=" text-white text-50 mb-0">Sistema de Rubricas para Gestão Avaliativa do SIMBAJU</p>
                         </div>
@@ -98,7 +99,7 @@
                         </div>
                     </div>
 
-                    {{--
+
                     <div class="col-lg-4 col-md-6">
                         <div class="feature-card">
                             <div class="feature-icon">
@@ -111,7 +112,7 @@
                         </div>
                     </div>
 
-
+                    {{--
                     <div class="col-lg-4 col-md-6">
                         <div class="feature-card">
                             <div class="feature-icon">
@@ -232,16 +233,16 @@
                 <div class="row align-items-center">
                     <div class="col-md-6">
                         <div class="d-flex align-items-center">
-                            <img src="{{ asset('/img/logoSirus.png') }}" alt="Logo SIRUS" style="max-width: 80px;">
+                            <x-authentication-card-logo size="40" class="me-2"/>
                             <span style="font-weight: 600; font-size: 1.2rem;">SIRUS</span>
                         </div>
                         <p class="mb-0 mt-2 text-white"> &copy; 2024 SIRUS. Todos os direitos reservados.</p>
                     </div>
                     <div class="col-md-6 text-md-end">
                         <div class="d-flex justify-content-md-end gap-3">
-                            <a href="/policy" class="text-white-50 text-decoration-none">Política de Privacidade</a>
-                            <a href="/terms" class="text-white-50 text-decoration-none">Termos de Uso</a>
-                            <a href="#" class="text-white-50 text-decoration-none">Suporte</a>
+                            <a href="{{ route('policy.show') }}" class="text-white-50 text-decoration-none">Política de Privacidade</a>
+                            <a href="{{ route('terms.show') }}" class="text-white-50 text-decoration-none">Termos de Uso</a>
+                            {{-- <a href="#" class="text-white-50 text-decoration-none">Suporte</a> --}}
                         </div>
                     </div>
                 </div>

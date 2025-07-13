@@ -15,9 +15,12 @@
                     {{ session('success') }}
                 </div>
             @endif
+
+            <x-banner/>
+
             <div>
                 <x-label for="ra" value="RA"/>
-                <x-input id="ra" class="w-full" type="text" wire:model="ra"/>
+                <x-input id="ra" class="w-full" type="number" wire:model.lazy="ra" wire:keydown="resetError('ra')" wire:blur="validateRa"/>
             </div>
             @error('ra')
             <span class="text-red-500 text-xs">{{ $message }}</span>
@@ -33,7 +36,7 @@
 
             <div class="mt-4">
                 <x-label for="email" value="E-mail"/>
-                <x-input id="email" class="w-full" type="email"  wire:model="email"/>
+                <x-input id="email" class="w-full" type="email" wire:model.lazy="email" wire:keydown="resetError('email')" wire:blur="validateEmail"/>
             </div>
             @error('email')
             <span class="text-red-500 text-xs">{{ $message }}</span>
@@ -101,12 +104,12 @@
                 <td class="px-4 py-2 border text-center border-gray-300 hidden lg:table-cell">{{ $student->course_id }}</td>
                 <td class="px-4 py-2 border text-center border-gray-300 hidden lg:table-cell">{{ $student->user->state == 1 ? 'Ativo' : 'Inativo' }}</td>
                 <td class="px-4 py-2 border text-center border-gray-300">
-                    <x-button class="min-w-[98px] !bg-blue-700">
+                    <x-button class="min-w-[98px]">
                         Alterar
                     </x-button>
-                    <x-button class="bg-red-800">
+                    <x-danger-button>
                         Inativar
-                    </x-button>
+                    </x-danger-button>
                 </td>
             </tr>
         @endforeach

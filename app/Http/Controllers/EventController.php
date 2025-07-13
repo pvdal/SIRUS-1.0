@@ -9,7 +9,7 @@ class EventController extends Controller
 {
     public function index()
     {
-        return view('calendar');
+        return view('agenda.calendar');
     }
 
     public function events(Request $request)

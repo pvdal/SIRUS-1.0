@@ -16,6 +16,10 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
+
+        // Após a criação, altere para datetime2
+        DB::statement('ALTER TABLE coordinators ALTER COLUMN created_at datetime2 NOT NULL');
+        DB::statement('ALTER TABLE coordinators ALTER COLUMN updated_at datetime2 NOT NULL');
     }
 
     /**

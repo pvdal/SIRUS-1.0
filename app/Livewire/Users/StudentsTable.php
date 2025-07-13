@@ -18,16 +18,17 @@ class StudentsTable extends Component
     public function open()
     {
         $this->showModal = true;
+        // Valida os dados da tabela students
     }
     public function close()
     {
         $this->showModal = false;
         $this->clear(); // Reseta o formulário
-        $this->resetErrorBag(); // limpa erros de validação
     }
     public function clear()
     {
         $this->reset(['ra','name' ,'email' ,'semester', 'course_id', 'group_id']);
+        $this->resetErrorBag(); // limpa erros de validação
     }
 
     public $name, $email;
@@ -46,10 +47,9 @@ class StudentsTable extends Component
 
     public function save(CreatesNewUsers $creator)
     {
-
         // Valida os dados da tabela students
         $this->validate([
-            'ra' => 'required|string|max:13',
+            'ra' => 'required|integer|digits:13|unique:students',
             'name' => 'required',
             'email' => 'required',
             'semester' => 'required|integer|between:1,10',
@@ -67,7 +67,7 @@ class StudentsTable extends Component
             'password' => '123456789', // fixa só pra testar
             'password_confirmation' => '123456789',
             'access_level' => 1,
-            'state' => 1,
+            'state' => 0,
         ]);
         // Cria o aluno na tabela específica
         Student::create([
@@ -84,9 +84,34 @@ class StudentsTable extends Component
         // Reseta o formulário
         $this->clear();
 
-        session()->flash('success', 'Estudante cadastrado com sucesso!.');
+        //session()->flash('success', 'Estudante cadastrado com sucesso!');
+        $this->js(<<<'JS'
+        window.dispatchEvent(new CustomEvent('banner-message', {
+                detail: {
+                    style: 'success',
+                    message: 'Estudante cadastrado com sucesso!'
+                }
+            }));
+        JS);
+    }
+    // Funções visuais para o formulário de cadastro
+    public function resetError($field)
+    {
+        $this->resetErrorBag($field);
     }
 
+    public function validateEmail()
+    {
+        $this->validateOnly('email', [
+            'email' => 'required|email:rfc,dns|unique:users,email',
+        ]);
+    }
+    public function validateRa()
+    {
+        $this->validateOnly('ra', [
+            'ra' => 'required|integer|digits:13|unique:students,ra',
+        ]);
+    }
     public function updatingSearch()
     {
         $this->resetPage();

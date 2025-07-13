@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         $user = User::factory()->create([
             'name' => 'Pedro Lima',
             'email' => 'root@root.com',
-            'access_level' => 1,
+            'access_level' => 3,
             'state' => true,
             'email_verified_at' => now(),  // Adicionado para simular e-mail verificado
             'password' => Hash::make('123456789'),
