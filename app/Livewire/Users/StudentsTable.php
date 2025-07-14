@@ -58,13 +58,14 @@ class StudentsTable extends Component
         ]);
 
         // Gera senha aleatória
-        $password = Str::random(12);
+        // $password = Str::random(12);
 
         // Cria o usuário reutilizando o controller CreateNewUser do Fortify
+        // Não precisa usar Hash aqui na senha, o CreateNewUser já faz isso
         $user = $creator->create([
             'name' => $this->name,
             'email' => $this->email,
-            'password' => '123456789', // fixa só pra testar
+            'password' => '123456789',
             'password_confirmation' => '123456789',
             'access_level' => 1,
             'state' => 0,

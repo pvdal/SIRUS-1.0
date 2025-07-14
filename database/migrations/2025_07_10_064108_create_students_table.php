@@ -19,6 +19,9 @@ return new class extends Migration
             $table->foreignId('group_id')->nullable()->constrained('groups');
             $table->timestamps();
         });
+        // Altera as colunas timestamp para datetime2 no SQL Server
+        DB::statement('ALTER TABLE students ALTER COLUMN created_at datetime2 NOT NULL');
+        DB::statement('ALTER TABLE students ALTER COLUMN updated_at datetime2 NOT NULL');
     }
 
     /**

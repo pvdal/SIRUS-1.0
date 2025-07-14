@@ -1,8 +1,9 @@
 <div>
-    <div class="pt-4 ps-8">
-        <button wire:click="open" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+    <div class="flex-col space-y-2 xs:space-y-0 xs:space-x-2 xs:flex-row pt-4 ps-2 pe-2 sm:ps-8 sm:me-8">
+        <x-button type="button" wire:click="open" class="bg-primary-blue hover:bg-primary-blue hover:opacity-90 min-h-10">
             Cadastrar aluno
-        </button>
+        </x-button>
+        <x-input type="search" class="w-full xs:w-6/12 xs:ms-4" placeholder="Buscar..." />
     </div>
     <x-dialog-modal wire:model="showModal">
         <x-slot name="title">

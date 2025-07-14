@@ -14,5 +14,4 @@
             @livewire('users.coordinators-table')
         </x-nav-users-table>
     </x-main-content>
-
 </x-app-layout>

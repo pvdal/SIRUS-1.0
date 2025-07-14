@@ -1,6 +1,7 @@
 <?php
 // Common
 use Illuminate\Support\Facades\Route;
+// Legal: Terms and Policy
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 //Calendar
@@ -9,6 +10,10 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ProfessorController;
 use App\Http\Controllers\CoordinatorController;
+// Groups
+use App\Http\Controllers\GroupController;
+// Courses
+use App\Http\Controllers\CourseController;
 
 Route::get('/', function () {
     return view('home');
@@ -53,6 +58,12 @@ Route::middleware([
     Route::get('/users/students', [StudentController::class, 'index'])->name('users.students-table');
     Route::get('/users/professors', [ProfessorController::class, 'index'])->name('users.professors-table');
     Route::get('/users/coordinators', [CoordinatorController::class, 'index'])->name('users.coordinators-table');
+
+    // Groups -> GroupController/Group.php
+    Route::get('/groups', [GroupController::class, 'index'])->name('groups-table');
+
+    // Courses -> CourseController/Course.php
+    Route::get('/courses', [CourseController::class, 'index'])->name('courses-table');
 });
 
 

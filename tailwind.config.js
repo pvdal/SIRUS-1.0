@@ -19,6 +19,7 @@ export default {
             },
             screens: {
                 'xs': '480px',  // novo breakpoint xs a partir de 480px
+                'xxs': '330px', // breakpoint para 330px
             },
             colors: {
                 'primary-blue': '#1E3A5F',

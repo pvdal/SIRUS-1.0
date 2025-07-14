@@ -1,8 +1,20 @@
 <div>
-    <div class="pt-4 ps-8">
-        <button wire:click="openCreateModal" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-            Abrir Modal
-        </button>
+    <div class="flex flex-wrap space-y-2 xs:space-y-0 xs:space-x-2 pt-4 ps-2 pe-2 sm:ps-8 sm:me-8">
+        <x-button type="button" wire:click="openCreateModal" class="bg-primary-blue hover:bg-primary-blue hover:opacity-90 min-h-10">
+            Cadastrar professor
+        </x-button>
+        <x-input  type="search"  class="w-full xs:w-6/12" placeholder="Buscar..." />
+        <div class="flex items-center space-x-2">
+            <x-checkbox  id="activeFilter" />
+            <label for="activeFilter" class="text-sm text-dark">Apenas ativos</label>
+        </div>
+
+        <select class="min-w-36 border-none rounded p-2 text-sm text-dark">
+            <option value="">Todas as datas</option>
+            <option value="today">Cadastrados hoje</option>
+            <option value="week">Últimos 7 dias</option>
+            <option value="month">Últimos 30 dias</option>
+        </select>
     </div>
     <x-dialog-modal wire:model="showCreateModal">
         <x-slot name="title">
