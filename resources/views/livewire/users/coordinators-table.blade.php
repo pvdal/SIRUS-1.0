@@ -1,8 +1,33 @@
 <div>
-    <div class="pt-4 ps-8">
-        <button wire:click="openCreateModal" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-            Abrir Modal
-        </button>
+    <div class="flex flex-wrap pt-4 ps-2 pe-2 sm:ps-8 sm:me-8 ">
+        <x-button type="button" wire:click="open" class="min-h-10 xs:me-2 mb-2">
+            Cadastrar coordenador
+        </x-button>
+
+        <x-input  type="search"  class="w-full xs:w-6/12 xs:me-2 mb-2" placeholder="Buscar..." />
+
+        <select
+            wire:model.live="statusFilter"
+            class=" bg-white border border-gray-300 rounded-lg px-4 py-2.5 pr-10 me-2 mb-2 text-sm text-gray-700 focus:ring-2 focus:ring-secondary-blue focus:border-secondary-blue transition-colors min-w-[168px] cursor-pointer"
+        >
+            <option value="active">Apenas ativos</option>
+            <option value="inactive">Apenas inativos</option>
+            <option value="all">Todos</option>
+        </select>
+
+        <select
+            wire:model.live="registerPeriod"
+            class="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2.5 pr-10 mb-2 text-sm text-gray-700 focus:ring-2 focus:ring-secondary-blue focus:border-secondary-blue transition-colors min-w-[160px] cursor-pointer"
+        >
+            <option value="">Todas as datas</option>
+            <option value="today">Cadastrados hoje</option>
+            <option value="week">Últimos 7 dias</option>
+            <option value="month">Últimos 30 dias</option>
+        </select>
+
+        <x-secondary-button>
+            l
+        </x-secondary-button>
     </div>
     <x-dialog-modal wire:model="showCreateModal">
         <x-slot name="title">

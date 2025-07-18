@@ -1,15 +1,24 @@
 <div>
-    <div class="flex flex-wrap space-y-2 xs:space-y-0 xs:space-x-2 pt-4 ps-2 pe-2 sm:ps-8 sm:me-8">
-        <x-button type="button" wire:click="openCreateModal" class="bg-primary-blue hover:bg-primary-blue hover:opacity-90 min-h-10">
+    <div class="flex flex-wrap pt-4 ps-2 pe-2 sm:ps-8 sm:me-8 ">
+        <x-button type="button" wire:click="openCreateModal" class="min-h-10 xs:me-2 mb-2">
             Cadastrar professor
         </x-button>
-        <x-input  type="search"  class="w-full xs:w-6/12" placeholder="Buscar..." />
-        <div class="flex items-center space-x-2">
-            <x-checkbox  id="activeFilter" />
-            <label for="activeFilter" class="text-sm text-dark">Apenas ativos</label>
-        </div>
 
-        <select class="min-w-36 border-none rounded p-2 text-sm text-dark">
+        <x-input  type="search"  class="w-full min-h-10 xs:w-6/12  xs:me-2 mb-2" placeholder="Buscar..." />
+
+        <select
+            wire:model.live="statusFilter"
+            class="appearance-none border border-gray-300 rounded-lg px-4 py-2.5 pr-10 me-2 mb-2 text-sm text-gray-700 focus:ring-2 focus:ring-secondary-blue focus:border-secondary-blue transition-colors min-w-[168px] cursor-pointer"
+        >
+            <option value="active">Apenas ativos</option>
+            <option value="inactive">Apenas inativos</option>
+            <option value="all">Todos</option>
+        </select>
+
+        <select
+            name="registerPeriod"
+            class="appearance-none border border-gray-300 rounded-lg px-4 py-2.5 pr-10 mb-2 text-sm text-gray-700 focus:ring-2 focus:ring-secondary-blue focus:border-secondary-blue transition-colors min-w-[160px] cursor-pointer"
+        >
             <option value="">Todas as datas</option>
             <option value="today">Cadastrados hoje</option>
             <option value="week">Últimos 7 dias</option>

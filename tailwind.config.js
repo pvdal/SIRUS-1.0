@@ -23,11 +23,13 @@ export default {
             },
             colors: {
                 'primary-blue': '#1E3A5F',
-                'secondary-blue': '#3B5D82',
+                'secondary-blue': '#4169E1',
+                'strong-blue': '#1a252f',
+                'soft-blue': 'rgba(59, 93, 130, 0.1)', /* 8% de opacidade */
                 'primary-orange': '#C75B12',
                 'secondary-orange': '#E07B3C',
-                'dark': '#1F2937',
-                'light': '#B0B0B0',
+                'danger-orange': '#B3470E',
+                'text-gray': '#D1D5DB',
             }
         },
     },

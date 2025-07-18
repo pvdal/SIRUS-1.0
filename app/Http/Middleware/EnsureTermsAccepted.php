@@ -28,11 +28,12 @@ class EnsureTermsAccepted
 
         if($user && is_null($user->terms_accepted_at) && !$request->is('dashboard'))
         {
+            $livewireRequest = $request->header('X-Livewire') !== null;
+            $allowedRoutes = ['livewire.update','policy.show','terms.show',];
             // Permitir chamadas do Livewire (como o accept)
-            if ($request->header('X-Livewire') !== null || $request->routeIs('livewire.update')) {
+            if ($livewireRequest || $request->routeIs(...$allowedRoutes)) {
                 return $next($request);
             }
-
             // Redirecionar se não for uma dessas rotas
             return redirect()->route('dashboard');
         }

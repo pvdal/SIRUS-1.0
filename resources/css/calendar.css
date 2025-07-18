@@ -78,3 +78,13 @@
         font-size: 1.125rem;
     }
 }
+
+.fc-toolbar-chunk .fc-button-group button {
+    background-color: #1e3a5f;   /* Cor de fundo azul escuro */
+    border-radius: 6px;          /* Cantos arredondados */
+    font-weight: 500;            /* Texto mais forte */
+    transition: background-color 0.2s ease;
+}
+
+
+

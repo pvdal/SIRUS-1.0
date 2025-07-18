@@ -10,8 +10,8 @@
     </x-slot>
 
     <x-main-content>
-        <div class="p-0 border-4 rounded overflow-hidden border-gray-700">
-            <div class="bg-gray-900 bg-blend-darken">
+        <div class="p-0 border-4 rounded overflow-hidden border-strong-blue">
+            <div class="bg-primary-blue bg-blend-darken">
                 <h1 class="text-center text-white border-b border-gray-600 pb-5 p-4 text-base sm:text-lg md:text-2xl lg:text-3xl">
                     AGENDA DE AVALIAÇÃO DO SIMBAJU
                 </h1>

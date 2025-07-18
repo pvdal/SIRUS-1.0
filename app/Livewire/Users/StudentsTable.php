@@ -9,43 +9,138 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Livewire\WithPagination;
+use Illuminate\Validation\Rule;
 
 class StudentsTable extends Component
 {
     use WithPagination;
-    public $search ='';
-    public $showModal = false;
-    public function open()
-    {
-        $this->showModal = true;
-        // Valida os dados da tabela students
-    }
-    public function close()
-    {
-        $this->showModal = false;
-        $this->clear(); // Reseta o formulário
-    }
-    public function clear()
-    {
-        $this->reset(['ra','name' ,'email' ,'semester', 'course_id', 'group_id']);
-        $this->resetErrorBag(); // limpa erros de validação
-    }
+    //#region Propriedades públicas
+    // Tema dos botões de paginação
+    protected $paginationTheme = 'tailwind';
+    public $searchTerm ='';
+    public $statusFilter = 1;
+    public $registerPeriod = null;
+    public $showCreateModal = false;
+    public $showUpdateModal = false;
+    public $showInactivationConfirmation = false;
 
     public $name, $email;
     public $ra,$semester='',$group_id,$course_id;
-
-    protected $paginationTheme = 'tailwind';
-    public function render()
+    public $user_id;
+    //#endregion
+    // Abrir modal
+    public function openModal($modal,$ra = null)
     {
-        $students = Student::with('user')
-            ->whereHas('user', fn ($q) =>
-                $q->where('name', 'like', "%{$this->search}%")
-            )
-            ->paginate(10);
-        return view('livewire.users.students-table', compact('students'));
+        switch ($modal)
+        {
+            case 'create':
+                $this->resetForm('create');
+                $this->showCreateModal = true;
+                break;
+            case 'update':
+                if($ra !== null)
+                {
+                    $this->edit($ra);
+                }
+                break;
+            case 'inactivation':
+                $this->showInactivationConfirmation = true;
+                break;
+        }
+    }
+    // Fechar modal
+    public function closeModal($modal=null)
+    {
+        switch ($modal)
+        {
+            case 'create':
+                $this->showCreateModal = false;
+                $this->resetForm('create');
+                break;
+            case 'update':
+                $this->showUpdateModal = false;
+                $this->resetForm('update');
+                break;
+            case 'inactivation':
+                $this->showInactivationConfirmation = false;
+                break;
+
+            default:
+                // Fecha tudo se nenhum $modal for passado
+                $this->closeModal('create');
+                $this->closeModal('update');
+                $this->closeModal('inactivation');
+                break;
+        }
+    }
+    // Limpa campos ou parâmetros de pesquisa
+    public function resetForm($field=null)
+    {
+        switch ($field)
+        {
+            case 'create':
+                $this->reset(['ra','name' ,'email' ,'semester', 'course_id', 'group_id']);
+                $this->resetErrorBag(); // limpa erros de validação
+                break;
+            case 'update':
+                $this->reset(['ra','name' ,'email' ,'semester', 'course_id', 'group_id','user_id']);
+                $this->resetErrorBag(); // limpa erros de validação
+                break;
+            case 'filters':
+                $this->reset('searchTerm','statusFilter','registerPeriod');
+                break;
+
+            default:
+                $this->resetForm('create');
+                $this->resetForm('create');
+                $this->resetForm('filters');
+                break;
+        }
     }
 
-    public function save(CreatesNewUsers $creator)
+    //#region Validações dinâmicas. Funções visuais e de segurança para o formulário de cadastro e atualização
+    public function resetError($field)
+    {
+        $this->resetErrorBag($field);
+    }
+    public function validateEmail($modal)
+    {
+        switch ($modal)
+        {
+            case 'create':
+                $this->validateOnly('email', [
+                    'email' => 'required|email:rfc,dns|unique:users,email',
+                ]);
+                break;
+            case 'update':
+                $this->validateOnly('email', [
+                    'email' => [
+                        'required',
+                        'email:rfc,dns',
+                        Rule::unique('users', 'email')->ignore($this->user_id),
+                    ],
+                ]);
+                break;
+        }
+    }
+    public function validateRa()
+    {
+        $this->validateOnly('ra', [
+            'ra' => 'required|integer|digits:13|unique:students,ra',
+        ]);
+    }
+    //#endregion
+
+    //#region Lifecycle / Busca
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+    //#endregion
+
+    //#region CRUD -> store, render (read), edit + update, inactive
+    // Salvamento
+    public function store(CreatesNewUsers $creator)
     {
         // Valida os dados da tabela students
         $this->validate([
@@ -68,7 +163,7 @@ class StudentsTable extends Component
             'password' => '123456789',
             'password_confirmation' => '123456789',
             'access_level' => 1,
-            'state' => 0,
+            'state' => 1,
         ]);
         // Cria o aluno na tabela específica
         Student::create([
@@ -83,7 +178,7 @@ class StudentsTable extends Component
         // Password::broker()->sendResetLink(['email' => $user->email,]);
 
         // Reseta o formulário
-        $this->clear();
+        $this->resetForm('create');
 
         //session()->flash('success', 'Estudante cadastrado com sucesso!');
         $this->js(<<<'JS'
@@ -95,26 +190,38 @@ class StudentsTable extends Component
             }));
         JS);
     }
-    // Funções visuais para o formulário de cadastro
-    public function resetError($field)
+    // Atualização
+    private function edit($ra)
     {
-        $this->resetErrorBag($field);
-    }
+        $student = Student::with('user')->findOrFail($ra);
 
-    public function validateEmail()
-    {
-        $this->validateOnly('email', [
-            'email' => 'required|email:rfc,dns|unique:users,email',
-        ]);
+        $this->user_id = $student->user->id;
+
+        $this->ra = $student->ra;
+        $this->name = $student->user->name;
+        $this->email = $student->user->email;
+        $this->semester = $student->semester;
+        $this->course_id = $student->course_id;
+        $this->group_id = $student->group_id;
+        $this->showUpdateModal = true;
     }
-    public function validateRa()
+    public function update()
     {
-        $this->validateOnly('ra', [
-            'ra' => 'required|integer|digits:13|unique:students,ra',
-        ]);
+        // Valida e atualiza dados do usuário e estudante
     }
-    public function updatingSearch()
+    public function inactivate()
     {
-        $this->resetPage();
+        // Define state = 0 para user relacionado
     }
+    // Renderiza o componente livewire
+    public function render()
+    {
+        $students = Student::with('user')
+            ->whereHas('user', fn ($q) =>
+            $q->where('name', 'like', "%{$this->searchTerm}%")
+            )
+            ->paginate(10);
+        return view('livewire.users.students-table', compact('students'));
+    }
+    //#endregion
 }
