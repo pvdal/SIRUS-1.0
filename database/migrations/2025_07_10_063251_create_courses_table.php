@@ -28,6 +28,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('course');
+        Schema::table('courses', function (Blueprint $table) {
+            $table->dropForeign(['coordinator_cpf']);
+        });
+
+        Schema::dropIfExists('courses');
     }
 };

@@ -15,7 +15,7 @@
     @isset($searchModel)
         <x-input
             type="search"
-            wire:model.debounce.500ms="{{ $searchModel }}"
+            wire:model.live="{{ $searchModel }}"
             class="w-full xs:w-4/12 me-2 mb-2"
             placeholder="{{ $searchPlaceholder ?? 'Buscar...' }}"
         />
