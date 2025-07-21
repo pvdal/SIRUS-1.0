@@ -5,6 +5,7 @@
             id="create"
             type="button"
             wire:click="{{ $getPrimaryActionClick() }}"
+            x-on:click="$el.blur()"
             class="min-h-10 me-2 mb-2 {{ $primaryAction['class'] ?? '' }}"
         >
             {{ $primaryAction['label'] ?? 'Ação' }}
@@ -14,6 +15,7 @@
     {{-- Campo de busca --}}
     @isset($searchModel)
         <x-input
+            id="search"
             type="search"
             wire:model.live="{{ $searchModel }}"
             class="w-full xs:w-4/12 me-2 mb-2"
@@ -23,6 +25,7 @@
 
     @isset($statusFilter)
         <select
+            id="statusFilter"
             wire:model="{{ $statusFilter}}"
             class="appearance-none border border-gray-300 rounded-lg px-4 py-2.5 pr-10 me-2 mb-2 text-sm text-gray-700 focus:ring-2 focus:ring-secondary-blue focus:border-secondary-blue min-w-[168px] cursor-pointer"
         >
@@ -34,6 +37,7 @@
 
     @isset($registerPeriod)
         <select
+            id="registerperiod"
             wire:model="{{ $registerPeriod}}"
             class="appearance-none border border-gray-300 rounded-lg px-4 py-2.5 pr-10 me-2 mb-2 text-sm text-gray-700 focus:ring-2 focus:ring-secondary-blue focus:border-secondary-blue min-w-[160px] cursor-pointer"
         >
@@ -50,6 +54,7 @@
     {{-- Botão limpar --}}
     @isset($clearAction)
         <button
+            id="clearAction"
             type="button"
             wire:click="{{ $getClearActionClick() }}"
             class="appearance-none border border-gray-300 rounded-lg px-6 py-2.5 mb-2 text-sm text-gray-700 focus:ring-2 focus:ring-secondary-blue focus:border-secondary-blue min-w-[168px] cursor-pointer inline-flex items-center justify-between gap-2"

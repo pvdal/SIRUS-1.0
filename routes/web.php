@@ -1,6 +1,7 @@
 <?php
 // Common
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\SendEmailVerification;
 // Legal: Terms and Policy
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;

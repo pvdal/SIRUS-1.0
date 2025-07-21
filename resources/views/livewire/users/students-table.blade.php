@@ -20,46 +20,7 @@
             <x-slot name="content">
                 <x-banner/>
 
-                <div>
-                    <x-label for="ra" value="RA"/>
-                    <x-input id="ra" class="w-full" type="number" wire:model.lazy="ra" wire:keydown="resetError('ra')" wire:change="validateRa" onkeydown="return ['e','E','+','-'].indexOf(event.key) === -1"/>
-                </div>
-                <x-input-error :for="'ra'"/>
-
-                <div class="mt-4">
-                    <x-label for="name" value="Nome"/>
-                    <x-input id="name" class="w-full" type="text" wire:model="name"/>
-                </div>
-                <x-input-error :for="'name'"/>
-
-                <div class="mt-4">
-                    <x-label for="email" value="E-mail"/>
-                    <x-input id="email" class="w-full" type="email" wire:model.lazy="email" wire:keydown="resetError('email')" wire:change="validateEmail('create')"/>
-                </div>
-                <x-input-error :for="'email'"/>
-
-                <div class="mt-4">
-                    <x-label for="semester" value="Semestre"/>
-                    <select id="semester" wire:model="semester" class="w-full rounded border-gray-300">
-                        <option value="" disabled selected>Selecione o semestre</option>
-                        @for($i=1;$i<=10;$i++)
-                            <option value="{{ $i }}">{{ $i }}</option>
-                        @endfor
-                    </select>
-                </div>
-                <x-input-error :for="'semester'"/>
-
-                <div class="mt-4">
-                    <x-label for="group_id" value="Grupo"/>
-                    <x-input id="group_id" class="block mt-1 w-full" type="text" wire:model="group_id"/>
-                </div>
-                <x-input-error :for="'group_id'"/>
-
-                <div class="mt-4">
-                    <x-label for="course_id" value="Curso"/>
-                    <x-input id="course_id" class="w-full" type="text" wire:model="course_id"/>
-                </div>
-                <x-input-error :for="'course_id'"/>
+                <x-form-fields.student typeModal="create"/>
             </x-slot>
 
             <x-slot name="footer">
@@ -82,46 +43,7 @@
             <x-slot name="content">
                 <x-banner/>
 
-                <div>
-                    <x-label for="ra" value="RA"/>
-                    <x-input id="ra" class="w-full" type="number" wire:model.lazy="ra" onkeydown="return ['e','E','+','-'].indexOf(event.key) === -1" disabled readonly/>
-                </div>
-                <x-input-error :for="'ra'"/>
-
-                <div class="mt-4">
-                    <x-label for="name" value="Nome"/>
-                    <x-input id="name" class="w-full" type="text" wire:model="name"/>
-                </div>
-                <x-input-error :for="'name'"/>
-
-                <div class="mt-4">
-                    <x-label for="email" value="E-mail"/>
-                    <x-input id="email" class="w-full" type="email" wire:model.lazy="email" wire:keydown="resetError('email')" wire:change="validateEmail('update')"/>
-                </div>
-                <x-input-error :for="'email'"/>
-
-                <div class="mt-4">
-                    <x-label for="semester" value="Semestre"/>
-                    <select id="semester" wire:model="semester" class="w-full rounded border-gray-300">
-                        <option value="" disabled selected>Selecione o semestre</option>
-                        @for($i=1;$i<=10;$i++)
-                            <option value="{{ $i }}">{{ $i }}</option>
-                        @endfor
-                    </select>
-                </div>
-                <x-input-error :for="'semester'"/>
-
-                <div class="mt-4">
-                    <x-label for="group_id" value="Grupo"/>
-                    <x-input id="group_id" class="block mt-1 w-full" type="text" wire:model="group_id"/>
-                </div>
-                <x-input-error :for="'group_id'"/>
-
-                <div class="mt-4">
-                    <x-label for="course_id" value="Curso"/>
-                    <x-input id="course_id" class="w-full" type="text" wire:model="course_id"/>
-                </div>
-                <x-input-error :for="'course_id'"/>
+                <x-form-fields.student typeModal="update"/>
             </x-slot>
 
             <x-slot name="footer">
@@ -135,18 +57,21 @@
         </x-dialog-modal>
     @endif
 
-    @if($showInactivationConfirmation)
-        <x-confirmation-modal wire:model="showInactivationConfirmation" :maxWidth="'sm'">
+    @if($showWarning)
+        <x-confirmation-modal wire:model="showWarning" :maxWidth="'sm'" :icon="$warningType">
             <x-slot name="title">
+                {{ $warningType }}
             </x-slot>
-            <x-slot name="content">
-                Tem certeza que deseja inativar o aluno?
+            <x-slot name="content" >
+                {{ $warningContent }}
             </x-slot>
             <x-slot name="footer" >
-                <x-danger-button >
-                    Inativar
-                </x-danger-button>
-                <x-secondary-button wire:click="closeModal('inactivation')" class="ms-4">
+                @if($warningType === 'Confirmação')
+                    <x-danger-button id="Inactivate" type="button" wire:click="inactivate">
+                        Inativar
+                    </x-danger-button>
+                @endif
+                <x-secondary-button id="closeModalInactivation" type="button"  wire:click="closeModal('inactivation')" class="ms-4">
                     Voltar
                 </x-secondary-button>
             </x-slot>
@@ -177,12 +102,35 @@
                 <td class="px-4 py-2 border text-center border-gray-300 hidden lg:table-cell">{{ $student->course_id }}</td>
                 <td class="px-4 py-2 border text-center border-gray-300 hidden lg:table-cell">{{ $student->user->state == 1 ? 'Ativo' : 'Inativo' }}</td>
                 <td class="px-4 py-2 border text-center border-gray-300">
-                    <x-button wire:click="openModal('update',{{ $student->ra }})" class="min-w-[98px] ">
+                    <x-button
+                        id="openModalUpdate"
+                        type="button"
+                        wire:click="openModal('update',{{ $student->ra }})"
+                        class="min-w-[98px]"
+                        x-on:click="$el.blur()"
+                    >
                         Alterar
                     </x-button>
-                    <x-danger-button type="button" wire:click="openModal('inactivation')">
-                        Inativar
-                    </x-danger-button>
+                    @if($student->user->state == 1)
+                        <x-danger-button
+                            id="openModalInactivation"
+                            type="button"
+                            wire:click="openModal('inactivation',{{ $student->ra }})"
+                            x-on:click="$el.blur()"
+                        >
+                            Inativar
+                        </x-danger-button>
+                    @else
+                        <x-danger-button
+                            id="openModalActivation"
+                            type="button"
+                            wire:click="activate({{ $student->ra }})"
+                            class="min-w-[98px]"
+                            x-on:click="$el.blur()"
+                        >
+                            Ativar
+                        </x-danger-button>
+                    @endif
                 </td>
             </tr>
         @endforeach
@@ -193,4 +141,3 @@
         {{ $students->links() }}
     </div>
 </div>
-

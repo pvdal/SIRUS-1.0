@@ -23,11 +23,16 @@
     --light: #6b7280;
     --shadow: #ccc;
 }
-/* Customização do link de paginação */
- nav[role="navigation"] > div {
-     flex-direction: column;
-     align-items: center;
- }
+/*******************
+    FULLCALENDAR
+********************/
+@media(min-width: 640px){
+    /* Customização do link de paginação */
+    nav[role="navigation"] > div {
+        flex-direction: column;
+        align-items: center;
+    }
+}
 /**********************************
     Retirar setas do campo number
 ***********************************/

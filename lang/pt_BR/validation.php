@@ -190,7 +190,7 @@ return [
     |
     */
 
-    'attributes' => [
+    'attributes' => array(
         'address'   => 'endereço',
         'age'       => 'idade',
         'body'      => 'conteúdo',
@@ -199,9 +199,12 @@ return [
         'country'   => 'país',
         'date'      => 'data',
         'day'       => 'dia',
+        'email'     => 'e-mail',
         'excerpt'   => 'resumo',
         'first_name' => 'primeiro nome',
         'gender'    => 'gênero',
+        'course_id' => 'curso',
+        'group_id'  => 'grupo',
         'marital_status' => 'estado civil',
         'profession' => 'profissão',
         'nationality' => 'nacionalidade',
@@ -219,6 +222,7 @@ return [
         'password'  => 'senha',
         'phone'     => 'telefone',
         'second'    => 'segundo',
+        'semester'  => 'semestre',
         'sex'       => 'sexo',
         'state'     => 'estado',
         'street'    => 'rua',
@@ -235,7 +239,7 @@ return [
         'modality' => 'modalidade',
         'category' => 'categoria',
         'blood_type' => 'tipo sanguíneo',
-        'birth_date' => 'data de nascimento'
-    ],
+        'birth_date' => 'data de nascimento',
+    ),
 
 ];

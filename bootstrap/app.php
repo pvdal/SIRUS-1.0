@@ -20,8 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'access.level' => EnsureUserHasAccessLevel::class,
         ]);
-
-        // adicionar seu middleware ao grupo web, junto com os padrões já existentes
+        // Adiciona o middleware ao grupo web, junto com os padrões já existentes
         $middleware->appendToGroup('web', EnsureTermsAccepted::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

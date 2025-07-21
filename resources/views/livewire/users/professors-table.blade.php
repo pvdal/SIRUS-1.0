@@ -61,7 +61,7 @@
         <tbody class="bg-white">
         @foreach ($users as $user)
             <tr class="hover:bg-gray-50">
-                <td class="px-4 py-2 border text-center border-gray-300 hidden sm:table-cell">{{ $user['cpf'] }}</td>
+                <td class="px-4 py-2 border text-center border-gray-300 hidden sm:table-cell">{{ $user['cpf']}}</td>
                 <td class="px-4 py-2 border text-center border-gray-300">{{ $user['name'] }}</td>
                 <td class="px-4 py-2 border text-center border-gray-300 hidden md:table-cell">{{ $user['email'] }}</td>
                 <td class="px-4 py-2 border text-center border-gray-300 hidden lg:table-cell">{{ $user['estado'] == 1 ? 'Ativo' : 'Inativo' }}</td>

@@ -36,6 +36,7 @@ return new class extends Migration
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });
+        DB::statement('ALTER TABLE password_reset_tokens ALTER COLUMN created_at datetime2 NULL');
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();

@@ -22,6 +22,7 @@
             <x-banner />
         --}}
         {{-- Impede que o usuário tenha acesso ao sistema caso não aceite os termos de uso e políticas de privacidade juntamente com o middleware 'terms-accepted' --}}
+
         @livewire('legal.terms-accept')
 
         <div class="min-h-screen bg-gray-100">

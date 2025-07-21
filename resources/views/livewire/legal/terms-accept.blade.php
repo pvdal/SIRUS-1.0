@@ -17,8 +17,8 @@
 
                             <div class="ms-2">
                                 {!! __('I agree to the :terms_of_service and :privacy_policy', [
-                                        'terms_of_service' => '<a target="_blank" href="'.route('terms.show').'" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">'.__('Terms of Service').'</a>',
-                                        'privacy_policy' => '<a target="_blank" href="'.route('policy.show').'" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">'.__('Privacy Policy').'</a>',
+                                        'terms_of_service' => '<a target="_blank" href="'.route('terms.show').'" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-blue">'.__('Terms of Service').'</a>',
+                                        'privacy_policy' => '<a target="_blank" href="'.route('policy.show').'" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-blue">'.__('Privacy Policy').'</a>',
                                 ]) !!}
                             </div>
                         </div>
@@ -31,14 +31,14 @@
                     wire:click="accept"
                     wire:loading.attr="disabled"
                     :disabled="!@js(!$accepted)"
-                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    class="px-4 py-2 bg-secondary-blue text-white rounded hover:opacity-90"
                 >
                     Aceito os termos
                 </button>
                 <button
                     type="button"
                     wire:click="refuse"
-                    class="px-4 py-2 ml-3 bg-red-500 text-white rounded hover:bg-red-600"
+                    class="px-4 py-2 ml-3 bg-danger-orange text-white rounded hover:opacity-90"
                 >
                     Cancelar
                 </button>
