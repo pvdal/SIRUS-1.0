@@ -1,6 +1,6 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-300">
         <!-- Menu padrão (desktop e acima de 300px) -->
-    <div class="max-w-[1900px] mx-auto hidden xxs:block">
+    <div class="max-w-[1900px] mx-auto hidden xxs:block border-b border-gray-200">
         <div class="flex justify-between h-16 w-full">
             <div class="flex">
                 <div class="hidden space-x-8 sm:-my-px xxs:ms-5 xs:ms-10 xxs:flex">

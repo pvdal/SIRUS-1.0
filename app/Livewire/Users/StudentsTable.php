@@ -2,15 +2,17 @@
 
 namespace App\Livewire\Users;
 
-use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use App\Models\Student;
 use App\Models\User;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Str;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Livewire\WithPagination;
 use Illuminate\Validation\Rule;
+use Illuminate\View\View;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
+
 class StudentsTable extends Component
 {
     use WithPagination;
@@ -42,7 +44,7 @@ class StudentsTable extends Component
 
     //#region Controle de modais
     // Abrir modal
-    public function openModal($modal,$ra = null)
+    public function openModal($modal,$ra = null): void
     {
         switch ($modal)
         {
@@ -76,9 +78,8 @@ class StudentsTable extends Component
             $this->showWarning = true;
         }
     }
-
     // Fechar modal
-    public function closeModal($modal = null)
+    public function closeModal($modal = null): void
     {
         switch ($modal)
         {
@@ -103,7 +104,7 @@ class StudentsTable extends Component
         }
     }
     // Limpa campos ou parâmetros de pesquisa
-    public function resetForm($field = null)
+    public function resetForm($field = null): void
     {
         switch ($field)
         {
@@ -123,19 +124,20 @@ class StudentsTable extends Component
                 break;
             default:
                 $this->resetForm('create');
-                $this->resetForm('create');
+                $this->resetForm('update');
                 $this->resetForm('filters');
+                $this->resetForm('inactivation');
                 break;
         }
     }
     //#endregion
 
     //#region Validações dinâmicas. Funções visuais e de segurança para o formulário de cadastro e atualização
-    public function resetError($field)
+    public function resetError($field): void
     {
         $this->resetErrorBag($field);
     }
-    public function validateEmail($modal)
+    public function validateEmail($modal): void
     {
         switch ($modal)
         {
@@ -155,7 +157,7 @@ class StudentsTable extends Component
                 break;
         }
     }
-    public function validateRa()
+    public function validateRa(): void
     {
         $this->validateOnly('ra', [
             'ra' => 'required|integer|digits:13|unique:students,ra',
@@ -164,15 +166,15 @@ class StudentsTable extends Component
     //#endregion
 
     //#region Lifecycle / Busca
-    public function updatingSearchTerm()
+    public function updatingSearchTerm(): void
     {
         $this->resetPage();
     }
     //#endregion
 
-    //#region CRUD -> store, render (read), edit + update, inactive
+    //#region CRUD -> store, render (read), edit + update, inactive + active
     // Salvamento
-    public function store(CreatesNewUsers $creator)
+    public function store(CreatesNewUsers $creator): void
     {
         // Valida os dados da tabela students
         $this->validate([
@@ -223,17 +225,12 @@ class StudentsTable extends Component
         JS);
     }
     // Atualização
-    private function edit($ra)
+    private function edit($ra): void
     {
         $student = Student::with('user')->find($ra);
 
-        if (!$student) {
-            $this->showWarning('Aluno não encontrado.','Erro');
-            return;
-        }
-
-        if (!$student->user) {
-            $this->showWarning('Usuário associado não encontrado.','Erro');
+        if (!$student || !$student->user) {
+            $this->showWarning('Aluno ou usuário associado não encontrado.', 'Erro');
             return;
         }
 
@@ -248,7 +245,7 @@ class StudentsTable extends Component
 
         $this->showUpdateModal = true;
     }
-    public function update()
+    public function update(): void
     {
         $this->validate([
             'name' => 'required|string|max:255',
@@ -287,17 +284,12 @@ class StudentsTable extends Component
             }));
         JS);
     }
-    public function inactivate()
+    public function inactivate(): void
     {
         $student = Student::with('user')->find($this->user_ra);
 
-        if (!$student) {
-            $this->showWarning('Aluno não encontrado.','Erro');
-            return;
-        }
-
-        if (!$student->user) {
-            $this->showWarning('Usuário associado não encontrado.','Erro');
+        if (!$student || !$student->user) {
+            $this->showWarning('Aluno ou usuário associado não encontrado.', 'Erro');
             return;
         }
 
@@ -308,17 +300,12 @@ class StudentsTable extends Component
         // $this->showWarning('Usuário inativado.', 'Sucesso'); // Caso queira que o modal exiba sucesso
         $this->closeModal('inactivation'); // Caso queira fechar sem exibir mensagem de sucesso
     }
-    public function activate($ra)
+    public function activate($ra): void
     {
         $student = Student::with('user')->find($ra);
 
-        if (!$student) {
-            $this->showWarning('Aluno não encontrado.','Erro');
-            return;
-        }
-
-        if (!$student->user) {
-            $this->showWarning('Usuário associado não encontrado.','Erro');
+        if (!$student || !$student->user) {
+            $this->showWarning('Aluno ou usuário associado não encontrado.', 'Erro');
             return;
         }
 
@@ -329,7 +316,7 @@ class StudentsTable extends Component
         // $this->showWarning('Usuário Ativado.', 'Sucesso'); // Caso queira exibir mensagem de sucesso
     }
     // Renderiza o componente livewire
-    public function render()
+    public function render(): View
     {
         $students = Student::with('user')
             ->whereHas('user', fn ($q) =>

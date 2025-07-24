@@ -18,7 +18,12 @@ return new class extends Migration
             $table->boolean('state')->default(true);
             $table->timestamps();
         });
+
+        DB::statement('ALTER TABLE groups ALTER COLUMN created_at datetime2 NOT NULL');
+        DB::statement('ALTER TABLE groups ALTER COLUMN updated_at datetime2 NOT NULL');
     }
+
+
 
     /**
      * Reverse the migrations.

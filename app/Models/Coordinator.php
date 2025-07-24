@@ -20,4 +20,9 @@ class Coordinator extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function course()
+    {
+        return $this->hasOne(Course::class,'coordinator_cpf','coordinator_cpf');
+    }
 }

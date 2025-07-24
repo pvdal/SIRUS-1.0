@@ -21,9 +21,6 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/policy', function () {
-    /*
-    $policy = file_get_contents(storage_path('app/public/policy.html')); // exemplo
-    return view('policy', compact('policy'));*/
     $policy = Str::markdown(File::get(resource_path('markdown/policy.md')));
     return view('policy', compact('policy'));
 })->name('policy.show');
@@ -65,7 +62,7 @@ Route::middleware([
 
     // Courses -> CourseController/Course.php
     Route::get('/courses', [CourseController::class, 'index'])->name('courses-table');
+    Route::post('/courses/save', [CourseController::class, 'store'])->name('courses-store');
 });
-
 
 // Rotas do aluno

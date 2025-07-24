@@ -224,6 +224,7 @@ return [
         'second'    => 'segundo',
         'semester'  => 'semestre',
         'sex'       => 'sexo',
+        'shift'     => 'turno',
         'state'     => 'estado',
         'street'    => 'rua',
         'subject'   => 'assunto',

@@ -11,7 +11,7 @@
         <x-slot name="filters"></x-slot>
     </x-actions-table-bar>
 
-@if($showCreateModal)
+    @if($showCreateModal)
         <x-dialog-modal wire:model="showCreateModal">
             <x-slot name="title">
                 Cadastre um aluno
@@ -80,16 +80,16 @@
 
     <table class="min-w-full border border-gray-300 divide-y divide-gray-200 mt-5">
         <thead class="bg-gray-100">
-            <tr>
-                <th class="px-4 py-2 text-center text-gray-700 hidden xs:table-cell">RA</th>
-                <th class="px-4 py-2 text-center text-gray-700">Nome</th>
-                <th class="px-4 py-2 text-center text-gray-700 hidden md:table-cell">Email</th>
-                <th class="px-4 py-2 text-center text-gray-700 hidden lg:table-cell">Semestre</th>
-                <th class="px-4 py-2 text-center text-gray-700 hidden sm:table-cell">Grupo</th>
-                <th class="px-4 py-2 text-center text-gray-700 hidden lg:table-cell">Curso</th>
-                <th class="px-4 py-2 text-center text-gray-700 hidden lg:table-cell">Estado</th>
-                <th class="px-4 py-2 text-center text-gray-700">Ações</th>
-            </tr>
+        <tr>
+            <th class="px-4 py-2 text-center text-gray-700 hidden xs:table-cell">RA</th>
+            <th class="px-4 py-2 text-center text-gray-700">Nome</th>
+            <th class="px-4 py-2 text-center text-gray-700 hidden md:table-cell">Email</th>
+            <th class="px-4 py-2 text-center text-gray-700 hidden lg:table-cell">Semestre</th>
+            <th class="px-4 py-2 text-center text-gray-700 hidden sm:table-cell">Grupo</th>
+            <th class="px-4 py-2 text-center text-gray-700 hidden lg:table-cell">Curso</th>
+            <th class="px-4 py-2 text-center text-gray-700 hidden lg:table-cell">Estado</th>
+            <th class="px-4 py-2 text-center text-gray-700">Ações</th>
+        </tr>
         </thead>
         <tbody class="bg-white">
         @foreach ($students as $student)

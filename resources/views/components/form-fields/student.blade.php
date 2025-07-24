@@ -2,19 +2,19 @@
     @isset($typeModal)
         <div class="mt-4">
             <x-label for="ra" value="RA"/>
-            <x-input id="ra" type="number" class="w-full" placeholder="Registro Acadêmico" wire:model.lazy="ra" {{ $attributes->merge($inputRaAttributes) }}/>
+            <x-input id="ra" type="number" class="w-full" placeholder="Registro Acadêmico" wire:model.lazy="ra" wire:change="validateRa" {{ $attributes->merge($inputRaAttributes) }}/>
         </div>
         <x-input-error :for="'ra'"/>
 
         <div class="mt-4">
             <x-label for="name" value="Nome"/>
-            <x-input id="name" type="text" class="w-full" autocomplete="name" placeholder="Nome" wire:model.lazy="name" wire:keydown="resetError('name')"/>
+            <x-input id="name" type="text" class="w-full" autocomplete="name" placeholder="Nome" wire:model.lazy="name" wire:input="resetError('name')"/>
         </div>
         <x-input-error :for="'name'"/>
 
         <div class="mt-4">
             <x-label for="email" value="E-mail"/>
-            <x-input id="email" type="email" class="w-full" autocomplete="email" placeholder="E-mail" wire:model.lazy="email" wire:keydown="resetError('email')" wire:change="validateEmail('{{ $typeModal }}')"/>
+            <x-input id="email" type="email" class="w-full" autocomplete="email" placeholder="E-mail" wire:model.lazy="email" wire:input="resetError('email')" wire:change="validateEmail('{{ $typeModal }}')"/>
         </div>
         <x-input-error :for="'email'"/>
 

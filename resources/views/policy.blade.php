@@ -4,7 +4,7 @@
     </x-slot>
     <div class="pt-4 bg-gray-100">
         <div class="min-h-screen flex flex-col items-center pt-6 sm:pt-0 m-3">
-            <div class="w-full flex bg-[var(--secondary-color)] justify-center border border-gray-900 p-4 max-w-[1200px] mx-auto">
+            <div class="w-full flex bg-primary-blue justify-center border border-gray-900 p-4 max-w-[1200px] mx-auto">
                 <x-authentication-card-logo size="60" />
             </div>
 

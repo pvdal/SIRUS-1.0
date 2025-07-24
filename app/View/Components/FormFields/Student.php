@@ -23,7 +23,6 @@ class Student extends Component
         if ($this->typeModal === 'create'){
             return [
                 'wire:keydown' => "resetError('ra')",
-                'wire:change' => 'validateRa',
                 'onkeydown' => "return ['e','E','+','-'].indexOf(event.key) === -1",
             ];
         }

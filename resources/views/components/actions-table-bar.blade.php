@@ -6,7 +6,7 @@
             type="button"
             wire:click="{{ $getPrimaryActionClick() }}"
             x-on:click="$el.blur()"
-            class="min-h-10 me-2 mb-2 {{ $primaryAction['class'] ?? '' }}"
+            class="min-h-10 me-2 mb-2 min-w-[168px]{{ $primaryAction['class'] ?? '' }}"
         >
             {{ $primaryAction['label'] ?? 'Ação' }}
         </x-button>
@@ -18,28 +18,28 @@
             id="search"
             type="search"
             wire:model.live="{{ $searchModel }}"
-            class="w-full xs:w-4/12 me-2 mb-2"
+            class="w-full xs:w-4/12 me-2 mb-2 min-w-[168px] max-w-[168px] xs:max-w-full"
             placeholder="{{ $searchPlaceholder ?? 'Buscar...' }}"
         />
     @endisset
-
+    {{-- Filtro de status --}}
     @isset($statusFilter)
         <select
             id="statusFilter"
-            wire:model="{{ $statusFilter}}"
+            wire:model.live="{{ $statusFilter}}"
             class="appearance-none border border-gray-300 rounded-lg px-4 py-2.5 pr-10 me-2 mb-2 text-sm text-gray-700 focus:ring-2 focus:ring-secondary-blue focus:border-secondary-blue min-w-[168px] cursor-pointer"
         >
+            <option value="">Todos</option>
             <option value="1">Apenas ativos</option>
             <option value="0">Apenas inativos</option>
-            <option value="">Todos</option>
         </select>
     @endisset
-
+    {{-- Filtro de período de cadastro --}}
     @isset($registerPeriod)
         <select
             id="registerperiod"
             wire:model="{{ $registerPeriod}}"
-            class="appearance-none border border-gray-300 rounded-lg px-4 py-2.5 pr-10 me-2 mb-2 text-sm text-gray-700 focus:ring-2 focus:ring-secondary-blue focus:border-secondary-blue min-w-[160px] cursor-pointer"
+            class="appearance-none border border-gray-300 rounded-lg px-4 py-2.5 pr-10 me-2 mb-2 text-sm text-gray-700 focus:ring-2 focus:ring-secondary-blue focus:border-secondary-blue min-w-[168px] cursor-pointer"
         >
             <option value="">Todas as datas</option>
             <option value="today">Cadastrados hoje</option>
@@ -60,9 +60,7 @@
             class="appearance-none border border-gray-300 rounded-lg px-6 py-2.5 mb-2 text-sm text-gray-700 focus:ring-2 focus:ring-secondary-blue focus:border-secondary-blue min-w-[168px] cursor-pointer inline-flex items-center justify-between gap-2"
         >
             {{ $clearAction['label'] ?? 'Limpar filtros' }}
-            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m-7 0a1 1 0 011-1h4a1 1 0 011 1m-7 0h8" />
-            </svg>
+            <x-lucide-trash-2 class="w-4 h-4 text-gray-500"/>
         </button>
     @endisset
 

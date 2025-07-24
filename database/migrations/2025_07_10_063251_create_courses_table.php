@@ -21,6 +21,9 @@ return new class extends Migration
 
             $table->foreign('coordinator_cpf')->references('coordinator_cpf')->on('coordinators');
         });
+
+        DB::statement('ALTER TABLE courses ALTER COLUMN created_at datetime2 NOT NULL');
+        DB::statement('ALTER TABLE courses ALTER COLUMN updated_at datetime2 NOT NULL');
     }
 
     /**
