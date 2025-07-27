@@ -1,15 +1,55 @@
 <div>
-    <x-actions-table-bar
-        :primaryAction="['label' => 'Cadastrar Aluno', 'method' => 'openModal', 'param' => 'create']"
-        :clearAction="['label' => 'Limpar filtros', 'method' => 'resetForm', 'param' => 'filters']"
-        searchModel="searchTerm"
-        searchPlaceholder="Buscar por nome..."
-        statusFilter="statusFilter"
-        registerPeriod="registerPeriod"
-    >
-        {{-- Slot de filtros customizados --}}
-        <x-slot name="filters"></x-slot>
-    </x-actions-table-bar>
+    <div class="flex flex-wrap pt-4 ps-2 pe-2 sm:ps-8 sm:me-8">
+        <x-button
+            id="create"
+            type="button"
+            wire:click="openModal('create')"
+            x-on:click="$el.blur()"
+            class="min-h-10 me-2 mb-2 min-w-[168px]"
+        >
+            Cadastrar aluno
+        </x-button>
+
+
+        <x-input
+            id="search"
+            type="search"
+            wire:model.live="searchTerm"
+            class="w-full xs:w-4/12 me-2 mb-2 min-w-[168px] max-w-[168px] xs:max-w-full"
+            placeholder="Buscar por nome..."
+        />
+
+        <select
+            id="statusFilter"
+            wire:model.live="statusFilter"
+            class="appearance-none border border-gray-300 rounded-lg px-4 py-2.5 pr-10 me-2 mb-2 text-sm text-gray-700 focus:ring-2 focus:ring-secondary-blue focus:border-secondary-blue min-w-[168px] cursor-pointer"
+        >
+            <option value="">Todos</option>
+            <option value="1">Apenas ativos</option>
+            <option value="0">Apenas inativos</option>
+        </select>
+
+        <select
+            id="registerperiod"
+            wire:model="registerPeriod"
+            class="appearance-none border border-gray-300 rounded-lg px-4 py-2.5 pr-10 me-2 mb-2 text-sm text-gray-700 focus:ring-2 focus:ring-secondary-blue focus:border-secondary-blue min-w-[168px] cursor-pointer"
+        >
+            <option value="">Todas as datas</option>
+            <option value="today">Cadastrados hoje</option>
+            <option value="week">Últimos 7 dias</option>
+            <option value="month">Últimos 30 dias</option>
+        </select>
+
+        <button
+            id="clearAction"
+            type="button"
+            wire:click="resetForm('filters')"
+            class="appearance-none border border-gray-300 rounded-lg px-6 py-2.5 mb-2 text-sm text-gray-700 focus:ring-2 focus:ring-secondary-blue focus:border-secondary-blue min-w-[168px] cursor-pointer inline-flex items-center justify-between gap-2"
+        >
+            Limpar filtros
+            <x-lucide-trash-2 class="w-4 h-4 text-gray-500"/>
+        </button>
+    </div>
 
     @if($showCreateModal)
         <x-dialog-modal wire:model="showCreateModal">

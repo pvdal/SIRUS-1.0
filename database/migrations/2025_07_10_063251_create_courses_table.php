@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -15,15 +16,16 @@ return new class extends Migration
             $table->id();
             $table->string('name', 100);
             $table->string('shift', 20);
-            $table->string('coordinator_cpf', 11)->nullable();
+            $table->foreignId('coordinator_id')->nullable()->constrained()->nullOnDelete();
             $table->boolean('state')->default(true);
             $table->timestamps();
 
-            $table->foreign('coordinator_cpf')->references('coordinator_cpf')->on('coordinators');
+
         });
 
         DB::statement('ALTER TABLE courses ALTER COLUMN created_at datetime2 NOT NULL');
         DB::statement('ALTER TABLE courses ALTER COLUMN updated_at datetime2 NOT NULL');
+        DB::statement("ALTER TABLE courses ADD CONSTRAINT chk_shift CHECK (shift IN ('morning', 'afternoon', 'night'))");
     }
 
     /**

@@ -196,6 +196,7 @@ return [
         'body'      => 'conteúdo',
         'cell'      => 'célula',
         'city'      => 'cidade',
+        'coordinator_cpf' => 'cpf',
         'country'   => 'país',
         'date'      => 'data',
         'day'       => 'dia',

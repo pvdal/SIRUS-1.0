@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -12,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('professors', function (Blueprint $table) {
-            $table->string('professor_cpf', 11)->primary();
+            $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });

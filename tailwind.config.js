@@ -1,6 +1,7 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
 import forms from '@tailwindcss/forms';
 import typography from '@tailwindcss/typography';
+import lineClamp from '@tailwindcss/line-clamp';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -18,8 +19,9 @@ export default {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
             screens: {
-                'xs': '480px',  // novo breakpoint xs a partir de 480px
-                'xxs': '330px', // breakpoint para 330px
+                'xs': '480px',  // breakpoint xs a partir de 480px
+                'xxs': '330px', // breakpoint xxs a partir de 330px
+                'xlg': '1380px', // breakpoint xlg a partir de 1380px
             },
             colors: {
                 'primary-blue': '#1E3A5F',
@@ -34,5 +36,8 @@ export default {
         },
     },
 
-    plugins: [forms, typography],
+    plugins: [
+        forms,
+        typography,
+    ],
 };

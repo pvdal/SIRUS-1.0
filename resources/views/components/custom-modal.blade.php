@@ -43,13 +43,14 @@
                 </h2>
             </div>
 
-            <div class="px-6 py-4 text-gray-900 ">
+            <div class="px-6 py-4 mt-4 text-sm text-gray-600 ">
                 {{ $content }}
             </div>
-
-            <div class="px-6 py-4 border-t dark:border-gray-100 text-end space-x-2">
-                {{ $footer }}
-            </div>
+            @isset($footer)
+                <div class="px-6 py-4 border-t dark:border-gray-100 text-end xxs:space-x-2">
+                    {{ $footer }}
+                </div>
+            @endisset
         </div>
     </div>
 </div>

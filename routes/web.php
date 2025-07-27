@@ -1,6 +1,7 @@
 <?php
 // Common
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Middleware\SendEmailVerification;
 // Legal: Terms and Policy
 use Illuminate\Support\Facades\File;
@@ -59,10 +60,14 @@ Route::middleware([
 
     // Groups -> GroupController/Group.php
     Route::get('/groups', [GroupController::class, 'index'])->name('groups-table');
+    Route::get('papers/{filename}', [GroupController::class, 'showPaper'])->name('papers.show');
+    Route::get('/groups/save', [GroupController::class,'store'])->name('groups.save');
 
     // Courses -> CourseController/Course.php
     Route::get('/courses', [CourseController::class, 'index'])->name('courses-table');
     Route::post('/courses/save', [CourseController::class, 'store'])->name('courses-store');
 });
+
+
 
 // Rotas do aluno

@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Coordinator extends Model
 {
-    protected $primaryKey = 'coordinator_cpf'; // Chave primária personalizada (string)
-    public $incrementing = false; // Impede autoincremento
-    protected $keyType = 'string'; // Define como string
-
-    protected $fillable = [
-        'coordinator_cpf',
+     protected $fillable = [
         'user_id',
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     // Relacionamento com o User
@@ -23,6 +23,6 @@ class Coordinator extends Model
 
     public function course()
     {
-        return $this->hasOne(Course::class,'coordinator_cpf','coordinator_cpf');
+        return $this->hasOne(Course::class);
     }
 }

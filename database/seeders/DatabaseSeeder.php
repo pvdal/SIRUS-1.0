@@ -28,7 +28,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Coordinator::create([
-            'coordinator_cpf' => '12345678900',
             'user_id' => $user->id,
         ]);
     }

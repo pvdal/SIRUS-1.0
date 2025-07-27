@@ -47,3 +47,29 @@ input[type=number]::-webkit-outer-spin-button {
 input[type=number] {
     -moz-appearance: textfield;
 }
+
+/***************************************
+    Customização da scroll-bar
+****************************************/
+/* Funciona no Chrome, Edge e Safari */
+.scrollbar-custom::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-track {
+    background: #f1f1f1; /* cor da trilha */
+    border-radius: 10px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+    background-color: #a0aec0; /* cor do "polegar" (scroll) */
+    border-radius: 10px;
+    border: 2px solid #f1f1f1;
+}
+
+/* Firefox */
+.scrollbar-custom {
+    scrollbar-width: thin;              /* 'auto' | 'thin' | 'none' */
+    scrollbar-color: #a0aec0 #f1f1f1;   /* thumb | track */
+}
