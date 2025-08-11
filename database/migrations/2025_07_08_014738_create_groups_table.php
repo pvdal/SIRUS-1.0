@@ -15,7 +15,6 @@ return new class extends Migration
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
             $table->string('theme', 150);
-            $table->string('file_path', 180)->nullable()->default(null);
             $table->boolean('state')->default(true);
             $table->timestamps();
         });
@@ -23,8 +22,6 @@ return new class extends Migration
         DB::statement('ALTER TABLE groups ALTER COLUMN created_at datetime2 NOT NULL');
         DB::statement('ALTER TABLE groups ALTER COLUMN updated_at datetime2 NOT NULL');
     }
-
-
 
     /**
      * Reverse the migrations.

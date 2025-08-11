@@ -6,16 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Professor extends Model
 {
-    protected $primaryKey = 'professor_cpf';
-    public $incrementing = false;
-
-    protected $keyType = 'string';
-
     protected $fillable = [
-        'professor_cpf',
         'user_id',
-
     ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
     // Relacionamento com User
     public function user()
     {

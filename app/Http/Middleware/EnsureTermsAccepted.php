@@ -35,7 +35,6 @@ class EnsureTermsAccepted
                 'terms.show',
                 'verification.send',
                 'verification.notice',
-                'profile.show',
                 'login',
                 'logout',
                 'two-factor.login',

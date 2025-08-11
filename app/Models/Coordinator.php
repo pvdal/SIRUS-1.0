@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Coordinator extends Model
 {
-     protected $fillable = [
+    protected $fillable = [
         'user_id',
     ];
 
@@ -21,6 +21,7 @@ class Coordinator extends Model
         return $this->belongsTo(User::class);
     }
 
+    // Relacionamento com o Course
     public function course()
     {
         return $this->hasOne(Course::class);

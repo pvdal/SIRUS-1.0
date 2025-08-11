@@ -9,53 +9,56 @@
              class="flex items-center justify-between"
         >
             <div x-show="showPaper" x-cloak>
-                <x-button x-on:click="$dispatch('voltar-papel')">Visualizar Grupos</x-button>
+                <x-button x-on:click="$dispatch('toggle-groups')">Visualizar Grupos</x-button>
             </div>
             <h2 x-show="!showPaper" x-cloak class="font-semibold text-xl">Grupos cadastrados</h2>
         </div>
     </x-slot>
 
+    {{-- Chamada da função alpine -> recources/js/components/management/groupsData.js--}}
     <div
         x-data="groupsData()"
-        x-on:voltar-papel.window="
+        x-on:toggle-groups.window="
                 showGroupCards = true;
                 showGroupPaper = false;
                 paperUrl = '';
                 $dispatch('toggle-paper', false);
-            "
+        "
+        x-init='init(@json($groups),{{ $current_page }}, {{ $last_page }})'
     >
+        {{-- Grupos cadastrados --}}
         <template x-if="showGroupCards">
             <x-main-content>
                 {{-- Menu utilitário das tabelas --}}
                 <x-actions-table-bar
-                    :primaryAction="['label' => 'Cadastrar grupo', 'method' => 'showCreateModal']"
-                    :clearAction="['label' => 'Limpar filtros', 'method' => 'limparCampos()']"
-                    searchModel="searchTerm"
-                    statusFilter="statusFilter"
-                    registerPeriod="registerPeriod"
+                    :primary-action="['label' => 'Cadastrar grupo', 'method' => 'showCreateModal']"
+                    :clear-action="['label' => 'Limpar filtros', 'method' => 'clearFields()']"
+                    :search-model="'searchTerm'"
+                    :status-filter="'statusFilter'"
+                    :register-period="'registerPeriod'"
+                    :load-function="'loadGroups()'"
                 />
-
                 {{-- Componente com o conteúdo --}}
-                <x-management.groups-content :groups="$groups"/>
-
-                {{-- Paginação nativa do Laravel --}}
-                <div class="mt-6 mb-8">
-                    {{-- $groups->links() --}}
-                </div>
+                <x-management.groups-content/>
+                {{-- Paginação --}}
+                <x-management.pagination
+                    :page-var="'page'"
+                    :total-pages="'totalPages'"
+                    :load-function="'loadGroups'"
+                />
             </x-main-content>
         </template>
-
+        {{-- Trabalhos cadastrados --}}
         <template x-if="showGroupPaper">
             <div class="relative">
-                <!-- Mensagem ou Spinner de Carregando -->
+                {{-- Carregando... --}}
                 <div
                     x-show="isLoadingPdf"
                     class="absolute inset-0 z-10 flex items-center justify-center bg-white bg-opacity-75"
                 >
                     <span class="text-gray-600 text-lg">Carregando PDF...</span>
                 </div>
-
-                <!-- Iframe do PDF -->
+                {{-- Iframe do PDF --}}
                 <iframe
                     x-bind:src="paperUrl"
                     class="w-full h-[100vh] border border-gray-300 rounded-md"
@@ -64,41 +67,5 @@
                 ></iframe>
             </div>
         </template>
-
     </div>
-    @push('scripts')
-        <script>
-            function groupsData() {
-                return {
-                    showGroupCards: true,
-                    showCreateModal: false,
-                    shoeUpdateModal: false,
-                    searchTerm: '',
-                    statusFilter: '',
-                    registerPeriod: '',
-                    theme: '',
-                    file_path: '',
-                    saving: false,
-                    showGroupPaper: false,
-                    paperUrl: '',
-                    isLoadingPdf: true,
-
-                    showPaper(url) {
-                        this.showGroupCards = false;
-                        this.isLoadingPdf = true;
-                        this.paperUrl = url;
-                        this.showGroupPaper = true;
-                        this.$dispatch('toggle-paper', true);
-                        this.$nextTick(() => {
-                            setTimeout(() => {
-                                this.paperUrl = url;
-                                this.showGroupPaper = true;
-                                this.$dispatch('toggle-paper', true);
-                            }, 10);
-                        });
-                    },
-                }
-            }
-        </script>
-    @endpush
 </x-app-layout>

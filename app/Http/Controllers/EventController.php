@@ -4,32 +4,23 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Event;
+use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
 
 class EventController extends Controller
 {
-    public function index()
+    public function index(): View
     {
+        session(['custom_token' => bin2hex(random_bytes(16))]);
+
         return view('agenda.calendar');
     }
 
-    public function events(Request $request)
+    public function events(Request $request): jsonResponse
     {
-        // Verifica se a requisição vem da página do calendário
-        $referer = $request->header('referer');
-        $allowedReferer = url('/calendar');
-
-        $isValidReferer = false;
-        if (str_starts_with($referer, $allowedReferer)) {
-            $isValidReferer = true;
-        }
-
-        if (!$isValidReferer) {
-            return redirect('/calendar');
-        }
         $events = Event::all();
-
         // Ajustar para formato que o FullCalendar espera
-        $formattedEvents = $events->map(function($event) {
+        $data = $events->map(function($event) {
             return [
                 'event_id' => $event->id,
                 'title' => $event->title,
@@ -39,6 +30,6 @@ class EventController extends Controller
             ];
         });
 
-        return response()->json($formattedEvents);
+        return response()->json($data);
     }
 }

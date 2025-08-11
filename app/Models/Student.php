@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Student extends Model
 {
+    use HasFactory;
     protected $primaryKey = 'ra'; // Chave primária personalizada (string)
     public $incrementing = false; // Impede autoincremento
     protected $keyType = 'string'; // Define como string
@@ -19,17 +22,17 @@ class Student extends Model
         'group_id'
     ];
     // Relacionamento com User
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
     // Relacionamento com Course
-    public function course()
+    public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class,'course_id');
     }
     // Relacionamento com Course
-    public function group()
+    public function group(): BelongsTo
     {
         return $this->belongsTo(Group::class,'group_id');
     }

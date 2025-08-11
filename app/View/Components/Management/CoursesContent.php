@@ -1,12 +1,12 @@
 <?php
 
-namespace App\View\Components\management;
+namespace App\View\Components\Management;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class GroupsContent extends Component
+class CoursesContent extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class GroupsContent extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.management.groups-content');
+        return view('components.management.courses-content');
     }
 }

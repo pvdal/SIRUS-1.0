@@ -24,7 +24,28 @@ document.addEventListener('DOMContentLoaded', function () {
         timeZone: 'local', // Fuso horário local
         contentHeight: 'auto', // faz altura ajustar conforme conteúdo
         aspectRatio: 1, // opcional para ajustar a proporção
-        events: '/events'
+        eventSources:[
+            {
+                events: function (info, successCallback, failureCallback) {
+                    const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
+                    axios({
+                        url: `${requestPrefix}/events/show`,
+                        method: 'GET',
+                        params: {
+                            start: info.startStr,
+                            end: info.endStr,
+                        },
+                    })
+                    .then(response => {
+                        successCallback(response.data);
+                    })
+                    .catch(error => {
+                        console.error('Erro ao buscar eventos', error);
+                        failureCallback(error);
+                    });
+                }
+            }
+        ]
 
     });
     window.addEventListener('resize', () => {

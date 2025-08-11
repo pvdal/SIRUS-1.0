@@ -275,14 +275,6 @@ class StudentsTable extends Component
         ]);
 
         // Mensagem de sucesso, caso haja
-        $this->js(<<<'JS'
-        window.dispatchEvent(new CustomEvent('banner-message', {
-                detail: {
-                    style: 'success',
-                    message: 'Dados atualizados com sucesso!'
-                }
-            }));
-        JS);
     }
     public function inactivate(): void
     {

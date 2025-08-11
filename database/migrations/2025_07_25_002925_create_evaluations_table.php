@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -13,11 +14,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('evaluations', function (Blueprint $table) {
-            $table->id('evaluations_id');
+            $table->id();
+            $table->foreignId('criteria_id')->nullable()->constrained('criteria')->nullOnDelete();
+            $table->foreignId('professor_committee_id')->nullable()->constrained('professors_committees')->nullOnDelete();
             $table->decimal('grade', 5, 2);
-            $table->string('comment');
-            $table->foreignId('criteria_id')->nullable()->constrained('criteria');
-            $table->foreignId('professor_committee_id')->nullable()->constrained('professors_committees');
+            $table->text('comment')->nullable();
             $table->timestamps();
         });
         DB::statement('ALTER TABLE evaluations ALTER COLUMN created_at datetime2 NOT NULL');

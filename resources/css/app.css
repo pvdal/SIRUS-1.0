@@ -49,9 +49,9 @@ input[type=number] {
 }
 
 /***************************************
-    Customização da scroll-bar
+   Customização da scroll-bar (cross-browser)
 ****************************************/
-/* Funciona no Chrome, Edge e Safari */
+/* Chrome, Edge (Chromium) e Safari */
 .scrollbar-custom::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -68,8 +68,15 @@ input[type=number] {
     border: 2px solid #f1f1f1;
 }
 
-/* Firefox */
-.scrollbar-custom {
-    scrollbar-width: thin;              /* 'auto' | 'thin' | 'none' */
-    scrollbar-color: #a0aec0 #f1f1f1;   /* thumb | track */
+/* Esconder as setas (botões) da scrollbar em WebKit */
+.scrollbar-custom::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
 }
+
+/* Firefox
+.scrollbar-custom {
+    scrollbar-width: thin;
+    scrollbar-color: #a0aec0 #f1f1f1;
+}*/

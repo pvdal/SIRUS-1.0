@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -14,15 +15,14 @@ return new class extends Migration
     {
         Schema::create('professors_committees', function (Blueprint $table) {
             $table->id();
-            $table->date('date');
+            $table->foreignId('professor_id')->nullable()->constrained('professors')->nullOnDelete();
+            $table->foreignId('committee_id')->nullable()->constrained('committees')->nullOnDelete();
+            $table->foreignId('group_id')->nullable()->constrained('groups')->nullOnDelete();
+            $table->foreignId('member_types_id')->nullable()->constrained('member_types')->nullOnDelete();
+            $table->foreignId('events_id')->nullable()->default(true)->constrained('events')->nullOnDelete();
             $table->boolean('status')->default(true);
-            $table->string('professor_cpf', 11)->nullable();
-
-            $table->foreign('professor_cpf')->references('professor_cpf')->on('professors');
-            $table->foreignId('committee_id')->nullable()->constrained('committees');
-            $table->foreignId('group_id')->nullable()->constrained('groups');
-            $table->foreignId('member_id')->nullable()->constrained('member_types');
             $table->timestamps();
+
         });
         DB::statement('ALTER TABLE professors_committees ALTER COLUMN created_at datetime2 NOT NULL');
         DB::statement('ALTER TABLE professors_committees ALTER COLUMN updated_at datetime2 NOT NULL');

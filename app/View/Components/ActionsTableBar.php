@@ -14,10 +14,12 @@ class ActionsTableBar extends Component
     public $searchPlaceholder;
     public $statusFilter;
     public $registerPeriod;
+
+    public $loadFunction;
     /**
      * Create a new component instance.
      */
-    public function __construct($primaryAction = null, $clearAction = null, $searchModel = null, $searchPlaceholder = null, $statusFilter = null, $registerPeriod = null)
+    public function __construct($primaryAction = null, $clearAction = null, $searchModel = null, $searchPlaceholder = null, $statusFilter = null, $registerPeriod = null, $loadFunction = null)
     {
         $this->primaryAction = $primaryAction;
         $this->clearAction = $clearAction;
@@ -25,6 +27,7 @@ class ActionsTableBar extends Component
         $this->searchPlaceholder = $searchPlaceholder;
         $this->statusFilter = $statusFilter;
         $this->registerPeriod = $registerPeriod;
+        $this->loadFunction = $loadFunction;
     }
 
     // Função para concatenar o metodo e o parâmetro

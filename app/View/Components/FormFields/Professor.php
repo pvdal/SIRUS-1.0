@@ -1,12 +1,12 @@
 <?php
 
-namespace App\View\Components\management;
+namespace App\View\Components\FormFields;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class CoursesContent extends Component
+class Professor extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class CoursesContent extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.management.courses-content');
+        return view('components.form-fields.professor');
     }
 }

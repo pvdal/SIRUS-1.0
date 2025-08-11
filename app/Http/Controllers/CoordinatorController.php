@@ -3,11 +3,210 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
+
+use App\Actions\Fortify\CreateNewUser;
+use App\Models\Coordinator;
+
+// Log
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Random\RandomException;
 
 class CoordinatorController extends Controller
 {
-    function index ()
+    /**
+     * @throws RandomException
+     */
+    public function index (): View
     {
-        return view('users.coordinators');
+        //if (!session()->has('custom_token')) {}
+        session(['dynamic_token' => bin2hex(random_bytes(16))]);
+
+        $coordinators = Coordinator::with('user:id,name,email,state')->paginate(10);
+
+        $data = $coordinators->getCollection()->map(function ($coordinator) {
+            return [
+                'id' => $coordinator->id,
+                'user_id' => $coordinator->user_id,
+                'name' => $coordinator->user->name,
+                'email' => $coordinator->user->email,
+                'state' => (int) $coordinator->user->state,
+            ];
+        });
+
+        return view('management.coordinators', [
+            'coordinators' => $data,
+            'current_page' => $coordinators->currentPage(),
+            'last_page' => $coordinators->lastPage(),
+        ]);
+    }
+
+    public function show (Request $request): jsonResponse
+    {
+        //DB::enableQueryLog();
+        $query = Coordinator::with('user:id,name,email,state');
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->whereHas('user',function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('status')) {
+            $status = $request->input('status');
+            $query->whereHas('user', function ($q) use ($status) {
+                $q->where('state', $status);
+            });
+        }
+
+        if ($request->filled('period')) {
+            $period = $request->input('period');
+            $query->whereHas('user', function ($q) use ($period) {
+                $q->when($period === 'today', fn($q) => $q->whereDate('created_at', today()))
+                  ->when($period === 'week', fn ($q) => $q->whereDate('created_at', [now()->subDays(7), now()]))
+                  ->when($period === 'month', fn ($q) => $q->whereDate('created_at', [now()->subDays(30), now()]));
+            });
+        }
+
+        $coordinators = $query->paginate(10);
+        //Log::info('Queries executadas:', DB::getQueryLog());
+
+        // Mapeia para retornar somente os campos necessários
+        $data = $coordinators->getCollection()->map(function ($coordinator) {
+            return [
+                'id' => $coordinator->id,
+                'user_id' => $coordinator->user_id,
+                'name' => $coordinator->user->name,
+                'email' => $coordinator->user->email,
+                'state' => (int) $coordinator->user->state,
+            ];
+        });
+
+        return response()->json([
+            'data' => $data,
+            'current_page' => $coordinators->currentPage(),
+            'last_page' => $coordinators->lastPage(),
+        ]);
+    }
+
+    public function store (Request $request, CreateNewUser $creator): jsonResponse
+    {
+        //$start = microtime(true);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email:rfc,dns|unique:users,email',
+        ]);
+
+        // Cria o usuário usando o Fortify
+        $user = $creator->create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => '123456789',
+            'password_confirmation' => '123456789',
+            'access_level' => 3, // 3 = Coordinator
+            'state' => 1,
+        ]);
+
+        // Cria o coordenador vinculado ao usuário
+        $coordinator = Coordinator::create([
+            'user_id' => $user->id,
+        ]);
+        //$end = microtime(true);
+        //Log::info('Tempo criação user direto + coordenador: ' . ($end - $start) . ' segundos');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Coordenador cadastrado com sucesso.',
+            'data' => [
+                'id' => $coordinator->id,
+                'user_id' => $coordinator->user_id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'state' => (int) $user->state,
+            ]
+        ]);
+    }
+
+    public function update (Request $request, $id): JsonResponse
+    {
+        if(!$id) {
+            return response()->json([
+                'message' => 'Selecione um Coordenador!',
+            ],422);
+        }
+
+        $request->validate([
+            'name'  => 'required|string|max:255',
+            'email' => "required|email:rfc,dns|unique:users,email,{$id},id",
+        ]);
+
+        $coordinator = Coordinator::with('user:id,name,email,state')->where('user_id', $id)->first();
+
+        if(!$coordinator || !$coordinator->user) {
+            return response()->json([
+                'message' => 'Coordenador não encontrado!',
+            ],422);
+        }
+
+        $coordinator->user->update([
+            'name' => $request['name'],
+            'email' => $request['email'],
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Coordenador atualizado com sucesso.',
+            'data' => [
+                'id' => $coordinator->id,
+                'user_id' => $coordinator->user_id,
+                'name' => $coordinator->user->name,
+                'email' => $coordinator->user->email,
+                'state' => (int) $coordinator->user->state,
+            ]
+        ]);
+    }
+
+    public function inactivate($id): JsonResponse
+    {
+        $coordinator = Coordinator::with('user:id,name,email,state')->where('user_id', $id)->first();
+
+        if (!$coordinator || !$coordinator->user) {
+            return response()->json([
+                'message' => 'Coordenador não encontrado!',
+            ], 422);
+        }
+
+        $coordinator->user->update(['state' => 0]);
+
+        $coordinator->refresh();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Coordenador inativado com sucesso.'
+        ]);
+    }
+
+    public function activate($id): JsonResponse
+    {
+        $coordinator = Coordinator::with('user:id,name,email,state')->where('user_id', $id)->first();
+
+        if (!$coordinator || !$coordinator->user) {
+            return response()->json([
+                'message' => 'Coordenador não encontrado!',
+            ], 422);
+        }
+
+        $coordinator->user->update(['state' => 1]);
+
+        $coordinator->refresh();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Coordenador ativado com sucesso.'
+        ]);
     }
 }

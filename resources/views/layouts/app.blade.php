@@ -4,27 +4,30 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="request-prefix" content="{{ env('SECURE_POST_PREFIX') }}">
 
         <title>{{config('app.name') . ($title ?? '' ? ' | ' .$title : '')}}</title>
         <link rel="icon" type="image/png" href="{{ asset('logo.png') }}?v=1">
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-
         <!-- Styles -->
         @livewireStyles
+
+        <script>
+            {{-- Token dinâmico de requisições ajax --}}
+            window.dynamicToken = '{{ session("dynamic_token") }}';
+            {{-- Armazena para uso no JavaScript --}}
+            localStorage.setItem('dynamic_token', window.dynamicToken);
+        </script>
     </head>
     <body class="font-sans antialiased">
-        {{-- Feedback messages: success, fail...
-            <x-banner />
-        --}}
+        {{-- Feedback messages: success, fail...--}}
+        <x-banner />
         {{-- Impede que o usuário tenha acesso ao sistema caso não aceite os termos de uso e políticas de privacidade juntamente com o middleware 'terms-accepted' --}}
-
         @livewire('legal.terms-accept')
-
         <div class="min-h-screen bg-gray-100">
             @livewire('navigation-menu')
 
@@ -42,8 +45,6 @@
                 {{ $slot }}
             </main>
         </div>
-
-
         @livewireScripts
         @stack('scripts')
     </body>

@@ -1,54 +1,68 @@
 <div>
-    @isset($typeModal)
-        <div class="mt-4">
-            <x-label for="ra" value="RA"/>
-            <x-input id="ra" type="number" class="w-full" placeholder="Registro Acadêmico" wire:model.lazy="ra" wire:change="validateRa" {{ $attributes->merge($inputRaAttributes) }}/>
-        </div>
-        <x-input-error :for="'ra'"/>
-
-        <div class="mt-4">
-            <x-label for="name" value="Nome"/>
-            <x-input id="name" type="text" class="w-full" autocomplete="name" placeholder="Nome" wire:model.lazy="name" wire:input="resetError('name')"/>
-        </div>
-        <x-input-error :for="'name'"/>
-
-        <div class="mt-4">
-            <x-label for="email" value="E-mail"/>
-            <x-input id="email" type="email" class="w-full" autocomplete="email" placeholder="E-mail" wire:model.lazy="email" wire:input="resetError('email')" wire:change="validateEmail('{{ $typeModal }}')"/>
-        </div>
-        <x-input-error :for="'email'"/>
-
-        <div class="mt-4">
-            <x-label for="semester" value="Semestre"/>
-            <select id="semester" class="w-full rounded border-gray-300" wire:model.lazy="semester" wire:change="resetError('semester')">
-                <option value="" disabled selected>Selecione o semestre</option>
-                @for($i=1;$i<=10;$i++)
-                    <option value="{{ $i }}">{{ $i }}</option>
-                @endfor
-            </select>
-        </div>
-        <x-input-error :for="'semester'"/>
-
-        <div class="mt-4">
-            <x-label for="group_id" value="Grupo"/>
-            <select id="group_id" class="w-full rounded border-gray-300"  wire:model.lazy="group_id">
-                <option value="" disabled selected>Selecione um grupo</option>
-                @for($i=1;$i<=10;$i++)
-                    <option value="{{ $i }}">Grupo {{ $i }}</option>
-                @endfor
-            </select>
-        </div>
-        <x-input-error :for="'group_id'"/>
-
-        <div class="mt-4">
-            <x-label for="course_id" value="Curso"/>
-            <select id="course_id" class="w-full rounded border-gray-300" wire:model.lazy="course_id">
-                <option value="" disabled selected>Selecione um curso</option>
-                @for($i=1;$i<=10;$i++)
-                    <option value="{{ $i }}">Curso {{ $i }}</option>
-                @endfor
-            </select>
-        </div>
-        <x-input-error :for="'course_id'"/>
-    @endisset
+    {{-- RA do aluno --}}
+    <div class="mt-4">
+        <x-label for="ra" value="RA do Aluno"/>
+        <x-input id="ra" type="number" autocomplete="ra" class="w-full" onkeydown="return ['e','E','+','-'].indexOf(event.key) === -1"
+                 placeholder="RA do aluno" x-model="ra" x-bind:disabled="edit"/>
+        <template x-if="errors.ra">
+            <p class="text-red-600 text-sm" x-text="errors.ra[0]"></p>
+        </template>
+    </div>
+    {{-- Nome do aluno --}}
+    <div class="mt-4">
+        <x-label for="name" value="Nome do Aluno"/>
+        <x-input id="name" type="text" autocomplete="name" class="w-full"
+                 placeholder="Nome do aluno" x-model="name"/>
+        <template x-if="errors.name">
+            <p class="text-red-600 text-sm" x-text="errors.name[0]"></p>
+        </template>
+    </div>
+    {{-- Email do aluno --}}
+    <div class="mt-4">
+        <x-label for="email" value="Email do Aluno"/>
+        <x-input id="email" type="text" autocomplete="email" class="w-full"
+                 placeholder="E-mail do aluno" x-model="email"/>
+        <template x-if="errors.email">
+            <p class="text-red-600 text-sm" x-text="errors.email[0]"></p>
+        </template>
+    </div>
+    {{-- Semestre do aluno --}}
+    <div class="mt-4">
+        <x-label for="semester" value="Semestre"/>
+        <select id="semester" class="w-full rounded border-gray-300" x-model="semester">
+            <option value="" disabled selected>Selecione o semestre</option>
+            <template x-for="i in 10" :key="i">
+                <option :value="i" x-text="i"></option>
+            </template>
+        </select>
+        <template x-if="errors.semester">
+            <p class="text-red-600 text-sm" x-text="errors.semester[0]"></p>
+        </template>
+    </div>
+    {{-- Grupo --}}
+    <div class="mt-4">
+        <x-label for="group_id" value="Grupo (opcional)"/>
+        <select id="group_id" class="w-full rounded border-gray-300" x-model="group_id">
+            <option value="" selected>Selecione um grupo</option>
+            <template x-for="group in groups" :key="group.id">
+                <option :value="group.id" x-text="group.theme ?? '-'"></option>
+            </template>
+        </select>
+        <template x-if="errors.group_id">
+            <p class="text-red-600 text-sm" x-text="errors.group_id[0]"></p>
+        </template>
+    </div>
+    {{-- Curso --}}
+    <div class="mt-4">
+        <x-label for="course_id" value="Curso (opcional)"/>
+        <select id="course_id" class="w-full rounded border-gray-300" x-model="course_id">
+            <option value="" selected>Selecione um curso</option>
+            <template x-for="course in courses" :key="course.id">
+                <option :value="course.id" x-text="course.name ?? '-'"></option>
+            </template>
+        </select>
+        <template x-if="errors.course_id">
+            <p class="text-red-600 text-sm" x-text="errors.course_id[0]"></p>
+        </template>
+    </div>
 </div>

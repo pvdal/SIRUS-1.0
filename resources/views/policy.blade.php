@@ -8,7 +8,7 @@
                 <x-authentication-card-logo size="60" />
             </div>
 
-            <div class="w-full max-w-[1200px] mx-auto lg:pt-28 pt-20 lg:p-28 md:p-20 sm:p-16 p-10 bg-white shadow-md overflow-hidden sm:rounded-lg prose" >
+            <div class="w-full max-w-[1200px] mx-auto lg:pt-28 pt-20 lg:p-24 md:p-20 sm:p-16 p-10 bg-white shadow-md overflow-hidden sm:rounded-lg prose" >
                 {!! $policy !!}
             </div>
         </div>

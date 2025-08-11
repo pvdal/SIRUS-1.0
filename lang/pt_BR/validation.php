@@ -162,6 +162,7 @@ return [
     'ulid'                 => 'O campo :attribute deve ser um ULID válido.',
     'uuid'                 => 'O campo :attribute deve ser um UUID válido.',
 
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines
@@ -176,6 +177,17 @@ return [
     'custom' => [
         'attribute-name' => [
             'rule-name' => 'custom-message',
+        ],
+
+        'members.*' => [
+            'required' => 'O campo membros é obrigatório.',
+            'string' => 'O campo membros deve conter valores válidos.',
+            'exists' => 'Um dos membros selecionados não é válido.',
+        ],
+        'members' => [
+            'required' => 'O campo membros é obrigatório.',
+            'array' => 'O campo membros deve ser uma lista.',
+            'min' => 'O campo membros deve ter ao menos :min item(s).',
         ],
     ],
 
@@ -196,12 +208,13 @@ return [
         'body'      => 'conteúdo',
         'cell'      => 'célula',
         'city'      => 'cidade',
-        'coordinator_cpf' => 'cpf',
+        'coordinator_id' => 'coordenador',
         'country'   => 'país',
         'date'      => 'data',
         'day'       => 'dia',
         'email'     => 'e-mail',
         'excerpt'   => 'resumo',
+        'file'      => 'arquivo',
         'first_name' => 'primeiro nome',
         'gender'    => 'gênero',
         'course_id' => 'curso',
@@ -211,6 +224,7 @@ return [
         'nationality' => 'nacionalidade',
         'hour'      => 'hora',
         'last_name' => 'sobrenome',
+        'members'    => 'membros',
         'message'   => 'mensagem',
         'minute'    => 'minuto',
         'mobile'    => 'celular',
@@ -230,6 +244,7 @@ return [
         'street'    => 'rua',
         'subject'   => 'assunto',
         'text'      => 'texto',
+        'theme'      => 'tema',
         'time'      => 'hora',
         'title'     => 'título',
         'username'  => 'usuário',
