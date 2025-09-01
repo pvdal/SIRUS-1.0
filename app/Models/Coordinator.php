@@ -3,11 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Coordinator extends Model
 {
     protected $fillable = [
         'user_id',
+        'email',
+        'name',
     ];
 
     protected $casts = [
@@ -25,5 +28,10 @@ class Coordinator extends Model
     public function course()
     {
         return $this->hasOne(Course::class);
+    }
+
+    public function committee(): HasMany
+    {
+        return $this->hasMany(Committee::class);
     }
 }

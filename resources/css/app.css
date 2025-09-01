@@ -80,3 +80,12 @@ input[type=number] {
     scrollbar-width: thin;
     scrollbar-color: #a0aec0 #f1f1f1;
 }*/
+
+@media (max-width: 640px) {
+    .fc-col-header-cell-cushion {
+        font-size: 0.75rem; /* menor tamanho */
+        white-space: normal; /* permite quebrar linha */
+        line-height: 1.1;
+    }
+}
+

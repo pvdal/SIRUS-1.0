@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 return [
 
@@ -234,8 +234,10 @@ return [
         'company_name'   => 'razão social',
         'neighborhood' => 'bairro',
         'number'    => 'número',
+        'paper_id'  => 'trabalho',
         'password'  => 'senha',
         'phone'     => 'telefone',
+        'rubric_id' => 'rubrica',
         'second'    => 'segundo',
         'semester'  => 'semestre',
         'sex'       => 'sexo',

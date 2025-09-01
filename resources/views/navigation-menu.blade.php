@@ -5,18 +5,22 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
+                    <a href="{{ route('calendar') }}">
                         <x-application-mark size="40" />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
+                {{--
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 md:flex">
-                    <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                    <x-nav-link href="{{ route('calendar') }}" :active="request()->routeIs('calendar')">
+                        {{ __('Calendar') }}
                     </x-nav-link>
                 </div>
-                <x-coord-nav-options :menuComponent="'nav-link'" :menuClass="'hidden space-x-8 sm:-my-px sm:ms-10 md:flex'"/>
+                --}}
+                @if(auth()->user()->access_level === 3)
+                    <x-coord-nav-options :menuComponent="'nav-link'" :menuClass="'hidden space-x-8 sm:-my-px sm:ms-10 md:flex'"/>
+                @endif
             </div>
 
             <div class="hidden md:flex sm:items-center sm:ms-6">
@@ -140,8 +144,9 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden md:hidden">
         <!-- Navigation Links -->
-        <x-coord-nav-options :menuComponent="'responsive-nav-link'" :menuClass="'pt-2 pb-3 space-y-1'" />
-
+        @if(auth()->user()->access_level === 3)
+            <x-coord-nav-options :menuComponent="'responsive-nav-link'" :menuClass="'pt-2 pb-3 space-y-1'" />
+        @endif
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="flex items-center px-4">

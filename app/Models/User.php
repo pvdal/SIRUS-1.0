@@ -4,11 +4,17 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+// Filas de email
+use App\Notifications\QueuedVerifyEmail;
+use App\Notifications\QueuedResetPassword;
+use App\Notifications\QueuedSendPasswordNotification;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -66,16 +72,38 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
         ];
     }
-    public function coordinator()
+
+    public function sendEmailVerificationNotification(): void
+    {
+        $this->notify(new QueuedVerifyEmail);
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new QueuedResetPassword($token));
+    }
+
+    public function sendTemporaryPasswordNotification($password): void
+    {
+        $this->notify(new QueuedSendPasswordNotification($password));
+    }
+
+    public function coordinator(): HasOne
     {
         return $this->hasOne(Coordinator::class);
     }
-    public function professor()
+    public function professor(): HasOne
     {
         return $this->hasOne(Professor::class);
     }
-    public function student()
+    public function student(): HasOne
     {
         return $this->hasOne(Student::class);
+    }
+
+    // Relacionamento com ProfessorCommittee
+    public function professorCommittee(): HasMany
+    {
+        return $this->hasMany(ProfessorCommittee::class);
     }
 }

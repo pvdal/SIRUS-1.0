@@ -26,7 +26,7 @@ class EnsureTermsAccepted
             'is_livewire' => $request->header('X-Livewire'),
         ]);*/
 
-        if($user && is_null($user->terms_accepted_at) && !$request->is('dashboard'))
+        if($user && is_null($user->terms_accepted_at) && !$request->is('calendar'))
         {
             $livewireRequest = $request->header('X-Livewire') !== null;
             $allowedRoutes = [
@@ -47,7 +47,7 @@ class EnsureTermsAccepted
                 return $next($request);
             }
             // Redirecionar se não for uma dessas rotas
-            return redirect()->route('dashboard');
+            return redirect()->route('calendar');
         }
         return $next($request);
     }

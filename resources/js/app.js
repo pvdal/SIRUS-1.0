@@ -20,6 +20,9 @@ window.studentsData = studentsData;
 // Courses
 import {coursesData} from "./components/management/coursesData.js";
 window.coursesData = coursesData;
-//Groups
+// Groups
 import {groupsData} from "./components/management/groupsData.js";
 window.groupsData = groupsData;
+// Comitees
+import {committeesData} from "./components/management/committeesData.js";
+window.committeesData = committeesData;

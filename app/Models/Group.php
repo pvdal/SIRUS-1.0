@@ -22,4 +22,9 @@ class Group extends Model
     {
         return $this->hasMany(Paper::class,'group_id');
     }
+
+    public function professor_committee(): HasMany
+    {
+        return $this->hasMany(ProfessorCommittee::class,'group_id');
+    }
 }

@@ -1,4 +1,4 @@
-@props(['minWidth'])
+@props(['minWidth', 'searchWidth' => null,])
 
 @php
     $primaryMethod = $primaryAction['method'] ?? null;
@@ -24,14 +24,14 @@
 
 @endphp
 
-<div {{ $attributes->merge(['class' => 'flex flex-wrap justify-center md:justify-start pt-4 ps-2 pe-2 sm:ps-8 sm:me-8']) }}>
+<div {{ $attributes->merge(['class' => 'flex flex-wrap justify-center pt-4 ps-2 pe-2 sm:ps-4 sm:me-4']) }}>
     {{-- Botão principal (ex: Cadastrar) --}}
     @isset($primaryAction)
         <x-button
             id="create"
             type="button"
-            x-on:click="{!! $primaryButton !!} "
-            class="min-h-10 xs:me-2 mb-2 {{ $minWidth }}{{ $primaryAction['class'] ?? '' }}"
+            x-on:click="{!! $primaryButton !!} {{ $primaryAdd ?? '' }}"
+            class="min-h-10 me-1 xs:me-2 mb-2 {{ $minWidth }}{{ $primaryAction['class'] ?? '' }}"
         >
             {{ $primaryAction['label'] ?? 'Cadastrar' }}
         </x-button>
@@ -43,40 +43,80 @@
             type="search"
             x-model="{!! $searchModel !!}"
             @keydown.enter="{{ $loadFunction }}"
-            class="{{ $minWidth }} max-w-[170px] xs:max-w-full xs:w-4/12 xs:me-2 mb-2"
+            class="{{ $minWidth }} max-w-[170px] me-1 xs:max-w-full {{ $searchWidth ?? 'sm:w-4/12' }} xs:me-2 mb-2"
             placeholder="{{ $searchPlaceholder ?? 'Buscar...' }}"
         />
-    @endisset
-    {{-- Filtro de status --}}
-    @isset($statusFilter)
-        <select
-            id="statusFilter"
-            x-model="{!! $statusFilter !!}"
-            @change="{{ $loadFunction }}"
-            class="appearance-none border border-gray-300 rounded-lg {{ $minWidth }} px-4 py-2.5 xs:me-2 mb-2 text-sm text-gray-700 focus:ring-2 focus:ring-secondary-blue focus:border-secondary-blue  cursor-pointer"
-        >
-            <option value="">Todos</option>
-            <option value="1">Apenas ativos</option>
-            <option value="0">Apenas inativos</option>
-        </select>
-    @endisset
-    {{-- Filtro de período de cadastro --}}
-    @isset($registerPeriod)
-        <select
-            id="registerPeriod"
-            x-model="{!! $registerPeriod !!}"
-            @change="{{ $loadFunction }}"
-            class="appearance-none border border-gray-300 rounded-lg {{ $minWidth }} px-4 py-2.5 xs:me-2 mb-2 text-sm text-gray-700 focus:ring-2 focus:ring-secondary-blue focus:border-secondary-blue  cursor-pointer"
-        >
-            <option value="">Todas as datas</option>
-            <option value="today">Cadastrados hoje</option>
-            <option value="week">Últimos 7 dias</option>
-            <option value="month">Últimos 30 dias</option>
-        </select>
     @endisset
 
     {{-- Filtros extras (slots) --}}
     {{ $filters ?? '' }}
+
+    {{-- Filtro de status --}}
+    @isset($statusFilter)
+        <div id="statusFilter" class="relative block {{ $minWidth }} max-w-[170px] md:max-w-[200px] w-full me-1 xs:me-2">
+            <button @click="statusFilter.drop = !statusFilter.drop"
+                    class="flex justify-between items-center pr-4 min-w-[170px] max-w-[200px] w-full whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 rounded-lg
+                           text-left px-4 py-2.5 xs:me-2 mb-2 text-sm text-gray-700 focus:ring-2 focus:ring-secondary-blue
+                           focus:border-secondary-blue cursor-pointer"
+                    :title="statusFilter.name || 'Selecione em estado'">
+                <span class="truncate" x-text="statusFilter.name || 'Selecione em estado'"></span>
+                <x-lucide-chevron-down class="w-4 h-4 text-gray-700 flex-shrink-0 ms-auto" />
+            </button>
+
+            <ul x-show="statusFilter.drop"
+                @click.outside="statusFilter.drop = false"
+                class="absolute min-w-[170px] md:max-w-[200px] w-full border bg-white mt-1 rounded-lg max-h-60 overflow-auto z-50 scrollbar-custom">
+                <li @click="statusFilter.value = ''; statusFilter.name = 'Todos dos estados'; statusFilter.drop = false; {{ $loadFunction }}"
+                    class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 break-words cursor-pointer">
+                    Todos dos estados
+                </li>
+
+                <li @click="statusFilter.value = 1; statusFilter.name = 'Apenas ativos'; statusFilter.drop = false; {{ $loadFunction }}"
+                    class="px-4 py-1 text-sm text-gray-700 hover:bg-gray-100 break-words cursor-pointer"
+                    x-text="'Apenas ativos'">
+                </li>
+                <li @click="statusFilter.value = 0; statusFilter.name = 'Apenas inativos'; statusFilter.drop = false; {{ $loadFunction }}"
+                    class="px-4 py-1 text-sm text-gray-700 hover:bg-gray-100 break-words cursor-pointer"
+                    x-text="'Apenas inativos'">
+                </li>
+            </ul>
+        </div>
+    @endisset
+    {{-- Filtro de período de cadastro --}}
+    @isset($registerPeriod)
+        <div id="registerPeriod" class="relative block {{ $minWidth }} max-w-[170px] md:max-w-[200px] w-full me-1 xs:me-2">
+            <button @click="registerPeriod.drop = !registerPeriod.drop"
+                    class="flex justify-between items-center pr-4 min-w-[170px] max-w-[200px] w-full whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 rounded-lg
+                           text-left px-4 py-2.5 xs:me-2 mb-2 text-sm text-gray-700 focus:ring-2 focus:ring-secondary-blue
+                           focus:border-secondary-blue cursor-pointer"
+                    :title="registerPeriod.name || 'Selecione um periodo'">
+                <span class="truncate" x-text="registerPeriod.name || 'Selecione um periodo'"></span>
+                <x-lucide-chevron-down class="w-4 h-4 text-gray-700 flex-shrink-0 ms-auto" />
+            </button>
+
+            <ul x-show="registerPeriod.drop"
+                @click.outside="registerPeriod.drop = false"
+                class="absolute min-w-[170px] md:max-w-[200px] w-full border bg-white mt-1 rounded-lg max-h-60 overflow-auto z-50 scrollbar-custom">
+                <li @click="registerPeriod.value = ''; registerPeriod.name = 'Todas as datas'; registerPeriod.drop = false; {{ $loadFunction }}"
+                    class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 break-words cursor-pointer">
+                    Todas as datas
+                </li>
+
+                <li @click="registerPeriod.value = 'today'; registerPeriod.name = 'Cadastrados hoje'; registerPeriod.drop = false; {{ $loadFunction }}"
+                    class="px-4 py-1 text-sm text-gray-700 hover:bg-gray-100 break-words cursor-pointer"
+                    x-text="'Cadastrados hoje'">
+                </li>
+                <li @click="registerPeriod.value = 'week'; registerPeriod.name = 'Últimos 7 dias'; registerPeriod.drop = false; {{ $loadFunction }}"
+                    class="px-4 py-1 text-sm text-gray-700 hover:bg-gray-100 break-words cursor-pointer"
+                    x-text="'Últimos 7 dias'">
+                </li>
+                <li @click="registerPeriod.value = 'month'; registerPeriod.name = 'Últimos 30 dias'; registerPeriod.drop = false; {{ $loadFunction }}"
+                    class="px-4 py-1 text-sm text-gray-700 hover:bg-gray-100 break-words cursor-pointer"
+                    x-text="'Últimos 30 dias'">
+                </li>
+            </ul>
+        </div>
+    @endisset
 
     {{-- Botão limpar --}}
     @isset($clearAction)
@@ -87,7 +127,7 @@
                 {!! $clearButton !!}
                 {{ $loadFunction }}
             "
-            class="appearance-none border border-gray-300 rounded-lg {{ $minWidth }} px-6 py-2.5 mb-2 text-sm text-gray-700 focus:ring-2 focus:ring-secondary-blue focus:border-secondary-blue cursor-pointer inline-flex items-center justify-between gap-2"
+            class="appearance-none border border-gray-300 rounded-lg me-1 {{ $minWidth }} px-6 py-2.5 mb-2 xs:me-2 text-sm text-gray-700 focus:ring-2 focus:ring-secondary-blue focus:border-secondary-blue cursor-pointer inline-flex items-center justify-between gap-2"
         >
             {{ $clearAction['label'] ?? 'Limpar filtros' }}
             <x-lucide-trash-2 class="w-4 h-4 text-gray-500"/>

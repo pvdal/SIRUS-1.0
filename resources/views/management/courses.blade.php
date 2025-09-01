@@ -22,6 +22,7 @@
                 :statusFilter="'statusFilter'"
                 :registerPeriod="'registerPeriod'"
                 :loadFunction="'loadCourses()'"
+                :class="'md:justify-start'"
             />
             {{-- Componente com o conteúdo que o alpine vai manipular --}}
             <x-management.courses-content/>

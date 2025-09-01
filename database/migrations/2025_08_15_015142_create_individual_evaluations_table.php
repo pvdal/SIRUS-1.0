@@ -10,19 +10,20 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    //Tabela Avaliação_Banca
     public function up(): void
     {
-        Schema::create('evaluations', function (Blueprint $table) {
+        Schema::create('individual_evaluations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('criteria_id')->nullable()->constrained('criteria')->nullOnDelete();
             $table->foreignId('professor_committee_id')->nullable()->constrained('professors_committees')->nullOnDelete();
+            $table->string('ra', 13)->nullable();
+            $table->foreignId('criteria_id')->nullable()->constrained('criteria')->nullOnDelete();
             $table->decimal('grade', 5, 2);
             $table->text('comment')->nullable();
             $table->timestamps();
+
+            $table->foreign('ra')->references('ra')->on('students')->nullOnDelete();
         });
-        DB::statement('ALTER TABLE evaluations ALTER COLUMN created_at datetime2 NOT NULL');
-        DB::statement('ALTER TABLE evaluations ALTER COLUMN updated_at datetime2 NOT NULL');
+
     }
 
     /**
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('evaluations');
+        Schema::dropIfExists('individual_evaluations');
     }
 };

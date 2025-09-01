@@ -2,7 +2,12 @@
     {{-- Modal de cadastro --}}
     <x-custom-modal x-model="showCreateModal" @close="showCreateModal = false; clearFields('store')">
         <x-slot name="title">
-            Cadastrar novo professor
+            <template x-if="!edit">
+                <span>Cadastrar novo professor</span>
+            </template>
+            <template x-if="edit">
+                <span>Atualizar os dados do professor</span>
+            </template>
         </x-slot>
 
         <x-slot name="content">
@@ -67,7 +72,7 @@
             <template x-if="warningType === 'Confirmação'">
                 <x-danger-button type="button"
                     x-on:click="
-                        inactivate;
+                        toggleStatus();
                         $el.blur();
                     "
                 >
@@ -107,14 +112,17 @@
                     <td class="px-4 py-2 border text-center border-gray-300 hidden sm:table-cell" x-text="professor.email"></td>
                     <td class="px-4 py-2 border text-center border-gray-300 hidden sm:table-cell" x-text="professor.state ? 'Ativo' : 'Inativo'"></td>
                     <td class="px-4 py-2 border text-center border-gray-300">
-                        <x-button type="button" class="min-w-[98px]"
-                            x-on:click="
-                                showProfessor(professor.user_id);
-                                $el.blur();
-                            "
-                        >
-                            Alterar
-                        </x-button>
+                        <template x-if="professor.state">
+                            <x-button type="button" class="min-w-[98px]"
+                                x-on:click="
+                                    showProfessor(professor.user_id);
+                                    $el.blur();
+                                "
+                            >
+                                Alterar
+                            </x-button>
+                        </template>
+
                         <template x-if="professor.state">
                             <x-danger-button type="button" class="min-w-[98px]" x-bind:disabled="isInactivating(professor.user_id)"
                                 x-on:click="
@@ -133,7 +141,7 @@
                         <template x-if="!professor.state">
                             <x-management.activate-button type="button" class="min-w-[98px]" x-bind:disabled="isActivating(professor.user_id)"
                                 x-on:click="
-                                    activate(professor.user_id);
+                                    toggleStatus(professor.user_id);
                                     $el.blur();
                                 "
                             >

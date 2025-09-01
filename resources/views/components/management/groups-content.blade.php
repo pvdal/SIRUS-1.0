@@ -1,8 +1,13 @@
 <div>
     {{-- Modal de cadastro --}}
-    <x-custom-modal x-model="showCreateModal" @close="showCreateModal = false; clearFields('store')">
+    <x-custom-modal x-model="showCreateModal">
         <x-slot name="title">
-            Cadastrar novo grupo
+            <template x-if="!edit">
+                <span>Cadastrar novo grupo</span>
+            </template>
+            <template x-if="edit">
+                <span>Atualizar os dados do grupo</span>
+            </template>
         </x-slot>
 
         <x-slot name="content">
@@ -67,7 +72,7 @@
             <template x-if="warningType === 'Confirmação'">
                 <x-danger-button type="button"
                     x-on:click="
-                        inactivate;
+                        toggleStatus();
                         $el.blur();
                     "
                 >
@@ -88,7 +93,11 @@
                     <div class="flex flex-col justify-between border border-gray-300 rounded-lg shadow bg-white/80 hover:bg-gray-50
                          w-full xs:w-[400px] md:w-auto max-w-[450px] backdrop-blur-sm transition-all duration-300 h-80 overflow-hidden hover:shadow-md"
                          x-bind:class="{ '!bg-green-50': group.origin === 'new' }">
+                        <div class="max-h-[30px] w-full flex items-center px-6">
+                            <span x-text="group.id" class="text-sm text-gray-600"></span>
+                        </div>
 
+                        <hr class="mt-0 block">
                         {{-- Cabeçalho --}}
                         <div class="flex justify-start items-center text-gray-800 h-[5rem] py-5 px-6 rounded-t-lg max-w-full">
                             <h3 class="text-lg font-semibold line-clamp-2 leading-snug" x-text="group.theme"></h3>
@@ -105,7 +114,10 @@
                         <div class="overflow-auto flex-1 scrollbar-custom border px-6 mx-5 rounded-md">
                             <ul class="space-y-1 text-gray-600 text-sm py-1">
                                 <template x-for="student in group.students" :key="student.ra">
-                                    <li x-text="student.name"></li>
+                                    <li
+                                        x-text="student.name"
+                                        :class="student.state == 0 ? 'line-through text-gray-400' : ''"
+                                    ></li>
                                 </template>
                             </ul>
                         </div>
@@ -127,14 +139,15 @@
                         <hr class="border-t border-gray-300 mx-3" />
 
                         {{-- Rodapé --}}
-                        <div class="flex flex-wrap gap-3 items-center justify-between px-3 py-2">
+                        <div class="flex flex-wrap gap-3 items-center justify-between px-5 py-2">
                             <span
-                                class="text-xs ms-4 py-1 px-3 font-bold rounded-s-lg rounded-e-lg"
+                                class="text-xs py-1 px-3 font-bold rounded-s-lg rounded-e-lg"
                                 :class="group.state === 1
                                     ? 'bg-secondary-blue text-white'
                                     : 'bg-gray-100 text-gray-600'"
                                 x-text="group.state === 1 ? 'Ativo' : 'Inativo'"
                             ></span>
+
                             <div class="flex flex-wrap gap-2 ms-4">
                                 <template x-if="group.state">
                                     <x-button type="button" class="min-w-[90px]"
@@ -164,7 +177,7 @@
                                 <template x-if="!group.state">
                                     <x-management.activate-button type="buton" class="min-w-[98px]" x-bind:disabled="isActivating(group.id)"
                                         x-on:click="
-                                            activate(group.id);
+                                            toggleStatus(group.id);
                                             $el.blur();
                                         "
                                     >

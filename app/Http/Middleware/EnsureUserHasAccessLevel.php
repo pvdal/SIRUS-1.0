@@ -22,7 +22,7 @@ class EnsureUserHasAccessLevel
         }
 
         if (!in_array($user->access_level, $levels)) {
-            return redirect('/login');
+            return redirect('/calendar');
         }
 
         return $next($request);

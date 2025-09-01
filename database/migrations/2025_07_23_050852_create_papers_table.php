@@ -15,15 +15,13 @@ return new class extends Migration
         Schema::create('papers', function (Blueprint $table) {
             $table->id();
             $table->string('title', 150);
-            $table->foreignId('group_id')->constrained()->onDelete('cascade');
+            $table->foreignId('group_id')->constrained('groups')->onDelete('cascade');
             $table->string('file_path', 180);
             $table->timestamp('submitted_at')->nullable();
+            $table->boolean('state')->default(true);
             $table->timestamps();
         });
 
-        DB::statement('ALTER TABLE papers ALTER COLUMN submitted_at datetime2');
-        DB::statement('ALTER TABLE papers ALTER COLUMN created_at datetime2 NOT NULL');
-        DB::statement('ALTER TABLE papers ALTER COLUMN updated_at datetime2 NOT NULL');
     }
 
     /**

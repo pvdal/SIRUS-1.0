@@ -13,7 +13,7 @@ class EventController extends Controller
     {
         session(['custom_token' => bin2hex(random_bytes(16))]);
 
-        return view('agenda.calendar');
+        return view('calendar');
     }
 
     public function events(Request $request): jsonResponse

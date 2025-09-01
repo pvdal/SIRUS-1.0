@@ -23,9 +23,6 @@ return new class extends Migration
 
         });
 
-        DB::statement('ALTER TABLE courses ALTER COLUMN created_at datetime2 NOT NULL');
-        DB::statement('ALTER TABLE courses ALTER COLUMN updated_at datetime2 NOT NULL');
-        DB::statement("ALTER TABLE courses ADD CONSTRAINT chk_shift CHECK (shift IN ('morning', 'afternoon', 'night'))");
     }
 
     /**
@@ -34,7 +31,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('courses', function (Blueprint $table) {
-            $table->dropForeign(['coordinator_cpf']);
+            $table->dropForeign(['coordinator_id']);
         });
 
         Schema::dropIfExists('courses');

@@ -25,6 +25,9 @@
             <x-input id="password_confirmation" type="password" class="mt-1 block w-full" wire:model="state.password_confirmation" autocomplete="new-password" />
             <x-input-error for="password_confirmation" class="mt-2" />
         </div>
+        <div class="col-span-6 sm:col-span-4">
+            <p class="block font-medium text-sm text-red-500">A senha deve conter pelo menos um símbolo uma letra maiúscula e uma letra minúscula.</p>
+        </div>
     </x-slot>
 
     <x-slot name="actions">

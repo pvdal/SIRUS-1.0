@@ -4,8 +4,26 @@ export function studentsData() {
         edit: false,
         showWarningModal: false,
         searchTerm: '',
-        statusFilter: '',
-        registerPeriod: '',
+        statusFilter: {
+            value: '',
+            name: '',
+            drop: false,
+        },
+        registerPeriod: {
+            value: '',
+            name: '',
+            drop: false,
+        },
+        groupFilter: {
+            id:'',
+            theme:'',
+            drop: false,
+        },
+        courseFilter: {
+            id: '',
+            name: '',
+            drop: false,
+        },
 
         ra: '',
         user_id: '',
@@ -14,6 +32,8 @@ export function studentsData() {
         semester: '',
         group_id: '',
         course_id: '',
+        created_at: '',
+        updated_at: '',
 
         errors: {},
         saving: false,
@@ -53,10 +73,20 @@ export function studentsData() {
                     this.showBanner = false;
                 }
             });
+
+            /*this.$watch('searchTerm', (value) => {
+                if(!value) {
+                    this.loadStudents();
+                }
+            });*/
         },
 
         async loadStudents(page = 1) {
             this.loading = true;
+
+            // muda o cursor para "aguardando"
+            document.body.style.cursor = 'wait';
+
             this.errors = {};
             this.newStudents = [];
 
@@ -64,8 +94,10 @@ export function studentsData() {
                 const params = {
                     page,
                     search: this.searchTerm,
-                    status: this.statusFilter,
-                    period: this.registerPeriod,
+                    status: this.statusFilter.value,
+                    period: this.registerPeriod.value,
+                    course: this.courseFilter.id,
+                    group: this.groupFilter.id,
                 };
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
                 const response = await axios.get(`/${requestPrefix}/students/show`, {params})
@@ -86,6 +118,8 @@ export function studentsData() {
                 }
             } finally {
                 this.loading = false;
+                // volta o cursor ao normal
+                document.body.style.cursor = 'default';
             }
         },
 
@@ -111,6 +145,18 @@ export function studentsData() {
             this.group_id = student.group_id || '';
             this.course_id = student.course_id || '';
 
+            // Função para timestamps
+            function formatDateTime(label, datetime, compare = null) {
+                if (!datetime || (compare && datetime === compare)) return '';
+
+                const date = new Date(datetime);
+                return `${label}: ${date.toLocaleDateString('pt-BR', { year: 'numeric', month: '2-digit', day: '2-digit' })} às ${date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}`;
+            }
+
+            // uso:
+            this.created_at = formatDateTime('Criado em', student.created_at);
+            this.updated_at = formatDateTime('Atualizado em', student.updated_at, student.created_at);
+
             this.errors = {};
             this.showBanner = false;
 
@@ -119,11 +165,12 @@ export function studentsData() {
         },
 
         async saveStudent() {
+            let update = this.edit;
             let url = '/students/save';
             let method = 'post';
             let id = null;
 
-            if (this.edit && this.studentId) {
+            if (update && this.studentId) {
                 id = this.studentId;
                 url = `/students/${id}/update`;  // rota para atualizar
                 method = 'put'; // 'post'/'put'/'patch' conforme backend
@@ -133,19 +180,30 @@ export function studentsData() {
                 url: url,
                 method,
                 payload: {
-                    ra: this.ra,
+                    ra: this.ra ? this.ra.toString().replace(/\D/g, '') : null,
                     name: this.name,
                     email: this.email,
-                    semester: this.semester,
                     group_id: this.group_id,
                     course_id: this.course_id,
                 },
                 contexto: this,
-                campoLista: this.edit ? null : 'newStudents',
-                clearFields: !this.edit,
+                campoLista: update ? null : 'newStudents',
+                clearFields: !update,
             });
 
-            if(this.edit && savedData) {
+            if(update && savedData) {
+                // Função para timestamps
+                function formatDateTime(label, datetime, compare = null) {
+                    if (!datetime || (compare && datetime === compare)) return '';
+
+                    const date = new Date(datetime);
+                    return `${label}: ${date.toLocaleDateString('pt-BR', { year: 'numeric', month: '2-digit', day: '2-digit' })} às ${date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}`;
+                }
+
+                // uso:
+                this.created_at = formatDateTime('Criado em', savedData.created_at);
+                this.updated_at = formatDateTime('Atualizado em', savedData.updated_at, savedData.created_at);
+
                 this.students = this.students.map(student =>
                     student.ra === savedData.ra ? savedData : student
                 );
@@ -160,61 +218,47 @@ export function studentsData() {
             return this.inactivatingIds.includes(id);
         },
 
-        async inactivate() {
-            if (!this.studentId || this.inactivatingIds.includes(this.studentId)) return;
-
-            const id = this.studentId;
-            this.studentId = null;
-            this.inactivatingIds.push(id);
-            this.showWarningModal = false;
-
-            try {
-                const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
-                const response = await axios.put(`/${requestPrefix}/students/${id}/inactivate`);
-                const updateState = (student) => {
-                    if(student.user_id === id) {
-                        student.state = 0;
-                    }
-                }
-
-                this.students.forEach(updateState);
-                this.newStudents.forEach(updateState);
-            } catch (error) {
-                console.error('Erro ao inativar: ', error);
-                const msg = error.response?.data?.message || 'Erro inesperado.';
-                window.dispatchEvent(new CustomEvent('banner-message', {
-                    detail: {
-                        style: 'danger',
-                        message: msg
-                    }
-                }));
-            } finally {
-                this.inactivatingIds = this.inactivatingIds.filter(item => item !== id);
-            }
-        },
-
         isActivating(id) {
             return this.activatingIds.includes(id);
         },
 
-        async activate(id) {
-            if (!id || this.activatingIds.includes(id)) return;
+        async toggleStatus(id = null) {
+            const targetId = id ?? this.studentId;
 
-            this.activatingIds.push(id);
+            const student = this.students.find(s => s.user_id === targetId)
+                || this.newStudents.find(s => s.user_id === targetId);
+
+            if (!student) return;
+
+            if (this.inactivatingIds.includes(targetId) || this.activatingIds.includes(targetId)) return;
+
+            let action;
+
+            if(student.state === 1) {
+                this.studentId = null;
+                this.inactivatingIds.push(targetId);
+                this.showWarningModal = false;
+                action = 'inactivate';
+            } else {
+                this.activatingIds.push(targetId);
+                action = 'activate';
+            }
 
             try {
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
-                const response = await axios.put(`/${requestPrefix}/students/${id}/activate`);
-                const updateState = (student) => {
-                    if(student.user_id === id) {
-                        student.state = 1;
+                const response = await axios.put(`/${requestPrefix}/students/${targetId}/${action}`);
+                const updateState = (s) => {
+                    if(s.user_id === targetId) {
+                        s.state = response.data.state;
+                        s.created_at = response.data.created_at;
+                        s.updated_at = response.data.updated_at;
                     }
                 }
 
                 this.students.forEach(updateState);
                 this.newStudents.forEach(updateState);
             } catch (error) {
-                console.error('Erro ao ativar: ', error);
+                console.error('Erro ao alterar status: ', error);
                 const msg = error.response?.data?.message || 'Erro inesperado.'
                 window.dispatchEvent(new CustomEvent('banner-message', {
                     detail: {
@@ -223,7 +267,8 @@ export function studentsData() {
                     }
                 }));
             } finally {
-                this.activatingIds = this.activatingIds.filter(item => item !== id);
+                this.inactivatingIds = this.inactivatingIds.filter(item => item !== targetId);
+                this.activatingIds = this.activatingIds.filter(item => item !== targetId);
             }
         },
 
@@ -241,8 +286,10 @@ export function studentsData() {
                     break;
                 case 'filters':
                     this.searchTerm = '';
-                    this.statusFilter = '';
-                    this.registerPeriod = '';
+                    this.statusFilter = {};
+                    this.registerPeriod = {};
+                    this.groupFilter = {};
+                    this.courseFilter = {};
                     break;
                 case 'warning':
                     this.warningType = '';

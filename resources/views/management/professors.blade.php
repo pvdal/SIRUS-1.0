@@ -23,6 +23,7 @@
                     :status-filter="'statusFilter'"
                     :register-period="'registerPeriod'"
                     :load-function="'loadProfessors()'"
+                    :class="'md:justify-start'"
                 />
                 {{-- Componente com o conteúdo que o alpine vai manipular --}}
                 <x-management.professors-content/>

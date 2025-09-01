@@ -4,11 +4,21 @@ export function professorsData() {
         edit: false,
         showWarningModal: false,
         searchTerm: '',
-        statusFilter: '',
-        registerPeriod: '',
+        statusFilter: {
+            value: '',
+            name: '',
+            drop: false,
+        },
+        registerPeriod: {
+            value: '',
+            name: '',
+            drop: false,
+        },
 
         name: '',
         email: '',
+        created_at: '',
+        updated_at: '',
 
         errors: {},
         saving: false,
@@ -36,6 +46,12 @@ export function professorsData() {
 
             this.empty = !Array.isArray(professors) || professors.length === 0;
 
+            /*this.$watch('searchTerm', (value) => {
+                if(!value) {
+                    this.loadProfessors();
+                }
+            });*/
+
             this.$watch('showCreateModal', (value) => {
                 if(!value) {
                     this.edit = false;
@@ -48,6 +64,10 @@ export function professorsData() {
 
         async loadProfessors(page = 1) {
             this.loading = true;
+
+            // muda o cursor para "aguardando"
+            document.body.style.cursor = 'wait';
+
             this.errors = {};
             this.newProfessors = [];
 
@@ -55,8 +75,8 @@ export function professorsData() {
                 const params = {
                     page,
                     search: this.searchTerm,
-                    status: this.statusFilter,
-                    period: this.registerPeriod,
+                    status: this.statusFilter.value,
+                    period: this.registerPeriod.value,
                 };
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
                 const response = await axios.get(`/${requestPrefix}/professors/show`, { params });
@@ -75,6 +95,8 @@ export function professorsData() {
                 }
             } finally {
                 this.loading = false;
+                // volta o cursor ao normal
+                document.body.style.cursor = 'default';
             }
         },
 
@@ -95,6 +117,18 @@ export function professorsData() {
             this.name = professor.name || '';
             this.email = professor.email || '';
 
+            // Função para timestamps
+            function formatDateTime(label, datetime, compare = null) {
+                if (!datetime || (compare && datetime === compare)) return '';
+
+                const date = new Date(datetime);
+                return `${label}: ${date.toLocaleDateString('pt-BR', { year: 'numeric', month: '2-digit', day: '2-digit' })} às ${date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}`;
+            }
+
+            // uso:
+            this.created_at = formatDateTime('Criado em', professor.created_at);
+            this.updated_at = formatDateTime('Atualizado em', professor.updated_at, professor.created_at);
+
             this.errors = {};
             this.showBanner = false;
 
@@ -103,11 +137,12 @@ export function professorsData() {
         },
 
         async saveProfessor() {
+            let update = this.edit;
             let url = '/professors/save';
             let method = 'post';
             let id = null;
 
-            if (this.edit && this.professorId) {
+            if (update && this.professorId) {
                 id = this.professorId;
                 url = `/professors/${id}/update`;  // rota para atualizar
                 method = 'put'; // 'post'/'put'/'patch' conforme backend
@@ -121,11 +156,23 @@ export function professorsData() {
                     email: this.email,
                 },
                 contexto: this,
-                campoLista: this.edit ? null : 'newProfessors',
-                clearFields: !this.edit,
+                campoLista: update ? null : 'newProfessors',
+                clearFields: !update,
             });
 
-            if(this.edit && savedData) {
+            if(update && savedData) {
+                // Função para timestamps
+                function formatDateTime(label, datetime, compare = null) {
+                    if (!datetime || (compare && datetime === compare)) return '';
+
+                    const date = new Date(datetime);
+                    return `${label}: ${date.toLocaleDateString('pt-BR', { year: 'numeric', month: '2-digit', day: '2-digit' })} às ${date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}`;
+                }
+
+                // uso:
+                this.created_at = formatDateTime('Criado em', savedData.created_at);
+                this.updated_at = formatDateTime('Atualizado em', savedData.updated_at, savedData.created_at);
+
                 this.professors = this.professors.map(professor =>
                     professor.id === savedData.id ? savedData : professor
                 );
@@ -140,61 +187,47 @@ export function professorsData() {
             return this.inactivatingIds.includes(id)
         },
 
-        async inactivate() {
-            if (!this.professorId || this.inactivatingIds.includes(this.professorId)) return;
-
-            const id = this.professorId;
-            this.professorId = null;
-            this.inactivatingIds.push(id);
-            this.showWarningModal = false;
-
-            try {
-                const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
-                const response= await axios.put(`/${requestPrefix}/professors/${id}/inactivate`)
-                const updateState = (professor) => {
-                    if(professor.user_id === id) {
-                        professor.state = 0;
-                    }
-                }
-
-                this.professors.forEach(updateState);
-                this.newProfessors.forEach(updateState);
-            } catch (error) {
-                console.error('Erro ao inativar:', error);
-                const msg = error.response?.data?.message || 'Erro inesperado.';
-                window.dispatchEvent(new CustomEvent('banner-message', {
-                    detail: {
-                        style: 'danger',
-                        message: msg
-                    }
-                }));
-            } finally {
-                this.inactivatingIds = this.inactivatingIds.filter(item => item !== id);
-            }
-        },
-
         isActivating(id) {
             return this.activatingIds.includes(id)
         },
 
-        async activate(id) {
-            if(!id || this.activatingIds.includes(id)) return;
+        async toggleStatus(id = null) {
+            const targetId = id ?? this.professorId;
 
-            this.activatingIds.push(id);
+            const professor = this.professors.find(p => p.user_id === targetId)
+                || this.newProfessors.find(p => p.user_id === targetId);
+
+            if (!professor) return;
+
+            if (this.inactivatingIds.includes(targetId) || this.activatingIds.includes(targetId)) return;
+
+            let action;
+
+            if(professor.state === 1) {
+                this.professorId = null;
+                this.inactivatingIds.push(targetId);
+                this.showWarningModal = false;
+                action = 'inactivate';
+            } else {
+                this.activatingIds.push(targetId);
+                action = 'activate';
+            }
 
             try {
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
-                const response = await axios.put(`/${requestPrefix}/professors/${id}/activate`);
-                const updateState = (professor) => {
-                    if(professor.user_id === id) {
-                        professor.state = 1;
+                const response = await axios.put(`/${requestPrefix}/professors/${targetId}/${action}`);
+                const updateState = (p) => {
+                    if(p.user_id === targetId) {
+                        p.state = response.data.state;
+                        p.created_at = response.data.created_at;
+                        p.updated_at = response.data.updated_at;
                     }
                 }
 
                 this.professors.forEach(updateState);
                 this.newProfessors.forEach(updateState);
             } catch (error) {
-                console.error('Erro ao ativar: ', error);
+                console.error('Erro ao alterar status: ', error);
                 const msg = error.response?.data?.message || 'Erro inesperado.'
                 window.dispatchEvent(new CustomEvent('banner-message', {
                     detail: {
@@ -203,7 +236,8 @@ export function professorsData() {
                     }
                 }));
             } finally {
-                this.activatingIds = this.activatingIds.filter(item => item !== id);
+                this.inactivatingIds = this.inactivatingIds.filter(item => item !== targetId);
+                this.activatingIds = this.activatingIds.filter(item => item !== targetId);
             }
         },
 
@@ -213,11 +247,12 @@ export function professorsData() {
                     this.name = '';
                     this.email = '';
                     this.errors = {};
+                    this.showBanner = false;
                     break;
                 case 'filters':
                     this.searchTerm = '';
-                    this.statusFilter = '';
-                    this.registerPeriod = '';
+                    this.statusFilter = {};
+                    this.registerPeriod = {};
                     break;
                 case 'warning':
                     this.warningType = '';

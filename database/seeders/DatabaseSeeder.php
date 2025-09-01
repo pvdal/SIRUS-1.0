@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
         Student::factory()->count(10)->create();
         $this->call(EventsTableSeeder::class);
+        $this->call(MemberTypesTableSeeder::class);
 
         $user = User::factory()->create([
             'name' => 'Pedro Lima',

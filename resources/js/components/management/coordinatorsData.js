@@ -4,11 +4,21 @@ export function coordinatorsData() {
         edit: false,
         showWarningModal: false,
         searchTerm: '',
-        statusFilter: '',
-        registerPeriod: '',
+        statusFilter: {
+            value: '',
+            name: '',
+            drop: false,
+        },
+        registerPeriod: {
+            value: '',
+            name: '',
+            drop: false,
+        },
 
         name: '',
         email: '',
+        created_at: '',
+        updated_at: '',
 
         errors: {},
         saving: false,
@@ -36,6 +46,12 @@ export function coordinatorsData() {
 
             this.empty = !Array.isArray(coordinators) || coordinators.length === 0;
 
+            /*this.$watch('searchTerm', (value) => {
+                if(!value) {
+                    this.loadCoordinators();
+                }
+            });*/
+
             this.$watch('showCreateModal', (value) => {
                 if(!value) {
                     this.edit = false;
@@ -48,6 +64,10 @@ export function coordinatorsData() {
 
         async loadCoordinators(page = 1) {
             this.loading = true;
+
+            // muda o cursor para "aguardando"
+            document.body.style.cursor = 'wait';
+
             this.errors = {};
             this.newCoordinators = [];
 
@@ -55,8 +75,8 @@ export function coordinatorsData() {
                 const params = {
                     page,
                     search: this.searchTerm,
-                    status: this.statusFilter,
-                    period: this.registerPeriod,
+                    status: this.statusFilter.value,
+                    period: this.registerPeriod.value,
                 };
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
                 const response = await axios.get(`/${requestPrefix}/coordinators/show`, {params})
@@ -75,6 +95,8 @@ export function coordinatorsData() {
                 }
             } finally {
                 this.loading = false;
+                // volta o cursor ao normal
+                document.body.style.cursor = 'default';
             }
         },
 
@@ -95,6 +117,18 @@ export function coordinatorsData() {
             this.name = coordinator.name || '';
             this.email = coordinator.email || '';
 
+            // Função para timestamps
+            function formatDateTime(label, datetime, compare = null) {
+                if (!datetime || (compare && datetime === compare)) return '';
+
+                const date = new Date(datetime);
+                return `${label}: ${date.toLocaleDateString('pt-BR', { year: 'numeric', month: '2-digit', day: '2-digit' })} às ${date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}`;
+            }
+
+            // uso:
+            this.created_at = formatDateTime('Criado em', coordinator.created_at);
+            this.updated_at = formatDateTime('Atualizado em', coordinator.updated_at, coordinator.created_at);
+
             this.errors = {};
             this.showBanner = false;
 
@@ -103,11 +137,12 @@ export function coordinatorsData() {
         },
 
         async saveCoordinator() {
+            let update = this.edit;
             let url = '/coordinators/save';
             let method = 'post';
             let id = null;
 
-            if (this.edit && this.coordinatorId) {
+            if (update && this.coordinatorId) {
                 id = this.coordinatorId;
                 url = `/coordinators/${id}/update`;  // rota para atualizar
                 method = 'put'; // 'post'/'put'/'patch' conforme backend
@@ -121,11 +156,23 @@ export function coordinatorsData() {
                     email: this.email,
                 },
                 contexto: this,
-                campoLista: this.edit ? null : 'newCoordinators',
-                clearFields: !this.edit,
+                campoLista: update ? null : 'newCoordinators',
+                clearFields: !update,
             });
 
-            if(this.edit && savedData) {
+            if(update && savedData) {
+                // Função para timestamps
+                function formatDateTime(label, datetime, compare = null) {
+                    if (!datetime || (compare && datetime === compare)) return '';
+
+                    const date = new Date(datetime);
+                    return `${label}: ${date.toLocaleDateString('pt-BR', { year: 'numeric', month: '2-digit', day: '2-digit' })} às ${date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}`;
+                }
+
+                // uso:
+                this.created_at = formatDateTime('Criado em', savedData.created_at);
+                this.updated_at = formatDateTime('Atualizado em', savedData.updated_at, savedData.created_at);
+
                 this.coordinators = this.coordinators.map(coordinator =>
                     coordinator.id === savedData.id ? savedData : coordinator
                 );
@@ -140,28 +187,48 @@ export function coordinatorsData() {
             return this.inactivatingIds.includes(id);
         },
 
-        async inactivate() {
-            if (!this.coordinatorId || this.inactivatingIds.includes(this.coordinatorId)) return;
+        isActivating(id) {
+            return this.activatingIds.includes(id);
+        },
 
-            const id = this.coordinatorId;
-            this.coordinatorId = null;
-            this.inactivatingIds.push(id)
-            this.showWarningModal = false;
+        async toggleStatus(id = null) {
+            const targetId = id ?? this.coordinatorId;
+
+            const coordinator = this.coordinators.find(c => c.user_id === targetId)
+                || this.newCoordinators.find(c => c.user_id === targetId);
+
+            if (!coordinator) return;
+
+            if (this.inactivatingIds.includes(targetId) || this.activatingIds.includes(targetId)) return;
+
+            let action;
+
+            if(coordinator.state === 1) {
+                this.coordinatorId = null;
+                this.inactivatingIds.push(targetId);
+                this.showWarningModal = false;
+                action = 'inactivate';
+            } else {
+                this.activatingIds.push(targetId);
+                action = 'activate';
+            }
 
             try {
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
-                const response = await axios.put(`/${requestPrefix}/coordinators/${id}/inactivate`);
-                const updateState = (coordinator) => {
-                    if(coordinator.user_id === id) {
-                        coordinator.state = 0;
+                const response = await axios.put(`/${requestPrefix}/coordinators/${targetId}/${action}`);
+                const updateState = (c) => {
+                    if(c.user_id === targetId) {
+                        c.state = response.data.state;
+                        c.created_at = response.data.created_at;
+                        c.updated_at = response.data.updated_at;
                     }
                 }
 
                 this.coordinators.forEach(updateState);
                 this.newCoordinators.forEach(updateState);
             } catch (error) {
-                console.error('Erro ao inativar:' . error);
-                const msg = error.response?.data?.message || 'Erro inesperado.';
+                console.error('Erro ao alterar status: ', error);
+                const msg = error.response?.data?.message || 'Erro inesperado.'
                 window.dispatchEvent(new CustomEvent('banner-message', {
                     detail: {
                         style: 'danger',
@@ -169,41 +236,8 @@ export function coordinatorsData() {
                     }
                 }));
             } finally {
-                this.inactivatingIds = this.inactivatingIds.filter(item => item !== id);
-            }
-        },
-
-        isActivating(id) {
-            return this.activatingIds.includes(id);
-        },
-
-        async activate(id) {
-            if(!id || this.activatingIds.includes(id)) return;
-
-            this.activatingIds.push(id);
-
-            try {
-                const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
-                const response = await axios.put(`/${requestPrefix}/coordinators/${id}/activate`);
-                const updateState = (coordinator) => {
-                    if(coordinator.user_id === id) {
-                        coordinator.state = 1;
-                    }
-                }
-
-                this.coordinators.forEach(updateState);
-                this.newCoordinators.forEach(updateState);
-            } catch (error) {
-                console.error('Erro ao ativar: ', error)
-                const msg = error.response?.data?.message || 'Erro inesperado.'
-                window.dispatchEvent(new CustomEvent ('banner-message', {
-                    detail: {
-                        style: 'danger',
-                        message: msg,
-                    }
-                }));
-            } finally {
-                this.activatingIds = this.activatingIds.filter(item => item !== id)
+                this.inactivatingIds = this.inactivatingIds.filter(item => item !== targetId);
+                this.activatingIds = this.activatingIds.filter(item => item !== targetId);
             }
         },
 
@@ -213,11 +247,12 @@ export function coordinatorsData() {
                     this.name = '';
                     this.email = '';
                     this.errors = {};
+                    this.showBanner = false;
                     break;
                 case 'filters':
                     this.searchTerm = '';
-                    this.statusFilter = '';
-                    this.registerPeriod = '';
+                    this.statusFilter = {};
+                    this.registerPeriod = {};
                     break;
                 case 'warning':
                     this.warningType = '';

@@ -3,7 +3,8 @@
     <div class="mt-4">
         <x-label for="name" value="Nome do Curso"/>
         <x-input id="name" type="text" autocomplete="name" class="w-full"
-                 placeholder="Nome do curso" x-model="name"/>
+                 placeholder="Nome do curso" x-model="name"
+                 @keydown.enter="saveCourse"/>
         <template x-if="errors.name">
             <p class="text-red-600 text-sm" x-text="errors.name[0]"></p>
         </template>
@@ -37,8 +38,9 @@
         </template>
     </div>
 
+    {{-- Timestamps --}}
     <template x-if="edit && (created_at || updated_at)">
-        <div class="mt-3">
+        <div class="mt-5">
             <p class="text-sm text-gray-800" x-text="created_at"></p>
             <p class="text-sm text-gray-800" x-text="updated_at"></p>
         </div>

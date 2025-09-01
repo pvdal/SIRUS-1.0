@@ -26,18 +26,14 @@ return new class extends Migration
             $table->string('profile_photo_path', 2048)->nullable();
             $table->timestamps();
         });
-        // Altera as colunas timestamp para datetime2 no SQL Server
-        DB::statement('ALTER TABLE users ALTER COLUMN email_verified_at datetime2 NULL');
-        DB::statement('ALTER TABLE users ALTER COLUMN terms_accepted_at datetime2 NULL');
-        DB::statement('ALTER TABLE users ALTER COLUMN created_at datetime2 NOT NULL');
-        DB::statement('ALTER TABLE users ALTER COLUMN updated_at datetime2 NOT NULL');
+
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });
-        DB::statement('ALTER TABLE password_reset_tokens ALTER COLUMN created_at datetime2 NULL');
+
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();

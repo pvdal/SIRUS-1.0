@@ -20,7 +20,7 @@ class Course extends Model
 
     // App\Models\Course.php
 
-    public function getShiftPtAttribute()
+    public function getShiftPtAttribute(): string
     {
         return match (strtolower($this->shift)) {
             'morning' => 'Manhã',

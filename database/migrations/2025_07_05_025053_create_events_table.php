@@ -18,13 +18,10 @@ return new class extends Migration
             $table->dateTime('start');
             $table->dateTime('end')->nullable();
             $table->string('color',45)->nullable();
+            $table->boolean('state')->default(true);
             $table->timestamps();
         });
 
-        DB::statement('ALTER TABLE events ALTER COLUMN start datetime2');
-        DB::statement('ALTER TABLE events ALTER COLUMN [end] datetime2 NULL');
-        DB::statement('ALTER TABLE events ALTER COLUMN created_at datetime2');
-        DB::statement('ALTER TABLE events ALTER COLUMN updated_at datetime2');
     }
 
     /**

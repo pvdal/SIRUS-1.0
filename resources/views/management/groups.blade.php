@@ -24,7 +24,7 @@
                 paperUrl = '';
                 $dispatch('toggle-paper', false);
         "
-        x-init='init(@json($groups),{{ $current_page }}, {{ $last_page }})'
+        x-init='init(@json($groups),@json($students),{{ $current_page }}, {{ $last_page }})'
     >
         {{-- Grupos cadastrados --}}
         <template x-if="showGroupCards">
@@ -37,6 +37,7 @@
                     :status-filter="'statusFilter'"
                     :register-period="'registerPeriod'"
                     :load-function="'loadGroups()'"
+                    :class="'md:justify-start'"
                 />
                 {{-- Componente com o conteúdo --}}
                 <x-management.groups-content/>

@@ -24,4 +24,8 @@
     </x-dynamic-component>
 </div>
 
-
+<div class="{{ $menuClass }}">
+    <x-dynamic-component :component="$menuComponent" href="{{ route('committees-table') }}" :active="request()->routeIS('committees-table')">
+        {{ __('Bancas') }}
+    </x-dynamic-component>
+</div>

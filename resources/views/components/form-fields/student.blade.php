@@ -3,7 +3,8 @@
     <div class="mt-4">
         <x-label for="ra" value="RA do Aluno"/>
         <x-input id="ra" type="number" autocomplete="ra" class="w-full" onkeydown="return ['e','E','+','-'].indexOf(event.key) === -1"
-                 placeholder="RA do aluno" x-model="ra" x-bind:disabled="edit"/>
+                 placeholder="RA do aluno" x-model="ra" x-bind:disabled="edit"
+                 @keydown.enter="saveStudent"/>
         <template x-if="errors.ra">
             <p class="text-red-600 text-sm" x-text="errors.ra[0]"></p>
         </template>
@@ -12,7 +13,8 @@
     <div class="mt-4">
         <x-label for="name" value="Nome do Aluno"/>
         <x-input id="name" type="text" autocomplete="name" class="w-full"
-                 placeholder="Nome do aluno" x-model="name"/>
+                 placeholder="Nome do aluno" x-model="name"
+                 @keydown.enter="saveStudent"/>
         <template x-if="errors.name">
             <p class="text-red-600 text-sm" x-text="errors.name[0]"></p>
         </template>
@@ -21,12 +23,13 @@
     <div class="mt-4">
         <x-label for="email" value="Email do Aluno"/>
         <x-input id="email" type="text" autocomplete="email" class="w-full"
-                 placeholder="E-mail do aluno" x-model="email"/>
+                 placeholder="E-mail do aluno" x-model="email"
+                 @keydown.enter="saveStudent"/>
         <template x-if="errors.email">
             <p class="text-red-600 text-sm" x-text="errors.email[0]"></p>
         </template>
     </div>
-    {{-- Semestre do aluno --}}
+    {{-- Semestre do aluno
     <div class="mt-4">
         <x-label for="semester" value="Semestre"/>
         <select id="semester" class="w-full rounded border-gray-300" x-model="semester">
@@ -38,7 +41,7 @@
         <template x-if="errors.semester">
             <p class="text-red-600 text-sm" x-text="errors.semester[0]"></p>
         </template>
-    </div>
+    </div>--}}
     {{-- Grupo --}}
     <div class="mt-4">
         <x-label for="group_id" value="Grupo (opcional)"/>
@@ -52,6 +55,7 @@
             <p class="text-red-600 text-sm" x-text="errors.group_id[0]"></p>
         </template>
     </div>
+
     {{-- Curso --}}
     <div class="mt-4">
         <x-label for="course_id" value="Curso (opcional)"/>
@@ -65,4 +69,12 @@
             <p class="text-red-600 text-sm" x-text="errors.course_id[0]"></p>
         </template>
     </div>
+
+    {{-- Timestamps --}}
+    <template x-if="edit && (created_at || updated_at)">
+        <div class="mt-5">
+            <p class="text-sm text-gray-800" x-text="created_at"></p>
+            <p class="text-sm text-gray-800" x-text="updated_at"></p>
+        </div>
+    </template>
 </div>

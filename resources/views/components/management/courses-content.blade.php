@@ -2,7 +2,12 @@
     {{-- Modal de cadastro --}}
     <x-custom-modal x-model="showCreateModal" @close="showCreateModal = false; clearFields('store')">
         <x-slot name="title">
-            Cadastrar novo curso
+            <template x-if="!edit">
+                <span>Cadastrar novo curso</span>
+            </template>
+            <template x-if="edit">
+                <span>Atualizar os dados do curso</span>
+            </template>
         </x-slot>
 
         <x-slot name="content">
@@ -67,7 +72,7 @@
             <template x-if="warningType === 'Confirmação'">
                 <x-danger-button type="button"
                     x-on:click="
-                        inactivate;
+                        toggleStatus();
                         $el.blur();
                     "
                 >
@@ -106,17 +111,20 @@
                     <td class="px-4 py-2 border text-center border-gray-300 hidden md:table-cell" x-text="course.id"></td>
                     <td class="px-4 py-2 border text-center border-gray-300" x-text="course.name"></td>
                     <td class="px-4 py-2 border text-center border-gray-300 hidden sm:table-cell" x-text="course.shift_pt"></td>
-                    <td class="px-4 py-2 border text-center border-gray-300 hidden md:table-cell" x-text="course.coordinator_name || '-'"></td>
+                    <td class="px-4 py-2 border text-center border-gray-300 hidden md:table-cell" :class="course.coordinator_state == 0 && course.coordinator_name ? 'line-through text-gray-400' : ''" x-text="course.coordinator_name || '-'"></td>
                     <td class="px-4 py-2 border text-center border-gray-300 hidden md:table-cell" x-text="course.state ? 'Ativo' : 'Inativo'"></td>
                     <td class="px-4 py-2 border text-center border-gray-300">
-                        <x-button type="button" class="min-w-[98px]"
-                            x-on:click="
-                                showCourse(course.id);
-                                $el.blur();
-                            "
-                        >
-                            Alterar
-                        </x-button>
+                        <template x-if="course.state">
+                            <x-button type="button" class="min-w-[98px]"
+                                x-on:click="
+                                    showCourse(course.id);
+                                    $el.blur();
+                                "
+                            >
+                                Alterar
+                            </x-button>
+                        </template>
+
                         <template x-if="course.state">
                             <x-danger-button type="button" class="min-w-[98px]" x-bind:disabled="isInactivating(course.id)"
                                 x-on:click="
@@ -135,7 +143,7 @@
                         <template x-if="!course.state">
                             <x-management.activate-button type="button" class="min-w-[98px]" x-bind:disabled="isActivating(course.id)"
                                 x-on:click="
-                                    activate(course.id);
+                                    toggleStatus(course.id);
                                     $el.blur();
                                 "
                             >

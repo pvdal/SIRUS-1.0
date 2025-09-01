@@ -45,7 +45,7 @@ export async function saveData({
         if (callbackSucesso) callbackSucesso(response.data);
 
         contexto.empty = false;
-
+        // Retorna o objeto modificado para que a lista da view seja alterada pelo alpine
         return novo;
 
     } catch (error) {
@@ -74,6 +74,7 @@ export async function saveData({
             contexto.showMessage('danger', 'Erro inesperado ao salvar.');
             console.error(error);
         }
+        //throw error;
     }
     finally {
         contexto.saving = false;

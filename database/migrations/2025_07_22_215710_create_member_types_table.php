@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+return new  class extends Migration
 {
     /**
      * Run the migrations.
@@ -15,12 +15,11 @@ return new class extends Migration
     {
         Schema::create('member_types', function (Blueprint $table) {
             $table->id();
-            $table->string('description');
-            $table->boolean('status')->default(true);
+            $table->string('name', 50)->unique();
+            $table->boolean('state')->default(true);
             $table->timestamps();
         });
-        DB::statement('ALTER TABLE member_types ALTER COLUMN created_at datetime2 NOT NULL');
-        DB::statement('ALTER TABLE member_types ALTER COLUMN updated_at datetime2 NOT NULL');
+
     }
 
     /**

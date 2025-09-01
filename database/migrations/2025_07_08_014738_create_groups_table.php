@@ -19,8 +19,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        DB::statement('ALTER TABLE groups ALTER COLUMN created_at datetime2 NOT NULL');
-        DB::statement('ALTER TABLE groups ALTER COLUMN updated_at datetime2 NOT NULL');
     }
 
     /**
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('group');
+        Schema::dropIfExists('groups');
     }
 };

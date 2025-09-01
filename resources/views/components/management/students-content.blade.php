@@ -2,7 +2,12 @@
     {{-- Modal de cadastro --}}
     <x-custom-modal x-model="showCreateModal" @close="showCreateModal = false; clearFields('store')">
         <x-slot name="title">
-            Cadastrar novo Estudante
+            <template x-if="!edit">
+                <span>Cadastrar novo aluno</span>
+            </template>
+            <template x-if="edit">
+                <span>Atualizar os dados do aluno</span>
+            </template>
         </x-slot>
 
         <x-slot name="content">
@@ -67,7 +72,7 @@
             <template x-if="warningType === 'Confirmação'">
                 <x-danger-button type="button"
                     x-on:click="
-                        inactivate;
+                        toggleStatus();
                         $el.blur();
                     "
                 >
@@ -109,8 +114,8 @@
                     <td class="px-4 py-2 border text-center border-gray-300" x-text="student.name"></td>
                     <td class="px-4 py-2 border text-center border-gray-300 hidden lg:table-cell" x-text="student.email"></td>
                     <td class="px-4 py-2 border text-center border-gray-300 hidden xl:table-cell" x-text="student.semester"></td>
-                    <td class="px-4 py-2 border text-center border-gray-300 hidden md:table-cell" x-text="student.group_name || '-'"></td>
-                    <td class="px-4 py-2 border text-center border-gray-300 hidden xl:table-cell" x-text="student.course_name || '-'"></td>
+                    <td class="px-4 py-2 border text-center border-gray-300 hidden md:table-cell" :class="student.group_state == 0 && student.group_name ? 'line-through text-gray-400' : ''" x-text="student.group_name || '-'"></td>
+                    <td class="px-4 py-2 border text-center border-gray-300 hidden xl:table-cell" :class="student.course_state == 0 && student.course_name ? 'line-through text-gray-400' : ''" x-text="student.course_name || '-'"></td>
                     <td class="px-4 py-2 border text-center border-gray-300 hidden xl:table-cell" x-text="student.state ? 'Ativo' : 'Inativo'"></td>
                     <td class="px-4 py-2 border text-center border-gray-300">
                         <template x-if="student.state">
@@ -141,7 +146,7 @@
                         <template x-if="!student.state">
                             <x-management.activate-button type="button" class="min-w-[98px]" x-bind:disabled="isActivating(student.user_id)"
                                 x-on:click="
-                                    activate(student.user_id);
+                                    toggleStatus(student.user_id);
                                     $el.blur();
                                 "
                             >

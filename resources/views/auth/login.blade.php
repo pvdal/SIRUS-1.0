@@ -23,9 +23,14 @@
                 <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
             </div>
 
-            <div class="mt-4">
+            <div class="mt-4 relative max-h-24">
                 <x-label for="password" value="{{ __('Password') }}" />
                 <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
+                <button id="showPass" type="button"
+                        class="absolute right-[2px] top-[26px] flex w-9 h-[38px] items-center justify-center rounded-s-sm rounded-e-md hover:bg-gray-100 dark:hover:bg-gray-100">
+                    <x-lucide-eye id="icoShow" class="h-4 w-4 text-gray-700" />
+                    <x-lucide-eye-off id="icoHide" class="h-4 w-4 hidden" />
+                </button>
             </div>
 
             <div class="block mt-4">
@@ -48,4 +53,21 @@
             </div>
         </form>
     </x-authentication-card>
+    @push('scripts')
+        <script>
+            const input   = document.getElementById('password');
+            const btn     = document.getElementById('showPass');
+            const icoShow = document.getElementById('icoShow'); // olho
+            const icoHide = document.getElementById('icoHide'); // olho cortado
+
+            btn.addEventListener('click', () => {
+                const showing = input.type === 'text';
+                input.type = showing ? 'password' : 'text';
+
+                // alterna os ícones
+                icoShow.classList.toggle('hidden', !showing);
+                icoHide.classList.toggle('hidden', showing);
+            });
+        </script>
+    @endpush
 </x-guest-layout>

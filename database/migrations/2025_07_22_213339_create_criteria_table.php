@@ -25,12 +25,10 @@ return new class extends Migration
             $table->text('excellent')->nullable();
             $table->decimal('weight_e', 4, 2)->default(0);
             $table->tinyInteger('criteria_type')->default(1);
-            $table->boolean('status')->default(true);
+            $table->boolean('state')->default(true);
             $table->timestamps();
             });
 
-        DB::statement('ALTER TABLE criteria ALTER COLUMN created_at datetime2 NOT NULL');
-        DB::statement('ALTER TABLE criteria ALTER COLUMN updated_at datetime2 NOT NULL');
         // Adicionar CHECK para tipo_criterio = 1 ou 2 e max_peso entre 0 e 10
         DB::statement("ALTER TABLE criteria ADD CONSTRAINT chk_criteria_type CHECK (criteria_type IN (1, 2))");
         DB::statement("ALTER TABLE criteria ADD CONSTRAINT chk_weight_i CHECK (weight_i BETWEEN 0 AND 10)");
@@ -48,10 +46,10 @@ return new class extends Migration
     {
         // Remover constraints antes de dropar a tabela
         DB::statement('ALTER TABLE criteria DROP CONSTRAINT chk_criteria_type');
-        DB::statement('ALTER TABLE criteria DROP CONSTRAINT chk_max_peso_i');
-        DB::statement('ALTER TABLE criteria DROP CONSTRAINT chk_max_peso_s');
-        DB::statement('ALTER TABLE criteria DROP CONSTRAINT chk_max_peso_g');
-        DB::statement('ALTER TABLE criteria DROP CONSTRAINT chk_max_peso_e');
+        DB::statement('ALTER TABLE criteria DROP CONSTRAINT chk_weight_i');
+        DB::statement('ALTER TABLE criteria DROP CONSTRAINT chk_weight_s');
+        DB::statement('ALTER TABLE criteria DROP CONSTRAINT chk_weight_g');
+        DB::statement('ALTER TABLE criteria DROP CONSTRAINT chk_weight_e');
 
         Schema::dropIfExists('criteria');
     }

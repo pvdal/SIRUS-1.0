@@ -23,6 +23,7 @@
                     :status-filter="'statusFilter'"
                     :register-period="'registerPeriod'"
                     :load-function="'loadCoordinators()'"
+                    :class="'md:justify-start'"
                 />
                 {{-- Componente com o conteúdo que o alpine vai manipular --}}
                 <x-management.coordinators-content/>

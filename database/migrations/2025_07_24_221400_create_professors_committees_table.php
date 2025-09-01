@@ -15,17 +15,13 @@ return new class extends Migration
     {
         Schema::create('professors_committees', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('professor_id')->nullable()->constrained('professors')->nullOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('committee_id')->nullable()->constrained('committees')->nullOnDelete();
-            $table->foreignId('group_id')->nullable()->constrained('groups')->nullOnDelete();
-            $table->foreignId('member_types_id')->nullable()->constrained('member_types')->nullOnDelete();
-            $table->foreignId('events_id')->nullable()->default(true)->constrained('events')->nullOnDelete();
-            $table->boolean('status')->default(true);
+            $table->foreignId('member_type_id')->nullable()->constrained('member_types')->nullOnDelete();
+            $table->boolean('state')->default(true);
             $table->timestamps();
 
         });
-        DB::statement('ALTER TABLE professors_committees ALTER COLUMN created_at datetime2 NOT NULL');
-        DB::statement('ALTER TABLE professors_committees ALTER COLUMN updated_at datetime2 NOT NULL');
     }
 
     /**
@@ -34,7 +30,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('professors_committees', function (Blueprint $table) {
-            $table->dropForeign(['professor_cpf']);
+            $table->dropForeign(['professor_id']);
+            $table->dropForeign(['committee_id']);
+            $table->dropForeign(['member_type_id']);
         });
         Schema::dropIfExists('professors_committees');
     }

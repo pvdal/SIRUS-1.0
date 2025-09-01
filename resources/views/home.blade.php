@@ -35,10 +35,10 @@
                                 Uma plataforma intuitiva para gerenciar, aplicar e analisar avaliações acadêmicas com eficiência e padronização.
                             </p>
                             <div class="d-flex gap-3 flex-wrap">
-                                <a class="text-white btn btn-primary-custom btn-lg" href="/login">
+                                <a class="text-white btn btn-primary-custom btn-lg" href="@auth /calendar @else /login @endauth">
                                     <i class="bi bi-box-arrow-in-right me-2"></i>
                                     @auth
-                                        Dashboard
+                                        Agenda do SIMBAJU
                                     @else
                                         Fazer Login
                                     @endauth
