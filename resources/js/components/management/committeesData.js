@@ -7,7 +7,11 @@ export function committeesData() {
         expanded: false,
         showWarningModal: false,
         searchTerm: '',
-        statusFilter: '',
+        statusFilter: {
+            value: '',
+            name: '',
+            drop: false,
+        },
         registerPeriod: {
             value: '',
             name: '',
@@ -276,7 +280,7 @@ export function committeesData() {
                 const params = {
                     page,
                     search: this.searchTerm,
-                    status: this.statusFilter,
+                    status: this.statusFilter.value,
                     period: this.registerPeriod.value,
                 }
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';

@@ -30,13 +30,7 @@ class ProfessorController extends Controller
         $professorsData = $professors->getCollection()->map(function ($professor) {
             $user = $professor->user;
 
-            $updated_at = $professor->updated_at;
 
-            if ($user && $user->updated_at) {
-                $updated_at = $user->updated_at->gt($professor->updated_at)
-                    ? $user->updated_at
-                    : $professor->updated_at;
-            }
 
             return [
                 'id' => $professor->id,
@@ -45,7 +39,7 @@ class ProfessorController extends Controller
                 'email' => $user->email ?? '—',
                 'state' => isset($user->state) ? (int) $user->state : 0,
                 'created_at' => $user->created_at ?? $professor->created_at,
-                'updated_at' => $updated_at,
+                'updated_at' => $user->updated_at ?? $professor->updated_at,
             ];
         })->values();
 

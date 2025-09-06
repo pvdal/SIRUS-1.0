@@ -21,8 +21,8 @@ return new class extends Migration
             $table->foreignId('rubric_id')->nullable()->constrained('rubrics')->nullOnDelete();
             $table->foreignId('paper_id')->nullable()->constrained('papers')->nullOnDelete();
             $table->foreignId('event_id')->nullable()->constrained('events')->nullOnDelete();
-            $table->dateTime('start')->nullable()->after('event_id');
-            $table->dateTime('end')->nullable()->after('start');
+            $table->dateTime('start')->nullable();
+            $table->dateTime('end')->nullable();
             $table->boolean('state')->default(true);
             $table->timestamps();
         });

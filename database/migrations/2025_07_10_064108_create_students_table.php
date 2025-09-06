@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        DB::statement("ALTER TABLE students ADD CONSTRAINT chk_semester CHECK (semester BETWEEN 1 AND 10)");
+
     }
 
     /**

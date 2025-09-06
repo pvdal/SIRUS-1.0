@@ -9,19 +9,27 @@ export async function saveData({
                                    formatResponse = null,
                                }) {
     if (contexto.saving) return;
+
     contexto.errors = {};
     contexto.saving = true;
 
     try {
+        // Pega o prefixo do <meta name="request-prefix" content="api">, se existir
         const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
+
+        // Verifica se a URL é absoluta (ex: https://api.site.com/endpoint)
+        const isAbsoluteUrl = /^https?:\/\//i.test(url);
+        // Se for absoluta, usa diretamente. Se não, adiciona o prefixo se necessário
+        const finalUrl = isAbsoluteUrl ? url : `/${requestPrefix}${url}`.replace(/\/{2,}/g, '/');
 
         const response = await axios({
             method,
-            url: `/${requestPrefix}${url}`,
+            url: finalUrl,
             data: payload,
         });
 
         if (clearFields) contexto.clearFields?.('store');
+
         if (response.data.success && response.data.message) {
             contexto.showMessage('success', response.data.message);
         } else {
@@ -30,28 +38,26 @@ export async function saveData({
 
         let novo = response.data?.data ?? response.data;
 
-        if(typeof formatResponse === 'function'){
+        if (typeof formatResponse === 'function') {
             novo = formatResponse(novo);
         }
 
         if (campoLista && Array.isArray(contexto[campoLista])) {
-            // console.log('Antes do unshift:', contexto[campoLista]);
             const novoComOrigin = { ...novo, origin: 'new' };
             contexto[campoLista].unshift(novoComOrigin);
-            // console.log('Depois do unshift:', contexto[campoLista]);
             if (contexto[campoLista].length > 10) contexto[campoLista].pop();
         }
 
         if (callbackSucesso) callbackSucesso(response.data);
 
         contexto.empty = false;
-        // Retorna o objeto modificado para que a lista da view seja alterada pelo alpine
+
+        // Retorna o objeto salvo para uso na view
         return novo;
 
     } catch (error) {
         if (error.response?.status === 422) {
             const errorsRaw = error.response.data.errors;
-
             const errorsNormalized = {};
             const membersErrors = [];
 
@@ -64,7 +70,6 @@ export async function saveData({
             }
 
             if (membersErrors.length > 0) {
-                // Coloca todos os erros de members em uma única chave
                 errorsNormalized.members = membersErrors;
             }
 
@@ -74,9 +79,8 @@ export async function saveData({
             contexto.showMessage('danger', 'Erro inesperado ao salvar.');
             console.error(error);
         }
-        //throw error;
-    }
-    finally {
+        throw error;
+    } finally {
         contexto.saving = false;
     }
 }
