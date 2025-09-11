@@ -75,8 +75,9 @@
                         toggleStatus();
                         $el.blur();
                     "
+                    x-text="warningAction"
                 >
-                    Inativar
+
                 </x-danger-button>
             </template>
             <x-secondary-button type="button" @click="showWarningModal = false; clearFields('warning');" class="ms-4">
@@ -84,6 +85,7 @@
             </x-secondary-button>
         </x-slot>
     </x-warning-modal>
+
     <div class="py-5 px-2">
         {{-- Tabela de registros: recebe os dados iniciais direto do controller e na paginação recebe os dados pro ajax --}}
         <table class="min-w-full border border-gray-300 divide-y divide-gray-200 ">
@@ -126,7 +128,7 @@
                         <template x-if="coordinator.state">
                             <x-danger-button type="button" class="min-w-[98px]" x-bind:disabled="isInactivating(coordinator.user_id)"
                                 x-on:click="
-                                    warning('confirmação', coordinator.name, coordinator.user_id);
+                                    warning('confirmação', coordinator.name, coordinator.user_id, 'inativar');
                                     $el.blur();
                                 "
                             >
@@ -141,7 +143,7 @@
                         <template x-if="!coordinator.state">
                             <x-management.activate-button type="button" class="min-w-[98px]" x-bind:disabled="isActivating(coordinator.user_id)"
                                 x-on:click="
-                                    toggleStatus(coordinator.user_id);
+                                    warning('confirmação',coordinator.name, coordinator.user_id, 'ativar');
                                     $el.blur();
                                 "
                             >

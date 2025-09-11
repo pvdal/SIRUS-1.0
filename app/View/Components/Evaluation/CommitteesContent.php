@@ -1,6 +1,6 @@
 <?php
 
-namespace App\View\Components\Evaluations;
+namespace App\View\Components\Evaluation;
 
 use Closure;
 use Illuminate\Contracts\View\View;
@@ -21,6 +21,6 @@ class CommitteesContent extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.evaluations.committees-content');
+        return view('components.evaluation.committees-content');
     }
 }

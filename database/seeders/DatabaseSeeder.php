@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Coordinator;
+use App\Models\Professor;
 use App\Models\Student;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -17,7 +18,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
-        Student::factory()->count(10)->create();
+        Student::factory()->count(10000)->create();
+        Professor::factory()->count(100)->create();
         $this->call(EventsTableSeeder::class);
         $this->call(MemberTypesTableSeeder::class);
 

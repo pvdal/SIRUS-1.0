@@ -58,6 +58,7 @@
                     class="flex justify-between items-center pr-4 min-w-[170px] max-w-[200px] w-full whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 rounded-lg
                            text-left px-4 py-2.5 xs:me-2 mb-2 text-sm text-gray-700 focus:ring-2 focus:ring-secondary-blue
                            focus:border-secondary-blue cursor-pointer"
+                    x-bind:disabled="loading"
                     :title="statusFilter.name || 'Selecione em estado'">
                 <span class="truncate" x-text="statusFilter.name || 'Selecione em estado'"></span>
                 <x-lucide-chevron-down class="w-4 h-4 text-gray-700 flex-shrink-0 ms-auto" />
@@ -89,6 +90,7 @@
                     class="flex justify-between items-center pr-4 min-w-[170px] max-w-[200px] w-full whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 rounded-lg
                            text-left px-4 py-2.5 xs:me-2 mb-2 text-sm text-gray-700 focus:ring-2 focus:ring-secondary-blue
                            focus:border-secondary-blue cursor-pointer"
+                    x-bind:disabled="loading"
                     :title="registerPeriod.name || 'Selecione um periodo'">
                 <span class="truncate" x-text="registerPeriod.name || 'Selecione um periodo'"></span>
                 <x-lucide-chevron-down class="w-4 h-4 text-gray-700 flex-shrink-0 ms-auto" />
@@ -128,6 +130,7 @@
                 {{ $loadFunction }}
             "
             class="appearance-none border border-gray-300 rounded-lg me-1 {{ $minWidth }} px-6 py-2.5 mb-2 xs:me-2 text-sm text-gray-700 focus:ring-2 focus:ring-secondary-blue focus:border-secondary-blue cursor-pointer inline-flex items-center justify-between gap-2"
+            :title="'Limpar filtros'"
         >
             {{ $clearAction['label'] ?? 'Limpar filtros' }}
             <x-lucide-trash-2 class="w-4 h-4 text-gray-500"/>

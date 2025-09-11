@@ -187,7 +187,7 @@ return [
         'members' => [
             'required' => 'O campo membros é obrigatório.',
             'array' => 'O campo membros deve ser uma lista.',
-            'min' => 'O campo membros deve ter ao menos :min item(s).',
+            'min' => 'O campo membros deve ter ao menos :min membros.',
         ],
     ],
 

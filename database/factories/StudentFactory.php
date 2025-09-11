@@ -27,7 +27,7 @@ class StudentFactory extends Factory
             'user_id' => User::factory(),
 
             // Semestre entre 1 e 10 (restrição na migration)
-          //  'semester' => $this->faker->numberBetween(1, 10),
+            //'semester' => $this->faker->numberBetween(1, 10),
 
             // group_id inicialmente nulo (grupo pode ser atribuído depois)
             'group_id' => null,

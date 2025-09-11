@@ -10,12 +10,16 @@ class AuthenticatedSessionController extends Controller
 {
     public function store(Request $request)
     {
-        $credentials = $request->validate([
+        $request->validate([
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
         ]);
 
-        if (! Auth::attempt($credentials, $request->boolean('remember'))) {
+        if (! Auth::attempt([
+            'email' => $request->email,
+            'password' => $request->password,
+            'state' => 1,
+        ], $request->boolean('remember'))) {
             return back()->withErrors([
                 'email' => __('As credenciais fornecidas não foram encontradas.'),
             ]);

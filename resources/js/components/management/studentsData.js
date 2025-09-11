@@ -1,7 +1,8 @@
 export function studentsData() {
     return {
+        // Variáveis relacionadas ao actions-table-bar
         showCreateModal: false,
-        edit: false,
+        edit: false, // O edit define se o modal vai direcionar a função para store ou ‘update’
         showWarningModal: false,
         searchTerm: '',
         statusFilter: {
@@ -24,7 +25,7 @@ export function studentsData() {
             name: '',
             drop: false,
         },
-
+        // Variáveis dos campos do formulário
         ra: '',
         user_id: '',
         name: '',
@@ -34,7 +35,7 @@ export function studentsData() {
         course_id: '',
         created_at: '',
         updated_at: '',
-
+        // Variáveis de estado das requisições
         errors: {},
         saving: false,
         showBanner: false,
@@ -42,26 +43,29 @@ export function studentsData() {
         message: '',
         warningType: '',
         warningContent: '',
+        // Variáveis usadas para alteração de status
         studentId: null,
-
         activatingIds: [],
         inactivatingIds: [],
+        // Arrays de registros do banco
         students: [],
         newStudents: [],
         groups: [],
         courses: [],
-
+        // Variáveis de estado das tabelas
         loading: false,
         empty: false,
         page: 1,
         totalPages: 1,
+        // perPage: 12, // teste de paginação js
 
-        init(students, groups, courses,currentPage, lastPage){
+        // paginação php
+        init(students, groups, courses, page, totalPages){
             this.students = students;
             this.groups = groups;
             this.courses = courses;
-            this.page = currentPage;
-            this.totalPages = lastPage;
+            this.page = page;
+            this.totalPages = totalPages;
 
             this.empty = !Array.isArray(students) || students.length === 0;
 
@@ -73,13 +77,43 @@ export function studentsData() {
                     this.showBanner = false;
                 }
             });
-
-            /*this.$watch('searchTerm', (value) => {
-                if(!value) {
-                    this.loadStudents();
-                }
-            });*/
         },
+
+        //teste de paginação js
+        /*
+        init(students = [], groups = [], courses = []) {
+            this.students = Array.isArray(students) ? students : [];
+            this.groups = Array.isArray(groups) ? groups : [];
+            this.courses = Array.isArray(courses) ? courses : [];
+
+            this.page = 1;               // página inicial
+            this.perPage = 15;           // itens por página
+            this.totalPages = Math.ceil(this.students.length / this.perPage);
+            this.empty = this.students.length === 0;
+
+            this.$watch('showCreateModal', (value) => {
+                if (!value) {
+                    this.edit = false;
+                    this.studentId = null;
+                    this.clearFields('store');
+                    this.showBanner = false;
+                }
+            });
+        },
+
+
+        // teste de paginação js
+        get paginatedStudents() {
+            const start = (this.page - 1) * this.perPage;
+            const end = start + this.perPage;
+            return this.students.slice(start, end);
+        },
+        // teste de paginação js
+        changePage(newPage) {
+            if (newPage < 1 || newPage > this.totalPages) return;
+            this.page = newPage;
+        },
+        */
 
         async loadStudents(page = 1) {
             this.loading = true;
@@ -105,8 +139,13 @@ export function studentsData() {
                 this.students = response.data.data;
                 this.groups = response.data.groups;
                 this.courses = response.data.courses;
-                this.page = response.data.current_page;
-                this.totalPages = response.data.last_page;
+                this.page = response.data.page;
+                this.totalPages = response.data.totalPages;
+
+                // Paginação local (.js)
+                //this.page = 1;               // página inicial
+                //this.perPage = 15;           // itens por página
+                //this.totalPages = Math.ceil(this.students.length / this.perPage);
 
             } catch (error){
                 if(error.response){
@@ -142,18 +181,10 @@ export function studentsData() {
             this.name = student.name || '';
             this.email = student.email || '';
             this.semester = student.semester || '';
-            this.group_id = student.group_id || '';
-            this.course_id = student.course_id || '';
+            this.group_id = student.group.id || '';
+            this.course_id = student.course.id || '';
 
-            // Função para timestamps
-            function formatDateTime(label, datetime, compare = null) {
-                if (!datetime || (compare && datetime === compare)) return '';
-
-                const date = new Date(datetime);
-                return `${label}: ${date.toLocaleDateString('pt-BR', { year: 'numeric', month: '2-digit', day: '2-digit' })} às ${date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}`;
-            }
-
-            // uso:
+            // Trata os timestamps
             this.created_at = formatDateTime('Criado em', student.created_at);
             this.updated_at = formatDateTime('Atualizado em', student.updated_at, student.created_at);
 
@@ -192,15 +223,7 @@ export function studentsData() {
             });
 
             if(update && savedData) {
-                // Função para timestamps
-                function formatDateTime(label, datetime, compare = null) {
-                    if (!datetime || (compare && datetime === compare)) return '';
-
-                    const date = new Date(datetime);
-                    return `${label}: ${date.toLocaleDateString('pt-BR', { year: 'numeric', month: '2-digit', day: '2-digit' })} às ${date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}`;
-                }
-
-                // uso:
+                // Trata os timestamps
                 this.created_at = formatDateTime('Criado em', savedData.created_at);
                 this.updated_at = formatDateTime('Atualizado em', savedData.updated_at, savedData.created_at);
 
@@ -224,10 +247,7 @@ export function studentsData() {
 
         async toggleStatus(id = null) {
             const targetId = id ?? this.studentId;
-
-            const student = this.students.find(s => s.user_id === targetId)
-                || this.newStudents.find(s => s.user_id === targetId);
-
+            const student = [...this.students, ...this.newStudents].find(s => s.user_id === targetId);
             if (!student) return;
 
             if (this.inactivatingIds.includes(targetId) || this.activatingIds.includes(targetId)) return;
@@ -237,12 +257,13 @@ export function studentsData() {
             if(student.state === 1) {
                 this.studentId = null;
                 this.inactivatingIds.push(targetId);
-                this.showWarningModal = false;
                 action = 'inactivate';
             } else {
                 this.activatingIds.push(targetId);
                 action = 'activate';
             }
+
+            this.showWarningModal = false;
 
             try {
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
@@ -273,34 +294,19 @@ export function studentsData() {
         },
 
         clearFields(type) {
-            switch (type){
-                case 'store':
-                    this.ra = '';
-                    this.name = '';
-                    this.email = '';
-                    this.semester = '';
-                    this.group_id = '';
-                    this.course_id = '';
-                    this.errors = {};
-                    this.showBanner = false;
-                    break;
-                case 'filters':
-                    this.searchTerm = '';
-                    this.statusFilter = {};
-                    this.registerPeriod = {};
-                    this.groupFilter = {};
-                    this.courseFilter = {};
-                    break;
-                case 'warning':
-                    this.warningType = '';
-                    this.warningContent = '';
-                    break;
-                default:
-                    this.clearFields('store');
-                    this.clearFields('filters');
-                    this.clearFields('warning')
-                    break;
-            }
+            clearComponentData(this,type,
+                [
+                    'ra',
+                    'name',
+                    'email',
+                    'group_id',
+                    'course_id',
+                ],
+                [
+                    'groupFilter',
+                    'courseFilter',
+                ],
+            );
         },
 
         showMessage(style, message) {
@@ -311,15 +317,16 @@ export function studentsData() {
                 this.showBanner = false;
             }, 3000);
         },
-
-        warning(type,name,id) {
+        warningAction: '',
+        warning(type, name, id, action=null) {
             type = type.toLowerCase();
             switch (type){
                 case 'confirmação':
                     type = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
                     this.warningType = type;
-                    this.warningContent = `Tem certeza que deseja inativar o aluno ${name}?`;
+                    this.warningContent = `Tem certeza que deseja ${action} o aluno ${name}?`;
                     this.studentId = id;
+                    this.warningAction = action;
                     break;
                 case 'erro':
                     type = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();

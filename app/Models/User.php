@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -20,7 +21,7 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens;
 
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasFactory;
     use HasProfilePhoto;
     use Notifiable;
@@ -37,6 +38,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'access_level',
         'state',
+        'email_verified_at',
     ];
 
     /**
@@ -73,37 +75,39 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-    public function sendEmailVerificationNotification(): void
+    #region Notificações via email em fila
+    public function sendEmailVerificationNotification(): void // Verificação de e-mail
     {
         $this->notify(new QueuedVerifyEmail);
     }
 
-    public function sendPasswordResetNotification($token)
+    public function sendPasswordResetNotification($token): void // Reset de senha
     {
         $this->notify(new QueuedResetPassword($token));
     }
 
-    public function sendTemporaryPasswordNotification($password): void
+    public function sendTemporaryPasswordNotification($password): void // Senha temporária
     {
         $this->notify(new QueuedSendPasswordNotification($password));
     }
+    #endregion
 
-    public function coordinator(): HasOne
+    #region Relacionamentos
+    public function coordinator(): HasOne // Relacionamento com Coordinator
     {
         return $this->hasOne(Coordinator::class);
     }
-    public function professor(): HasOne
+    public function professor(): HasOne // Relacionamento com Professor
     {
         return $this->hasOne(Professor::class);
     }
-    public function student(): HasOne
+    public function student(): HasOne // Relacionamento com Student
     {
         return $this->hasOne(Student::class);
     }
-
-    // Relacionamento com ProfessorCommittee
-    public function professorCommittee(): HasMany
+    public function userCommittee(): HasMany // Relacionamento com UserCommittee
     {
-        return $this->hasMany(ProfessorCommittee::class);
+        return $this->hasMany(UserCommittee::class);
     }
+    #endregion
 }

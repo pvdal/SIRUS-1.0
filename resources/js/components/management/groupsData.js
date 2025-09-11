@@ -3,7 +3,7 @@ export function groupsData() {
         // Variáveis relacionadas ao actions-table-bar.
         showGroupCards: true,
         showCreateModal: false,
-        edit: false, // O edit define se o modal vai direcionar a função para store ou update.
+        edit: false, // O edit define se o modal vai direcionar a função para store ou ‘update’.
         showWarningModal: false,
         searchTerm: '',
         statusFilter: {
@@ -31,10 +31,11 @@ export function groupsData() {
         message: '',
         warningType: '',
         warningContent: '',
-        // Variáveis que armazenam coleção de registros e preparam alteração de estado (ativo/inativo) o update
+        // Variáveis usadas para alteração de status
         groupId: null,
         activatingIds: [],
         inactivatingIds: [],
+        // Arrays de registros do banco
         groups: [],
         newGroups: [],
         // Variáveis para visualização dos trabalhos
@@ -71,7 +72,14 @@ export function groupsData() {
             */
             // Evento de escuta para a busca de alunos para cadastro no grupo
             this.$watch('searchStudent', (value) => {
-                this.searchStudents();
+                value = value.trim();
+                if(value) {
+                    this.searchStudents();
+                } else {
+                    this.searching = false;
+                    this.showNoStudentsMsg = false;
+                    this.filteredStudents = [];
+                }
             });
             // Garante que ao modal ser fechado o estado das variáveis de update sejam resetados, isso evita que ao fechar o modal de update o create se comporte como update
             this.$watch('showCreateModal', (value) => {
@@ -95,13 +103,12 @@ export function groupsData() {
             });
         },
 
-        /*
+
         async searchStudents() {
             if (this.searchTimeout) clearTimeout(this.searchTimeout);
 
             this.searchTimeout = setTimeout(async () => {
                 if (!this.showCreateModal) {
-                    // Se modal fechado, cancela a busca
                     this.filteredStudents = [];
                     this.searching = false;
                     this.showNoStudentsMsg = false;
@@ -111,66 +118,78 @@ export function groupsData() {
                 const term = this.searchStudent.trim();
                 if (!term) {
                     this.filteredStudents = [];
+                    this.showNoStudentsMsg = false;
                     return;
                 }
 
                 this.searching = true;
-                this.showNoStudentsMsg = true;
+
                 try {
                     const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
                     const response = await axios.get(`/${requestPrefix}/students/search`, {
                         params: { q: term }
                     });
-                    // Filtra alunos que ainda não estão na lista de membros
-                    this.filteredStudents = response.data.filter(aluno =>
-                        !this.members.some(m => m.ra === aluno.ra)
+
+                    // response.data agora é array, filter funciona sem erro
+                    this.filteredStudents = response.data.filter(
+                        aluno => !this.members.some(m => m.ra === aluno.ra)
                     );
+
+                    this.showNoStudentsMsg = this.filteredStudents.length === 0;
+
                 } catch (error) {
                     console.error('Erro ao buscar alunos:', error);
                 } finally {
                     this.searching = false;
                 }
-            }, 400); // debounce
+            }, 200); // debounce
         },
-        */
 
+       /*
         async searchStudents() {
+            // Cancela o debounce anterior
             if (this.searchTimeout) clearTimeout(this.searchTimeout);
+
+            const term = this.searchStudent.trim().toLowerCase();
+
+            if (!term) {
+                this.filteredStudents = [];
+                this.searching = false;
+                this.showNoStudentsMsg = false;
+                return;
+            }
+
+            this.searching = true;
 
             this.searchTimeout = setTimeout(() => {
                 if (!this.showCreateModal) {
-                    // Se modal fechado, cancela a busca
                     this.filteredStudents = [];
                     this.searching = false;
                     this.showNoStudentsMsg = false;
                     return;
                 }
 
-                const term = this.searchStudent.trim().toLowerCase();
-                if (!term) {
-                    this.filteredStudents = [];
-                    return;
+                // Filtragem eficiente usando for loop simples
+                const result = [];
+                const termLower = term;
+
+                for (let i = 0; i < this.students.length; i++) {
+                    const aluno = this.students[i];
+
+                    // Ignora alunos já membros
+                    if (this.members.some(m => m.ra === aluno.ra)) continue;
+
+                    // Checa name ou ra
+                    if (aluno.name.toLowerCase().includes(termLower) || aluno.ra.toLowerCase().includes(termLower)) {
+                        result.push(aluno);
+                    }
                 }
 
-                this.searching = true;
-                this.showNoStudentsMsg = true;
-
-                try {
-                    // Busca local no array students
-                    this.filteredStudents = this.students.filter(aluno =>
-                        (
-                            aluno.name.toLowerCase().includes(term) ||
-                            aluno.ra.toLowerCase().includes(term) // pesquisa também pelo RA
-                        ) &&
-                        !this.members.some(m => m.ra === aluno.ra) // não repete os já adicionados
-                    );
-                } catch (error) {
-                    console.error('Erro ao filtrar alunos localmente:', error);
-                } finally {
-                    this.searching = false;
-                }
-            }, 100); // debounce
-        },
+                this.filteredStudents = result;
+                this.searching = false;
+                this.showNoStudentsMsg = result.length === 0;
+            }, 400);
+        },*/
 
         addMember(aluno) {
             if (!this.members.some(m => m.ra === aluno.ra)) {
@@ -183,18 +202,7 @@ export function groupsData() {
         },
 
         showPaper(url) {
-            this.showGroupCards = false;
-            this.isLoadingPdf = true;
-            this.paperUrl = url;
-            this.showGroupPaper = true;
-            this.$dispatch('toggle-paper', true);
-            this.$nextTick(() => {
-                setTimeout(() => {
-                    this.paperUrl = url;
-                    this.showGroupPaper = true;
-                    this.$dispatch('toggle-paper', true);
-                }, 10);
-            });
+            paperViewer(this, url);
         },
 
         async loadGroups(page = 1) {
@@ -265,15 +273,7 @@ export function groupsData() {
                 this.file = null;
             }
 
-            // Função para timestamps
-            function formatDateTime(label, datetime, compare = null) {
-                if (!datetime || (compare && datetime === compare)) return '';
-
-                const date = new Date(datetime);
-                return `${label}: ${date.toLocaleDateString('pt-BR', { year: 'numeric', month: '2-digit', day: '2-digit' })} às ${date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}`;
-            }
-
-            // uso:
+            // Trata os timestamps
             this.created_at = formatDateTime('Criado em', group.created_at);
             this.updated_at = formatDateTime('Atualizado em', group.updated_at, group.created_at);
 
@@ -347,15 +347,7 @@ export function groupsData() {
 
             // Alteração dos dados nas arrays locais, de acordo com o update do controller
             if(update && savedData) {
-                // Função para timestamps
-                function formatDateTime(label, datetime, compare = null) {
-                    if (!datetime || (compare && datetime === compare)) return '';
-
-                    const date = new Date(datetime);
-                    return `${label}: ${date.toLocaleDateString('pt-BR', { year: 'numeric', month: '2-digit', day: '2-digit' })} às ${date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}`;
-                }
-
-                // uso:
+                // Trata os timestamps
                 this.created_at = formatDateTime('Criado em', savedData.created_at);
                 this.updated_at = formatDateTime('Atualizado em', savedData.updated_at, savedData.created_at);
 
@@ -392,12 +384,13 @@ export function groupsData() {
             if(group.state === 1) {
                 this.groupId = null;
                 this.inactivatingIds.push(targetId);
-                this.showWarningModal = false;
                 action = 'inactivate';
             } else {
                 this.activatingIds.push(targetId);
                 action = 'activate';
             }
+
+            this.showWarningModal = false;
 
             try {
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
@@ -428,31 +421,15 @@ export function groupsData() {
         },
 
         clearFields(type) {
-            switch (type){
-                case 'store':
-                    this.theme = '';
-                    this.file = '';
-                    this.searchStudent = '';
-                    this.filteredStudents = [];
-                    this.members = [];
-                    this.errors = {};
-                    this.showBanner = false;
-                    break;
-                case 'filters':
-                    this.searchTerm = '';
-                    this.statusFilter = {};
-                    this.registerPeriod = {};
-                    break;
-                case 'warning':
-                    this.warningType = '';
-                    this.warningContent = '';
-                    break;
-                default:
-                    this.clearFields('store');
-                    this.clearFields('filters');
-                    this.clearFields('warning')
-                    break;
-            }
+            clearComponentData(this, type,
+                [
+                    'theme',
+                    'file',
+                    'searchStudent',
+                    'filteredStudents',
+                    'members'
+                ],
+            );
         },
 
         showMessage(style, message) {
@@ -464,14 +441,17 @@ export function groupsData() {
             }, 3000);
         },
 
-        warning(type, name, id) {
+        warningAction: '',
+
+        warning(type, name, id, action=null) {
             type = type.toLowerCase();
             switch (type){
                 case 'confirmação':
                     type = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
                     this.warningType = type;
-                    this.warningContent = `Tem certeza que deseja inativar o grupo ${name}?`;
+                    this.warningContent = `Tem certeza que deseja ${action} o grupo ${name}?`;
                     this.groupId = id;
+                    this.warningAction = action;
                     break;
                 case 'erro':
                     type = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();

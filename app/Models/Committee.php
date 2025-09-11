@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\ProfessorCommittee;
+use App\Models\UserCommittee;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -24,10 +24,11 @@ class Committee extends Model
         'updated_at' => 'datetime',
     ];
 
-    // Relacionamento com ProfessorCommittee
+    #region Relacionamentos
+    // Relacionamento com UserCommittee
     public function members(): HasMany
     {
-        return $this->hasMany(ProfessorCommittee::class);
+        return $this->hasMany(UserCommittee::class);
     }
 
     // Relacionamento com Coordinator
@@ -42,7 +43,7 @@ class Committee extends Model
         return $this->belongsTo(Group::class);
     }
 
-    // Relacionamento com Paper
+    // Relacionamento com ‘Paper’
     public function paper(): BelongsTo
     {
         return $this->belongsTo(Paper::class);
@@ -53,4 +54,5 @@ class Committee extends Model
     {
         return $this->belongsTo(Event::class, 'event_id');
     }
+    #endregion
 }

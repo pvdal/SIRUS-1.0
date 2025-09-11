@@ -69,24 +69,22 @@ export function committeesData() {
         setCardType(id,type) {
             this.cardTypes[id] = type;
         },
-
         getCardType(id) {
             return this.cardTypes[id] || 'committee';
         },
-
         setAllCardType(type) {
             for(let id in this.cardTypes) {
                 this.cardTypes[id] = type;
             }
         },
-
         hasGroupCard() {
             return Object.values(this.cardTypes).includes('group');
         },
-
         hasCommitteeCard() {
             return Object.values(this.cardTypes).includes('committee');
         },
+
+        showingCommittee: false,
 
         init(committees, memberTypes, groups, academicStaff, currentPage, lastPage) {
             this.committees = committees;
@@ -96,37 +94,40 @@ export function committeesData() {
             this.page = currentPage;
             this.totalPages = lastPage;
             this.empty = !Array.isArray(committees) || committees.length === 0;
-
+            console.log(committees);
             /*this.$watch('searchTerm', (value) => {
                 if(!value) {
                     this.loadCommittees();
                 }
             });*/
 
-            this.$watch('committees', (value) => {
+            this.$watch('committees', () => {
                 this.committees.forEach(c => {
                     this.cardTypes[c.id] = 'committee';
                 });
             });
 
             // Evento de escuta para a busca de alunos para cadastro no grupo
-            this.$watch('searchMember', (value) => {
+            this.$watch('searchMember', () => {
                 this.searchMembers();
             });
 
             // Verifica
             this.$watch('group_id', () => {
                 this.groupSelected = !!this.group_id;
-
                 this.showGroupPapers();
+                // Reseta o valor de paper_id caso o usuário efetue um clique diferente de alterar (visualizar)
+                if(!this.showingCommittee) {
+                    this.paper_id = null;
+                }
             });
-
+            /*
             this.$watch('searchTerm', (value) => {
                 if(!value) {
                     this.loadCommittees();
                 }
             });
-
+            */
             // Garante que ao modal ser fechado o estado das variáveis de update sejam resetados, isso evita que ao fechar o modal de update o create se comporte como update
             this.$watch('showCreateModal', (value) => {
                 if (!value) {
@@ -137,7 +138,7 @@ export function committeesData() {
                 }
             });
         },
-        /*
+
         searchMembers() {
             if (this.searchTimeout) clearTimeout(this.searchTimeout);
 
@@ -172,9 +173,11 @@ export function committeesData() {
                 } finally {
                     this.searching = false;
                 }
-            }, 400); // debounce
-        },*/
+            }, 200); // debounce
+        },
 
+        /*
+        // Busca de membros
         searchMembers() {
             if (this.searchTimeout) clearTimeout(this.searchTimeout);
 
@@ -212,7 +215,9 @@ export function committeesData() {
                 }
             }, 100); // debounce
         },
+         */
 
+        // Adiciona membros
         addMember(member) {
             if (!this.member_type_id) {
                 alert('Selecione o tipo de membro antes de adicionar.');
@@ -234,11 +239,12 @@ export function committeesData() {
                     } });
             }
         },
-
+        // Remove membros
         removeMember(userId) {
             this.members = this.members.filter(m => m.user_id !== userId);
         },
 
+        // Mantém a lista de papers atualizada
         showGroupPapers() {
             const group = this.groups.find(g => g.id === Number(this.group_id));
             if(group && group.papers) {
@@ -252,19 +258,9 @@ export function committeesData() {
             }
         },
 
+        // Mostra o trabalho do aluno
         showPaper(url) {
-            this.showGroupCards = false;
-            this.isLoadingPdf = true;
-            this.paperUrl = url;
-            this.showGroupPaper = true;
-            this.$dispatch('toggle-paper', true);
-            this.$nextTick(() => {
-                setTimeout(() => {
-                    this.paperUrl = url;
-                    this.showGroupPaper = true;
-                    this.$dispatch('toggle-paper', true);
-                }, 10);
-            });
+            paperViewer(this, url);
         },
 
         async loadCommittees(page = 1) {
@@ -287,7 +283,6 @@ export function committeesData() {
                 const response = await axios.get(`/${requestPrefix}/committees/show`, {params});
 
                 this.committees = response.data.data;
-                console.log(response.data.data);
                 this.page = response.data.current_page;
                 this.totalPages = response.data.last_page;
             } catch (error) {
@@ -319,6 +314,7 @@ export function committeesData() {
                 return;
             }
 
+            this.showingCommittee = true;
             this.name = committee.name || '';
             this.coordinator_id = committee.coordinator_id || null;
             this.group_id = committee.group_id || null;
@@ -348,15 +344,7 @@ export function committeesData() {
                 this.paper_title = null;
             }
 
-            // Função para timestamps
-            function formatDateTime(label, datetime, compare = null) {
-                if (!datetime || (compare && datetime === compare)) return '';
-
-                const date = new Date(datetime);
-                return `${label}: ${date.toLocaleDateString('pt-BR', { year: 'numeric', month: '2-digit', day: '2-digit' })} às ${date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}`;
-            }
-
-            // uso:
+            // Trata os timestamps
             this.created_at = formatDateTime('Criado em', committee.created_at);
             this.updated_at = formatDateTime('Atualizado em', committee.updated_at, committee.created_at);
 
@@ -365,6 +353,12 @@ export function committeesData() {
 
             this.edit = true;  // indica modo edição
             this.showCreateModal = true;
+
+            // Garante que a função de anular o paper_id seja funcional apenas após o usuário setar outro grupo no modo edição.
+            // o nextTick seria um clique diferente do efetuado agora, 'alterar'
+            this.$nextTick(() => {
+                this.showingCommittee = false;
+            });
         },
 
         async saveCommittee() {
@@ -394,15 +388,7 @@ export function committeesData() {
             });
 
             if(update && savedData) {
-                // Função para timestamps
-                function formatDateTime(label, datetime, compare = null) {
-                    if (!datetime || (compare && datetime === compare)) return '';
-
-                    const date = new Date(datetime);
-                    return `${label}: ${date.toLocaleDateString('pt-BR', { year: 'numeric', month: '2-digit', day: '2-digit' })} às ${date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}`;
-                }
-
-                // uso:
+                // Trata os timestamps
                 this.created_at = formatDateTime('Criado em', savedData.created_at);
                 this.updated_at = formatDateTime('Atualizado em', savedData.updated_at, savedData.created_at);
 
@@ -439,12 +425,13 @@ export function committeesData() {
             if(committee.state === 1) {
                 this.committeeId = null;
                 this.inactivatingIds.push(targetId);
-                this.showWarningModal = false;
                 action = 'inactivate';
             } else {
                 this.activatingIds.push(targetId);
                 action = 'activate';
             }
+
+            this.showWarningModal = false;
 
             try {
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
@@ -475,34 +462,18 @@ export function committeesData() {
         },
 
         clearFields(type) {
-            switch (type){
-                case 'store':
-                    this.name = '';
-                    this.coordinator_id = '';
-                    this.searchMember = '';
-                    this.filteredMembers = [];
-                    this.members = [];
-                    this.group_id = '';
-                    this.paper_id = '';
-                    this.member_type_id = '';
-                    this.errors = {};
-                    this.showBanner = false;
-                    break;
-                case 'filters':
-                    this.searchTerm = '';
-                    this.statusFilter = {};
-                    this.registerPeriod = {};
-                    break;
-                case 'warning':
-                    this.warningType = '';
-                    this.warningContent = '';
-                    break;
-                default:
-                    this.clearFields('store');
-                    this.clearFields('filters');
-                    this.clearFields('warning')
-                    break;
-            }
+            clearComponentData(this, type,
+                [
+                    'name',
+                    'coordinator_id',
+                    'searchMember',
+                    'filteredMembers',
+                    'members',
+                    'group_id',
+                    'paper_id',
+                    'member_type_id',
+                ],
+            );
         },
 
         showMessage(style, message) {
@@ -514,14 +485,17 @@ export function committeesData() {
             }, 3000);
         },
 
-        warning(type,name,id) {
+        warningAction: '',
+
+        warning(type, name, id, action=null) {
             type = type.toLowerCase();
             switch (type){
                 case 'confirmação':
                     type = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
                     this.warningType = type;
-                    this.warningContent = `Tem certeza que deseja inativar a banca ${name}?`;
+                    this.warningContent = `Tem certeza que deseja ${action} a banca ${name}?`;
                     this.committeeId = id;
+                    this.warningAction = action;
                     break;
                 case 'erro':
                     type = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();

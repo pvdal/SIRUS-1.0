@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Paper;
 use App\Models\User;
+use App\Utils\TokenGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -20,10 +21,7 @@ use Throwable;
 
 class GroupController extends Controller
 {
-    /**
-     * @throws RandomException
-     */
-/*
+
     public function search(Request $request): JsonResponse
     {
         $q = $request->query('q', '');
@@ -45,31 +43,12 @@ class GroupController extends Controller
         $students->load('group:id,theme');
 
         return response()->json(
-            $students->map(function ($student) {
-                return [
-                    'ra' => $student->ra,
-                    'name' => $student->user->name ?? '(sem nome)',
-                    'group' => $student->group->theme ?? null,
-                ];
-            })
+            $students->map(fn($student) => [
+                'ra' => $student->ra,
+                'name' => $student->user->name ?? '(sem nome)',
+                'group' => $student->group->theme ?? null,
+            ])->values()->all() // <-- converte Collection para array
         );
-    }
-*/
-    public function showPaper($filename): StreamedResponse
-    {
-        // Evita acesso fora da pasta
-        if (str_contains($filename, '..')) {
-            abort(403);
-        }
-
-        if (!Storage::disk('public')->exists("papers/{$filename}")) {
-            abort(404);
-        }
-
-        return Storage::disk('public')->response("papers/{$filename}", null, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="' . $filename . '"'
-        ]);
     }
 
     /**
@@ -77,8 +56,8 @@ class GroupController extends Controller
      */
     public function index(Request $request): View
     {
-        //if (!session()->has('custom_token')) {}
-        session(['dynamic_token' => bin2hex(random_bytes(24))]);
+        // Inicializa o DynamicToken
+        TokenGenerator::initializeTab();
 
         $groups = Group::with([
             'papers',
@@ -135,8 +114,8 @@ class GroupController extends Controller
     {
         //DB::enableQueryLog();
         $query = Group::with([
-            'papers',
-            'students.user:id,name,state,updated_at,created_at'
+            'papers:id,title,file_path,group_id',
+            'students.user:id,name,state,updated_at,created_at',
         ])->orderBy('id');
 
         if ($request->filled('search')) {
@@ -148,7 +127,10 @@ class GroupController extends Controller
                     })
                     ->orWhereHas('students', function ($sub) use ($search) {
                         $sub->where('ra', 'like', "%{$search}%");
-                    });
+                    })
+                    ->orWhereHas('papers', function ($sub) use ($search) {
+                        $sub->where('title', 'like', "%{$search}%");
+                });
             });
         }
 
@@ -171,11 +153,9 @@ class GroupController extends Controller
         }
 
         $groups = $query->paginate(12);
-        $students = Student::with(['user:id,name', 'group:id,theme'])
-            ->whereHas('user', function ($sub) {
-                $sub->where('state', 1);
-            })
-            ->select('ra', 'user_id', 'group_id')
+
+        $students = Student::whereHas('user', fn ($q) => $q->where('state', 1))
+            ->select(['ra', 'user_id', 'group_id'])
             ->orderBy(
                 User::select('name')
                     ->whereColumn('users.id', 'students.user_id')

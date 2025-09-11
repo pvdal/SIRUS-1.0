@@ -2,18 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+// Common
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
+// Users/Models
 use App\Actions\Fortify\CreateNewUser;
 use App\Models\Professor;
 
 // Log
 //use Illuminate\Support\Facades\DB;
 //use Illuminate\Support\Facades\Log;
+
+// Static Classes and utils
 use Random\RandomException;
+use App\Utils\TokenGenerator;
+use App\Utils\PasswordGenerator;
 
 class ProfessorController extends Controller
 {
@@ -22,27 +27,29 @@ class ProfessorController extends Controller
      */
     public function index(): View
     {
-        //if (!session()->has('custom_token')) {}
-        session(['dynamic_token' => bin2hex(random_bytes(16))]);
+        // Inicializa o DynamicToken
+        TokenGenerator::initializeTab();
 
-        $professors = Professor::with('user:id,name,email,state,updated_at,created_at')->orderBy('id')->paginate(10);
+        // Faz uma query no banco trazendo 15 registros paginados
+        $professors = Professor::with(
+            'user:id,name,email,state,updated_at,created_at'
+        )->orderBy('id')->paginate(15);
 
+        // Pega a coleção paginada que retornou da query acima e mapeia com chaves amigáveis
         $professorsData = $professors->getCollection()->map(function ($professor) {
             $user = $professor->user;
-
-
-
             return [
                 'id' => $professor->id,
                 'user_id' => $professor->user_id,
                 'name' => $user->name ?? '—',
                 'email' => $user->email ?? '—',
                 'state' => isset($user->state) ? (int) $user->state : 0,
-                'created_at' => $user->created_at ?? $professor->created_at,
-                'updated_at' => $user->updated_at ?? $professor->updated_at,
+                'created_at' => $professor->created_at ?? $user->created_at,
+                'updated_at' => $professor->updated_at ?? $user->updated_at,
             ];
-        })->values();
+        })->values(); // Pega apenas a array de valores
 
+        // Retorna os dados na view de gerenciamento de professores
         return view('management.professors', [
             'professors' => $professorsData,
             'current_page' => $professors->currentPage(),
@@ -53,8 +60,12 @@ class ProfessorController extends Controller
     public function show(Request $request): JsonResponse
     {
         //DB::enableQueryLog();
-        $query = Professor::with('user:id,name,email,state,updated_at,created_at')->orderBy('id'); // Carrega dados do usuário
+        $query = Professor::with(
+            'user:id,name,email,state,updated_at,created_at'
+        )->orderBy('id'); // Carrega dados do usuário
 
+        #region Filtros
+        // searchTerm: por nome ou email
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->whereHas('user', function ($q) use ($search) {
@@ -62,48 +73,47 @@ class ProfessorController extends Controller
                     ->orWhere('email', 'like', "%{$search}%");
             });
         }
-
+        // statusFilter: ativo ou inativo
         if($request->filled('status')) {
             $status = $request->input('status');
             $query->whereHas('user', function ($q) use ($status) {
                 $q->where('state', $status);
             });
         }
-
+        // registerPeriod: período de cadastro
         if ($request->filled('period')) {
             $period = $request->input('period');
-            $query->whereHas('user', function ($q) use ($period) {
-                $q->when($period === 'today', fn($q) => $q->whereDate('created_at', today()))
-                    ->when($period === 'week', fn($q) => $q->whereBetween('created_at', [now()->subDays(7), now()]))
-                    ->when($period === 'month', fn($q) => $q->whereBetween('created_at', [now()->subDays(30), now()]));
+            $query->when($period === 'today', function ($q) {
+                $q->whereDate('created_at', today());
+            });
+            $query->when($period === 'week', function ($q) {
+                $q->whereBetween('created_at', [now()->subDays(7), now()]);
+            });
+            $query->when($period === 'month', function ($q) {
+                $q->whereBetween('created_at', [now()->subDays(30), now()]);
             });
         }
+        #endregion
 
-        $professors = $query->paginate(10);
+        // Transforma a query que recebeu os filtros em objeto paginado
+        $professors = $query->paginate(15);
         //Log::info('Queries executadas:', DB::getQueryLog());
 
         // Mapeia para retornar somente os campos necessários
         $professorsData = $professors->getCollection()->map(function ($professor) {
             $user = $professor->user;
-
-            $updated_at = $professor->updated_at;
-
-            if ($user && $user->updated_at) {
-                $updated_at = $user->updated_at->gt($professor->updated_at)
-                    ? $user->updated_at
-                    : $professor->updated_at;
-            }
             return [
                 'id'    => $professor->id,
                 'user_id' => $professor->user_id,
                 'name'  => $professor->user->name,
                 'email' => $professor->user->email,
                 'state' => (int) $professor->user->state,
-                'created_at' => $professor->created_at,
-                'updated_at' => $updated_at, // pega o mais recente
+                'created_at' => $professor->created_at ?? $user->created_at,
+                'updated_at' => $professor->updated_at ?? $user->updated_at, // pega o mais recente
             ];
         })->values();
 
+        // Retorna json com os registros filtrados
         return response()->json([
             'data' => $professorsData,
             'current_page' => $professors->currentPage(),
@@ -111,16 +121,9 @@ class ProfessorController extends Controller
         ]);
     }
 
-    function generateStrongPassword($length = 12) {
-        $letters = Str::random(4);          // letras maiúsculas/minúsculas
-        $numbers = rand(1000, 9999);        // números
-        $symbols = ['!', '@', '#', '$', '%', '&', '*'];
-        $symbol = $symbols[array_rand($symbols)];
-
-        $password = str_shuffle($letters . $numbers . $symbol);
-        return $password;
-    }
-
+    /**
+     * @throws RandomException
+     */
     public function store(Request $request, CreateNewUser $creator): JsonResponse
     {
         //$start = microtime(true);
@@ -129,9 +132,9 @@ class ProfessorController extends Controller
             'email' => 'required|email:rfc,dns|unique:users,email',
         ]);
 
-        $password = $this->generateStrongPassword();
+        $password = PasswordGenerator::random();
 
-        // Cria o usuário usando o Fortify
+        // Cria o usuário usando o controller nativo do Fortify
         $user = $creator->create([
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -161,7 +164,7 @@ class ProfessorController extends Controller
                 'email' => $user->email,
                 'state' => (int) $user->state,
                 'created_at' => $professor->created_at,
-                'updated_at' => $professor->updated_at, // pega o mais recente
+                'updated_at' => $professor->updated_at,
             ]
         ]);
     }
@@ -179,7 +182,9 @@ class ProfessorController extends Controller
             'email' => "required|email:rfc,dns|unique:users,email,{$id},id",
         ]);
 
-        $professor = Professor::with('user:id,name,email,state,updated_at,created_at')->where('user_id', $id)->first();
+        $professor = Professor::with(
+            'user:id,name,email,state,updated_at,created_at'
+        )->where('user_id', $id)->first();
 
         if(!$professor || !$professor->user) {
             return response()->json([
@@ -187,18 +192,15 @@ class ProfessorController extends Controller
             ],422);
         }
 
-        $professor->user->update([
+        // Adiciona os valores na memória
+        $professor->user->fill([
             'name' => $request['name'],
             'email' => $request['email'],
         ]);
-        $user = $professor->user;
-
-        $updated_at = $professor->updated_at;
-
-        if ($user && $user->updated_at) {
-            $updated_at = $user->updated_at->gt($professor->updated_at)
-                ? $user->updated_at
-                : $professor->updated_at;
+        // Se houver alteração comparado aos dados vindos do banco, isDirty retorna true
+        if($professor->isDirty()) {
+            $professor->user->save();
+            $professor->touch(); // Atualiza timestamps do professor
         }
 
         return response()->json([
@@ -211,14 +213,17 @@ class ProfessorController extends Controller
                 'email' => $professor->user->email,
                 'state' => (int) $professor->user->state,
                 'created_at' => $professor->created_at,
-                'updated_at' => $updated_at, // pega o mais recente
+                'updated_at' => $professor->updated_at,
             ]
         ]);
     }
 
-    public function toggleStatus($id,$action): JsonResponse
+    public function toggleStatus($id, $action): JsonResponse
     {
-        $professor = Professor::with('user:id,name,email,state')->where('user_id', $id)->first();
+        // Busca primeiro professor com o ‘ID’ passado como parâmetro
+        $professor = Professor::with(
+            'user:id,name,email,state'
+        )->where('user_id', $id)->first();
 
         if (!$professor || !$professor->user) {
             return response()->json([
@@ -226,6 +231,7 @@ class ProfessorController extends Controller
             ], 422);
         }
 
+        // Inativa ou ativa a depender da $action
         if ($action === 'inactivate') {
             $professor->user->update(['state' => 0]);
         } elseif ($action === 'activate') {
@@ -236,14 +242,14 @@ class ProfessorController extends Controller
             ], 422);
         }
 
-        $professor->refresh();
+        $professor->touch();
 
         return response()->json([
             'success' => true,
             'message' => 'Professor atualizado com sucesso!',
             'state' => (int) $professor->user->state,
-            'created_at' => $professor->user->created_at,
-            'updated_at' => $professor->user->updated_at,
+            'created_at' => $professor->created_at ?? $professor->user->created_at,
+            'updated_at' =>$professor->updated_at ?? $professor->user->updated_at,
         ]);
     }
 }

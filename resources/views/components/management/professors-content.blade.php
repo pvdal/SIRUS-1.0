@@ -75,8 +75,8 @@
                         toggleStatus();
                         $el.blur();
                     "
+                    x-text="warningAction"
                 >
-                    Inativar
                 </x-danger-button>
             </template>
             <x-secondary-button type="button" @click="showWarningModal = false; clearFields('warning');" class="ms-4">
@@ -126,7 +126,7 @@
                         <template x-if="professor.state">
                             <x-danger-button type="button" class="min-w-[98px]" x-bind:disabled="isInactivating(professor.user_id)"
                                 x-on:click="
-                                    warning('confirmação', professor.name, professor.user_id);
+                                    warning('confirmação', professor.name, professor.user_id, 'inativar');
                                     $el.blur();
                                 "
                             >
@@ -141,7 +141,7 @@
                         <template x-if="!professor.state">
                             <x-management.activate-button type="button" class="min-w-[98px]" x-bind:disabled="isActivating(professor.user_id)"
                                 x-on:click="
-                                    toggleStatus(professor.user_id);
+                                    warning('confirmação',professor.name, professor.user_id, 'ativar');
                                     $el.blur();
                                 "
                             >

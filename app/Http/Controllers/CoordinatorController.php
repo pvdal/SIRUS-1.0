@@ -2,18 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+// Common
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
+// Users/Models
 use App\Actions\Fortify\CreateNewUser;
 use App\Models\Coordinator;
 
 // Log
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+//use Illuminate\Support\Facades\DB;
+//use Illuminate\Support\Facades\Log;
+
+// Static Classes and utils
 use Random\RandomException;
+use App\Utils\TokenGenerator;
+use App\Utils\PasswordGenerator;
 
 class CoordinatorController extends Controller
 {
@@ -22,22 +27,14 @@ class CoordinatorController extends Controller
      */
     public function index (): View
     {
-        //if (!session()->has('custom_token')) {}
-        session(['dynamic_token' => bin2hex(random_bytes(16))]);
+        // Inicializa o DynamicToken
+        TokenGenerator::initializeTab();
 
-        $coordinators = Coordinator::with('user:id,name,email,state,updated_at,created_at')->orderBy('id')->paginate(10);
+        $coordinators = Coordinator::with(
+            'user:id,name,email,state,updated_at,created_at'
+        )->orderBy('id')->paginate(15);
 
         $coordinatorsData = $coordinators->getCollection()->map(function ($coordinator) {
-            $user = $coordinator->user;
-
-            $updated_at = $coordinator->updated_at;
-
-            if ($user && $user->updated_at) {
-                $updated_at = $user->updated_at->gt($coordinator->updated_at)
-                    ? $user->updated_at
-                    : $coordinator->updated_at;
-            }
-
             return [
                 'id' => $coordinator->id,
                 'user_id' => $coordinator->user_id,
@@ -45,7 +42,7 @@ class CoordinatorController extends Controller
                 'email' => $coordinator->user->email,
                 'state' => (int) $coordinator->user->state,
                 'created_at' => $coordinator->created_at,
-                'updated_at' => $updated_at,
+                'updated_at' => $coordinator->updated_at,
             ];
         })->values();
 
@@ -59,8 +56,13 @@ class CoordinatorController extends Controller
     public function show (Request $request): jsonResponse
     {
         //DB::enableQueryLog();
-        $query = Coordinator::with('user:id,name,email,state,updated_at,created_at')->orderBy('id');
+        // Consulta no banco, join user com alguns campos ordenados por id
+        $query = Coordinator::with(
+            'user:id,name,email,state,updated_at,created_at'
+        )->orderBy('id');
 
+        #region Filtros
+        // searchTerm: por nome ou email
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->whereHas('user',function ($q) use ($search) {
@@ -68,38 +70,34 @@ class CoordinatorController extends Controller
                     ->orWhere('email', 'like', "%{$search}%");
             });
         }
-
+        // statusFilter: ativo ou inativo
         if ($request->filled('status')) {
             $status = $request->input('status');
             $query->whereHas('user', function ($q) use ($status) {
                 $q->where('state', $status);
             });
         }
-
+        // registerPeriod: período de cadastro
         if ($request->filled('period')) {
             $period = $request->input('period');
-            $query->whereHas('user', function ($q) use ($period) {
-                $q->when($period === 'today', fn($q) => $q->whereDate('created_at', today()))
-                  ->when($period === 'week', fn ($q) => $q->whereDate('created_at', [now()->subDays(7), now()]))
-                  ->when($period === 'month', fn ($q) => $q->whereDate('created_at', [now()->subDays(30), now()]));
+            $query->when($period === 'today', function ($q) {
+                $q->whereDate('created_at', today());
+            });
+            $query->when($period === 'week', function ($q) {
+                $q->whereBetween('created_at', [now()->subDays(7), now()]);
+            });
+            $query->when($period === 'month', function ($q) {
+                $q->whereBetween('created_at', [now()->subDays(30), now()]);
             });
         }
+        #endregion
 
-        $coordinators = $query->paginate(10);
+        //paginação dos dados que vieram do banco
+        $coordinators = $query->paginate(15);
         //Log::info('Queries executadas:', DB::getQueryLog());
 
-        // Mapeia para retornar somente os campos necessários
+        // Mapeia para retornar somente os campos necessários com chaves amigáveis
         $coordinatorsData = $coordinators->getCollection()->map(function ($coordinator) {
-            $user = $coordinator->user;
-
-            $updated_at = $coordinator->updated_at;
-
-            if ($user && $user->updated_at) {
-                $updated_at = $user->updated_at->gt($coordinator->updated_at)
-                    ? $user->updated_at
-                    : $coordinator->updated_at;
-            }
-
             return [
                 'id' => $coordinator->id,
                 'user_id' => $coordinator->user_id,
@@ -107,10 +105,11 @@ class CoordinatorController extends Controller
                 'email' => $coordinator->user->email,
                 'state' => (int) $coordinator->user->state,
                 'created_at' => $coordinator->created_at,
-                'updated_at' => $updated_at,
+                'updated_at' => $coordinator->updated_at,
             ];
         })->values();
 
+        // Retorna dos dados dos coordenadores + pagina atual e última página
         return response()->json([
             'data' => $coordinatorsData,
             'current_page' => $coordinators->currentPage(),
@@ -118,16 +117,9 @@ class CoordinatorController extends Controller
         ]);
     }
 
-    function generateStrongPassword($length = 12) {
-        $letters = Str::random(4);          // letras maiúsculas/minúsculas
-        $numbers = rand(1000, 9999);        // números
-        $symbols = ['!', '@', '#', '$', '%', '&', '*'];
-        $symbol = $symbols[array_rand($symbols)];
-
-        $password = str_shuffle($letters . $numbers . $symbol);
-        return $password;
-    }
-
+    /**
+     * @throws RandomException
+     */
     public function store (Request $request, CreateNewUser $creator): jsonResponse
     {
         //$start = microtime(true);
@@ -136,7 +128,7 @@ class CoordinatorController extends Controller
             'email' => 'required|email:rfc,dns|unique:users,email',
         ]);
 
-        $password = $this->generateStrongPassword();
+        $password = PasswordGenerator::random();
 
         // Cria o usuário usando o Fortify
         $user = $creator->create([
@@ -186,7 +178,10 @@ class CoordinatorController extends Controller
             'email' => "required|email:rfc,dns|unique:users,email,{$id},id",
         ]);
 
-        $coordinator = Coordinator::with('user:id,name,email,state,updated_at,created_at')->where('user_id', $id)->first();
+        $coordinator = Coordinator::with(
+            'user:id,name,email,state,updated_at,created_at'
+        )->where('user_id', $id)
+         ->first();
 
         if(!$coordinator || !$coordinator->user) {
             return response()->json([
@@ -194,10 +189,17 @@ class CoordinatorController extends Controller
             ],422);
         }
 
-        $coordinator->user->update([
+        // Atualiza os campos em memória
+        $coordinator->user->fill([
             'name' => $request['name'],
             'email' => $request['email'],
         ]);
+
+        // Só salva se houver mudanças
+        if($coordinator->user->isDirty()) {
+            $coordinator->user->save(); // Salva apenas se houver mudança, isNotDirty
+            $coordinator->touch(); // Atualiza timestamps do coordenador
+        }
 
         return response()->json([
             'success' => true,
@@ -216,12 +218,20 @@ class CoordinatorController extends Controller
 
     public function toggleStatus($id,$action): JsonResponse
     {
-        $coordinator = Coordinator::with('user:id,name,email,state')->where('user_id', $id)->first();
+        $coordinator = Coordinator::with(
+            'user:id,name,email,state'
+        )->where('user_id', $id)->first();
 
         if (!$coordinator || !$coordinator->user) {
             return response()->json([
                 'message' => 'Coordenador não encontrado!',
             ], 422);
+        }
+        // O usuário autenticado na sessão atual não pode se inativar
+        if(auth()->user()->id === $coordinator->user_id) {
+            return response()->json([
+                'message' => 'Você não pode inativar a própria conta!'
+            ],403);
         }
 
         if ($action === 'inactivate') {
@@ -234,14 +244,14 @@ class CoordinatorController extends Controller
             ], 422);
         }
 
-        $coordinator->refresh();
+        $coordinator->touch();
 
         return response()->json([
             'success' => true,
             'message' => 'Coordenador atualizado com sucesso!',
             'state' => (int) $coordinator->user->state,
-            'created_at' => $coordinator->user->created_at,
-            'updated_at' => $coordinator->user->updated_at,
+            'created_at' => $coordinator->created_at ?? $coordinator->user->created_at,
+            'updated_at' => $coordinator->updated_at ?? $coordinator->user->updated_at,
         ]);
     }
 }

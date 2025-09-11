@@ -19,8 +19,6 @@ return new class extends Migration
             $table->foreignId('group_id')->nullable()->constrained('groups')->nullOnDelete();;
             $table->timestamps();
         });
-
-
     }
 
     /**

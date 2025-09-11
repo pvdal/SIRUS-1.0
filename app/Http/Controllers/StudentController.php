@@ -2,75 +2,86 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\Fortify\CreateNewUser;
-use App\Models\Course;
-use App\Models\Group;
-use App\Models\Student;
+// Common
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
-use Random\RandomException;
+
+// Users/Models
+use App\Actions\Fortify\CreateNewUser;
+use App\Models\Student;
+use App\Models\Course;
+use App\Models\Group;
 
 // Log
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
+// Static Classes and utils
+use Random\RandomException;
+use App\Utils\TokenGenerator;
+use App\Utils\PasswordGenerator;
+
+
 
 class StudentController extends Controller
 {
     /**
      * @throws RandomException
      */
+    // Exibição inicial de alunos sem aplicação de filtros ou troca de página (‘READ’)
     public function index(): View
     {
-        //if (!session()->has('custom_token')) {}
-        session(['dynamic_token' => bin2hex(random_bytes(16))]);
+        // Inicializa o DynamicToken
+        TokenGenerator::initializeTab();
 
+        // Query inicial da tabela 'students' (15 por página). Faz join com as tabelas com as quais se relaciona.
         $students = Student::with(
             'user:id,name,email,state,updated_at,created_at',
             'group:id,theme,state',
             'course:id,name,state',
-        )->orderBy('ra','asc')->paginate(10);
+        )->orderBy('ra','asc')->paginate(15);
 
-        $groups = Group::select('id', 'theme')->where('state', 1)->orderBy('theme', 'asc')->get();
-        $courses = Course::select('id', 'name')->where('state', 1)->orderBy('name', 'asc')->get();
+        // Dados utilizados para o modal de cadastro e filtros
+        $groups = Group::select(['id', 'theme'])->where('state', 1)->orderBy('theme')->get();
+        $courses = Course::select(['id', 'name'])->where('state', 1)->orderBy('name')->get();
 
+        // Mapeia a coleção de dados paginados retornando array simples com chaves definidas aqui
         $studentsData = $students->getCollection()->map(function ($student) {
             $user = $student->user;
-
-            $updated_at = $student->updated_at;
-
-            if ($user && $user->updated_at) {
-                $updated_at = $user->updated_at->gt($student->updated_at)
-                    ? $user->updated_at
-                    : $student->updated_at;
-            }
-
             return [
                 'ra' => $student->ra,
                 'user_id' => $student->user_id,
                 'name' => $student->user->name,
                 'email' => $student->user->email,
                 //'semester' => $student->semester,
-                'group_id' => $student->group->id ?? null,
-                'group_name' => $student->group->theme ?? null,
-                'group_state' => (int) ($student->group->state ?? 0),
-                'course_id' => $student->course->id ?? null,
-                'course_name' => $student->course->name ?? null,
-                'course_state' => (int) ($student->course->state ?? 0),
+                'group' => [
+                    'id' => $student->group->id ?? null,
+                    'name' => $student->group->theme ?? '',
+                    'state' => (int) ($student->group->state ?? 0),
+                ],
+                'course' => [
+                    'id' => $student->course->id ?? null,
+                    'name' => $student->course->name ?? '',
+                    'state' => (int) ($student->course->state ?? 0),
+                ],
                 'state' => (int) $student->user->state,
-                'created_at' => $student->user->created_at, // data de criação do user
-                'updated_at' => $updated_at, // pega o mais recente
+                'created_at' => $student->created_at ?? $user->created_at,
+                'updated_at' => $student->updated_at ?? $user->updated_at,
             ];
         })->values();
 
+        // Retorna a view de gestão de estudantes com os dados extraídos do banco
         return view('management.students', [
             'students' => $studentsData,
             'groups' => $groups,
             'courses' => $courses,
-            'current_page' => $students->currentPage(),
-            'last_page' => $students->lastPage(),
+            'page' => $students->currentPage(),
+            'totalPages' => $students->lastPage(),
         ]);
     }
 
+    // Exibição de alunos com aplicação de filtros ou troca de página (‘READ’)
     public function show(Request $request): JsonResponse
     {
         //DB::enableQueryLog();
@@ -87,7 +98,6 @@ class StudentController extends Controller
                     ->orWhere('email', 'like', "%{$search}%");
             })
             ->orWhere('ra', 'like', "%{$search}%");
-
         }
 
         if ($request->filled('course')) {
@@ -109,28 +119,27 @@ class StudentController extends Controller
 
         if ($request->filled('period')) {
             $period = $request->input('period');
-            $query->whereHas('user', function ($q) use ($period) {
-                $q->when($period === 'today', fn($q) => $q->whereDate('created_at', today()))
-                  ->when($period === 'week', fn($q) => $q->whereBetween('created_at', [now()->subDays(7), now()]))
-                  ->when($period === 'month', fn($q) => $q->whereBetween('created_at', [now()->subDays(30), now()]));
+            $query->when($period === 'today', function ($q) {
+                $q->whereDate('created_at', today());
+            });
+            $query->when($period === 'week', function ($q) {
+                $q->whereBetween('created_at', [now()->subDays(7), now()]);
+            });
+            $query->when($period === 'month', function ($q) {
+                $q->whereBetween('created_at', [now()->subDays(30), now()]);
             });
         }
 
-        $students = $query->paginate(10);
-        $groups = Group::select('id', 'theme')->where('state', 1)->orderBy('theme', 'asc')->get();
-        $courses = Course::select('id', 'name')->where('state', 1)->orderBy('name', 'asc')->get();
+        $students = $query->paginate(15);
+
+        $groups = Group::select(['id', 'theme'])->where('state', 1)
+            ->orderBy('theme', 'asc')->get();
+        $courses = Course::select(['id', 'name'])->where('state', 1)
+            ->orderBy('name', 'asc')->get();
         //Log::info('Queries executadas:', DB::getQueryLog());
 
         $studentsData = $students->getCollection()->map(function ($student) {
             $user = $student->user;
-
-            $updated_at = $student->updated_at;
-
-            if ($user && $user->updated_at) {
-                $updated_at = $user->updated_at->gt($student->updated_at)
-                    ? $user->updated_at
-                    : $student->updated_at;
-            }
 
             return [
                 'ra' => $student->ra,
@@ -138,15 +147,19 @@ class StudentController extends Controller
                 'name' => $student->user->name,
                 'email' => $student->user->email,
                 //'semester' => $student->semester,
-                'group_id' => $student->group->id ?? null,
-                'group_name' => $student->group->theme ?? null,
-                'group_state' => (int) ($student->group->state ?? 0),
-                'course_id' => $student->course->id ?? null,
-                'course_name' => $student->course->name ?? null,
-                'course_state' => (int) ($student->course->state ?? 0),
+                'group' => [
+                    'id' => $student->group->id ?? null,
+                    'name' => $student->group->theme ?? '',
+                    'state' => (int) ($student->group->state ?? 0),
+                ],
+                'course' => [
+                    'id' => $student->course->id ?? null,
+                    'name' => $student->course->name ?? '',
+                    'state' => (int) ($student->course->state ?? 0),
+                ],
                 'state' => (int) $student->user->state,
                 'created_at' => $student->created_at,
-                'updated_at' => $updated_at,
+                'updated_at' => $student->updated_at,
             ];
         })->values();
 
@@ -154,14 +167,19 @@ class StudentController extends Controller
             'data' => $studentsData,
             'groups' => $groups,
             'courses' => $courses,
-            'current_page' => $students->currentPage(),
-            'last_page' => $students->lastPage(),
+            'page' => $students->currentPage(),
+            'totalPages' => $students->lastPage(),
         ]);
     }
 
+    // Cadastro de alunos (‘CREATE’)
+
+    /**
+     * @throws RandomException
+     */
     public function store(Request $request, CreateNewUser $creator): JsonResponse
     {
-        Log::info('Dados recebidos no store', $request->all());
+        //Log::info('Dados recebidos no store', $request->all());
         //$start = microtime(true);
         $validated = $request->validate([
             'ra' => 'required|string|digits:13|unique:students,ra',
@@ -172,11 +190,13 @@ class StudentController extends Controller
             'course_id' => 'nullable|exists:courses,id',
         ]);
 
+        $password = PasswordGenerator::random();
+
         $user = $creator->create([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'password' => 'Aluno@2025',
-            'password_confirmation' => 'Aluno@2025',
+            'password' => $password,
+            'password_confirmation' => $password,
             'access_level' => 1, // 1 = Student
             'state' => 1,
         ]);
@@ -202,10 +222,14 @@ class StudentController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
                 //'semester' => $student->semester,
-                'group_id' => $student->group->id ?? null,
-                'group_name' => $student->group->theme ?? null,
-                'course_id' => $student->course->id ?? null,
-                'course_name' => $student->course->name ?? null,
+                'group' => [
+                    'id' => $student->group->id ?? null,
+                    'name' => $student->group->theme ?? '',
+                ],
+                'course' => [
+                    'id' => $student->course->id ?? null,
+                    'name' => $student->course->name ?? '',
+                ],
                 'state' => (int) $user->state,
                 'created_at' => $student->created_at,
                 'updated_at' => $student->updated_at,
@@ -213,6 +237,7 @@ class StudentController extends Controller
         ]);
     }
 
+    // Atualização de dados (‘UPDATE’)
     public function update(Request $request, $id): JsonResponse
     {
         if(!$id) {
@@ -237,10 +262,15 @@ class StudentController extends Controller
             ], 422);
         }
 
-        $student->user->update([
+        $student->user->fill([
             'name' => $request['name'],
             'email' => $request['email'],
         ]);
+
+        if($student->user->isDirty()) {
+            $student->user->save();
+            $student->touch();
+        }
 
         $student->update([
             //'semester' => $request['semester'],
@@ -252,14 +282,6 @@ class StudentController extends Controller
 
         $user = $student->user;
 
-        $updated_at = $student->updated_at;
-
-        if ($user && $user->updated_at) {
-            $updated_at = $user->updated_at->gt($student->updated_at)
-                ? $user->updated_at
-                : $student->updated_at;
-        }
-
         return response()->json([
             'success' => true,
             'message' => 'Aluno atualizado com sucesso!',
@@ -269,20 +291,24 @@ class StudentController extends Controller
                 'name' => $student->user->name,
                 'email' => $student->user->email,
                 //'semester' => $student->semester,
-                'group_id' => $student->group->id ?? null,
-                'group_name' => $student->group->theme ?? null,
-                'course_id' => $student->course->id ?? null,
-                'course_name' => $student->course->name ?? null,
+                'group' => [
+                    'id' => $student->group->id ?? null,
+                    'name' => $student->group->theme ?? '',
+                ],
+                'course' => [
+                    'id' => $student->course->id ?? null,
+                    'name' => $student->course->name ?? '',
+                ],
                 'state' => (int) $student->user->state,
-                'created_at' => $student->created_at,
-                'updated_at' => $updated_at, // pega o mais recente
+                'created_at' => $student->created_at ?? $user->created_at,
+                'updated_at' => $student->updated_at ?? $user->updated_at,
             ]
         ]);
     }
 
     public function toggleStatus($id,$action): JsonResponse
     {
-        $student = Student::with('user:id,name,email,state')->where('user_id', $id)->first();
+        $student = Student::with('user:id,state,created_at,updated_at')->where('user_id', $id)->first();
 
         if (!$student || !$student->user) {
             return response()->json([
@@ -300,14 +326,14 @@ class StudentController extends Controller
             ], 422);
         }
 
-        $student->refresh();
+        $student->touch();
 
         return response()->json([
             'success' => true,
             'message' => 'Aluno atualizado com sucesso!',
             'state' => (int) $student->user->state,
-            'created_at' => $student->user->created_at,
-            'updated_at' => $student->user->updated_at, // pega o mais recente
+            'created_at' => $student->created_at ?? $student->user->created_at,
+            'updated_at' => $student->updated_at ?? $student->user->updated_at,
         ]);
     }
 }

@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
+        @php
+            $tabId = session('tabId');
+            $dynamicTokens = session('dynamic_tokens', []);
+            $dynamicToken = $dynamicTokens[$tabId][0] ?? null;
+        @endphp
+
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <meta name="request-prefix" content="{{ env('SECURE_POST_PREFIX') }}">
+        <meta name="request-prefix" content="{{ config('secure.request_prefix') }}">
+        <meta name="tabId" content="{{ $tabId }}">
+        <meta name="dynamic-token" content="{{ $dynamicToken }}">
 
         <title>{{config('app.name') . ($title ?? '' ? ' | ' .$title : '')}}</title>
         <link rel="icon" type="image/png" href="{{ asset('logo.png') }}?v=1">
@@ -17,10 +25,12 @@
         @livewireStyles
 
         <script>
-            {{-- Token dinâmico de requisições ajax --}}
-            window.dynamicToken = '{{ session("dynamic_token") }}';
-            {{-- Armazena para uso no JavaScript --}}
-            localStorage.setItem('dynamic_token', window.dynamicToken);
+            {{-- ID da aba atual --}}
+            window.dynamicToken = document.querySelector('meta[name="dynamic-token"]')?.content || '';
+            sessionStorage.setItem('dynamic_token', window.dynamicToken);
+            {{-- Token dinâmico inicial --}}
+            window.tabId = document.querySelector('meta[name="tabId"]')?.content || '';
+            sessionStorage.setItem('tabId', window.tabId);
         </script>
     </head>
     <body class="font-sans antialiased">

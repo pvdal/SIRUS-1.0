@@ -17,8 +17,8 @@ class MemberType extends Model
         'updated_at' => 'datetime',
     ];
 
-    public function ProfessorCommittee(): HasMany
+    public function UserCommittee(): HasMany
     {
-        return $this->hasMany(ProfessorCommittee::class);
+        return $this->hasMany(UserCommittee::class);
     }
 }

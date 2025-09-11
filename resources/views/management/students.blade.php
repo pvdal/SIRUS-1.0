@@ -13,7 +13,7 @@
     <x-main-content>
         {{-- Chamada da função alpine -> recources/js/components/management/studentsData.js--}}
         <div x-data="studentsData()"
-             x-init='init(@json($students), @json($groups), @json($courses), {{ $current_page }}, {{ $last_page }})'>
+             x-init='init(@json($students), @json($groups), @json($courses), {{ $page }}, {{ $totalPages }})'>{{-- com paginação backend: , {{ $current_page }}, {{ $last_page }} --}}
             <x-nav-users-table> {{-- Navegação das tabelas de usuário --}}
                 {{-- Menu utilitário das tabelas --}}
                 <x-actions-table-bar
@@ -35,6 +35,7 @@
                                     class="flex justify-between items-center pr-4 min-w-[170px] max-w-[200px] w-full whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 rounded-lg
                                        text-left px-4 py-2.5 xs:me-2 mb-2 text-sm text-gray-700 focus:ring-2 focus:ring-secondary-blue
                                        focus:border-secondary-blue cursor-pointer"
+                                    x-bind:disabled="loading"
                                     :title="courseFilter.name || 'Selecione um curso'">
                                 <span class="truncate" x-text="courseFilter.name || 'Selecione um curso'"></span>
                                 <x-lucide-chevron-down class="w-4 h-4 text-gray-700 flex-shrink-0 ms-auto" />
@@ -43,8 +44,15 @@
                             <ul x-show="courseFilter.drop"
                                 @click.outside="courseFilter.drop = false"
                                 class="absolute min-w-[170px] md:max-w-[200px] w-full border bg-white mt-1 rounded-lg max-h-60 overflow-auto z-50 scrollbar-custom">
+                                <template x-if="courses.length == 0">
+                                    <li class="px-4 py-1 text-sm text-gray-700 break-words">
+                                        Não há cursos cadastrados ainda!
+                                    </li>
+                                </template>
                                 <li @click="courseFilter.id = ''; courseFilter.name = 'Todos os cursos'; courseFilter.drop = false; loadStudents()"
-                                    class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 break-words cursor-pointer">
+                                    class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 break-words cursor-pointer"
+                                    x-show="courses.length > 0"
+                                >
                                     Todos os cursos
                                 </li>
                                 <template x-for="course in courses" :key="course.id">
@@ -62,6 +70,7 @@
                                     class="flex justify-between items-center pr-4 min-w-[170px] max-w-[200px] w-full whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 rounded-lg
                                        text-left px-4 py-2.5 xs:me-2 mb-2 text-sm text-gray-700 focus:ring-2 focus:ring-secondary-blue
                                        focus:border-secondary-blue cursor-pointer"
+                                    x-bind:disabled="loading"
                                     :title="groupFilter.theme || 'Selecione um grupo'">
                                 <span class="truncate" x-text="groupFilter.theme || 'Selecione um grupo'"></span>
                                 <x-lucide-chevron-down class="w-4 h-4 text-gray-700 flex-shrink-0 ms-auto"/>
@@ -70,8 +79,15 @@
                             <ul x-show="groupFilter.drop"
                                 @click.outside="groupFilter.drop = false"
                                 class="absolute min-w-[170px] md:max-w-[200px] w-full border bg-white mt-1 rounded-lg max-h-60 overflow-auto z-50 scrollbar-custom">
+                                <template x-if="groups.length == 0">
+                                        <li class="px-4 py-1 text-sm text-gray-700 break-words">
+                                        Não há grupos cadastrados ainda!
+                                    </li>
+                                </template>
                                 <li @click="groupFilter.id = ''; groupFilter.theme = 'Todos os grupos'; groupFilter.drop = false; loadStudents()"
-                                    class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 break-words cursor-pointer">
+                                    class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 break-words cursor-pointer"
+                                    x-show="groups.length > 0"
+                                >
                                     Todos os grupos
                                 </li>
                                 <template x-for="group in groups" :key="group.id">
@@ -87,11 +103,19 @@
                 {{-- Componente com o conteúdo que o alpine vai manipular --}}
                 <x-management.students-content/>
                 {{-- Paginação --}}
-                <x-management.pagination
+                 <x-management.pagination
                     :page-var="'page'"
                     :total-pages="'totalPages'"
                     :load-function="'loadStudents'"
                 />
+
+                {{-- com paginação js--}}
+                {{--
+                <x-management.paginationJs
+                    :page-var="'page'"
+                    :total-pages="'totalPages'"
+
+                />--}}
             </x-nav-users-table>
         </div>
     </x-main-content>

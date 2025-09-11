@@ -17,6 +17,6 @@ class Event extends Model
 
     public function professor_committee(): HasMany
     {
-        return $this->hasMany(ProfessorCommittee::class);
+        return $this->hasMany(UserCommittee::class);
     }
 }

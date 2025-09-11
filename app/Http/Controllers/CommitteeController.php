@@ -7,10 +7,12 @@ use App\Models\Coordinator;
 use App\Models\Group;
 use App\Models\MemberType;
 use App\Models\Professor;
-use App\Models\ProfessorCommittee;
+use App\Models\UserCommittee;
 use App\Models\User;
+use App\Utils\TokenGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Random\RandomException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,28 +26,22 @@ class CommitteeController extends Controller
 
     public function index(): View
     {
-        session(['dynamic_token' => bin2hex(random_bytes(16))]);
+        // Inicializa o DynamicToken
+        TokenGenerator::initializeTab();
 
         // Paginação agora em cima de Committee
         $committees = Committee::with([
             'coordinator.user:id,name',
-            'group.students.user:id,name,state',
             'members.user:id,name,state,access_level', // todos membros (professor/coordenador)
             'members.memberType',
             'event',
-            'paper:id,title,file_path',
+            'paper.group.students.user:id,name,state',
         ])->orderBy('id')->paginate(12);
+
 
         // Mapeamento dos dados paginados
         $committeesData = $committees->getCollection()->map(function ($committee) {
-            $group = $committee->group;
-
-            $professorCommittee = $committee->members;
-
-            $membersUpdatedAt = $professorCommittee->max('updated_at'); // pega o maior updated_at dos membros
-            $updated_at = $membersUpdatedAt && $membersUpdatedAt->gt($committee->updated_at)
-                ? $membersUpdatedAt
-                : $committee->updated_at;
+            $group = $committee->paper->group;
 
             return [
                 'id' => $committee->id,
@@ -82,27 +78,27 @@ class CommitteeController extends Controller
                 'event_title' => $committee->event?->title,
                 'state' => (int) $committee->state,
                 'created_at' => $committee->created_at,
-                'updated_at' => $updated_at,
+                'updated_at' => $committee->updated_at,
             ];
         })->values();
 
         // Dados auxiliares
-        $coordinators = Coordinator::with(['user:id,name'])
+        $coordinators = Coordinator::with('user:id,name')
             ->whereHas('user', function ($sub) {
                 $sub->where('state', 1);
             })
-            ->select('id', 'user_id')
+            ->select(['id', 'user_id'])
             ->orderBy(
                 User::select('name')
                     ->whereColumn('users.id', 'coordinators.user_id')
             )
             ->get();
 
-        $professors = Professor::with(['user:id,name'])
+        $professors = Professor::with('user:id,name')
             ->whereHas('user', function ($sub) {
                 $sub->where('state', 1);
             })
-            ->select('id', 'user_id')
+            ->select(['id', 'user_id'])
             ->orderBy(
                 User::select('name')
                     ->whereColumn('users.id', 'professors.user_id')
@@ -111,7 +107,7 @@ class CommitteeController extends Controller
 
         $member_types = MemberType::orderBy('name')->get();
 
-        $groups = Group::with(['papers:id,title,file_path,group_id'])
+        $groups = Group::with('papers:id,title,file_path,group_id')
             ->where('state', 1)
             ->orderBy('theme', 'asc')
             ->get()
@@ -159,12 +155,12 @@ class CommitteeController extends Controller
         ]);
     }
 
-    /*
+
     public function search(Request $request): JsonResponse
     {
         $q = $request->query('q', '');
 
-        $coordinators = Coordinator::with(['user:id,name'])
+        $coordinators = Coordinator::with('user:id,name')
             ->whereHas('user', function ($sub) {
                 $sub->where('state', 1);
             })
@@ -174,7 +170,7 @@ class CommitteeController extends Controller
                 })
                     ->orWhere('id', 'like', '%' . $q . '%');
             })
-            ->select('id', 'user_id')
+            ->select(['id', 'user_id'])
             ->limit(5)
             ->orderBy(
                 User::select('name')
@@ -182,7 +178,7 @@ class CommitteeController extends Controller
             )
             ->get();
 
-        $professors = Professor::with(['user:id,name'])
+        $professors = Professor::with('user:id,name')
             ->whereHas('user', function ($sub) {
                 $sub->where('state', 1);
             })
@@ -192,8 +188,8 @@ class CommitteeController extends Controller
                 })
                     ->orWhere('id', 'like', '%' . $q . '%');
             })
-            ->select('id', 'user_id')
-            ->limit(5)
+            ->select(['id', 'user_id'])
+            ->limit(10)
             ->orderBy(
                 User::select('name')
                     ->whereColumn('users.id', 'professors.user_id')
@@ -226,18 +222,17 @@ class CommitteeController extends Controller
             )->values()
         );
     }
-    */
+
 
     public function show(Request $request): JsonResponse
     {
         //DB::enableQueryLog();
         $query = Committee::with([
             'coordinator.user:id,name',
-            'group.students.user:id,name,state',
             'members.user:id,name,state',   // todos membros (professor/coordenador)
             'members.memberType',
             'event',
-            'paper:id,title,file_path',
+            'paper.group.students.user:id,name,state',
         ])->orderBy('id');
 
         if ($request->filled('search')) {
@@ -282,14 +277,7 @@ class CommitteeController extends Controller
 
         // Mapeia para retornar somente os campos necessários
         $committeesData = $committees->getCollection()->map(function ($committee) {
-            $group = $committee->group;
-
-            $professorCommittee = $committee->members;
-
-            $membersUpdatedAt = $professorCommittee->max('updated_at'); // pega o maior updated_at dos membros
-            $updated_at = $membersUpdatedAt && $membersUpdatedAt->gt($committee->updated_at)
-                ? $membersUpdatedAt
-                : $committee->updated_at;
+            $group = $committee->paper->group;
 
             return [
                 'id' => $committee->id,
@@ -326,27 +314,27 @@ class CommitteeController extends Controller
                 'event_title' => $committee->event?->title,
                 'state' => (int) $committee->state,
                 'created_at' => $committee->created_at,
-                'updated_at' => $updated_at,
+                'updated_at' => $committee->updated_at,
             ];
         })->values();
 
         // Dados auxiliares
-        $coordinators = Coordinator::with(['user:id,name'])
+        $coordinators = Coordinator::with('user:id,name')
             ->whereHas('user', function ($sub) {
                 $sub->where('state', 1);
             })
-            ->select('id', 'user_id')
+            ->select(['id', 'user_id'])
             ->orderBy(
                 User::select('name')
                     ->whereColumn('users.id', 'coordinators.user_id')
             )
             ->get();
 
-        $professors = Professor::with(['user:id,name'])
+        $professors = Professor::with('user:id,name')
             ->whereHas('user', function ($sub) {
                 $sub->where('state', 1);
             })
-            ->select('id', 'user_id')
+            ->select(['id', 'user_id'])
             ->orderBy(
                 User::select('name')
                     ->whereColumn('users.id', 'professors.user_id')
@@ -355,7 +343,7 @@ class CommitteeController extends Controller
 
         $member_types = MemberType::orderBy('name')->get();
 
-        $groups = Group::with(['papers:id,title,file_path,group_id'])
+        $groups = Group::with('papers:id,title,file_path,group_id')
             ->where('state', 1)
             ->get()
             ->map(fn($g) => [
@@ -408,11 +396,17 @@ class CommitteeController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        // o nullable de rubric é temporario
+        // o nullable de rubric é temporário
         $request->validate([
             'name' => 'required|string|max:255|unique:committees,name',
             'group_id' => 'required|exists:groups,id',
-            'paper_id' => 'required|exists:papers,id|unique:committees,paper_id',
+            'paper_id' => [
+                'required',
+                Rule::exists('papers', 'id')->where(function ($query) use ($request) {
+                    $query->where('group_id', $request->group_id);
+                }),
+                'unique:committees,paper_id',
+            ],
             'rubric_id' => 'nullable|exists:rubrics,id',
             'members' => 'required|array|min:1',
             'members.*.user_id' => 'required|exists:users,id',
@@ -435,13 +429,13 @@ class CommitteeController extends Controller
             $committee = Committee::create([
                 'name' => $request['name'],
                 'coordinator_id' => $request->coordinator_id,
-                'group_id' => $request['group_id'],
+                //'group_id' => $request['group_id'],
                 'paper_id' => $request['paper_id'],
                 'state' => 1,
             ]);
 
             foreach ($request['members'] as $member) {
-                ProfessorCommittee::create([
+                UserCommittee::create([
                     'committee_id' => $committee->id,
                     'user_id' => $member['user_id'],
                     'member_type_id' => $member['member_type']['id'],
@@ -449,13 +443,13 @@ class CommitteeController extends Controller
             }
         });
 
-        $professorsCommittees = ProfessorCommittee::with([
+        $professorsCommittees = UserCommittee::with([
             'user' => function ($query) {
                 $query->where('state', 1)
                     ->select('id','name','state');
             },
             'committee.coordinator.user:id,name',
-            'committee.group.students' => function ($query) {
+            'committee.paper.group.students' => function ($query) {
                 $query->whereHas('user', function ($q) {
                     $q->where('state', 1);
                 })
@@ -530,17 +524,6 @@ class CommitteeController extends Controller
             ],422);
         }
 
-        // o nullable de rubric é temporario
-        $request->validate([
-            'name' => "required|string|max:255|unique:committees,name,{$id},id",
-            'group_id' => 'required|exists:groups,id',
-            'paper_id' => 'required|exists:papers,id',
-            'rubric_id' => 'nullable|exists:rubrics,id',
-            'members' => 'required|array|min:1',
-            'members.*.user_id' => 'required|exists:users,id',
-            'members.*.member_type.id' => 'required|exists:member_types,id',
-        ]);
-
         // Busca a banca existente
         $committee = Committee::find($id);
 
@@ -550,42 +533,64 @@ class CommitteeController extends Controller
             ], 422);
         }
 
+        $currentPaperId = $committee->paper_id;
+
+        // o nullable de rubric é temporario
+        $request->validate([
+            'name' => "required|string|max:255|unique:committees,name,{$id},id",
+            'group_id' => 'required|exists:groups,id',
+            'paper_id' => [
+                'required',
+                Rule::exists('papers', 'id')->where(function ($query) use ($request) {
+                    $query->where('group_id', $request->group_id);
+                }),
+                "unique:committees,paper_id,{$currentPaperId},id",
+            ],
+            'rubric_id' => 'nullable|exists:rubrics,id',
+            'members' => 'required|array|min:3',
+            'members.*.user_id' => 'required|exists:users,id',
+            'members.*.member_type.id' => 'required|exists:member_types,id',
+        ]);
+
+        $committee->fill([
+            'name' => $request['name'],
+            //'group_id' => $request['group_id'],
+            'paper_id' => $request['paper_id'],
+        ]);
+
         $existingMembers = $committee->members
             ->map(fn($m) => ['user_id' => $m->user_id, 'member_type_id' => $m->member_type_id])
-            ->toArray();
+            ->values();
 
         $newMembers = collect($request['members'])
             ->map(fn($m) => ['user_id' => $m['user_id'], 'member_type_id' => $m['member_type']['id']])
-            ->toArray();
+            ->values();
 
         DB::transaction(function () use ($request, &$committee, &$existingMembers, &$newMembers) {
-            $committee->update([
-                'name' => $request['name'],
-                'group_id' => $request['group_id'],
-                'paper_id' => $request['paper_id'],
-            ]);
+            if($committee->isDirty()) {
+                $committee->save();
+            }
 
             // Compara os arrays
-            $membersChanged = $existingMembers != $newMembers;
-
-            if ($membersChanged) {
+            if ($existingMembers->toArray() !== $newMembers->toArray()) {
                 // Só atualiza se houver mudança
                 $committee->members()->delete();
 
                 foreach ($newMembers as $member) {
-                    ProfessorCommittee::create([
+                    UserCommittee::create([
                         'committee_id' => $committee->id,
                         'user_id' => $member['user_id'],
                         'member_type_id' => $member['member_type_id'],
                     ]);
                 }
+                $committee->touch();
             }
         });
 
-        $professorsCommittees = ProfessorCommittee::with([
+        $professorsCommittees = UserCommittee::with([
             'user:id,name,state',
             'committee.coordinator.user:id,name',
-            'committee.group.students' => function ($query) {
+            'committee.paper.group.students' => function ($query) {
                 $query->whereHas('user', function ($q) {
                     $q->where('state', 1);
                 })
@@ -596,14 +601,7 @@ class CommitteeController extends Controller
         ])->where('committee_id', $committee->id)
             ->get();
 
-        $group = $committee->group;
-
-        $professorCommittee = $committee->members;
-
-        $membersUpdatedAt = $professorCommittee->max('updated_at'); // pega o maior updated_at dos membros
-        $updated_at = $membersUpdatedAt && $membersUpdatedAt->gt($committee->updated_at)
-            ? $membersUpdatedAt
-            : $committee->updated_at;
+        $group = $committee->paper->group;
 
         return response()->json([
             'success' => true,
@@ -642,7 +640,7 @@ class CommitteeController extends Controller
                 'event_title' => $committee?->event?->title,
                 'state' => (int) $committee->state,
                 'created_at' => $committee->created_at,
-                'updated_at' => $updated_at,
+                'updated_at' => $committee->updated_at,
             ],
         ]);
     }

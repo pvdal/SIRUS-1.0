@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('coordinator_id')->nullable()->constrained('coordinators')->nullOnDelete();
-            $table->foreignId('group_id')->nullable()->constrained('groups')->nullOnDelete();
             $table->foreignId('rubric_id')->nullable()->constrained('rubrics')->nullOnDelete();
             $table->foreignId('paper_id')->nullable()->constrained('papers')->nullOnDelete();
             $table->foreignId('event_id')->nullable()->constrained('events')->nullOnDelete();
@@ -35,7 +34,6 @@ return new class extends Migration
     {
         Schema::table('committees', function (Blueprint $table) {
             $table->dropForeign(['coordinator_id']);
-            $table->dropForeign(['group_id']);
             $table->dropForeign(['rubric_id']);
             $table->dropForeign(['event_id']);
         });

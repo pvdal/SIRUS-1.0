@@ -5,10 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ProfessorCommittee extends Model
+class UserCommittee extends Model
 {
-    protected $table = 'professors_committees';
-
     protected $fillable = [
         'user_id',
         'committee_id',

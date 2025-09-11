@@ -170,15 +170,7 @@ export function coursesData(){
             this.shift = shift || '';
             this.coordinator_id = course.coordinator_id || '';
 
-            // Função para timestamps
-            function formatDateTime(label, datetime, compare = null) {
-                if (!datetime || (compare && datetime === compare)) return '';
-
-                const date = new Date(datetime);
-                return `${label}: ${date.toLocaleDateString('pt-BR', { year: 'numeric', month: '2-digit', day: '2-digit' })} às ${date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}`;
-            }
-
-            // uso:
+            // Trata os timestamps
             this.created_at = formatDateTime('Criado em', course.created_at);
             this.updated_at = formatDateTime('Atualizado em', course.updated_at, course.created_at);
 
@@ -219,15 +211,7 @@ export function coursesData(){
             });
 
             if(update && savedData) {
-                // Função para timestamps
-                function formatDateTime(label, datetime, compare = null) {
-                    if (!datetime || (compare && datetime === compare)) return '';
-
-                    const date = new Date(datetime);
-                    return `${label}: ${date.toLocaleDateString('pt-BR', { year: 'numeric', month: '2-digit', day: '2-digit' })} às ${date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}`;
-                }
-
-                // uso:
+                // Trata os timestamps
                 this.created_at = formatDateTime('Criado em', savedData.created_at);
                 this.updated_at = formatDateTime('Atualizado em', savedData.updated_at, savedData.created_at);
 
@@ -264,12 +248,14 @@ export function coursesData(){
             if(course.state === 1) {
                 this.courseId = null;
                 this.inactivatingIds.push(targetId);
-                this.showWarningModal = false;
+
                 action = 'inactivate';
             } else {
                 this.activatingIds.push(targetId);
                 action = 'activate';
             }
+
+            this.showWarningModal = false;
 
             try {
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
@@ -300,29 +286,13 @@ export function coursesData(){
         },
 
         clearFields(type) {
-            switch (type){
-                case 'store':
-                    this.name = '';
-                    this.shift = '';
-                    this.coordinator_id = '';
-                    this.errors = {};
-                    this.showBanner = false;
-                    break;
-                case 'filters':
-                    this.searchTerm = '';
-                    this.statusFilter = {};
-                    this.registerPeriod = {};
-                    break;
-                case 'warning':
-                    this.warningType = '';
-                    this.warningContent = '';
-                    break;
-                default:
-                    this.clearFields('store');
-                    this.clearFields('filters');
-                    this.clearFields('warning')
-                    break;
-            }
+            clearComponentData(this, type,
+                [
+                    'name',
+                    'shift',
+                    'coordinator_id',
+                ],
+            );
         },
 
         showMessage(style, message) {
@@ -333,15 +303,16 @@ export function coursesData(){
                 this.showBanner = false;
             }, 3000);
         },
-
-        warning(type, name, id) {
+        warningAction: '',
+        warning(type, name, id, action=null) {
             type = type.toLowerCase();
             switch (type){
                 case 'confirmação':
                     type = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
                     this.warningType = type;
-                    this.warningContent = `Tem certeza que deseja inativar o curso ${name}?`;
+                    this.warningContent = `Tem certeza que deseja ${action} o curso ${name}?`;
                     this.courseId = id;
+                    this.warningAction = action;
                     break;
                 case 'erro':
                     type = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();

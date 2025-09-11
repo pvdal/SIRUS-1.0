@@ -75,8 +75,9 @@
                         toggleStatus();
                         $el.blur();
                     "
+                    x-text="warningAction"
                 >
-                    Inativar
+
                 </x-danger-button>
             </template>
             <x-secondary-button type="button" @click="showWarningModal = false; clearFields('warning');" class="ms-4">
@@ -84,6 +85,7 @@
             </x-secondary-button>
         </x-slot>
     </x-warning-modal>
+
     <div class="py-5 px-2 rounded-sm">
         {{-- Tabela de registros: recebe os dados iniciais direto do controller e na paginação recebe os dados pro ajax --}}
         <table class="min-w-full border border-gray-300 divide-y divide-gray-200 rounded-sm">
@@ -92,7 +94,7 @@
                 <th class="px-4 py-2 text-center text-gray-700 hidden md:table-cell">RA</th>
                 <th class="px-4 py-2 text-center text-gray-700">Nome</th>
                 <th class="px-4 py-2 text-center text-gray-700 hidden lg:table-cell">E-mail</th>
-                <th class="px-4 py-2 text-center text-gray-700 hidden xl:table-cell">Semestre</th>
+                {{--<th class="px-4 py-2 text-center text-gray-700 hidden xl:table-cell">Semestre</th>--}}
                 <th class="px-4 py-2 text-center text-gray-700 hidden md:table-cell">Grupo</th>
                 <th class="px-4 py-2 text-center text-gray-700 hidden xl:table-cell">Curso</th>
                 <th class="px-4 py-2 text-center text-gray-700 hidden xl:table-cell">Estado</th>
@@ -113,9 +115,9 @@
                     <td class="px-4 py-2 border text-center border-gray-300 hidden md:table-cell" x-text="student.ra"></td>
                     <td class="px-4 py-2 border text-center border-gray-300" x-text="student.name"></td>
                     <td class="px-4 py-2 border text-center border-gray-300 hidden lg:table-cell" x-text="student.email"></td>
-                    <td class="px-4 py-2 border text-center border-gray-300 hidden xl:table-cell" x-text="student.semester"></td>
-                    <td class="px-4 py-2 border text-center border-gray-300 hidden md:table-cell" :class="student.group_state == 0 && student.group_name ? 'line-through text-gray-400' : ''" x-text="student.group_name || '-'"></td>
-                    <td class="px-4 py-2 border text-center border-gray-300 hidden xl:table-cell" :class="student.course_state == 0 && student.course_name ? 'line-through text-gray-400' : ''" x-text="student.course_name || '-'"></td>
+                    {{--<td class="px-4 py-2 border text-center border-gray-300 hidden xl:table-cell" x-text="student.semester"></td>--}}
+                    <td class="px-4 py-2 border text-center border-gray-300 hidden md:table-cell" :class="student.group.state === 0 && student.group.name ? 'line-through text-gray-400' : ''" x-text="student.group.name || '-'"></td>
+                    <td class="px-4 py-2 border text-center border-gray-300 hidden xl:table-cell" :class="student.course.state === 0 && student.course.name ? 'line-through text-gray-400' : ''" x-text="student.course.name || '-'"></td>
                     <td class="px-4 py-2 border text-center border-gray-300 hidden xl:table-cell" x-text="student.state ? 'Ativo' : 'Inativo'"></td>
                     <td class="px-4 py-2 border text-center border-gray-300">
                         <template x-if="student.state">
@@ -131,7 +133,7 @@
                         <template x-if="student.state">
                             <x-danger-button type="button" class="min-w-[98px]" x-bind:disabled="isInactivating(student.user_id)"
                                 x-on:click="
-                                    warning('confirmação', student.name, student.user_id);
+                                    warning('confirmação', student.name, student.user_id, 'inativar');
                                     $el.blur();
                                 "
                             >
@@ -146,7 +148,7 @@
                         <template x-if="!student.state">
                             <x-management.activate-button type="button" class="min-w-[98px]" x-bind:disabled="isActivating(student.user_id)"
                                 x-on:click="
-                                    toggleStatus(student.user_id);
+                                    warning('confirmação', student.name, student.user_id, 'ativar');
                                     $el.blur();
                                 "
                             >

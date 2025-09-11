@@ -13,7 +13,7 @@ return new class extends Migration
     //Tabela Professor_Banca
     public function up(): void
     {
-        Schema::create('professors_committees', function (Blueprint $table) {
+        Schema::create('user_committees', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('committee_id')->nullable()->constrained('committees')->nullOnDelete();
@@ -29,11 +29,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('professors_committees', function (Blueprint $table) {
+        Schema::table('user_committees', function (Blueprint $table) {
             $table->dropForeign(['professor_id']);
             $table->dropForeign(['committee_id']);
             $table->dropForeign(['member_type_id']);
         });
-        Schema::dropIfExists('professors_committees');
+        Schema::dropIfExists('user_committees');
     }
 };

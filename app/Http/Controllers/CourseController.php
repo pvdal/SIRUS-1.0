@@ -2,18 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use Illuminate\Http\Request;
+// Common
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
+// Models
+use App\Models\User;
 use App\Models\Course;
 use App\Models\Coordinator;
 
 // Log
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+// use Illuminate\Support\Facades\DB;
+// use Illuminate\Support\Facades\Log;
+
+// Static Classes and utils
 use Random\RandomException;
+use App\Utils\TokenGenerator;
 
 class CourseController extends Controller
 {
@@ -22,8 +27,8 @@ class CourseController extends Controller
      */
     public function index(): View
     {
-        //if (!session()->has('custom_token')) {}
-        session(['dynamic_token' => bin2hex(random_bytes(16))]);
+        // Inicializa o DynamicToken
+        TokenGenerator::initializeTab();
 
         $coordinators = Coordinator::with('user:id,name')
             ->whereHas('user', function ($q) {
@@ -42,7 +47,7 @@ class CourseController extends Controller
             ];
         });
 
-        $courses = Course::with('coordinator.user:id,name,state')->orderBy('id')->paginate(10);
+        $courses = Course::with('coordinator.user:id,name,state')->orderBy('id')->paginate(12);
 
         $coursesData = $courses->getCollection()->map(function ($course) {
             return [
@@ -115,7 +120,7 @@ class CourseController extends Controller
             });
         }
 
-        $courses = $query->paginate(10);
+        $courses = $query->paginate(12);
         //Log::info('Queries executadas:', DB::getQueryLog());
         //$queries = DB::getQueryLog();
         //dd($queries);
@@ -182,13 +187,19 @@ class CourseController extends Controller
 
     public function update(Request $request, $id): JsonResponse
     {
+        if(!$id) {
+            return response()->json([
+                'message' => 'Selecione um Curso!',
+            ],422);
+        }
+
         $request->validate([
             'name' => "required|string|max:255|unique:courses,name,{$id},id",
             'shift' => 'required|in:morning,afternoon,night',
             'coordinator_id' => "nullable|integer|unique:courses,coordinator_id,{$id},id|exists:coordinators,id",
         ]);
 
-        $course = Course::with('coordinator.user')->find($id);
+        $course = Course::with('coordinator.user:id,name')->find($id);
 
         if(!$course) {
             return response()->json([
@@ -196,13 +207,15 @@ class CourseController extends Controller
             ],422);
         }
 
-        $course->update([
+        $course->fill([
             'name' => $request['name'],
             'shift' => $request['shift'],
             'coordinator_id' => $request['coordinator_id'],
         ]);
 
-        $course->load('coordinator.user:id,name');
+        if($course->isDirty()) {
+            $course->save();
+        }
 
         return response()->json([
             'success' => true,
@@ -239,8 +252,6 @@ class CourseController extends Controller
                 'message' => 'Ação inválida!'
             ], 422);
         }
-
-        $course->refresh();
 
         return response()->json([
             'success' => true,

@@ -75,8 +75,8 @@
                         toggleStatus();
                         $el.blur();
                     "
+                    x-text="warningAction"
                 >
-                    Inativar
                 </x-danger-button>
             </template>
             <x-secondary-button type="button" @click="showWarningModal = false; clearFields('warning');" class="ms-4">
@@ -86,7 +86,7 @@
     </x-warning-modal>
     {{-- View dos cards --}}
     <div class="mx-auto p-6">
-        <div x-show="committees.length > 0" class="max-h-[60px] max-w-sm md:max-w-full flex flex-col items-end justify-center mb-2 ms-auto me-auto">
+        <div x-show="committees.length > 0" class="max-h-[60px] max-w-sm md:max-w-full flex flex-row justify-start mb-2 space-x-1">
             <button class="px-3 whitespace-nowrap border rounded-md text-gray-700 text-sm"
                 x-on:click="
                     $el.blur();
@@ -189,7 +189,7 @@
                                 </template>
                                 <template x-if="committee.state">
                                     <x-danger-button type="button" class="min-w-[98px]" x-bind:disabled="isInactivating(committee.id)"
-                                                     x-on:click="warning('confirmação', committee.name, committee.id); $el.blur();">
+                                                     x-on:click="warning('confirmação', committee.name, committee.id, 'inativar'); $el.blur();">
                                         <template x-if="isInactivating(committee.id)">
                                             <span>Inativando...</span>
                                         </template>
@@ -200,7 +200,11 @@
                                 </template>
                                 <template x-if="!committee.state">
                                     <x-management.activate-button type="button" class="min-w-[98px]" x-bind:disabled="isActivating(committee.id)"
-                                                                  x-on:click="toggleStatus(committee.id); $el.blur();">
+                                                                  x-on:click="
+                                                                      warning('confirmação',committee.name, committee.id, 'ativar');
+                                                                      $el.blur();
+                                                                  "
+                                    >
                                         <template x-if="isActivating(committee.id)">
                                             <span>Ativando...</span>
                                         </template>
@@ -217,6 +221,7 @@
                         class="flex flex-col justify-between border border-gray-300 rounded-lg shadow bg-white/80 hover:bg-gray-50
                         w-full xs:w-[400px] md:w-auto max-w-[450px] backdrop-blur-sm transition-all duration-300 h-80 overflow-hidden hover:shadow-md">
                         <div class="max-h-[30px] w-full flex items-center px-6">
+                            <span x-text="committee.group_id" class="text-sm text-gray-600"></span>
                             <button class="px-3 my-1 whitespace-nowrap ms-auto bg-primary-orange rounded-md text-white text-sm"
                                 x-on:click="
                                     $el.blur();

@@ -1,15 +1,18 @@
 <?php
 // Common
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Legal\LegalController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\PaperController;
+// Coordenação
 use App\Http\Controllers\CommitteeController;
 use App\Http\Controllers\CoordinatorController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\GroupController;
-use App\Http\Controllers\Legal\LegalController;
 use App\Http\Controllers\ProfessorController;
 use App\Http\Controllers\StudentController;
-use Illuminate\Support\Facades\Route;
+
 
 // Rota para homePage
 Route::get('/', function () {
@@ -35,10 +38,10 @@ Route::middleware([
     })->name('dashboard');*/
     // Calendar -> EventController/Event.php
     Route::get('/calendar', [EventController::class, 'index'])->name('calendar');
-    Route::get('/events/show', [EventController::class, 'events'])->name('events.show');
+    Route::get('/events/show', [eventController::class, 'events'])->name('events.show');
 
     // Groups -> GroupController/Group.php
-    Route::get('/papers/{filename}', [GroupController::class, 'showPaper'])->name('papers.show');
+    Route::get('/papers/{filename}', [PaperController::class, 'showPaper'])->name('papers.show');
 });
 
 // rotas do coordenador
@@ -63,8 +66,8 @@ Route::middleware([
     Route::get('/committees', [CommitteeController::class, 'index'])->name('committees-table');
 
     // Operações CRUD das tabelas e cards
-    Route::prefix(env('SECURE_POST_PREFIX')) // todas as rotas dentro desse grupo possuem o prefixo definido no.env
-    ->middleware(['secure.ajax']) // middleware que traz camadas a mais de seguranças nas requisições ajax
+    Route::prefix(config('secure.request_prefix')) // todas as rotas dentro desse grupo possuem o prefixo definido no.env
+    ->middleware('secure.ajax') // middleware que traz camadas a mais de seguranças nas requisições ajax
     ->group(function () {
         // Students -> StudentController/Student.php
         Route::get('/students/show', [StudentController::class, 'show'])->name('students.show');
@@ -85,9 +88,8 @@ Route::middleware([
         Route::put('/coordinators/{id}/{action}', [CoordinatorController::class, 'toggleStatus'])->name('coordinators.toggle-status');
 
         // Groups -> GroupController/Group.php
-        /*
+
         Route::get('/students/search', [GroupController::class, 'search'])->name('groups.search-students');
-        */
         Route::get('/groups/show', [GroupController::class, 'show'])->name('groups.show');
         Route::post('/groups/save', [GroupController::class, 'store'])->name('groups.store');
         Route::put('/groups/{id}/update', [GroupController::class, 'update'])->name('groups.update');
@@ -100,9 +102,8 @@ Route::middleware([
         Route::put('/courses/{id}/{action}', [CourseController::class, 'toggleStatus'])->name('courses.toggle-status');
 
         // calendar -> CommitteeController/Committee.php
-        /*
+
         Route::get('/members/search', [CommitteeController::class, 'search'])->name('committees.search-members');
-        */
         Route::get('/committees/show', [CommitteeController::class, 'show'])->name('committees.show');
         Route::post('/committees/save', [CommitteeController::class, 'store'])->name('committees.store');
         Route::put('/committees/{id}/update', [CommitteeController::class, 'update'])->name('committees.update');

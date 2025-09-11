@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         expandRows: false,
         contentHeight: 'auto', // faz altura ajustar conforme conteúdo
-        //aspectRatio: 1, // opcional para ajustar a proporção
+        aspectRatio: 1, // opcional para ajustar a proporção
         eventSources:[
             {
                 events: function (info, successCallback, failureCallback) {
