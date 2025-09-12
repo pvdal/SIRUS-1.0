@@ -79,7 +79,7 @@ export async function saveData({
             contexto.showMessage('danger', 'Erro inesperado ao salvar.');
             console.error(error);
         }
-        throw error;
+        // throw error;
     } finally {
         contexto.saving = false;
     }

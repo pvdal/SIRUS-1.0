@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('group_evaluations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('criteria_id')->nullable()->constrained('criteria')->nullOnDelete();
-            $table->foreignId('professor_committee_id')->nullable()->constrained('professors_committees')->nullOnDelete();
+            $table->foreignId('user_committee_id')->nullable()->constrained('user_committees')->nullOnDelete();
             $table->decimal('grade', 5, 2);
             $table->text('comment')->nullable();
             $table->timestamps();

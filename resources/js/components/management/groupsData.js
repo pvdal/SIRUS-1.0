@@ -191,9 +191,9 @@ export function groupsData() {
             }, 400);
         },*/
 
-        addMember(aluno) {
-            if (!this.members.some(m => m.ra === aluno.ra)) {
-                this.members.push({ ra: aluno.ra, name: aluno.name });
+        addMember(student) {
+            if (!this.members.some(m => m.ra === student.ra)) {
+                this.members.push({ ra: student.ra, name: student.name });
             }
         },
 

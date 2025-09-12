@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('individual_evaluations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('professor_committee_id')->nullable()->constrained('professors_committees')->nullOnDelete();
+            $table->foreignId('user_committee_id')->nullable()->constrained('user_committees')->nullOnDelete();
             $table->string('ra', 13)->nullable();
             $table->foreignId('criteria_id')->nullable()->constrained('criteria')->nullOnDelete();
             $table->decimal('grade', 5, 2);
