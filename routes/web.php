@@ -1,5 +1,6 @@
 <?php
 // Common
+use App\Http\Controllers\CriteriaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Legal\LegalController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\PaperController;
 use App\Http\Controllers\CommitteeController;
 use App\Http\Controllers\CoordinatorController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\ProfessorController;
@@ -64,6 +66,14 @@ Route::middleware([
 
     // calendar -> CommitteeController/Committee.php
     Route::get('/committees', [CommitteeController::class, 'index'])->name('committees-table');
+
+    // Evaluations -> CommitteeController/Committee.php
+   // Route::get('/evaluation', [EvaluationController::class, 'index'])->name('evaluations-table');
+
+    // users -> StudentController/Student.php ProfessorController/Professor.php CoordinatorController/Coordinator.php
+    Route::get('/evaluation/criteria', [CriteriaController::class, 'index'])->name('evaluation.criteria.table');
+    Route::get('/evaluation/axis', [AxisController::class, 'index'])->name('evaluation.axis.table');
+    Route::get('/evaluation/rubric', [RubricController::class, 'index'])->name('evaluation.rubric.table');
 
     // Operações CRUD das tabelas e cards
     Route::prefix(config('secure.request_prefix')) // todas as rotas dentro desse grupo possuem o prefixo definido no.env

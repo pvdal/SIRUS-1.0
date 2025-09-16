@@ -29,3 +29,9 @@
         {{ __('Bancas') }}
     </x-dynamic-component>
 </div>
+
+<div class="{{ $menuClass }}">
+    <x-dynamic-component :component="$menuComponent" href="{{ route('evaluation.criteria.table') }}" :active="request()->routeIS('evaluations-table')">
+        {{ __('Avaliações') }}
+    </x-dynamic-component>
+</div>

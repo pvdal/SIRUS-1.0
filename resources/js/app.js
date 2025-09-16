@@ -37,3 +37,6 @@ window.committeesData = committeesData;
 // Calendar
 import {calendarData} from "./components/evaluation/calendarData.js";
 window.calendarData = calendarData;
+// Evaluation
+import {criteriaData} from "./components/management/criteriaData.js";
+window.criteriaData = criteriaData;
