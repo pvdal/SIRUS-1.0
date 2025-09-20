@@ -29,11 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('user_committees', function (Blueprint $table) {
-            $table->dropForeign(['professor_id']);
-            $table->dropForeign(['committee_id']);
-            $table->dropForeign(['member_type_id']);
-        });
         Schema::dropIfExists('user_committees');
     }
 };

@@ -13,7 +13,7 @@
     <x-main-content>
         {{-- Chamada da função alpine -> recources/js/components/management/professorsData.js--}}
         <div x-data="professorsData()"
-             x-init='init(@json($professors), {{ $current_page }}, {{ $last_page }})'>
+             x-init='init(@json($professors), {{ $page}}, {{ $totalPages}})'>
             <x-nav-users-table> {{-- Navegação das tabelas de usuário --}}
                 {{-- Menu utilitário das tabelas --}}
                 <x-actions-table-bar

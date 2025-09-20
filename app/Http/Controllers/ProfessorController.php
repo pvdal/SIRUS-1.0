@@ -5,14 +5,15 @@ namespace App\Http\Controllers;
 // Common
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 // Users/Models
 use App\Actions\Fortify\CreateNewUser;
 use App\Models\Professor;
 
+// Transações no banco
+use Illuminate\Support\Facades\DB;
+
 // Log
-//use Illuminate\Support\Facades\DB;
 //use Illuminate\Support\Facades\Log;
 
 // Static Classes and utils
@@ -25,11 +26,11 @@ class ProfessorController extends Controller
     /**
      * @throws RandomException
      */
-    public function index(): View
+    // Exibição inicial de professores sem aplicação de filtros ou troca de página (‘READ’)
+    public function index(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         // Inicializa o DynamicToken
         TokenGenerator::initializeTab();
-
         // Faz uma query no banco trazendo 15 registros paginados
         $professors = Professor::with(
             'user:id,name,email,state,updated_at,created_at'
@@ -48,15 +49,15 @@ class ProfessorController extends Controller
                 'updated_at' => $professor->updated_at ?? $user->updated_at,
             ];
         })->values(); // Pega apenas a array de valores
-
         // Retorna os dados na view de gerenciamento de professores
         return view('management.professors', [
             'professors' => $professorsData,
-            'current_page' => $professors->currentPage(),
-            'last_page' => $professors->lastPage(),
+            'page' => $professors->currentPage(),
+            'totalPages' => $professors->lastPage(),
         ]);
     }
 
+    // Exibição de professores com aplicação de filtros ou troca de página (‘READ’)
     public function show(Request $request): JsonResponse
     {
         //DB::enableQueryLog();
@@ -107,7 +108,7 @@ class ProfessorController extends Controller
                 'user_id' => $professor->user_id,
                 'name'  => $professor->user->name,
                 'email' => $professor->user->email,
-                'state' => (int) $professor->user->state,
+                'state' => ($professor->user->state ?? 0),
                 'created_at' => $professor->created_at ?? $user->created_at,
                 'updated_at' => $professor->updated_at ?? $user->updated_at, // pega o mais recente
             ];
@@ -116,14 +117,12 @@ class ProfessorController extends Controller
         // Retorna json com os registros filtrados
         return response()->json([
             'data' => $professorsData,
-            'current_page' => $professors->currentPage(),
-            'last_page' => $professors->lastPage(),
+            'page' => $professors->currentPage(),
+            'totalPages' => $professors->lastPage(),
         ]);
     }
 
-    /**
-     * @throws RandomException
-     */
+    // Cadastro de professores (‘CREATE’)
     public function store(Request $request, CreateNewUser $creator): JsonResponse
     {
         //$start = microtime(true);
@@ -132,25 +131,29 @@ class ProfessorController extends Controller
             'email' => 'required|email:rfc,dns|unique:users,email',
         ]);
 
-        $password = PasswordGenerator::random();
+        $user = null;
+        $professor = null;
+        DB::transaction(function () use ($validated, $creator, &$user, &$professor) {
+            $password = PasswordGenerator::random();
 
-        // Cria o usuário usando o controller nativo do Fortify
-        $user = $creator->create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => $password,
-            'password_confirmation' => $password,
-            'access_level' => 2, // 2 = Professor
-            'state' => 1,
-        ]);
+            // Cria o usuário usando o controller nativo do Fortify
+            $user = $creator->create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => $password,
+                'password_confirmation' => $password,
+                'access_level' => 2, // 2 = Professor
+                'state' => 1,
+            ]);
 
-        // Envio da senha para o usuário cadastrado pelo e-mail por fila no banco
-        $user->sendTemporaryPasswordNotification($password);
+            // Cria o professor vinculado ao usuário
+            $professor = Professor::create([
+                'user_id' => $user->id,
+            ]);
 
-        // Cria o professor vinculado ao usuário
-        $professor = Professor::create([
-            'user_id' => $user->id,
-        ]);
+            // Envio da senha para o usuário cadastrado pelo e-mail por fila no banco
+            $user->sendTemporaryPasswordNotification($password);
+        });
         //$end = microtime(true);
         //Log::info('Tempo criação user direto + professor: ' . ($end - $start) . ' segundos');
 
@@ -162,7 +165,7 @@ class ProfessorController extends Controller
                 'user_id' => $professor->user_id,
                 'name'  => $user->name,
                 'email' => $user->email,
-                'state' => (int) $user->state,
+                'state' => ($user->state ?? 0),
                 'created_at' => $professor->created_at,
                 'updated_at' => $professor->updated_at,
             ]

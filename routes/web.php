@@ -14,6 +14,9 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\ProfessorController;
 use App\Http\Controllers\StudentController;
+use Laravel\Jetstream\Jetstream;
+use Laravel\Jetstream\Http\Controllers\Livewire\ApiTokenController;
+
 
 
 // Rota para homePage
@@ -25,7 +28,8 @@ Route::get('/', function () {
 Route::get('/policy', [LegalController::class, 'showPolicies'])->name('policy.show');
 ROute::get('/terms', [LegalController::class, 'showTerms'])->name('terms.show');
 
-// Rotas comuns de login e logout
+// Rotas comuns de login e logout. Isso sobrepõe as rotas laravel padrão, é possível setar elas globalmente em /config/fortify.php
+// OBS: Isso sobrescreve as rotas default do vendor
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login');
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
@@ -38,12 +42,14 @@ Route::middleware([
     /*Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');*/
-    // Calendar -> EventController/Event.php
+    // Calendar -> EventController/Committee.php
     Route::get('/calendar', [EventController::class, 'index'])->name('calendar');
-    Route::get('/events/show', [eventController::class, 'events'])->name('events.show');
+    Route::get('/events/show', [EventController::class, 'events'])->name('events.show');
 
-    // Groups -> GroupController/Group.php
-    Route::get('/papers/{filename}', [PaperController::class, 'showPaper'])->name('papers.show');
+    // Groups -> PaperController/Paper.php -> Quem chama essa rota é o iframe em groups.blade.php
+    Route::get('/papers/{filepath}', [PaperController::class, 'showPaper'])
+        ->where('filepath', '.*')
+        ->name('papers.show');
 });
 
 // rotas do coordenador
@@ -53,6 +59,11 @@ Route::middleware([
     'verified',
     'access.level:3',
 ])->group(function () {
+    // Retirado do vendor: isso limita a rota à usuários de nível 3
+    if (Jetstream::hasApiFeatures()) {
+        Route::get('/user/api-tokens', [ApiTokenController::class, 'index'])->name('api-tokens.index');
+    }
+
     // users -> StudentController/Student.php ProfessorController/Professor.php CoordinatorController/Coordinator.php
     Route::get('/users/students', [StudentController::class, 'index'])->name('users.students-table');
     Route::get('/users/professors', [ProfessorController::class, 'index'])->name('users.professors-table');

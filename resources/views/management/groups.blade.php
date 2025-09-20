@@ -24,7 +24,7 @@
                 paperUrl = '';
                 $dispatch('toggle-paper', false);
         "
-        x-init='init(@json($groups),@json($students),{{ $current_page }}, {{ $last_page }})'
+        x-init='init(@json($groups), @json($courses), {{ $page }}, {{ $totalPages}})'
     >
         {{-- Grupos cadastrados --}}
         <template x-if="showGroupCards">
@@ -40,7 +40,9 @@
                     :class="'md:justify-start'"
                 />
                 {{-- Componente com o conteúdo --}}
-                <x-management.groups-content/>
+                <x-management.groups-content
+                    :courses="$courses"
+                />
                 {{-- Paginação --}}
                 <x-management.pagination
                     :page-var="'page'"

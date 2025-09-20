@@ -39,10 +39,10 @@ export function coordinatorsData() {
         page: 1,
         totalPages: 1,
 
-        init(coordinators, currentPage, lastPage){
+        init(coordinators, page, totalPages){
             this.coordinators = coordinators;
-            this.page = currentPage;
-            this.totalPages = lastPage;
+            this.page = page;
+            this.totalPages = totalPages;
 
             this.empty = !Array.isArray(coordinators) || coordinators.length === 0;
 
@@ -82,8 +82,8 @@ export function coordinatorsData() {
                 const response = await axios.get(`/${requestPrefix}/coordinators/show`, {params})
 
                 this.coordinators = response.data.data;
-                this.page = response.data.current_page;
-                this.totalPages = response.data.last_page;
+                this.page = response.data.page;
+                this.totalPages = response.data.totalPages;
 
             } catch (error){
                 if(error.response){

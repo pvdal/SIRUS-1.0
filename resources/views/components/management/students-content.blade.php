@@ -106,7 +106,7 @@
                 <tr :class="
                     {
                         'hover:bg-gray-50': true,
-                        'bg-green-50': student.origin === 'new',
+                        'bg-green-100': student.origin === 'new',
                     }"
                     x-transition:enter="transition ease-out duration-500"
                     x-transition:enter-start="opacity-0 transform scale-95 -translate-y-2"

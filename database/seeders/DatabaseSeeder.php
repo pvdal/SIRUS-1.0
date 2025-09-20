@@ -21,7 +21,6 @@ class DatabaseSeeder extends Seeder
         Student::factory()->count(10000)->create();
         Professor::factory()->count(100)->create();
         Coordinator::factory()->count(50)->create();
-        $this->call(EventsTableSeeder::class);
         $this->call(MemberTypesTableSeeder::class);
 
         $user = User::factory()->create([

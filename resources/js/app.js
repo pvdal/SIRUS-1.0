@@ -7,7 +7,7 @@ import './calendar.js';
 import {saveData} from './helpers/saveData'; // Salvar/Atualizar dados
 window.saveData = saveData; // Necessário para Alpine acessar
 
-import {paperViewer} from "./helpers/ShowPaper.js"; // Visualizar trabalho do aluno
+import {paperViewer} from "./helpers/paperViewer.js"; // Visualizar trabalho do aluno
 window.paperViewer = paperViewer;
 
 import {formatDateTime} from "./helpers/formatDateTime.js"; // Trata os timestamps

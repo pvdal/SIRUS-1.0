@@ -5,14 +5,15 @@ namespace App\Http\Controllers;
 // Common
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 // Users/Models
 use App\Actions\Fortify\CreateNewUser;
 use App\Models\Coordinator;
 
+// Transações no banco
+use Illuminate\Support\Facades\DB;
+
 // Log
-//use Illuminate\Support\Facades\DB;
 //use Illuminate\Support\Facades\Log;
 
 // Static Classes and utils
@@ -25,15 +26,16 @@ class CoordinatorController extends Controller
     /**
      * @throws RandomException
      */
-    public function index (): View
+    // Exibição inicial de coordenadores sem aplicação de filtros ou troca de página (‘READ’)
+    public function index(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         // Inicializa o DynamicToken
         TokenGenerator::initializeTab();
-
+        // Faz uma query no banco trazendo 15 registros paginados
         $coordinators = Coordinator::with(
             'user:id,name,email,state,updated_at,created_at'
         )->orderBy('id')->paginate(15);
-
+        // Pega a coleção paginada que retornou da query acima e mapeia com chaves amigáveis
         $coordinatorsData = $coordinators->getCollection()->map(function ($coordinator) {
             return [
                 'id' => $coordinator->id,
@@ -45,14 +47,15 @@ class CoordinatorController extends Controller
                 'updated_at' => $coordinator->updated_at,
             ];
         })->values();
-
+        // Retorna os dados na view de gerenciamento de coordenadores
         return view('management.coordinators', [
             'coordinators' => $coordinatorsData,
-            'current_page' => $coordinators->currentPage(),
-            'last_page' => $coordinators->lastPage(),
+            'page' => $coordinators->currentPage(),
+            'totalPages' => $coordinators->lastPage(),
         ]);
     }
 
+    // Exibição de coordenadores com aplicação de filtros ou troca de página (‘READ’)
     public function show (Request $request): jsonResponse
     {
         //DB::enableQueryLog();
@@ -103,7 +106,7 @@ class CoordinatorController extends Controller
                 'user_id' => $coordinator->user_id,
                 'name' => $coordinator->user->name,
                 'email' => $coordinator->user->email,
-                'state' => (int) $coordinator->user->state,
+                'state' => ($coordinator->user->state ?? 0),
                 'created_at' => $coordinator->created_at,
                 'updated_at' => $coordinator->updated_at,
             ];
@@ -112,14 +115,12 @@ class CoordinatorController extends Controller
         // Retorna dos dados dos coordenadores + pagina atual e última página
         return response()->json([
             'data' => $coordinatorsData,
-            'current_page' => $coordinators->currentPage(),
-            'last_page' => $coordinators->lastPage(),
+            'page' => $coordinators->currentPage(),
+            'totalPages' => $coordinators->lastPage(),
         ]);
     }
 
-    /**
-     * @throws RandomException
-     */
+    // Cadastro de coordenadores (‘CREATE’)
     public function store (Request $request, CreateNewUser $creator): jsonResponse
     {
         //$start = microtime(true);
@@ -128,25 +129,30 @@ class CoordinatorController extends Controller
             'email' => 'required|email:rfc,dns|unique:users,email',
         ]);
 
-        $password = PasswordGenerator::random();
+        $user = null;
+        $coordinator = null;
 
-        // Cria o usuário usando o Fortify
-        $user = $creator->create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => $password,
-            'password_confirmation' => $password,
-            'access_level' => 3, // 3 = Coordinator
-            'state' => 1,
-        ]);
+        DB::transaction(function () use($validated, $creator, &$user, &$coordinator) {
+            $password = PasswordGenerator::random();
 
-        // Envio da senha para o usuário cadastrado pelo e-mail por fila no banco
-        $user->sendTemporaryPasswordNotification($password);
+            // Cria o usuário usando o Fortify
+            $user = $creator->create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => $password,
+                'password_confirmation' => $password,
+                'access_level' => 3, // 3 = Coordinator
+                'state' => 1,
+            ]);
 
-        // Cria o coordenador vinculado ao usuário
-        $coordinator = Coordinator::create([
-            'user_id' => $user->id,
-        ]);
+            // Cria o coordenador vinculado ao usuário
+            $coordinator = Coordinator::create([
+                'user_id' => $user->id,
+            ]);
+
+            // Envio da senha para o usuário cadastrado pelo e-mail por fila no banco
+            $user->sendTemporaryPasswordNotification($password);
+        });
         //$end = microtime(true);
         //Log::info('Tempo criação user direto + coordenador: ' . ($end - $start) . ' segundos');
 
@@ -158,7 +164,7 @@ class CoordinatorController extends Controller
                 'user_id' => $coordinator->user_id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'state' => (int) $user->state,
+                'state' => ($user->state ?? 0),
                 'created_at' => $coordinator->created_at,
                 'updated_at' => $coordinator->updated_at,
             ]
@@ -227,7 +233,7 @@ class CoordinatorController extends Controller
                 'message' => 'Coordenador não encontrado!',
             ], 422);
         }
-        // O usuário autenticado na sessão atual não pode se inativar
+        // O utilizador autenticado na sessão atual não pode se inativar
         if(auth()->user()->id === $coordinator->user_id) {
             return response()->json([
                 'message' => 'Você não pode inativar a própria conta!'

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\UserCommittee;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -12,10 +11,8 @@ class Committee extends Model
     protected $fillable = [
         'name',
         'coordinator_id',
-        'group_id',
         'rubric_id',
         'paper_id',
-        'event_id',
         'state'
     ];
 
@@ -37,22 +34,10 @@ class Committee extends Model
         return $this->belongsTo(Coordinator::class);
     }
 
-    // Relacionamento com Group
-    public function group(): BelongsTo
-    {
-        return $this->belongsTo(Group::class);
-    }
-
     // Relacionamento com ‘Paper’
     public function paper(): BelongsTo
     {
         return $this->belongsTo(Paper::class);
-    }
-
-    // Relacionamento com Event
-    public function event(): BelongsTo
-    {
-        return $this->belongsTo(Event::class, 'event_id');
     }
     #endregion
 }

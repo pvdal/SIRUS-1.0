@@ -19,12 +19,12 @@ class QueuedSendPasswordNotification extends Notification implements ShouldQueue
         $this->password = $password;
     }
 
-    public function via($notifiable)
+    public function via($notifiable): array
     {
         return ['mail'];
     }
 
-    public function toMail($notifiable)
+    public function toMail($notifiable): MailMessage
     {
         return (new MailMessage)
             ->subject('Sua senha temporária')

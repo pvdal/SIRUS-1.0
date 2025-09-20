@@ -13,11 +13,12 @@
     <x-main-content>
         {{-- Chamada da função alpine -> recources/js/components/management/studentsData.js--}}
         <div x-data="studentsData()"
-             x-init='init(@json($students), @json($groups), @json($courses), {{ $page }}, {{ $totalPages }})'>{{-- com paginação backend: , {{ $current_page }}, {{ $last_page }} --}}
+             x-init='init(@json($students), @json($groups), @json($courses), {{ $page}}, {{ $totalPages}})'>{{-- com paginação backend: , {{ $current_page }}, {{ $last_page }} --}}
             <x-nav-users-table> {{-- Navegação das tabelas de usuário --}}
                 {{-- Menu utilitário das tabelas --}}
+                {{-- , 'additional' => 'edit = false;' --}}
                 <x-actions-table-bar
-                    :primary-action="['label' => 'Cadastrar Aluno', 'method' => 'showCreateModal', 'additional' => 'edit = false;']"
+                    :primary-action="['label' => 'Cadastrar Aluno', 'method' => 'showCreateModal']"
                     :clear-action="['label' => 'Limpar filtros', 'method' => 'clearFields()']"
                     :search-model="'searchTerm'"
                     :search-placeholder="'Buscar alunos...'"

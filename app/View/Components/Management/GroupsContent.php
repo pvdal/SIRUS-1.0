@@ -8,12 +8,14 @@ use Illuminate\View\Component;
 
 class GroupsContent extends Component
 {
+    public $courses;
+
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct($courses)
     {
-        //
+        $this->courses = $courses;
     }
 
     /**

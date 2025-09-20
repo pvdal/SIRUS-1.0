@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-white ">
+<nav class="bg-white ">
         <!-- Menu padrão (desktop e acima de 300px) -->
     <div class="max-w-[2100px] mx-auto hidden xxs:block border-b border-gray-200">
         <div class="flex justify-between h-16 w-full">

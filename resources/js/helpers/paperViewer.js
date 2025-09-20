@@ -11,4 +11,5 @@ export function paperViewer(context, url) {
             context.$dispatch('toggle-paper', true);
         }, 10);
     });
+    console.log(context.paperUrl);
 }

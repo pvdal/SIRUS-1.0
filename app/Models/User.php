@@ -72,7 +72,13 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'access_level' => 'integer',
         ];
+    }
+
+    public function canManageApiTokens(): bool
+    {
+        return $this->getAttribute('access_level') === 3; // só coordenadores podem ver
     }
 
     #region Notificações via email em fila

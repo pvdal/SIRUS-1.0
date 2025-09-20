@@ -20,13 +20,17 @@ class Paper extends Model
         'updated_at' => 'datetime',
     ];
 
+    #region Relacionamentos
+    // Relacionamento com Group
     public function group(): BelongsTo
     {
         return $this->belongsTo(Group::class);
     }
 
+    // Relacionamento com Committee
     public function committee(): HasOne
     {
         return $this->hasOne(Committee::class);
     }
+    #endregion
 }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 // Common
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 // Users/Models
 use App\Actions\Fortify\CreateNewUser;
@@ -13,16 +12,16 @@ use App\Models\Student;
 use App\Models\Course;
 use App\Models\Group;
 
-// Log
+// Transações no banco
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+
+// Log
+//use Illuminate\Support\Facades\Log;
 
 // Static Classes and utils
 use Random\RandomException;
 use App\Utils\TokenGenerator;
 use App\Utils\PasswordGenerator;
-
-
 
 class StudentController extends Controller
 {
@@ -30,7 +29,7 @@ class StudentController extends Controller
      * @throws RandomException
      */
     // Exibição inicial de alunos sem aplicação de filtros ou troca de página (‘READ’)
-    public function index(): View
+    public function index(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         // Inicializa o DynamicToken
         TokenGenerator::initializeTab();
@@ -40,11 +39,13 @@ class StudentController extends Controller
             'user:id,name,email,state,updated_at,created_at',
             'group:id,theme,state',
             'course:id,name,state',
-        )->orderBy('ra','asc')->paginate(15);
+        )->orderBy('ra')->paginate(15);
 
         // Dados utilizados para o modal de cadastro e filtros
-        $groups = Group::select(['id', 'theme'])->where('state', 1)->orderBy('theme')->get();
-        $courses = Course::select(['id', 'name'])->where('state', 1)->orderBy('name')->get();
+        $groups = Group::select(['id', 'theme'])->where('state', 1)
+            ->orderBy('theme')->get();
+        $courses = Course::select(['id', 'name'])->where('state', 1)
+            ->orderBy('name')->get();
 
         // Mapeia a coleção de dados paginados retornando array simples com chaves definidas aqui
         $studentsData = $students->getCollection()->map(function ($student) {
@@ -58,19 +59,18 @@ class StudentController extends Controller
                 'group' => [
                     'id' => $student->group->id ?? null,
                     'name' => $student->group->theme ?? '',
-                    'state' => (int) ($student->group->state ?? 0),
+                    'state' => ($student->group->state ?? 0),
                 ],
                 'course' => [
                     'id' => $student->course->id ?? null,
                     'name' => $student->course->name ?? '',
-                    'state' => (int) ($student->course->state ?? 0),
+                    'state' => ($student->course->state ?? 0),
                 ],
-                'state' => (int) $student->user->state,
+                'state' => ($student->user->state ?? 0),
                 'created_at' => $student->created_at ?? $user->created_at,
                 'updated_at' => $student->updated_at ?? $user->updated_at,
             ];
         })->values();
-
         // Retorna a view de gestão de estudantes com os dados extraídos do banco
         return view('management.students', [
             'students' => $studentsData,
@@ -89,15 +89,16 @@ class StudentController extends Controller
             'user:id,name,email,state,updated_at,created_at',
             'group:id,theme,state',
             'course:id,name,state',
-        )->orderBy('ra', 'asc');
+        )->orderBy('ra');
 
+        #region Filtros
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->whereHas('user', function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%");
             })
-            ->orWhere('ra', 'like', "%{$search}%");
+                ->orWhere('ra', 'like', "%{$search}%");
         }
 
         if ($request->filled('course')) {
@@ -129,6 +130,7 @@ class StudentController extends Controller
                 $q->whereBetween('created_at', [now()->subDays(30), now()]);
             });
         }
+        #endregion
 
         $students = $query->paginate(15);
 
@@ -140,7 +142,6 @@ class StudentController extends Controller
 
         $studentsData = $students->getCollection()->map(function ($student) {
             $user = $student->user;
-
             return [
                 'ra' => $student->ra,
                 'user_id' => $student->user_id,
@@ -150,16 +151,16 @@ class StudentController extends Controller
                 'group' => [
                     'id' => $student->group->id ?? null,
                     'name' => $student->group->theme ?? '',
-                    'state' => (int) ($student->group->state ?? 0),
+                    'state' => ($student->group->state ?? 0),
                 ],
                 'course' => [
                     'id' => $student->course->id ?? null,
                     'name' => $student->course->name ?? '',
-                    'state' => (int) ($student->course->state ?? 0),
+                    'state' => ($student->course->state ?? 0),
                 ],
-                'state' => (int) $student->user->state,
-                'created_at' => $student->created_at,
-                'updated_at' => $student->updated_at,
+                'state' => ($student->user->state ?? 0),
+                'created_at' => $student->created_at ?? $user->created_at,
+                'updated_at' => $student->updated_at ?? $user->updated_at,
             ];
         })->values();
 
@@ -173,10 +174,6 @@ class StudentController extends Controller
     }
 
     // Cadastro de alunos (‘CREATE’)
-
-    /**
-     * @throws RandomException
-     */
     public function store(Request $request, CreateNewUser $creator): JsonResponse
     {
         //Log::info('Dados recebidos no store', $request->all());
@@ -190,24 +187,32 @@ class StudentController extends Controller
             'course_id' => 'nullable|exists:courses,id',
         ]);
 
-        $password = PasswordGenerator::random();
+        $user = null;
+        $student = null;
 
-        $user = $creator->create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => $password,
-            'password_confirmation' => $password,
-            'access_level' => 1, // 1 = Student
-            'state' => 1,
-        ]);
+        DB::transaction(function () use ($validated, $creator, &$user, &$student) {
+            $password = PasswordGenerator::random();
 
-        $student = Student::create([
-            'ra' => $validated['ra'],
-            //'semester' => $validated['semester'],
-            'group_id' => $validated['group_id'],
-            'course_id' => $validated['course_id'],
-            'user_id' => $user->id,
-        ]);
+            $user = $creator->create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => $password,
+                'password_confirmation' => $password,
+                'access_level' => 1, // 1 = Student
+                'state' => 1,
+            ]);
+
+            $student = Student::create([
+                'ra' => $validated['ra'],
+                //'semester' => $validated['semester'],
+                'group_id' => $validated['group_id'],
+                'course_id' => $validated['course_id'],
+                'user_id' => $user->id,
+            ]);
+
+            // Envio da senha para o usuário cadastrado pelo e-mail por fila no banco
+            $user->sendTemporaryPasswordNotification($password);
+        });
         //$end = microtime(true);
         //Log::info('Tempo criação user direto + professor: ' . ($end - $start) . ' segundos');
 
@@ -230,7 +235,7 @@ class StudentController extends Controller
                     'id' => $student->course->id ?? null,
                     'name' => $student->course->name ?? '',
                 ],
-                'state' => (int) $user->state,
+                'state' => ($user->state ?? 0),
                 'created_at' => $student->created_at,
                 'updated_at' => $student->updated_at,
             ]

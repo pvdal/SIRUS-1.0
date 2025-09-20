@@ -19,7 +19,6 @@ return new class extends Migration
             $table->foreignId('coordinator_id')->nullable()->constrained('coordinators')->nullOnDelete();
             $table->foreignId('rubric_id')->nullable()->constrained('rubrics')->nullOnDelete();
             $table->foreignId('paper_id')->nullable()->constrained('papers')->nullOnDelete();
-            $table->foreignId('event_id')->nullable()->constrained('events')->nullOnDelete();
             $table->dateTime('start')->nullable();
             $table->dateTime('end')->nullable();
             $table->boolean('state')->default(true);
@@ -32,11 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('committees', function (Blueprint $table) {
-            $table->dropForeign(['coordinator_id']);
-            $table->dropForeign(['rubric_id']);
-            $table->dropForeign(['event_id']);
-        });
         Schema::dropIfExists('committees');
     }
 };

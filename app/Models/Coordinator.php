@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Coordinator extends Model
 {
@@ -21,14 +23,15 @@ class Coordinator extends Model
         'updated_at' => 'datetime',
     ];
 
+    #region Relacionamentos
     // Relacionamento com o User
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
     // Relacionamento com o Course
-    public function course()
+    public function course(): HasOne
     {
         return $this->hasOne(Course::class);
     }
@@ -37,4 +40,5 @@ class Coordinator extends Model
     {
         return $this->hasMany(Committee::class);
     }
+    #endregion
 }

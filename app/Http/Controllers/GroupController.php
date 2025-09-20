@@ -2,30 +2,91 @@
 
 namespace App\Http\Controllers;
 
+// Common
+use App\Models\Course;
+use App\Services\PaperService;
+use App\Utils\StringResolve;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
+// Models
 use App\Models\Paper;
 use App\Models\User;
-use App\Utils\TokenGenerator;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
-use Illuminate\View\View;
-use Illuminate\Support\Facades\Storage;
-
 use App\Models\Group;
 use App\Models\Student;
-use Random\RandomException;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
-use Illuminate\Support\Facades\Log;
+// Transações no banco
+use Illuminate\Support\Facades\DB;
+
+// Log
+//use Illuminate\Support\Facades\Log;
+
+// Static Classes and utils
+use Random\RandomException;
+use App\Utils\TokenGenerator;
+
+use Illuminate\Support\Facades\Storage;
 use Throwable;
 
 class GroupController extends Controller
 {
+    /**
+     * @throws RandomException
+     */
+    // Exibição inicial de grupos sem aplicação de filtros ou troca de página (‘READ’)
+    public function index(Request $request): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+    {
+        // Inicializa o DynamicToken
+        TokenGenerator::initializeTab();
+        // Faz uma query no banco trazendo 15 registros paginados
+        $groups = Group::with([
+            'papers',
+            'students.user:id,name,state,updated_at,created_at'
+        ])->orderBy('id')->paginate(15);
+        // Mapeia os dados manualmente
+        $groupsData = $groups->getCollection()->map(function ($group) {
+            return [
+                'id' => $group->id,
+                'theme' => mb_strtoupper($group->theme),
+                'state' => ($group->state ?? 0),
+                'papers' => $group->papers->map(fn($p) => [
+                    'id' => $p->id,
+                    'title' => $p->title,
+                    'file_path' => $p->file_path,
+                ]),
+                'students' => $group->students->map(fn($s) => [
+                    'ra' => $s->ra,
+                    'name' => $s->user->name,
+                    'state' => ($s->user->state ?? 0),
+                ]),
+                'created_at' => $group->created_at,
+                'updated_at' => $group->updated_at,
+            ];
+        })->values();
 
+        $courses = Course::select(['id', 'name'])
+            ->get()
+            ->map(function ($course) {
+                return [
+                    'id' => $course->id,
+                    'name' => $course->name,
+                ];
+            })->values();
+
+        //dd($groupsData->toArray());
+        return view('management.groups', [
+            'groups' => $groupsData,
+            'courses' => $courses,
+            'page' => $groups->currentPage(),
+            'totalPages' => $groups->lastPage(),
+        ]);
+    }
+
+    // Buscar alunos ativos por nome ou RA
     public function search(Request $request): JsonResponse
     {
         $q = $request->query('q', '');
-
+        // Traz alunos ativos com name ou RA pesquisados
         $students = Student::with(['user:id,name'])
             ->whereHas('user', function ($sub) {
                 $sub->where('state', 1);
@@ -37,7 +98,7 @@ class GroupController extends Controller
                     ->orWhere('ra', 'like', '%' . $q . '%');
             })
             ->select('ra', 'user_id', 'group_id')
-            ->limit(10)
+            ->limit(20)
             ->get();
 
         $students->load('group:id,theme');
@@ -51,65 +112,7 @@ class GroupController extends Controller
         );
     }
 
-    /**
-     * @throws RandomException
-     */
-    public function index(Request $request): View
-    {
-        // Inicializa o DynamicToken
-        TokenGenerator::initializeTab();
-
-        $groups = Group::with([
-            'papers',
-            'students.user:id,name,state,updated_at,created_at'
-        ])->orderBy('id')->paginate(12);
-
-        // Mapeia os dados manualmente
-        $groupsData = $groups->getCollection()->map(function ($group) {
-            return [
-                'id' => $group->id,
-                'theme' => mb_strtoupper($group->theme),
-                'state' => (int) $group->state,
-                'papers' => $group->papers->map(fn($p) => [
-                    'id' => $p->id,
-                    'title' => $p->title,
-                    'file_path' => $p->file_path,
-                ]),
-                'students' => $group->students->map(fn($s) => [
-                    'ra' => $s->ra,
-                    'name' => $s->user->name,
-                    'state' => $s->user->state,
-                ]),
-                'created_at' => $group->created_at,
-                'updated_at' => $group->updated_at,
-            ];
-        })->values();
-
-        $students = Student::with(['user:id,name', 'group:id,theme'])
-            ->whereHas('user', function ($sub) {
-                $sub->where('state', 1);
-            })
-            ->select('ra', 'user_id', 'group_id')
-            ->orderBy(
-                User::select('name')
-                    ->whereColumn('users.id', 'students.user_id')
-            )
-            ->get();
-
-        return view('management.groups', [
-            'groups' => $groupsData,
-            'current_page' => $groups->currentPage(),
-            'last_page' => $groups->lastPage(),
-            'students' => $students->map(function ($student) {
-                return [
-                    'ra' => $student->ra,
-                    'name' => $student->user->name ?? '(sem nome)',
-                    'group' => $student->group->theme ?? null,
-                ];
-            })
-        ]);
-    }
-
+    // Exibição de grupos com aplicação de filtros ou troca de página (‘READ’)
     public function show(Request $request): JsonResponse
     {
         //DB::enableQueryLog();
@@ -118,6 +121,7 @@ class GroupController extends Controller
             'students.user:id,name,state,updated_at,created_at',
         ])->orderBy('id');
 
+        #region Filtros
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
@@ -130,7 +134,7 @@ class GroupController extends Controller
                     })
                     ->orWhereHas('papers', function ($sub) use ($search) {
                         $sub->where('title', 'like', "%{$search}%");
-                });
+                    });
             });
         }
 
@@ -151,16 +155,13 @@ class GroupController extends Controller
                 $q->whereBetween('created_at', [now()->subDays(30), now()]);
             });
         }
+        #endregion
 
-        $groups = $query->paginate(12);
+        $groups = $query->paginate(15);
 
-        $students = Student::whereHas('user', fn ($q) => $q->where('state', 1))
-            ->select(['ra', 'user_id', 'group_id'])
-            ->orderBy(
-                User::select('name')
-                    ->whereColumn('users.id', 'students.user_id')
-            )
-            ->get();
+        #region Dados auxiliares
+        #endregion
+
         //Log::info('Queries executadas:', DB::getQueryLog());
 
         // Mapeia para retornar somente os campos necessários
@@ -168,7 +169,7 @@ class GroupController extends Controller
             return [
                 'id' => $group->id,
                 'theme' => mb_strtoupper($group->theme),
-                'state' => (int) $group->state,
+                'state' => ($group->state ?? 0),
                 'papers' => $group->papers->map(fn($p) => [
                     'id' => $p->id,
                     'title' => $p->title,
@@ -177,7 +178,7 @@ class GroupController extends Controller
                 'students' => $group->students->map(fn($s) => [
                     'ra' => $s->ra,
                     'name' => $s->user->name,
-                    'state' => $s->user->state,
+                    'state' => ($s->user->state ?? 0),
                 ]),
                 'created_at' => $group->created_at,
                 'updated_at' => $group->updated_at,
@@ -186,22 +187,16 @@ class GroupController extends Controller
 
         return response()->json([
             'data' => $groupsData,
-            'current_page' => $groups->currentPage(),
-            'last_page' => $groups->lastPage(),
-            'students' => $students->map(function ($student) {
-                return [
-                    'ra' => $student->ra,
-                    'name' => $student->user->name ?? '(sem nome)',
-                    'group' => $student->group->theme ?? null,
-                ];
-            })
+            'page' => $groups->currentPage(),
+            'totalPages' => $groups->lastPage(),
         ]);
     }
 
     /**
      * @throws Throwable
      */
-    public function store(Request $request): JsonResponse
+    // Cadastro de grupos (‘CREATE’)
+    public function store(Request $request, PaperService $paperService): JsonResponse
     {
         $request->validate([
             'theme' => 'required|string|max:255|unique:groups,theme',
@@ -214,11 +209,8 @@ class GroupController extends Controller
         $alunosEmOutroGrupo = Student::whereIn('ra', $request->members)
             ->whereNotNull('group_id')
             ->exists();
-
+        // Se ja está em outro grupo, retorna mensagem de erro e encerra o método
         if ($alunosEmOutroGrupo) {
-            /*Log::warning('Aluno(s) já pertence(m) a outro grupo', [
-                'members' => $request->members,
-            ]);*/
             return response()->json([
                 'success' => false,
                 'errors' => [
@@ -227,9 +219,9 @@ class GroupController extends Controller
             ], 422);
         }
 
-        $group = null;
+        $group = null; // Inicia a variável
 
-        DB::transaction(function () use ($request, &$group) {
+        DB::transaction(function () use ($request, &$group, &$paperService) {
             $group = Group::create([
                 'theme' => $request->theme,
                 'state' => 1,
@@ -239,15 +231,24 @@ class GroupController extends Controller
                 ->update(['group_id' => $group->id]);
 
             if ($request->hasFile('file')) {
-                $uploadedFile = $request->file('file');
-                $filePath = $uploadedFile->store('papers', 'public');
-                $title = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $request['year'] = 2025;
+                $request['semester'] = 2;
+                $request['version'] = 'avaliacao';
+                $request['course'] = 'Gestão de Tecnologia da Informação';
+                $request['project'] = 1;
 
-                Paper::create([
-                    'title' => $title,
-                    'file_path' => $filePath,
-                    'group_id' => $group->id,
+                $sanitize = fn($v) => preg_replace('/[^a-zA-Z0-9_áàâãéèêíïóôõöúç-]/u', '_', $v);
+                $folders = array_map($sanitize, [
+                    $request->year,
+                    'semestre_' . $request->semester,
+                    $request->version,
+                    $request->course,
+                    'projeto_integrador_' . $request->project,
                 ]);
+
+                $folders = array_map(fn ($v) => StringResolve::normalizeFolderName($v), $folders);
+
+                $paperService->createPaper($request->file('file'), $group->id, $folders);
             }
         });
 
@@ -278,7 +279,7 @@ class GroupController extends Controller
     /**
      * @throws Throwable
      */
-    public function update(Request $request, $id): JsonResponse
+    public function update(Request $request, $id, PaperService $paperService): JsonResponse
     {
         if(!$id) {
             return response()->json([
@@ -318,7 +319,7 @@ class GroupController extends Controller
             ], 422);
         }
 
-        DB::transaction(function () use ($request, $group) {
+        DB::transaction(function () use ($request, $group, &$paperService) {
             // Atualiza o tema
             if($group->theme != $request->theme) {
                 $group->update([
@@ -345,45 +346,25 @@ class GroupController extends Controller
 
             // Se tem arquivo novo, salva e cria novo Paper, removendo antigo
             if ($request->hasFile('file')) {
-                $uploadedFile = $request->file('file');
+                $request['year'] = 2025;
+                $request['semester'] = 2;
+                $request['version'] = 'avaliacao';
+                $request['course'] = 'Gestão de Tecnologia da Informação';
+                $request['project'] = 1;
 
-                $oldPaper = $group->papers()->latest()->first();
-
-                // Hash real do novo arquivo (SHA1 do conteúdo)
-                $newHash = sha1_file($uploadedFile->getRealPath());
-
-                if ($oldPaper) {
-                    // Lê o arquivo atual no storage e calcula hash
-                    $oldHash = sha1(Storage::disk('public')->get($oldPaper->file_path));
-
-                    if ($newHash === $oldHash) {
-                        // Mesmo arquivo → só atualiza título se mudou
-                        $updated = $oldPaper->update([
-                            'title' => pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME),
-                        ]);
-
-                        return; // não mexe no banco nem cria arquivo novo
-                    }
-
-                    // Arquivo diferente → remove os antigos
-                    foreach ($group->papers as $paper) {
-                        Storage::disk('public')->delete($paper->file_path);
-                    }
-                    $group->papers()->delete();
-
-                    $group->touch();
-                }
-
-                // Só agora salva porque sabemos que é realmente outro arquivo
-                $newFilePath = $uploadedFile->store('papers', 'public');
-
-                Paper::create([
-                    'title' => pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME),
-                    'file_path' => $newFilePath,
-                    'group_id' => $group->id,
+                $sanitize = fn($v) => preg_replace('/[^a-zA-Z0-9_áàâãéèêíïóôõöúç-]/u', '_', $v);
+                $folders = array_map($sanitize, [
+                    $request->year,
+                    'semestre_' . $request->semester,
+                    $request->version,
+                    $request->course,
+                    'projeto_integrador_' . $request->project,
                 ]);
-            }
 
+                $folders = array_map(fn ($v) => StringResolve::normalizeFolderName($v), $folders);
+
+                $paperService->updatePaper($request->file('file'), $group, $folders);
+            }
         });
 
         // Recarrega completamente grupo + alunos + papers
@@ -403,7 +384,7 @@ class GroupController extends Controller
                 ]),
                 'students' => $group->students->map(fn($s) => [
                     'ra' => $s->ra,
-                    'name' => mb_strtoupper($s->user->name),
+                    'name' => $s->user->name,
                 ]),
                 'created_at' => $group->created_at,
                 'updated_at' => $group->updated_at,
@@ -431,7 +412,7 @@ class GroupController extends Controller
             ], 422);
         }
 
-        $group->refresh();
+        $group->touch();
 
         return response()->json([
             'success' => true,

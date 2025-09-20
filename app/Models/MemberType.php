@@ -17,6 +17,7 @@ class MemberType extends Model
         'updated_at' => 'datetime',
     ];
 
+    // Relacionamento com UserCommittee
     public function UserCommittee(): HasMany
     {
         return $this->hasMany(UserCommittee::class);

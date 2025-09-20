@@ -13,7 +13,7 @@
     <x-main-content>
         {{-- Chamada da função alpine -> recources/js/components/management/coursesData.js--}}
         <div x-data="coursesData()"
-             x-init='init(@json($courses), @json($coordinators), {{ $current_page }}, {{ $last_page }})'>
+             x-init='init(@json($courses), @json($coordinators), {{ $page}}, {{ $totalPages}})'>
             {{-- Menu utilitário das tabelas --}}
             <x-actions-table-bar
                 :primaryAction="['label' => 'Cadastrar Curso', 'method' => 'showCreateModal']"

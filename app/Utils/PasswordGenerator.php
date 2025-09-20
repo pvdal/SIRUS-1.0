@@ -2,6 +2,7 @@
 
 namespace App\Utils;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Random\RandomException;
 
@@ -15,7 +16,7 @@ class PasswordGenerator
      */
     public static function random(int $length = 12): String
     {
-        if($length < 8) {
+        if($length < 8) { // A senha deve ter no mínimo 8 dígitos
             Throw New \InvalidArgumentException("A senha deve ter pelo menos 8 caracteres!");
         }
 
@@ -35,7 +36,7 @@ class PasswordGenerator
 
         $allChars = $lowerLetters . $upperLetters . $numbers . $symbols;
         for ($i = strlen($password); $i < $length; $i ++) {
-            $password = $allChars[random_int(0, strlen($allChars) -1)];
+            $password .= $allChars[random_int(0, strlen($allChars) -1)];
         }
 
         // Embaralha a ordem final

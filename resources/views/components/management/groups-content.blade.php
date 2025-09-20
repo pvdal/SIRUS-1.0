@@ -1,6 +1,6 @@
 <div>
     {{-- Modal de cadastro --}}
-    <x-custom-modal x-model="showCreateModal">
+    <x-custom-modal x-model="showCreateModal" maxWidth="3xl">
         <x-slot name="title">
             <template x-if="!edit">
                 <span>Cadastrar novo grupo</span>
@@ -15,7 +15,7 @@
             <x-custom-banner/>
             {{-- Formulário --}}
             <div>
-                <x-form-fields.group/>
+                <x-form-fields.group :courses="$courses" />
             </div>
         </x-slot>
 
@@ -91,7 +91,7 @@
                 <template x-for="group in [...newGroups, ...groups]" :key="group.id">
                     {{-- Card --}}
                     <div class="flex flex-col justify-between border border-gray-300 rounded-lg shadow bg-white/80 hover:bg-gray-50
-                         w-full xs:w-[400px] md:w-auto max-w-[450px] backdrop-blur-sm transition-all duration-300 h-80 overflow-hidden hover:shadow-md"
+                         w-full xs:w-[400px] md:w-auto max-w-[450px] backdrop-blur-sm transition-all duration-300 h-90 xxs:h-80 overflow-hidden hover:shadow-md"
                          x-bind:class="{ '!bg-green-50': group.origin === 'new' }">
                         <div class="max-h-[30px] w-full flex items-center px-6">
                             <span x-text="group.id" class="text-sm text-gray-600"></span>
@@ -141,7 +141,7 @@
                         {{-- Rodapé --}}
                         <div class="flex flex-wrap gap-3 items-center justify-between px-5 py-2">
                             <span
-                                class="text-xs py-1 px-3 font-bold rounded-s-lg rounded-e-lg"
+                                class="text-xs py-1 ms-4 px-3 font-bold rounded-s-lg rounded-e-lg"
                                 :class="group.state === 1
                                     ? 'bg-secondary-blue text-white'
                                     : 'bg-gray-100 text-gray-600'"

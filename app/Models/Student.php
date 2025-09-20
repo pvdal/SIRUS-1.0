@@ -17,10 +17,17 @@ class Student extends Model
     protected $fillable = [
         'ra',
         'user_id',
-        'semester',
+        //'semester',
         'course_id',
         'group_id'
     ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
+    #region Relacionamentos
     // Relacionamento com User
     public function user(): BelongsTo
     {
@@ -31,9 +38,10 @@ class Student extends Model
     {
         return $this->belongsTo(Course::class,'course_id');
     }
-    // Relacionamento com Course
+    // Relacionamento com Group
     public function group(): BelongsTo
     {
         return $this->belongsTo(Group::class,'group_id');
     }
+    #endregion
 }

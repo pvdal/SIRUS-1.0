@@ -5,16 +5,17 @@ namespace App\Http\Controllers;
 // Common
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 // Models
 use App\Models\User;
 use App\Models\Course;
 use App\Models\Coordinator;
 
+// Transações no banco
+use Illuminate\Support\Facades\DB;
+
 // Log
-// use Illuminate\Support\Facades\DB;
-// use Illuminate\Support\Facades\Log;
+//use Illuminate\Support\Facades\Log;
 
 // Static Classes and utils
 use Random\RandomException;
@@ -25,30 +26,16 @@ class CourseController extends Controller
     /**
      * @throws RandomException
      */
-    public function index(): View
+    // Exibição inicial de cursos sem aplicação de filtros ou troca de página (‘READ’)
+    public function index(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         // Inicializa o DynamicToken
         TokenGenerator::initializeTab();
-
-        $coordinators = Coordinator::with('user:id,name')
-            ->whereHas('user', function ($q) {
-                $q->where('state', 1);
-            })
-            ->orderBy(
-                User::select('name')
-                    ->whereColumn('users.id', 'coordinators.user_id')
-            )
-            ->get();
-
-        $data = $coordinators->map(function ($coordinator) {
-            return [
-                'id' => $coordinator->id,
-                'name' => $coordinator->user->name,
-            ];
-        });
-
-        $courses = Course::with('coordinator.user:id,name,state')->orderBy('id')->paginate(12);
-
+        // Faz uma query no banco trazendo 15 registros paginados
+        $courses = Course::with(
+            'coordinator.user:id,name,state'
+        )->orderBy('id')->paginate(15);
+        // Pega a coleção paginada que retornou da query acima e mapeia com chaves amigáveis
         $coursesData = $courses->getCollection()->map(function ($course) {
             return [
                 'id' => $course->id,
@@ -63,17 +50,7 @@ class CourseController extends Controller
             ];
         })->values();
 
-        return view('management.courses', [
-            'courses' => $coursesData,
-            'coordinators' => $data,
-            'current_page' => $courses->currentPage(),
-            'last_page' => $courses->lastPage(),
-        ]);
-    }
-
-    public function show (Request $request): jsonResponse
-    {
-        //DB::enableQueryLog();
+        #region Dados auxiliares
         $coordinators = Coordinator::with('user:id,name')
             ->whereHas('user', function ($q) {
                 $q->where('state', 1);
@@ -83,16 +60,29 @@ class CourseController extends Controller
                     ->whereColumn('users.id', 'coordinators.user_id')
             )
             ->get();
+        #endregion
 
-        $data = $coordinators->map(function ($coordinator) {
-            return [
-                'id' => $coordinator->id,
-                'name' => $coordinator->user->name,
-            ];
-        });
+        // Retorna os dados na view de gerenciamento de cursos
+        return view('management.courses', [
+            'courses' => $coursesData,
+            'coordinators' => $coordinators->map(function ($coordinator) {
+                return [
+                    'id' => $coordinator->id,
+                    'name' => $coordinator->user->name,
+                ];
+            }),
+            'page' => $courses->currentPage(),
+            'totalPages' => $courses->lastPage(),
+        ]);
+    }
 
+    // Exibição de cursos com aplicação de filtros ou troca de página (‘READ’)
+    public function show (Request $request): jsonResponse
+    {
+        //DB::enableQueryLog();
         $query = Course::with('coordinator.user:id,name,state')->orderBy('id');
 
+        #region Filtros
         if ($request->filled('search')) {
             $search = $request->input('search');
 
@@ -119,11 +109,28 @@ class CourseController extends Controller
                 $q->whereBetween('created_at', [now()->subDays(30), now()]);
             });
         }
+        #endregion
 
-        $courses = $query->paginate(12);
+        $courses = $query->paginate(15);
+
+        $coordinators = Coordinator::with('user:id,name')
+            ->whereHas('user', function ($q) {
+                $q->where('state', 1);
+            })
+            ->orderBy(
+                User::select('name')
+                    ->whereColumn('users.id', 'coordinators.user_id')
+            )
+            ->get();
+
+        $data = $coordinators->map(function ($coordinator) {
+            return [
+                'id' => $coordinator->id,
+                'name' => $coordinator->user->name,
+            ];
+        });
         //Log::info('Queries executadas:', DB::getQueryLog());
         //$queries = DB::getQueryLog();
-        //dd($queries);
 
         // Mapeia para retornar somente os campos necessários
         $coursesData = $courses->getCollection()->map(function ($course) {
@@ -133,8 +140,8 @@ class CourseController extends Controller
                 'shift' => $course->shift,
                 'coordinator_id' => $course->coordinator_id ?? null,
                 'coordinator_name' => $course->coordinator->user->name ?? null,
-                'coordinator_state' => (int) ($course->coordinator->user->state ?? 0),
-                'state' => (int) $course->state,
+                'coordinator_state' => ($course->coordinator->user->state ?? 0),
+                'state' => ($course->state ?? 0),
                 'created_at' => $course->created_at,
                 'updated_at' => $course->updated_at,
             ];
@@ -143,11 +150,12 @@ class CourseController extends Controller
         return response()->json([
             'data' => $coursesData,
             'coordinators' => $data,
-            'current_page' => $courses->currentPage(),
-            'last_page' => $courses->lastPage(),
+            'page' => $courses->currentPage(),
+            'totalPages' => $courses->lastPage(),
         ]);
     }
 
+    // Cadastro de cursos (‘CREATE’)
     public function store(Request $request): JsonResponse
     {
         //$start = microtime(true);
@@ -157,13 +165,11 @@ class CourseController extends Controller
             'coordinator_id' => 'nullable|integer|unique:courses|exists:coordinators,id',
         ]);
 
-        $request['state'] = 1;
-
         $course = Course::create([
             'name' => $request['name'],
             'shift' => $request['shift'],
             'coordinator_id' => $request['coordinator_id'],
-            'state' => $request['state'],
+            'state' => 1,
         ]);
         //$end = microtime(true);
         //Log::info('Tempo criação user direto + professor: ' . ($end - $start) . ' segundos');
@@ -178,7 +184,7 @@ class CourseController extends Controller
                 'shift' => $course->shift,
                 'coordinator_id' => $course->coordinator_id ?? null,
                 'coordinator_name' => $course->coordinator->user->name ?? null,
-                'state' => (int) $course->state,
+                'state' => ($course->state ?? 0),
                 'created_at' => $course->created_at,
                 'updated_at' => $course->updated_at,
             ],
@@ -252,6 +258,8 @@ class CourseController extends Controller
                 'message' => 'Ação inválida!'
             ], 422);
         }
+
+        $course->touch();
 
         return response()->json([
             'success' => true,

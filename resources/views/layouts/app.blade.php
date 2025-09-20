@@ -23,15 +23,6 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <!-- Styles -->
         @livewireStyles
-
-        <script>
-            {{-- ID da aba atual --}}
-            window.dynamicToken = document.querySelector('meta[name="dynamic-token"]')?.content || '';
-            sessionStorage.setItem('dynamic_token', window.dynamicToken);
-            {{-- Token dinâmico inicial --}}
-            window.tabId = document.querySelector('meta[name="tabId"]')?.content || '';
-            sessionStorage.setItem('tabId', window.tabId);
-        </script>
     </head>
     <body class="font-sans antialiased">
         {{-- Feedback messages: success, fail...--}}

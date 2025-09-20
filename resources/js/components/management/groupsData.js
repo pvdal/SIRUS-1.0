@@ -18,7 +18,16 @@ export function groupsData() {
         },
         // Variáveis dos campos do formulário
         theme: '',
-        file: null,
+        file: {
+            title: '',           // Nome do arquivo
+            file: null,          // Instância de File do input
+            url: null,           // ObjectURL do arquivo
+            year: new Date().getFullYear(), // Ano padrão
+            semester: 1,         // Semestre padrão
+            project: 1,          // Projeto padrão
+            version: 'evaluation', // Versão padrão ('evaluation' ou 'corrected')
+            course: '',  // ID do curso selecionado
+        },
         fileObjectUrl: null,
         members: [],
         created_at: '',
@@ -55,21 +64,50 @@ export function groupsData() {
         searchTimeout: null,
         showNoStudentsMsg: false,
 
-        init(groups, students,currentPage, lastPage) {
+        papers: [], // Guarda todos os trabalhos do grupo
+        paperExpanded: {}, // Controla a expansão do menu accordion
+        dropAll() {
+            for (let key in this.paperExpanded) {
+                this.paperExpanded[key] = false;
+            }
+        },
+        courses: [],
+        addPaper() {
+            if (!this.file.file) return;
+            const newPaper = {
+                id: null,
+                tempId: crypto.randomUUID(),
+                ...this.file // copia todos os campos do objeto
+            };
+
+            this.papers.push(newPaper);
+            this.paperExpanded[newPaper.tempId] = false;
+            console.log(this.papers);
+            // limpa buffer
+            this.file = {
+                title: '',
+                file: null,
+                url: null,
+                year: new Date().getFullYear(),
+                semester: 1,
+                project: 1,
+                version: 'evaluation',
+                course: null
+            };
+            this.$refs.pdfFile.value = '';
+        },
+
+
+
+
+        init(groups, courses, page, totalPages) {
             this.groups = groups;
-            this.students = students;
-            this.page = currentPage;
-            this.totalPages = lastPage;
+            this.courses = courses;
+            this.page = page;
+            this.totalPages = totalPages;
             // Se a array vier vazia ou o objeto recebido não for array, o usuário terá como retorno que não há registros
             this.empty = !Array.isArray(groups) || groups.length === 0;
 
-            /*
-            this.$watch('searchTerm', (value) => {
-                if(!value) {
-                    this.loadGroups();
-                }
-            });
-            */
             // Evento de escuta para a busca de alunos para cadastro no grupo
             this.$watch('searchStudent', (value) => {
                 value = value.trim();
@@ -81,6 +119,7 @@ export function groupsData() {
                     this.filteredStudents = [];
                 }
             });
+
             // Garante que ao modal ser fechado o estado das variáveis de update sejam resetados, isso evita que ao fechar o modal de update o create se comporte como update
             this.$watch('showCreateModal', (value) => {
                 if (!value) {
@@ -89,17 +128,23 @@ export function groupsData() {
                     this.clearFields('store');
                     this.showBanner = false;
                     this.filteredStudents = [];
+                    this.papers = [];
+                    this.file = {
+                        title: '',
+                        file: null,
+                        url: null,
+                        year: new Date().getFullYear(),
+                        semester: 1,
+                        project: 1,
+                        version: 'evaluation',
+                        course: null
+                    };
                 }
             });
             // Observador reativo que garante que ao ser adicionado um arquivo no modal de update, a url seja alterada para a url do novo arquivo
-            this.$watch('file', (newFile, oldFile) => {
-                if (this.fileObjectUrl) {
-                    URL.revokeObjectURL(this.fileObjectUrl);
-                    this.fileObjectUrl = null;
-                }
-                if (newFile instanceof File) {
-                    this.fileObjectUrl = URL.createObjectURL(newFile);
-                }
+            this.$watch('file.file', (newFile) => {
+                this.file.title = newFile?.name ?? null;
+                this.file.url = newFile ? URL.createObjectURL(newFile) : null;
             });
         },
 
@@ -202,6 +247,8 @@ export function groupsData() {
         },
 
         showPaper(url) {
+            // Remove overflow-hidden pra aplicar o auto e permitir scroll na página de visualização do paper
+            document.body.classList.remove("overflow-hidden");
             paperViewer(this, url);
         },
 
@@ -225,9 +272,8 @@ export function groupsData() {
                 const response = await axios.get(`/${requestPrefix}/groups/show`, {params});
 
                 this.groups = response.data.data;
-                this.students = response.data.students;
-                this.page = response.data.current_page;
-                this.totalPages = response.data.last_page;
+                this.page = response.data.page;
+                this.totalPages = response.data.totalPages;
             } catch (error) {
                 if(error.response){
                     this.errors.load = error.response.data.message || 'Erro ao carregar os dados.';
@@ -242,7 +288,7 @@ export function groupsData() {
                 document.body.style.cursor = 'default';
             }
         },
-
+        course_id: '',
         showGroup(id) {
             this.groupId = id;
             const group = this.groups.find(g => g.id === id) || this.newGroups.find(g => g.id === id);
@@ -264,13 +310,31 @@ export function groupsData() {
             } else {
                 this.members = [];
             }
-
+            this.course_id = 1;
             // Pega o nome do arquivo, se existir
             if (group.papers && group.papers.length > 0) {
-                const paper = group.papers[0];
-                this.file = { name: paper.title.split('/').pop(), url: paper.file_path };
+                this.papers = group.papers.map(p => ({
+                    id: p.id,
+                    title: p.title,
+                    file_path: p.file_path,
+                    year: new Date().getFullYear(), // garante tipo número
+                    semester: 1, // opcional, define valor padrão
+                    project: 1,
+                    version: 'evaluation',
+                    course: 1,
+                }));
+                // Inicializa paperExpanded
+                this.paperExpanded = {}; // garante que está vazio
+                this.papers.forEach(p => {
+                    const key = p.id ?? p.tempId;
+                    this.paperExpanded[key] = false;
+                });
+                //const paper = group.papers[0];
+                //this.file = { name: paper.title.split('/').pop(), url: paper.file_path };
             } else {
-                this.file = null;
+                //this.file = null;
+                this.papers = [];
+                this.paperExpanded = {};
             }
 
             // Trata os timestamps
@@ -284,13 +348,17 @@ export function groupsData() {
             this.edit = true;  // indica modo edição
         },
 
+        removePaper(paperId) {
+            this.papers = this.papers.filter(p => p.id !== paperId && p.tempId !== paperId)
+        },
+
         async saveGroup() {
             let update = this.edit;
             const formData = new FormData();
             formData.append('theme', this.theme);
 
-            if (this.file instanceof File) {
-                formData.append('file', this.file);
+            if (this.file.file instanceof File) {
+                formData.append('file', this.file.file);
             }
 
             if (this.members.length === 0) {

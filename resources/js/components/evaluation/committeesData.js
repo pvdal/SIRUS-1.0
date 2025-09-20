@@ -86,15 +86,14 @@ export function committeesData() {
 
         showingCommittee: false,
 
-        init(committees, memberTypes, groups, academicStaff, currentPage, lastPage) {
+        init(committees, memberTypes, groups, academicStaff, page, totalPages) {
             this.committees = committees;
             this.memberTypes = memberTypes;
             this.groups = groups;
             this.academicStaff = academicStaff;
-            this.page = currentPage;
-            this.totalPages = lastPage;
+            this.page = page;
+            this.totalPages = totalPages;
             this.empty = !Array.isArray(committees) || committees.length === 0;
-            console.log(committees);
             /*this.$watch('searchTerm', (value) => {
                 if(!value) {
                     this.loadCommittees();
@@ -283,8 +282,8 @@ export function committeesData() {
                 const response = await axios.get(`/${requestPrefix}/committees/show`, {params});
 
                 this.committees = response.data.data;
-                this.page = response.data.current_page;
-                this.totalPages = response.data.last_page;
+                this.page = response.data.page;
+                this.totalPages = response.data.totalPages;
             } catch (error) {
                 if(error.response){
                     this.errors.load = error.response.data.message || 'Erro ao carregar os dados.';

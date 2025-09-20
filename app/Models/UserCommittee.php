@@ -19,6 +19,7 @@ class UserCommittee extends Model
         'updated_at' => 'datetime',
     ];
 
+    #region Relacionamentos
     // Relacionamento com Committee
     public function committee(): BelongsTo
     {
@@ -42,4 +43,5 @@ class UserCommittee extends Model
     {
         return $this->belongsTo(Paper::class);
     }
+    #endregion
 }

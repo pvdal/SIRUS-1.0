@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Course extends Model
 {
@@ -13,13 +14,13 @@ class Course extends Model
         'coordinator_id',
         'state',
     ];
+
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
 
-    // App\Models\Course.php
-
+    // Traduz o inglês do banco para português
     public function getShiftPtAttribute(): string
     {
         return match (strtolower($this->shift)) {
@@ -30,14 +31,14 @@ class Course extends Model
         };
     }
 
-
-    // Scope para cursos ativos
+    // Escopo para cursos ativos
     public function scopeActive($query)
     {
         return $query->where('state', 1);
     }
+
     // Relacionamento com Coordinator
-    public function coordinator()
+    public function coordinator(): BelongsTo
     {
         return $this->belongsTo(Coordinator::class);
     }

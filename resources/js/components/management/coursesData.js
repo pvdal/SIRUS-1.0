@@ -41,7 +41,7 @@ export function coursesData(){
         page: 1,
         totalPages: 1,
 
-        init(courses, coordinators, currentPage, lastPage){
+        init(courses, coordinators, page, totalPages){
             if (!Array.isArray(courses)) {
                 this.courses = [];
             } else {
@@ -51,8 +51,8 @@ export function coursesData(){
                 }));
             }
             this.coordinators = coordinators
-            this.page = currentPage;
-            this.totalPages = lastPage;
+            this.page = page;
+            this.totalPages = totalPages;
 
             this.empty =  this.courses.length === 0;
 
@@ -100,8 +100,8 @@ export function coursesData(){
                     }));
                 }
                 this.coordinators = response.data.coordinators;
-                this.page = response.data.current_page;
-                this.totalPages = response.data.last_page;
+                this.page = response.data.page;
+                this.totalPages = response.data.totalPages;
 
             } catch (error) {
                 if(error.response){
