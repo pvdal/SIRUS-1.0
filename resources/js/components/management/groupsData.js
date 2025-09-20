@@ -82,7 +82,8 @@ export function groupsData() {
 
             this.papers.push(newPaper);
             this.paperExpanded[newPaper.tempId] = false;
-            console.log(this.papers);
+            console.log(this.papers[0]);
+            console.log(this.papers[0].file);
             // limpa buffer
             this.file = {
                 title: '',
@@ -96,8 +97,6 @@ export function groupsData() {
             };
             this.$refs.pdfFile.value = '';
         },
-
-
 
 
         init(groups, courses, page, totalPages) {
@@ -357,8 +356,8 @@ export function groupsData() {
             const formData = new FormData();
             formData.append('theme', this.theme);
 
-            if (this.file.file instanceof File) {
-                formData.append('file', this.file.file);
+            if (this.papers[0].file) {
+                formData.append('file', this.papers[0].file);
             }
 
             if (this.members.length === 0) {
