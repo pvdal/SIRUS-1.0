@@ -200,8 +200,10 @@ class ProfessorController extends Controller
             'name' => $request['name'],
             'email' => $request['email'],
         ]);
+        
         // Se houver alteração comparado aos dados vindos do banco, isDirty retorna true
-        if($professor->isDirty()) {
+        if($professor->user->isDirty()) {
+            Log:info($professor->user);
             $professor->user->save();
             $professor->touch(); // Atualiza timestamps do professor
         }

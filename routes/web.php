@@ -30,7 +30,7 @@ ROute::get('/terms', [LegalController::class, 'showTerms'])->name('terms.show');
 
 // Rotas comuns de login e logout. Isso sobrepõe as rotas laravel padrão, é possível setar elas globalmente em /config/fortify.php
 // OBS: Isso sobrescreve as rotas default do vendor
-Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login');
+Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.store');
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
 // Rotas acessíveis a qualquer usuário autenticado e verificado
