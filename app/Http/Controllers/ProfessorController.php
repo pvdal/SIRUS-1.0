@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\DB;
 use Random\RandomException;
 use App\Utils\TokenGenerator;
 use App\Utils\PasswordGenerator;
+use Throwable;
 
 class ProfessorController extends Controller
 {
@@ -123,12 +124,16 @@ class ProfessorController extends Controller
     }
 
     // Cadastro de professores (‘CREATE’)
+
+    /**
+     * @throws Throwable
+     */
     public function store(Request $request, CreateNewUser $creator): JsonResponse
     {
         //$start = microtime(true);
         $validated = $request->validate([
             'name'  => 'required|string|max:255',
-            'email' => 'required|email:rfc,dns|unique:users,email',
+            'email' => 'required|email:rfc|unique:users,email',
         ]);
 
         $user = null;
@@ -165,7 +170,7 @@ class ProfessorController extends Controller
                 'user_id' => $professor->user_id,
                 'name'  => $user->name,
                 'email' => $user->email,
-                'state' => ($user->state ?? 0),
+                'state' => (int) $user->state,
                 'created_at' => $professor->created_at,
                 'updated_at' => $professor->updated_at,
             ]
@@ -182,7 +187,7 @@ class ProfessorController extends Controller
 
         $request->validate([
             'name'  => 'required|string|max:255',
-            'email' => "required|email:rfc,dns|unique:users,email,{$id},id",
+            'email' => "required|email:rfc|unique:users,email,{$id},id",
         ]);
 
         $professor = Professor::with(
@@ -200,10 +205,9 @@ class ProfessorController extends Controller
             'name' => $request['name'],
             'email' => $request['email'],
         ]);
-        
+
         // Se houver alteração comparado aos dados vindos do banco, isDirty retorna true
         if($professor->user->isDirty()) {
-            Log:info($professor->user);
             $professor->user->save();
             $professor->touch(); // Atualiza timestamps do professor
         }

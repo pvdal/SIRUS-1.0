@@ -128,7 +128,7 @@
                                 <button
                                     type="button"
                                     class="flex items-center justify-start gap-2 px-3 py-2 rounded-md hover:bg-gray-200 transition cursor-pointer w-full max-w-full"
-                                    x-on:click="showPaper(`/${group.papers[0].file_path}`)"
+                                    x-on:click="showPaper(`${group.papers[0].file_path}`)"
                                 >
                                     <x-lucide-file-text class="w-4 h-4 text-gray-600 flex-shrink-0"/>
                                     <span class="text-sm text-gray-800 font-semibold truncate " x-text="group.papers[0].title"></span>

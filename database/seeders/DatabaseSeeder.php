@@ -18,13 +18,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
-<<<<<<< HEAD
-        Student::factory()->count(10)->create();
-        Professor::factory()->count(10)->create();
-=======
         Student::factory()->count(100)->create();
         Professor::factory()->count(100)->create();
->>>>>>> 1ebe5cc81cc5e0e661156ed62e7690b54d708019
         Coordinator::factory()->count(50)->create();
         $this->call(MemberTypesTableSeeder::class);
 

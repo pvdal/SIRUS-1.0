@@ -16,13 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // Middleware que identifica o nível de acesso do usuário: App\Http\Middleware\EnsureUserHasAccessLevel
-        $middleware->alias([
-            'access.level' => EnsureUserHasAccessLevel::class,
-            'secure.ajax' => SecureAjaxRequest::class,
-        ]);
-        // Adiciona o middleware ao grupo web, junto com os padrões já existentes
-        $middleware->appendToGroup('web', EnsureTermsAccepted::class);
+        //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

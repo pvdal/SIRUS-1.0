@@ -24,4 +24,14 @@ return [
     |
     */
     'request_prefix' => env('REQUEST_PREFIX', '2e95b528-95e8-4c8e-a41a'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Termos de uso e políticas de privacidade
+    |--------------------------------------------------------------------------
+    |
+    | Define se será exigido o aceite de termos por parte do usuário ou não.
+    |
+    */
+    'terms_accept' => true,
 ];

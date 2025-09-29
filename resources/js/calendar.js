@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 events: function (info, successCallback, failureCallback) {
                     const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
                     axios({
-                        url: `/events/show`,
+                        url: `${requestPrefix}/events/show`,
                         method: 'GET',
                         params: {
                             start: info.startStr,
@@ -52,8 +52,6 @@ document.addEventListener('DOMContentLoaded', function () {
         eventClick: function(info) {
             // info.event contém os dados do evento
             alert('Evento: ' + info.event.title);
-
-
         },
     });
     // Forçar view com base na largura da tela

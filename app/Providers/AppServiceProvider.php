@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Sanctum\PersonalAccessToken;
 use Livewire\Livewire;
@@ -41,6 +43,5 @@ class AppServiceProvider extends ServiceProvider
                 throw new \Exception ('Não autorizado a deletar tokens');
             }
         });
-
     }
 }

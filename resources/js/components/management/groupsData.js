@@ -27,6 +27,7 @@ export function groupsData() {
             project: 1,          // Projeto padrão
             version: 'evaluation', // Versão padrão ('evaluation' ou 'corrected')
             course: '',  // ID do curso selecionado
+
         },
         fileObjectUrl: null,
         members: [],
@@ -66,24 +67,27 @@ export function groupsData() {
 
         papers: [], // Guarda todos os trabalhos do grupo
         paperExpanded: {}, // Controla a expansão do menu accordion
-        dropAll() {
+        dropAll() { // Colapsa todos os menus da array papers
             for (let key in this.paperExpanded) {
                 this.paperExpanded[key] = false;
             }
         },
-        courses: [],
-        addPaper() {
-            if (!this.file.file) return;
+        courses: [], // Array de cursos para o menu de cadastro de papers
+        addPaper() { // Função para adicionar ‘papers’
+            if (!this.file.file || this.file.file.type !== 'application/pdf') {
+                alert('Apenas arquivos PDF são permitidos!');
+                return;
+            }
             const newPaper = {
                 id: null,
-                tempId: crypto.randomUUID(),
+                tempId: Date.now() + Math.floor(Math.random() * 10000),
                 ...this.file // copia todos os campos do objeto
             };
-
             this.papers.push(newPaper);
             this.paperExpanded[newPaper.tempId] = false;
-            console.log(this.papers[0]);
-            console.log(this.papers[0].file);
+
+            //console.log(this.papers[0]);
+            //console.log(this.papers[0].file);
             // limpa buffer
             this.file = {
                 title: '',
@@ -95,9 +99,9 @@ export function groupsData() {
                 version: 'evaluation',
                 course: null
             };
+            // Limpa a referência do ‘input’ como PDF
             this.$refs.pdfFile.value = '';
         },
-
 
         init(groups, courses, page, totalPages) {
             this.groups = groups;
@@ -147,7 +151,6 @@ export function groupsData() {
             });
         },
 
-
         async searchStudents() {
             if (this.searchTimeout) clearTimeout(this.searchTimeout);
 
@@ -174,7 +177,7 @@ export function groupsData() {
                         params: { q: term }
                     });
 
-                    // response.data agora é array, filter funciona sem erro
+
                     this.filteredStudents = response.data.filter(
                         aluno => !this.members.some(m => m.ra === aluno.ra)
                     );
@@ -316,11 +319,12 @@ export function groupsData() {
                     id: p.id,
                     title: p.title,
                     file_path: p.file_path,
-                    year: new Date().getFullYear(), // garante tipo número
-                    semester: 1, // opcional, define valor padrão
-                    project: 1,
-                    version: 'evaluation',
-                    course: 1,
+                    year: p.year,
+                    semester: p.semester,
+                    project: p.project,
+                    version: p.version,
+                    course: p.course,
+                    state: p.state,
                 }));
                 // Inicializa paperExpanded
                 this.paperExpanded = {}; // garante que está vazio
@@ -348,7 +352,15 @@ export function groupsData() {
         },
 
         removePaper(paperId) {
+            const paperToRemove = this.papers.find(p => p.id === paperId || p.tempId === paperId);
+
+            if(paperToRemove?.url) {
+                URL.revokeObjectURL(paperToRemove.url);
+            }
+
             this.papers = this.papers.filter(p => p.id !== paperId && p.tempId !== paperId)
+
+            console.log(this.errors);
         },
 
         async saveGroup() {
@@ -356,9 +368,22 @@ export function groupsData() {
             const formData = new FormData();
             formData.append('theme', this.theme);
 
-            if (this.papers[0].file) {
-                formData.append('file', this.papers[0].file);
+            if (this.papers.length > 0) {
+                this.papers.forEach((p, index) => {
+                    formData.append(`papers[${index}][id]`, p.id ?? null);
+                    formData.append(`papers[${index}][title]`, p.title ?? '');
+                    if (p.file instanceof File) {
+                        formData.append(`papers[${index}][file]`, p.file);
+                    }
+                    formData.append(`papers[${index}][year]`, p.year ?? '');
+                    formData.append(`papers[${index}][semester]`, p.semester ?? '');
+                    formData.append(`papers[${index}][version]`, p.version ?? '');
+                    formData.append(`papers[${index}][course]`, p.course ?? '');
+                    formData.append(`papers[${index}][project]`, p.project ?? '');
+                });
             }
+            //console.log(this.papers);
+            //console.log(formData);
 
             if (this.members.length === 0) {
                 formData.append('members[]', '');
@@ -380,6 +405,7 @@ export function groupsData() {
 
             const newMembers = this.members;
             const groupTheme = this.theme;
+
             const savedData = await saveData({
                 url,
                 method,
@@ -414,6 +440,19 @@ export function groupsData() {
 
             // Alteração dos dados nas arrays locais, de acordo com o update do controller
             if(update && savedData) {
+                this.papers.forEach(p => {
+                    if (p.file?.url) {
+                        URL.revokeObjectURL(p.file.url);
+                    }
+                });
+
+                // Substitui pelos papers retornados do backend, já sem campos temporários
+                this.papers = (savedData.papers ?? []).map(p => ({
+                    ...p,
+                    file: undefined,
+                    tempId: undefined
+                }));
+
                 // Trata os timestamps
                 this.created_at = formatDateTime('Criado em', savedData.created_at);
                 this.updated_at = formatDateTime('Atualizado em', savedData.updated_at, savedData.created_at);
@@ -491,10 +530,10 @@ export function groupsData() {
             clearComponentData(this, type,
                 [
                     'theme',
-                    'file',
                     'searchStudent',
                     'filteredStudents',
-                    'members'
+                    'members',
+                    'papers'
                 ],
             );
         },

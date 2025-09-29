@@ -21,12 +21,12 @@ use Laravel\Jetstream\Http\Controllers\Livewire\ApiTokenController;
 
 // Rota para homePage
 Route::get('/', function () {
-    return view('home-page');
+    return view('home');
 })->name('home');
 
 // Rotas para políticas de privacidade e termos de uso
-Route::get('/policy', [LegalController::class, 'showPolicies'])->name('policy.show');
-ROute::get('/terms', [LegalController::class, 'showTerms'])->name('terms.show');
+Route::get('/legal/policy', [LegalController::class, 'showPolicies'])->name('policy.show');
+ROute::get('/legal/terms', [LegalController::class, 'showTerms'])->name('terms.show');
 
 // Rotas comuns de login e logout. Isso sobrepõe as rotas laravel padrão, é possível setar elas globalmente em /config/fortify.php
 // OBS: Isso sobrescreve as rotas default do vendor
@@ -42,14 +42,21 @@ Route::middleware([
     /*Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');*/
-    // Calendar -> EventController/Committee.php
-    Route::get('/calendar', [EventController::class, 'index'])->name('calendar');
-    Route::get('/events/show', [EventController::class, 'events'])->name('events.show');
 
     // Groups -> PaperController/Paper.php -> Quem chama essa rota é o iframe em groups.blade.php
     Route::get('/papers/{filepath}', [PaperController::class, 'showPaper'])
         ->where('filepath', '.*')
         ->name('papers.show');
+
+    // Calendar -> EventController/Committee.php
+    Route::get('/calendar', [EventController::class, 'index'])->name('calendar');
+
+    Route::prefix(config('secure.request_prefix')) // todas as rotas dentro desse grupo possuem o prefixo definido no.env
+    ->middleware('secure.ajax') // middleware que traz camadas a mais de seguranças nas requisições ajax
+    ->group(function () {
+        // Calendar -> EventController/Committee.php
+        Route::get('/events/show', [EventController::class, 'events'])->name('events.show');
+    });
 });
 
 // rotas do coordenador

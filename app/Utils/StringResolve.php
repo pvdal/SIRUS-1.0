@@ -21,7 +21,11 @@ class StringResolve
             'Ú'=>'U','Ù'=>'U','Û'=>'U','Ü'=>'U'
         ];
 
+        // Utiliza a array pra remover os acentos
         $value = strtr($value, $unwanted_array);
+
+        // Transforma tudo em minúsculo
+        $value = strtolower($value);
 
         // Substitui qualquer caractere que não seja letra, número ou _ por _
         $value = preg_replace('/[^a-zA-Z0-9_]/', '_', $value);

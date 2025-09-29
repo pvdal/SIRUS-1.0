@@ -121,12 +121,16 @@ class CoordinatorController extends Controller
     }
 
     // Cadastro de coordenadores (‘CREATE’)
+
+    /**
+     * @throws \Throwable
+     */
     public function store (Request $request, CreateNewUser $creator): jsonResponse
     {
         //$start = microtime(true);
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email:rfc,dns|unique:users,email',
+            'email' => 'required|email:rfc|unique:users,email',
         ]);
 
         $user = null;
@@ -181,7 +185,7 @@ class CoordinatorController extends Controller
 
         $request->validate([
             'name'  => 'required|string|max:255',
-            'email' => "required|email:rfc,dns|unique:users,email,{$id},id",
+            'email' => "required|email:rfc|unique:users,email,{$id},id",
         ]);
 
         $coordinator = Coordinator::with(

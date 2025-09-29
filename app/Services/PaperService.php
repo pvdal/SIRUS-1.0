@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Models\Group;
+use App\Utils\StringResolve;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Paper;
 
@@ -19,57 +21,89 @@ class PaperService
      */
     public function createPaper(UploadedFile $file, int $groupId, array $folders): Paper
     {
+        $version = $folders['version'] === 'corrected' ? 'corrigido' : 'avaliacao';
+        $foldersPath = [
+            $folders['year'],
+            'semestre_'.$folders['semester'],
+            $version,
+            StringResolve::normalizeFolderName($folders['course_name']),
+            'projeto_integrador_'.$folders['project'],
+        ];
+
         // Monta caminho de diretórios
-        $path = 'papers/' . implode('/', $folders);
+        $path = 'papers/' . implode('/', $foldersPath);
         Storage::disk('public')->makeDirectory($path);
 
         // Nome original + hash SHA256 de 30 chars
         $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $extension = $file->getClientOriginalExtension();
-        $hash = substr(hash('sha256', $originalName . time()), 0, 30);
+        $hash = substr(hash('sha256', $originalName . time()), 0, 10);
 
         $newFileName = $originalName . '_' . $hash . '.' . $extension;
-        // Salva o arquivo
-        $filePath = $file->storeAs($path, $newFileName, 'public');
+        $filePath = $file->storeAs($path, $newFileName, 'public');// Salva o arquivo
 
+        Log::info("File stored: " . $filePath);
         // Cria registro no banco
         return Paper::create([
             'title' => $originalName,
             'file_path' => $filePath,
             'group_id' => $groupId,
+            'year' => $folders['year'],
+            'semester' => $folders['semester'],
+            'version' => $folders['version'],
+            'course_id' => $folders['course_id'],
+            'project' => $folders['project'],
         ]);
     }
 
     /**
      * Atualiza o paper de um grupo: se o arquivo for igual, só atualiza o título;
-     * se diferente, apaga os antigos e cria novo.
+     * se diferente, cria.
+     *
+     * @param Paper $paper
+     * @param Group $group
+     * @param array $folders
+     * @return Paper
      */
-    public function updatePaper(UploadedFile $file, Group $group, array $folders): Paper
+    public function updatePaper(Paper $paper,Group $group, array $folders): Paper
     {
-        $oldPaper = $group->papers()->latest()->first();
-        // Hash real do novo arquivo (SHA1 do conteúdo)
-        $newHash = sha1_file($file->getRealPath());
+        $version = $folders['version'] === 'corrected' ? 'corrigido' : 'avaliacao';
+        $foldersPath = [
+            $folders['year'],
+            'semestre_'.$folders['semester'],
+            $version,
+            StringResolve::normalizeFolderName($folders['course_name']),
+            'projeto_integrador_'.$folders['project'],
+        ];
 
-        if($oldPaper) {
-            // Lê o arquivo atual no storage e calcula hash
-            $oldHash = sha1(Storage::disk('public')->path($oldPaper->file_path));
+        // Pasta nova
+        $newDir = 'papers/' . implode('/', $foldersPath);
 
-            if ($newHash === $oldHash) {
-                // Mesmo arquivo → só atualiza título se mudou
-                $oldPaper->fill([
-                    'title' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
-                ]);
+        // Nome atual do arquivo
+        $fileName = basename($paper->file_path);
 
-                if($oldPaper->isDirty()) {
-                    $oldPaper->save();
-                    $group->touch();
-                }
+        // Caminho novo (diretório + mesmo nome de arquivo)
+        $newPath = $newDir . '/' . $fileName;
 
-                return $oldPaper; // não mexe no banco nem cria arquivo novo
-            }
+        if($newPath !== $paper->file_path){
+            // Cria pasta destino caso não exista
+            Storage::disk('public')->makeDirectory($newDir);
+
+            // Move fisicamente
+            Storage::disk('public')->move($paper->file_path, $newPath);
+
+            // Atualiza no banco
+            $paper->update([
+                'file_path' => $newPath,
+                'group_id'  => $group->id,
+                'year'      => $folders['year'],
+                'semester'  => $folders['semester'],
+                'version'   => $folders['version'],
+                'course_id' => $folders['course_id'],
+                'project'   => $folders['project'],
+            ]);
         }
 
-        // Novo arquivo -> mantém os antigos, só cria outro
-        return $this->createPaper($file, $group->id, $folders);
+        return $paper;
     }
 }

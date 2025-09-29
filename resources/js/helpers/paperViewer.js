@@ -1,15 +1,14 @@
 export function paperViewer(context, url) {
     context.showGroupCards = false;
     context.isLoadingPdf = true;
-    context.paperUrl = url;
+    context.paperUrl = `${window.appUrl}/pdfjs/web/viewer.html?file=${window.appUrl}/${url}`;
     context.showGroupPaper = true;
     context.$dispatch('toggle-paper', true);
     context.$nextTick(() => {
         setTimeout(() => {
-            context.paperUrl = url;
+            context.paperUrl = `${window.appUrl}/pdfjs/web/viewer.html?file=${window.appUrl}/${url}`;
             context.showGroupPaper = true;
             context.$dispatch('toggle-paper', true);
-        }, 10);
+        }, 5);
     });
-    console.log(context.paperUrl);
 }

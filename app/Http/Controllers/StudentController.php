@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\DB;
 use Random\RandomException;
 use App\Utils\TokenGenerator;
 use App\Utils\PasswordGenerator;
+use Throwable;
 
 class StudentController extends Controller
 {
@@ -50,27 +51,9 @@ class StudentController extends Controller
         // Mapeia a coleção de dados paginados retornando array simples com chaves definidas aqui
         $studentsData = $students->getCollection()->map(function ($student) {
             $user = $student->user;
-            return [
-                'ra' => $student->ra,
-                'user_id' => $student->user_id,
-                'name' => $student->user->name,
-                'email' => $student->user->email,
-                //'semester' => $student->semester,
-                'group' => [
-                    'id' => $student->group->id ?? null,
-                    'name' => $student->group->theme ?? '',
-                    'state' => ($student->group->state ?? 0),
-                ],
-                'course' => [
-                    'id' => $student->course->id ?? null,
-                    'name' => $student->course->name ?? '',
-                    'state' => ($student->course->state ?? 0),
-                ],
-                'state' => ($student->user->state ?? 0),
-                'created_at' => $student->created_at ?? $user->created_at,
-                'updated_at' => $student->updated_at ?? $user->updated_at,
-            ];
+            return $this->mapStudent($student, $user);
         })->values();
+
         // Retorna a view de gestão de estudantes com os dados extraídos do banco
         return view('management.students', [
             'students' => $studentsData,
@@ -94,11 +77,13 @@ class StudentController extends Controller
         #region Filtros
         if ($request->filled('search')) {
             $search = $request->input('search');
-            $query->whereHas('user', function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
-            })
-                ->orWhere('ra', 'like', "%{$search}%");
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('user', function ($q2) use ($search) {
+                    $q2->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                })
+                    ->orWhere('ra', 'like', "%{$search}%");
+            });
         }
 
         if ($request->filled('course')) {
@@ -142,26 +127,7 @@ class StudentController extends Controller
 
         $studentsData = $students->getCollection()->map(function ($student) {
             $user = $student->user;
-            return [
-                'ra' => $student->ra,
-                'user_id' => $student->user_id,
-                'name' => $student->user->name,
-                'email' => $student->user->email,
-                //'semester' => $student->semester,
-                'group' => [
-                    'id' => $student->group->id ?? null,
-                    'name' => $student->group->theme ?? '',
-                    'state' => ($student->group->state ?? 0),
-                ],
-                'course' => [
-                    'id' => $student->course->id ?? null,
-                    'name' => $student->course->name ?? '',
-                    'state' => ($student->course->state ?? 0),
-                ],
-                'state' => ($student->user->state ?? 0),
-                'created_at' => $student->created_at ?? $user->created_at,
-                'updated_at' => $student->updated_at ?? $user->updated_at,
-            ];
+            return $this->mapStudent($student, $user);
         })->values();
 
         return response()->json([
@@ -174,6 +140,9 @@ class StudentController extends Controller
     }
 
     // Cadastro de alunos (‘CREATE’)
+    /**
+     * @throws Throwable
+     */
     public function store(Request $request, CreateNewUser $creator): JsonResponse
     {
         //Log::info('Dados recebidos no store', $request->all());
@@ -181,8 +150,7 @@ class StudentController extends Controller
         $validated = $request->validate([
             'ra' => 'required|string|digits:13|unique:students,ra',
             'name' => 'required|string|max:255',
-            'email' => 'required|email:rfc,dns|unique:users,email',
-            //'semester' => 'nullable|integer|min:1|max:10',
+            'email' => 'required|email:rfc|unique:users,email',
             'group_id' => 'nullable|exists:groups,id',
             'course_id' => 'nullable|exists:courses,id',
         ]);
@@ -210,8 +178,7 @@ class StudentController extends Controller
                 'user_id' => $user->id,
             ]);
 
-            // Envio da senha para o usuário cadastrado pelo e-mail por fila no banco
-            $user->sendTemporaryPasswordNotification($password);
+            $user->sendTemporaryPasswordNotification($password); // Envio da senha para o usuário cadastrado pelo e-mail por fila no banco
         });
         //$end = microtime(true);
         //Log::info('Tempo criação user direto + professor: ' . ($end - $start) . ' segundos');
@@ -221,24 +188,7 @@ class StudentController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Aluno cadastrado com sucesso.',
-            'data' => [
-                'ra' => $student->ra,
-                'user_id' => $student->user_id,
-                'name' => $user->name,
-                'email' => $user->email,
-                //'semester' => $student->semester,
-                'group' => [
-                    'id' => $student->group->id ?? null,
-                    'name' => $student->group->theme ?? '',
-                ],
-                'course' => [
-                    'id' => $student->course->id ?? null,
-                    'name' => $student->course->name ?? '',
-                ],
-                'state' => ($user->state ?? 0),
-                'created_at' => $student->created_at,
-                'updated_at' => $student->updated_at,
-            ]
+            'data' => $this->mapStudent($student, $user),
         ]);
     }
 
@@ -253,8 +203,7 @@ class StudentController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => "required|email:rfc,dns|unique:users,email,{$id},id",
-            //'semester' => 'required|integer|min:1|max:10',
+            'email' => "required|email:rfc|unique:users,email,{$id},id",
             'group_id' => 'nullable|exists:groups,id',
             'course_id' => 'nullable|exists:courses,id',
         ]);
@@ -290,27 +239,11 @@ class StudentController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Aluno atualizado com sucesso!',
-            'data' => [
-                'ra' => $student->ra,
-                'user_id' => $student->user_id,
-                'name' => $student->user->name,
-                'email' => $student->user->email,
-                //'semester' => $student->semester,
-                'group' => [
-                    'id' => $student->group->id ?? null,
-                    'name' => $student->group->theme ?? '',
-                ],
-                'course' => [
-                    'id' => $student->course->id ?? null,
-                    'name' => $student->course->name ?? '',
-                ],
-                'state' => (int) $student->user->state,
-                'created_at' => $student->created_at ?? $user->created_at,
-                'updated_at' => $student->updated_at ?? $user->updated_at,
-            ]
+            'data' => $this->mapStudent($student, $user),
         ]);
     }
 
+    // Atualização do status do registro no banco (ativo/inativo)
     public function toggleStatus($id,$action): JsonResponse
     {
         $student = Student::with('user:id,state,created_at,updated_at')->where('user_id', $id)->first();
@@ -340,5 +273,27 @@ class StudentController extends Controller
             'created_at' => $student->created_at ?? $student->user->created_at,
             'updated_at' => $student->updated_at ?? $student->user->updated_at,
         ]);
+    }
+
+    // Mapeamento da array de students injetada no front
+    private function mapStudent($student, $user): array
+    {
+        return [
+            'ra' => $student->ra,
+            'user_id' => $student->user_id,
+            'name' => $student->user->name,
+            'email' => $student->user->email,
+            'group' => [
+                'id' => $student->group->id ?? null,
+                'name' => $student->group->theme ?? '',
+            ],
+            'course' => [
+                'id' => $student->course->id ?? null,
+                'name' => $student->course->name ?? '',
+            ],
+            'state' => (int) $student->user->state,
+            'created_at' => $student->created_at ?? $user->created_at,
+            'updated_at' => $student->updated_at ?? $user->updated_at,
+        ];
     }
 }

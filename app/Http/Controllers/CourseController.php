@@ -85,11 +85,12 @@ class CourseController extends Controller
         #region Filtros
         if ($request->filled('search')) {
             $search = $request->input('search');
-
-            $query->where('name', 'like', "%{$search}%")
-                ->orWhereHas('coordinator.user', function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%");
-                });
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('coordinator.user', function ($q2) use ($search) {
+                    $q2->where('name', 'like', "%{$search}%");
+                })
+                ->orWhere('name', 'like', "%{$search}%");
+            });
         }
 
         if($request->filled('status')) {

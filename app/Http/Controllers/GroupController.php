@@ -6,12 +6,12 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Services\PaperService;
 use App\Utils\StringResolve;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 // Models
 use App\Models\Paper;
-use App\Models\User;
 use App\Models\Group;
 use App\Models\Student;
 
@@ -22,10 +22,10 @@ use Illuminate\Support\Facades\DB;
 //use Illuminate\Support\Facades\Log;
 
 // Static Classes and utils
+use Illuminate\Support\Facades\Log;
 use Random\RandomException;
 use App\Utils\TokenGenerator;
 
-use Illuminate\Support\Facades\Storage;
 use Throwable;
 
 class GroupController extends Controller
@@ -34,34 +34,17 @@ class GroupController extends Controller
      * @throws RandomException
      */
     // Exibição inicial de grupos sem aplicação de filtros ou troca de página (‘READ’)
-    public function index(Request $request): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+    public function index(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
-        // Inicializa o DynamicToken
-        TokenGenerator::initializeTab();
-        // Faz uma query no banco trazendo 15 registros paginados
-        $groups = Group::with([
+        TokenGenerator::initializeTab();// Inicializa o DynamicToken
+
+        $groups = Group::with([ // Faz uma query no banco trazendo 15 registros paginados
             'papers',
             'students.user:id,name,state,updated_at,created_at'
         ])->orderBy('id')->paginate(15);
-        // Mapeia os dados manualmente
-        $groupsData = $groups->getCollection()->map(function ($group) {
-            return [
-                'id' => $group->id,
-                'theme' => mb_strtoupper($group->theme),
-                'state' => ($group->state ?? 0),
-                'papers' => $group->papers->map(fn($p) => [
-                    'id' => $p->id,
-                    'title' => $p->title,
-                    'file_path' => $p->file_path,
-                ]),
-                'students' => $group->students->map(fn($s) => [
-                    'ra' => $s->ra,
-                    'name' => $s->user->name,
-                    'state' => ($s->user->state ?? 0),
-                ]),
-                'created_at' => $group->created_at,
-                'updated_at' => $group->updated_at,
-            ];
+
+        $groupsData = $groups->getCollection()->map(function ($group) { // Mapeia os dados manualmente
+            return $this->mapGroup($group);
         })->values();
 
         $courses = Course::select(['id', 'name'])
@@ -73,7 +56,6 @@ class GroupController extends Controller
                 ];
             })->values();
 
-        //dd($groupsData->toArray());
         return view('management.groups', [
             'groups' => $groupsData,
             'courses' => $courses,
@@ -86,8 +68,8 @@ class GroupController extends Controller
     public function search(Request $request): JsonResponse
     {
         $q = $request->query('q', '');
-        // Traz alunos ativos com name ou RA pesquisados
-        $students = Student::with(['user:id,name'])
+
+        $students = Student::with(['user:id,name']) // Traz alunos ativos com name ou RA pesquisados
             ->whereHas('user', function ($sub) {
                 $sub->where('state', 1);
             })
@@ -97,7 +79,7 @@ class GroupController extends Controller
                 })
                     ->orWhere('ra', 'like', '%' . $q . '%');
             })
-            ->select('ra', 'user_id', 'group_id')
+            ->select(['ra', 'user_id', 'group_id'])
             ->limit(20)
             ->get();
 
@@ -117,7 +99,7 @@ class GroupController extends Controller
     {
         //DB::enableQueryLog();
         $query = Group::with([
-            'papers:id,title,file_path,group_id',
+            'papers',
             'students.user:id,name,state,updated_at,created_at',
         ])->orderBy('id');
 
@@ -159,30 +141,10 @@ class GroupController extends Controller
 
         $groups = $query->paginate(15);
 
-        #region Dados auxiliares
-        #endregion
-
         //Log::info('Queries executadas:', DB::getQueryLog());
 
-        // Mapeia para retornar somente os campos necessários
-        $groupsData = $groups->getCollection()->map(function ($group) {
-            return [
-                'id' => $group->id,
-                'theme' => mb_strtoupper($group->theme),
-                'state' => ($group->state ?? 0),
-                'papers' => $group->papers->map(fn($p) => [
-                    'id' => $p->id,
-                    'title' => $p->title,
-                    'file_path' => $p->file_path,
-                ]),
-                'students' => $group->students->map(fn($s) => [
-                    'ra' => $s->ra,
-                    'name' => $s->user->name,
-                    'state' => ($s->user->state ?? 0),
-                ]),
-                'created_at' => $group->created_at,
-                'updated_at' => $group->updated_at,
-            ];
+        $groupsData = $groups->getCollection()->map(function ($group) { // Mapeia para retornar somente os campos necessários
+            return $this->mapGroup($group);
         })->values();
 
         return response()->json([
@@ -198,18 +160,41 @@ class GroupController extends Controller
     // Cadastro de grupos (‘CREATE’)
     public function store(Request $request, PaperService $paperService): JsonResponse
     {
+        $this->extractPapersTitle($request);
+
+        $currentYear = date('Y');
+
+        //Log::info($request->all());
         $request->validate([
             'theme' => 'required|string|max:255|unique:groups,theme',
-            'file' => 'nullable|file|mimes:pdf|max:10240',
             'members' => 'required|array|min:1',
             'members.*' => 'required|string|exists:students,ra',
+            'papers' => 'required|array|min:1|max:12',
+            'papers.*.title' => [
+                'required',
+                'string',
+                'max:255',
+                'unique:papers,title',
+                function ($attribute, $value, $fail) use ($request) {
+                    $titles = array_map(fn($p) => $p['title'], $request->papers);
+                    if (count(array_filter($titles, fn($t) => $t === $value)) > 1) {
+                        $fail("O arquivo com título '{$value}' está duplicado");
+                    }
+                }
+            ],
+            'papers.*.file' => 'required|file|mimes:pdf|max:5120',
+            'papers.*.year' => "required|integer|digits:4|between:" . ($currentYear - 1) . "," . ($currentYear),
+            'papers.*.semester' => 'required|integer|in:1,2',
+            'papers.*.version' => 'required|string|in:evaluation,corrected',
+            'papers.*.course' => 'required|integer|exists:courses,id',
+            'papers.*.project' => 'required|integer|between:1,6',
         ]);
 
         // Verifica se algum aluno já está em outro grupo
         $alunosEmOutroGrupo = Student::whereIn('ra', $request->members)
             ->whereNotNull('group_id')
             ->exists();
-        // Se ja está em outro grupo, retorna mensagem de erro e encerra o método
+        // Se já está em outro grupo, retorna mensagem de erro e encerra a função
         if ($alunosEmOutroGrupo) {
             return response()->json([
                 'success' => false,
@@ -230,25 +215,13 @@ class GroupController extends Controller
             Student::whereIn('ra', $request->members)
                 ->update(['group_id' => $group->id]);
 
-            if ($request->hasFile('file')) {
-                $request['year'] = 2025;
-                $request['semester'] = 2;
-                $request['version'] = 'avaliacao';
-                $request['course'] = 'Gestão de Tecnologia da Informação';
-                $request['project'] = 1;
+            foreach ($request->papers as $i => $paper) {
+                if ($request->hasFile("papers.$i.file")) {
 
-                $sanitize = fn($v) => preg_replace('/[^a-zA-Z0-9_áàâãéèêíïóôõöúç-]/u', '_', $v);
-                $folders = array_map($sanitize, [
-                    $request->year,
-                    'semestre_' . $request->semester,
-                    $request->version,
-                    $request->course,
-                    'projeto_integrador_' . $request->project,
-                ]);
+                    $folders = $this->prepareFolders($paper);
 
-                $folders = array_map(fn ($v) => StringResolve::normalizeFolderName($v), $folders);
-
-                $paperService->createPaper($request->file('file'), $group->id, $folders);
+                    $paperService->createPaper($request->file("papers.$i.file"), $group->id, $folders);
+                }
             }
         });
 
@@ -257,22 +230,7 @@ class GroupController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Grupo salvo com sucesso!',
-            'data' => [
-                'id' => $group->id,
-                'theme' => mb_strtoupper($group->theme),
-                'state' => $group->state,
-                'papers' => $group->papers->map(fn($p) => [
-                    'id' => $p->id,
-                    'title' => $p->title,
-                    'file_path' => $p->file_path,
-                ]),
-                'students' => $group->students->map(fn($s) => [
-                    'ra' => $s->ra,
-                    'name' => $s->user->name,
-                ]),
-                'created_at' => $group->created_at,
-                'updated_at' =>  $group->updated_at,
-            ]
+            'data' => $this->mapGroup($group),
         ]);
     }
 
@@ -287,11 +245,71 @@ class GroupController extends Controller
             ],422);
         }
 
+        $this->extractPapersTitle($request);
+
+        $currentYear = date('Y');
+        //Log::info($request->all());
         $request->validate([
             'theme' => "required|string|max:255|unique:groups,theme,{$id},id",
-            'file' => 'nullable|file|mimes:pdf|max:10240',
             'members' => 'required|array|min:1',
             'members.*' => 'required|string|exists:students,ra',
+            'papers' => 'required|array|min:1|max:12',
+            'papers.*.title' => [
+                'required',
+                'string',
+                'max:255',
+                function ($attribute, $value, $fail) use ($request, $id) {
+                    // Extrai índice do array
+                    preg_match('/papers\.(\d+)\.title/', $attribute, $matches);
+                    $index = $matches[1] ?? null;
+                    if ($index === null) return;
+
+                    $paper = $request->papers[$index] ?? null;
+                    $paperId = $paper['id'] ?? null;
+
+                    $exists = Paper::where('group_id', $id)
+                        ->where('title', $value)
+                        ->when($paperId, fn($q) => $q->where('id', '!=', $paperId))
+                        ->exists();
+
+                    if ($exists) {
+                        $fail("Já existe um trabalho com o título '{$value}' neste grupo.");
+                    }
+
+                    // Garante que não hajam trabalhos com títulos duplicados na array
+                    $titles = array_map(fn($p) => $p['title'], $request->papers);
+                    if (count(array_filter($titles, fn($t) => $t === $value)) > 1) {
+                        $fail("O arquivo com título '{$value}' está duplicado");
+                    }
+                }
+            ],
+            'papers.*.file' => [
+                // Obrigatório só se NÃO existir no banco
+                function($attribute, $value, $fail) use ($request, $id) {
+                    // pega o índice do paper atual
+                    preg_match('/papers\.(\d+)\.file/', $attribute, $matches);
+                    $index = $matches[1];
+
+                    $paper = $request->papers[$index] ?? null;
+
+                    if(!$paper) return;
+
+                    // obrigatório só se não existe no banco
+                    if(empty($paper['id']) || !Paper::where('id', $paper['id'])->where('group_id', $id)->exists()) {
+                        if(!$value) {
+                            $fail("O PDF é obrigatório para o trabalho '{$paper['title']}'");
+                        }
+                    }
+                },
+                'file',
+                'mimes:pdf',
+                'max:5120'
+            ],
+            'papers.*.year' => "required|integer|digits:4|between:" . ($currentYear - 1) . "," . ($currentYear),
+            'papers.*.semester' => 'required|integer|in:1,2',
+            'papers.*.version' => 'required|string|in:evaluation,corrected',
+            'papers.*.course' => 'required|integer|exists:courses,id',
+            'papers.*.project' => 'required|integer|between:1,6',
         ]);
 
         // Busca o grupo existente
@@ -300,7 +318,7 @@ class GroupController extends Controller
         if (!$group) {
             return response()->json([
                 'message' => 'Grupo não encontrado!'
-            ], 422);
+            ], 403);
         }
 
         // Verifica se algum aluno está em outro grupo diferente do atual. O front já oferece uma proteção inicial
@@ -319,7 +337,7 @@ class GroupController extends Controller
             ], 422);
         }
 
-        DB::transaction(function () use ($request, $group, &$paperService) {
+        DB::transaction(function () use ($request, $group, $paperService) {
             // Atualiza o tema
             if($group->theme != $request->theme) {
                 $group->update([
@@ -332,8 +350,6 @@ class GroupController extends Controller
                 ->whereNotIn('ra', $request->members)
                 ->update(['group_id' => null]);
 
-            if($removed > 0) $group->touch();
-
             // Atualiza o group_id dos alunos selecionados
             $added = Student::whereIn('ra', $request->members)
                 ->where(function ($q) use ($group) {
@@ -342,28 +358,56 @@ class GroupController extends Controller
                 })
                 ->update(['group_id' => $group->id]);
 
-            if($added > 0) $group->touch();
+            // Identifica papers enviados no request (IDs existentes ou titles novos)
+            $sentPapers = array_filter(array_map(fn($p) => $p['id'] ?? null, $request->papers));
 
-            // Se tem arquivo novo, salva e cria novo Paper, removendo antigo
-            if ($request->hasFile('file')) {
-                $request['year'] = 2025;
-                $request['semester'] = 2;
-                $request['version'] = 'avaliacao';
-                $request['course'] = 'Gestão de Tecnologia da Informação';
-                $request['project'] = 1;
+            $papersToInactivate = Paper::where('group_id', $group->id)
+                ->where('state', 1)
+                ->whereNotIn('id', $sentPapers)
+                ->get();
 
-                $sanitize = fn($v) => preg_replace('/[^a-zA-Z0-9_áàâãéèêíïóôõöúç-]/u', '_', $v);
-                $folders = array_map($sanitize, [
-                    $request->year,
-                    'semestre_' . $request->semester,
-                    $request->version,
-                    $request->course,
-                    'projeto_integrador_' . $request->project,
+            foreach ($papersToInactivate as $paper) {
+                $paper->update([
+                    'state' => 0
                 ]);
+            }
 
-                $folders = array_map(fn ($v) => StringResolve::normalizeFolderName($v), $folders);
+            if($papersToInactivate->count() > 0 || $added > 0 || $removed > 0) {
+                $group->touch();
+            }
 
-                $paperService->updatePaper($request->file('file'), $group, $folders);
+            // Se tem arquivo novo, salva
+            foreach ($request->papers as $i => $paper) {
+                if ($request->hasFile("papers.$i.file")) {
+                    $folders = $this->prepareFolders($paper);
+
+                    $paperService->createPaper($request->file("papers.$i.file"), $group->id, $folders);
+
+                    $group->touch();
+                } else {
+                    $paperToUpdate = Paper::find($paper['id']);
+                    if (!$paperToUpdate || $paperToUpdate->group_id != $group->id || $paperToUpdate->group_id == null) {
+                        // Paper não existe ou está inativo
+                        Log::warning("Paper ID {$paper['id']} inválido ou removido");
+                        continue;
+                    }
+                    // Só processa de ativo
+                    if($paperToUpdate->state === 1) {
+                        $paperToUpdate->fill([
+                            'title' => $paper['title'],
+                        ]);
+
+                        if($paperToUpdate->isDirty()) {
+                            $paperToUpdate->save();
+                            $group->touch();
+                        }
+
+                        $folders = $this->prepareFolders($paper);
+
+                        $paperService->updatePaper($paperToUpdate,$group, $folders);
+                        $group->touch();
+                    }
+                }
             }
         });
 
@@ -373,22 +417,7 @@ class GroupController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Grupo atualizado com sucesso!',
-            'data' => [
-                'id' => $group->id,
-                'theme' => mb_strtoupper($group->theme),
-                'state' => (int) $group->state,
-                'papers' => $group->papers->map(fn($p) => [
-                    'id' => $p->id,
-                    'title' => $p->title,
-                    'file_path' => $p->file_path,
-                ]),
-                'students' => $group->students->map(fn($s) => [
-                    'ra' => $s->ra,
-                    'name' => $s->user->name,
-                ]),
-                'created_at' => $group->created_at,
-                'updated_at' => $group->updated_at,
-            ]
+            'data' => $this->mapGroup($group),
         ]);
     }
 
@@ -421,5 +450,74 @@ class GroupController extends Controller
             'created_at' => $group->created_at,
             'updated_at' => $group->updated_at,
         ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return void
+     */
+    private function extractPapersTitle(Request $request): void
+    {
+        if ($request->papers) {
+            foreach ($request->papers as $i => $paper) {
+                if ($request->hasFile("papers.$i.file")) {
+                    $originalName = pathinfo(
+                        $request->file("papers.$i.file")->getClientOriginalName(),
+                        PATHINFO_FILENAME
+                    );
+
+                    $request->merge([
+                        "papers.$i.title" => $originalName,
+                    ]);
+                }
+            }
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function prepareFolders(array $paper): array
+    {
+        $course = Course::find($paper['course']);
+        if(!$course) {
+            throw new Exception("Curso não encontrado para o ID $paper[course]");
+        }
+        $folders = [
+            'year' => $paper['year'],
+            'semester' => $paper['semester'],
+            'version' => $paper['version'],
+            'course_id' => $course->id,
+            'course_name' => $course->name,
+            'project' => $paper['project'],
+        ];
+
+        return array_map(fn($q) => StringResolve::normalizeFolderName($q), $folders);
+    }
+
+    private function mapGroup($group): array
+    {
+        return [
+            'id' => $group->id,
+            'theme' => mb_strtoupper($group->theme),
+            'state' => (int) $group->state,
+            'papers' => $group->papers->map(fn($p) => [
+                'id' => $p->id,
+                'title' => $p->title ?? 'Sem título',
+                'file_path' => $p->file_path ?? null,
+                'year' => $p->year ?? null,
+                'semester' => $p->semester ?? null,
+                'version' => $p->version ?? null,
+                'course' => $p->course_id ?? null,
+                'project' => $p->project ?? null,
+                'state' => (int) $p->state,
+            ]),
+            'students' => $group->students->map(fn($s) => [
+                'ra' => $s->ra,
+                'name' => $s->user->name,
+            ]),
+            'created_at' => $group->created_at,
+            'updated_at' =>  $group->updated_at,
+        ];
     }
 }

@@ -2,8 +2,13 @@
     {{-- RA do aluno --}}
     <div class="mt-4">
         <x-label for="ra" value="RA do Aluno"/>
-        <x-input id="ra" type="number" autocomplete="ra" class="w-full" onkeydown="return ['e','E','+','-'].indexOf(event.key) === -1"
-                 placeholder="RA do aluno" x-model="ra" x-bind:disabled="edit"
+        <x-input id="ra"
+                 type="text"
+                 autocomplete="ra"
+                 class="w-full"
+                 @input="ra = ra.replace(/\D/g,'')"
+                 placeholder="RA do aluno"
+                 x-model="ra" x-bind:disabled="edit"
                  @keydown.enter="saveStudent"/>
         <template x-if="errors.ra">
             <p class="text-red-600 text-sm" x-text="errors.ra[0]"></p>

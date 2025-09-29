@@ -1,21 +1,22 @@
 import './bootstrap';
 import './calendar.js';
 
-/*
- * Utils
+/**
+ * Helpers
  */
-import {saveData} from './helpers/saveData'; // Salvar/Atualizar dados
+// Salvar/Atualizar dados
+import {saveData} from './helpers/saveData';
 window.saveData = saveData; // Necessário para Alpine acessar
-
-import {paperViewer} from "./helpers/paperViewer.js"; // Visualizar trabalho do aluno
+// Visualizar trabalho do aluno
+import {paperViewer} from "./helpers/paperViewer.js";
 window.paperViewer = paperViewer;
-
-import {formatDateTime} from "./helpers/formatDateTime.js"; // Trata os timestamps
+// Trata os timestamps
+import {formatDateTime} from "./helpers/formatDateTime.js";
 window.formatDateTime = formatDateTime;
-
+// Limpa campos de formulário ou filtro
 import {clearComponentData} from "./helpers/clearComponentData.js";
 window.clearComponentData = clearComponentData;
-/*
+/**
  * Scripts alpine
  */
 // Users

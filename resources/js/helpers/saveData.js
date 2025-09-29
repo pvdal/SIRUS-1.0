@@ -75,9 +75,12 @@ export async function saveData({
 
             contexto.errors = errorsNormalized;
             contexto.showMessage('warning', 'Verifique os dados informados!');
+        } else if(error.response?.status === 413) {
+            contexto.showMessage('warning', 'O arquivo enviado é muito grande. O limite permitido é 5MB.');
         } else {
             contexto.showMessage('danger', 'Erro inesperado ao salvar.');
-            console.error(error);
+
+            //console.error(error);
         }
         // throw error;
     } finally {

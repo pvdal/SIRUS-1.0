@@ -3887,7 +3887,6 @@
         },
         {
             "name": "psy/psysh",
-<<<<<<< HEAD
             "version": "v0.12.12",
             "source": {
                 "type": "git",
@@ -3898,18 +3897,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/bobthecow/psysh/zipball/cd23863404a40ccfaf733e3af4db2b459837f7e7",
                 "reference": "cd23863404a40ccfaf733e3af4db2b459837f7e7",
-=======
-            "version": "v0.12.11",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/bobthecow/psysh.git",
-                "reference": "d8fcbe0ee3abb15213e7f72eb0aaa4d928aea2be"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/d8fcbe0ee3abb15213e7f72eb0aaa4d928aea2be",
-                "reference": "d8fcbe0ee3abb15213e7f72eb0aaa4d928aea2be",
->>>>>>> 1ebe5cc81cc5e0e661156ed62e7690b54d708019
                 "shasum": ""
             },
             "require": {
@@ -3972,15 +3959,9 @@
             ],
             "support": {
                 "issues": "https://github.com/bobthecow/psysh/issues",
-<<<<<<< HEAD
                 "source": "https://github.com/bobthecow/psysh/tree/v0.12.12"
             },
             "time": "2025-09-20T13:46:31+00:00"
-=======
-                "source": "https://github.com/bobthecow/psysh/tree/v0.12.11"
-            },
-            "time": "2025-09-20T11:55:11+00:00"
->>>>>>> 1ebe5cc81cc5e0e661156ed62e7690b54d708019
         },
         {
             "name": "ralouphie/getallheaders",
@@ -9636,12 +9617,12 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.3"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }

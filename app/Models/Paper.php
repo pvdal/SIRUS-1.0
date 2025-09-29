@@ -12,7 +12,13 @@ class Paper extends Model
         'title',
         'group_id',
         'file_path',
-        'submitted_at'
+        'year',
+        'semester',
+        'version',
+        'course_id',
+        'project',
+        'submitted_at',
+        'state'
     ];
 
     protected $casts = [
@@ -31,6 +37,12 @@ class Paper extends Model
     public function committee(): HasOne
     {
         return $this->hasOne(Committee::class);
+    }
+
+    // Relacionamento com curso
+    public function course(): BelongsTo
+    {
+        return $this->belongsTo(Course::class);
     }
     #endregion
 }

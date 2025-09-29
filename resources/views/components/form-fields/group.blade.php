@@ -35,7 +35,7 @@
             <template x-if="file.file">
                 <div class="truncate block flex-1 max-w-full">
                     <span class="truncate block flex-1 text-gray-500">
-                        <span class="text-gray-800">Arquivo selecionado (limite: 10MB):</span>
+                        <span class="text-gray-800">Arquivo selecionado (limite: 5MB):</span>
                     </span>
                     <div class="flex flex-col bg-gray-100 hover:bg-gray-200/60 p-2 rounded">
                         <div class="flex items-center mb-2">
@@ -60,14 +60,14 @@
                         </div>
 
                         {{-- Conteúdo expandido --}}
-                        <div class="flex flex-wrap justify-start gap-5 px-6 md:px-14 pb-2 bg-gray-50">
+                        <div class="flex flex-wrap justify-center md:justify-start gap-5 px-6 md:px-14 pb-2 bg-gray-50">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Ano</label>
                                 <select x-model="file.year" class="mt-1 block w-32 rounded border-gray-300 shadow-sm">
                                     @php
                                         $currentYear = date('Y');
                                     @endphp
-                                    @for($i = $currentYear - 2; $i<($currentYear + 2); $i++)
+                                    @for($i = $currentYear - 1; $i<($currentYear + 1); $i++)
                                         <option value="{{ $i }}">{{ $i }}</option>
                                     @endfor
                                 </select>
@@ -101,7 +101,7 @@
 
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Curso</label>
-                                <select x-model="file.course" class="mt-1 block w-32 sm:w-auto sm:max-w-[277px] rounded truncate border-gray-300 shadow-sm">
+                                <select x-model="file.course" class="mt-1 block w-32 sm:w-[277px] md:w-[425px] rounded truncate border-gray-300 shadow-sm">
                                     <option value="">Selecione um curso</option>
                                     @foreach($courses as $course)
                                         <option value="{{ $course['id'] }}">{{ $course['name'] ?? '-' }}</option>
@@ -144,46 +144,72 @@
                         text-white text-sm font-medium rounded-md shadow gap-2 transition duration-200 ease-in-out justify-center me-auto"
                         x-on:click="dropAll(); $el.blur();"
                     >Fechar todos</button>
+                    {{-- Lista com os trabalhos do grupo --}}
                     <ul class="space-y-1 mt-2">
-                        <template x-for="paper in papers" :key="paper.id ?? paper.tempId">
+                        {{-- É importante que haja a interação do index para que a exibição de erros ocorra com êxito --}}
+                        <template x-for="(paper,index) in papers" :key="paper.id ?? paper.tempId">
                             <li
-                                class="flex flex-col bg-gray-100 hover:bg-gray-200/60 p-2 rounded"
+                                :class="{
+                                    'flex flex-col bg-gray-100 p-2 rounded': true,
+                                    'hover:bg-gray-200/60': paper.state !== 0,
+                                }"
                             >
+                                {{-- Controle dos elementos paper --}}
                                 <div
-                                    class="flex items-center justify-between cursor-pointer"
+                                    :class="{
+                                        'flex items-center justify-between': true,
+                                        'cursor-pointer': paper.state !== 0,
+                                        'cursor-default opacity-50': paper.state === 0
+                                    }"
                                     @click="paperExpanded[paper.id ?? paper.tempId] = !paperExpanded[paper.id ?? paper.tempId]"
                                 >
                                     <span class="ms-1 flex flex-row space-x-2 max-w-[85%] xs:max-w-[90%] overflow-hidden">
                                         <x-lucide-chevron-right
-                                            class="w-4 h-4 text-gray-600 flex-shrink-0 transition-transform duration-200"
-                                            x-bind:class="paperExpanded[paper.id] ? 'rotate-90' : ''"
+                                            class="w-4 h-4  flex-shrink-0 transition-transform duration-200"
+                                            x-bind:class="{
+                                                'rotate-90': paperExpanded[paper.id ?? paper.tempId],
+                                                'opacity-0': paper.state === 0,
+                                                'text-gray-600': paper.state
+                                            }"
                                         />
                                         <x-lucide-file-text class="w-4 h-4 text-gray-600 flex-shrink-0"/>
                                         <span
-                                            class="text-primary-blue cursor-pointer truncate  text-ellipsis"
+                                            :class="{
+                                                'text-primary-blue truncate text-ellipsis': true,
+                                                'line-through': !paper.state && paper.id !== null
+                                            }"
                                             x-text="paper.title"
                                             :title="paper.title"
                                         ></span>
                                     </span>
                                     <button
+                                        x-show="paper.state !== 0"
                                         class="text-red-500 hover:text-red-700 h-[100%] w-[20px] rounded-sm bg-red-100"
-                                        @click.stop="removePaper(paper.id ?? paper.tempId)"
+                                        @click.stop="removePaper((paper.id ?? paper.tempId))"
                                         :title="'Remover'"
                                     >
                                         ✕
                                     </button>
+                                    <template x-if="paper.state === 0">
+                                        <span x-text="'(Inativo)'"></span>
+                                    </template>
+
                                 </div>
 
                                 {{-- Conteúdo expandido --}}
                                 <div
-                                    x-show="paperExpanded[paper.id ?? paper.tempId]"
+                                    x-show="paperExpanded[paper.id ?? paper.tempId] && paper.state !== 0"
                                     x-transition
-                                    class="flex flex-wrap justify-start gap-5 px-6 md:px-14 pb-2 bg-gray-50"
+                                    class="flex flex-wrap justify-center md:justify-start gap-5 px-6 md:px-14 pb-2 bg-gray-50"
                                 >
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Projeto</label>
+                                        <x-input x-model="paper.title" type="text" class="mt-1 block w-32 sm:w-[277px] md:w-[572px] rounded truncate border-gray-300 shadow-sm"/>
+                                    </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700">Ano</label>
                                         <select x-model="paper.year" class="mt-1 block w-32 rounded border-gray-300 shadow-sm">
-                                            @for($i = $currentYear -2; $i< ($currentYear + 2); $i++)
+                                            @for($i = $currentYear -1; $i< ($currentYear + 1); $i++)
                                                 <option value="{{ $i }}">{{ $i }}</option>
                                             @endfor
                                         </select>
@@ -217,10 +243,10 @@
 
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700">Curso</label>
-                                        <select x-model="paper.course" class="mt-1 block w-32 sm:w-auto sm:max-w-[277px] rounded truncate border-gray-300 shadow-sm">
+                                        <select x-model="paper.course" class="mt-1 block w-32 sm:w-[277px] md:w-[425px] rounded truncate border-gray-300 shadow-sm">
                                             <option value="">Selecione um curso</option>
                                             @foreach($courses as $course)
-                                                <option value="{{ $course['id'] }}">{{ $course['name'] ?? '-' }}</option>
+                                                <option value="{{ $course['id'] }}" title="{{ $course['name'] }}">{{ $course['name'] ?? '-' }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -230,18 +256,49 @@
                                             class="flex justify-center items-center pr-4 min-w-[127px] whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 rounded-lg
                                            text-left px-4 py-2.5 text-sm text-gray-700 focus:ring-1 focus:ring-secondary-blue
                                            focus:border-secondary-blue cursor-pointer mt-auto"
-                                            x-on:click="paper.file_path ? showPaper(`/${paper.file_path}`) : window.open(paper.url, '_blank')"
+                                            x-on:click="paper.file_path ? showPaper(`${paper.file_path}`) : window.open(paper.url, '_blank')"
                                         >
                                             Visualizar
                                         </button>
                                     </div>
                                 </div>
 
+                                {{-- Se o paper não tem ID, tem tempId, isso significa que ainda não está no banco, e é marcado como pendente--}}
                                 <template x-if="!paper.id">
                                     <span
                                         class="text-xs py-1 ms-7 mt-2 px-3 font-bold text-white text-center rounded-s-lg rounded-e-lg bg-secondary-blue max-w-20"
                                         x-text="'Pendente'"
                                     ></span>
+                                </template>
+
+                                {{-- Validações de erro de cada campo do menu accordion --}}
+                                <template x-if="papers.length > 0 && errors && errors['papers.' + index + '.title']">
+                                    <p class="text-red-600 text-sm"
+                                       x-text="errors['papers.' + index + '.title']?.[0]"></p>
+                                </template>
+                                <template x-if="papers.length > 0 && errors && errors['papers.' + index + '.file']">
+                                    <p class="text-red-600 text-sm"
+                                       x-text="errors['papers.' + index + '.file']?.[0]"></p>
+                                </template>
+                                <template x-if="papers.length > 0 && errors && errors['papers.' + index + '.year']">
+                                    <p class="text-red-600 text-sm"
+                                       x-text="errors['papers.' + index + '.year']?.[0]"></p>
+                                </template>
+                                <template x-if="papers.length > 0 && errors && errors['papers.' + index + '.semester']">
+                                    <p class="text-red-600 text-sm"
+                                       x-text="errors['papers.' + index + '.semester']?.[0]"></p>
+                                </template>
+                                <template x-if="papers.length > 0 && errors && errors['papers.' + index + '.project']">
+                                    <p class="text-red-600 text-sm"
+                                       x-text="errors['papers.' + index + '.project']?.[0]"></p>
+                                </template>
+                                <template x-if="papers.length > 0 && errors && errors['papers.' + index + '.version']">
+                                    <p class="text-red-600 text-sm"
+                                       x-text="errors['papers.' + index + '.version']?.[0]"></p>
+                                </template>
+                                <template x-if="papers.length > 0 && errors && errors['papers.' + index + '.course']">
+                                    <p class="text-red-600 text-sm"
+                                       x-text="errors['papers.' + index + '.course']?.[0]"></p>
                                 </template>
                             </li>
                         </template>
@@ -249,12 +306,15 @@
                 </div>
             </template>
         </div>
-        <template x-if="errors.file">
-            <p class="text-red-600 text-sm" x-text="errors.file[0]"></p>
+        <template x-if="errors.papers">
+            <p class="text-red-600 text-sm" x-text="errors.papers[0]"></p>
         </template>
     </div>
 
-    {{-- INCLUIR ANULOS --}}
+    {{--
+     --- INCLUIR ANULOS
+     --}}
+
     {{-- Campo de busca --}}
     <div class="mt-4">
         <x-label for="searchStudent" value="Busque os membros do grupo" class="mt-8"/>
@@ -269,7 +329,8 @@
     <template x-if="!filteredStudents.length && searchStudent && !searching && showNoStudentsMsg">
         <p class="p-2 text-gray-500">Nenhum aluno encontrado.</p>
     </template>
-    <ul x-show="filteredStudents.length > 0 || searching" class="max-h-60 overflow-y-auto scrollbar-custom"
+    <ul
+        x-show="filteredStudents.length > 0 || searching" class="max-h-60 overflow-y-auto scrollbar-custom"
         x-bind:class="{ 'border rounded bg-gray-50 drop-shadow-sm': filteredStudents.length > 0}"
     >
         <template x-if="searching">
@@ -283,8 +344,7 @@
                 :class="{ 'opacity-50 cursor-normal': student.group, 'cursor-pointer hover:bg-blue-100': !student.group }"
             >
                 <div>
-                    <span x-text="student.name + ': '"></span>
-                    <span x-text="student.ra"></span>
+                    <span x-text="student.name + ': ' + student.ra"></span>
                 </div>
                 <template x-if="student.group">
                     <div>
@@ -302,8 +362,7 @@
             <template x-for="member in members" :key="member.ra">
                 <li class="flex items-center justify-between bg-gray-100 p-2 rounded">
                 <span>
-                    <span x-text="member.name"></span> -
-                    <span x-text="member.ra"></span>
+                    <span x-text="member.name"></span> - <span x-text="member.ra"></span>
                 </span>
                     <button
                         class="text-red-500 hover:text-red-700 h-[100%] w-[20px] rounded-sm bg-red-100"
