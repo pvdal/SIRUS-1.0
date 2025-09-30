@@ -75,13 +75,15 @@ export function groupsData() {
         courses: [], // Array de cursos para o menu de cadastro de papers
         addPaper() { // Função para adicionar ‘papers’
             if (!this.file.file || this.file.file.type !== 'application/pdf') {
-                alert('Apenas arquivos PDF são permitidos!');
+                this.showMessage('warning', 'Apenas documentos PDF são permitidos!');
                 return;
             }
             const newPaper = {
                 id: null,
                 tempId: Date.now() + Math.floor(Math.random() * 10000),
-                ...this.file // copia todos os campos do objeto
+
+                ...this.file, // copia todos os campos do objeto
+                title: this.file.title.replace(/\.pdf$/i,''),
             };
             this.papers.push(newPaper);
             this.paperExpanded[newPaper.tempId] = false;

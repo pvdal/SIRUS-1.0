@@ -21,7 +21,7 @@ class EventController extends Controller
         // Inicializa o DynamicToken
         TokenGenerator::initializeTab();
 
-        return view('evaluation.calendar');
+        return view('evaluation.events');
     }
     /*
     public function events(Request $request): jsonResponse
@@ -42,7 +42,7 @@ class EventController extends Controller
     }
     */
 
-    public function events(Request $request): JsonResponse
+    public function show(): JsonResponse
     {
         $committees = Committee::all();
         // Ajustar para formato que o FullCalendar espera

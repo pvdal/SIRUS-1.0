@@ -4,7 +4,7 @@
             Agende a data de uma banca
         </x-slot>
         <x-slot name="content">
-
+            <x-form-fields.event/>
         </x-slot>
         <x-slot name="footer">
 

@@ -11,9 +11,9 @@
 
     {{-- Conteúdo principal --}}
     <x-main-content>
-        {{-- Chamada da função alpine -> recources/js/components/evaluation/calendarData.js--}}
-        <div x-data="calendarData()">
-            <x-evaluation.calendar-content/>
+        {{-- Chamada da função alpine -> recources/js/components/evaluation/eventsData.js--}}
+        <div x-data="eventsData()">
+            <x-evaluation.events-content/>
         </div>
     </x-main-content>
 </x-app-layout>

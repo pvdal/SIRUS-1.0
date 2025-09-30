@@ -393,19 +393,15 @@ class GroupController extends Controller
                     }
                     // Só processa de ativo
                     if($paperToUpdate->state === 1) {
-                        $paperToUpdate->fill([
-                            'title' => $paper['title'],
-                        ]);
+                        $paperTitle = $paperToUpdate->title;
 
-                        if($paperToUpdate->isDirty()) {
-                            $paperToUpdate->save();
+                        if($paperTitle !== $paper['title']) {
+                            $paperTitle = $paper['title'];
                             $group->touch();
                         }
 
                         $folders = $this->prepareFolders($paper);
-
-                        $paperService->updatePaper($paperToUpdate,$group, $folders);
-                        $group->touch();
+                        $paperService->updatePaper($paperToUpdate, $group, $folders, $paperTitle);
                     }
                 }
             }

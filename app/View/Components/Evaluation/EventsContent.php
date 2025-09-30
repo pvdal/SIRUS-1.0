@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class CalendarContent extends Component
+class EventsContent extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class CalendarContent extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.evaluation.calendar-content');
+        return view('components.evaluation.events-content');
     }
 }

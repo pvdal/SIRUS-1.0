@@ -49,9 +49,31 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
         ],
+
+        select: function (info) {
+            window.dispatchEvent(new CustomEvent('open-create-modal', {
+                detail: {
+                    dateStart: info.start,
+                    timeStart: info.start,
+                    dateEnd: info.end,
+                    timeEnd: info.end,
+                    allDay: info.allDay
+                }
+            }))
+        },
         eventClick: function(info) {
             // info.event contém os dados do evento
-            alert('Evento: ' + info.event.title);
+            window.dispatchEvent(new CustomEvent('open-create-modal', {
+                detail: {
+                    id: info.event.id,
+                    title: info.event.title,
+                    dateStart: info.event.start,
+                    timeStart: info.event.start,
+                    dateEnd: info.event.end,
+                    timeEnd: info.event.end,
+                    allDay: info.event.allDay
+                }
+            }))
         },
     });
     // Forçar view com base na largura da tela

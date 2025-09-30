@@ -55,7 +55,7 @@ Route::middleware([
     ->middleware('secure.ajax') // middleware que traz camadas a mais de seguranças nas requisições ajax
     ->group(function () {
         // Calendar -> EventController/Committee.php
-        Route::get('/events/show', [EventController::class, 'events'])->name('events.show');
+        Route::get('/events/show', [EventController::class, 'show'])->name('events.show');
     });
 });
 
@@ -116,7 +116,6 @@ Route::middleware([
         Route::put('/coordinators/{id}/{action}', [CoordinatorController::class, 'toggleStatus'])->name('coordinators.toggle-status');
 
         // Groups -> GroupController/Group.php
-
         Route::get('/students/search', [GroupController::class, 'search'])->name('groups.search-students');
         Route::get('/groups/show', [GroupController::class, 'show'])->name('groups.show');
         Route::post('/groups/save', [GroupController::class, 'store'])->name('groups.store');
@@ -130,7 +129,6 @@ Route::middleware([
         Route::put('/courses/{id}/{action}', [CourseController::class, 'toggleStatus'])->name('courses.toggle-status');
 
         // calendar -> CommitteeController/Committee.php
-
         Route::get('/members/search', [CommitteeController::class, 'search'])->name('committees.search-members');
         Route::get('/committees/show', [CommitteeController::class, 'show'])->name('committees.show');
         Route::post('/committees/save', [CommitteeController::class, 'store'])->name('committees.store');

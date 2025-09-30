@@ -42,7 +42,6 @@ class PaperService
         $newFileName = $originalName . '_' . $hash . '.' . $extension;
         $filePath = $file->storeAs($path, $newFileName, 'public');// Salva o arquivo
 
-        Log::info("File stored: " . $filePath);
         // Cria registro no banco
         return Paper::create([
             'title' => $originalName,
@@ -62,11 +61,21 @@ class PaperService
      *
      * @param Paper $paper
      * @param Group $group
-     * @param array $folders
+     * @param array $folders ['title', 'year', 'semester', 'version', 'course', 'project']
+     * @param string $paperTitle
      * @return Paper
      */
-    public function updatePaper(Paper $paper,Group $group, array $folders): Paper
+    public function updatePaper(Paper $paper,Group $group, array $folders, string $paperTitle): Paper
     {
+        $paper->fill([
+            'title' => $paperTitle,
+        ]);
+
+        if($paper->isDirty()) {
+            $paper->save();
+            $group->touch();
+        }
+
         $version = $folders['version'] === 'corrected' ? 'corrigido' : 'avaliacao';
         $foldersPath = [
             $folders['year'],
@@ -79,11 +88,13 @@ class PaperService
         // Pasta nova
         $newDir = 'papers/' . implode('/', $foldersPath);
 
+        $extension = pathinfo($paper->file_path, PATHINFO_EXTENSION);
+
         // Nome atual do arquivo
-        $fileName = basename($paper->file_path);
+        $newFileName = $paperTitle . '.' . $extension;
 
         // Caminho novo (diretório + mesmo nome de arquivo)
-        $newPath = $newDir . '/' . $fileName;
+        $newPath = $newDir . '/' . $newFileName;
 
         if($newPath !== $paper->file_path){
             // Cria pasta destino caso não exista
@@ -102,6 +113,8 @@ class PaperService
                 'course_id' => $folders['course_id'],
                 'project'   => $folders['project'],
             ]);
+
+            $group->touch();
         }
 
         return $paper;
