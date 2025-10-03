@@ -1,16 +1,134 @@
 <div>
-    <x-custom-modal x-model="showCreateModal">
-        <x-slot name="title">
-            Agende a data de uma banca
-        </x-slot>
-        <x-slot name="content">
-            <x-form-fields.event/>
-        </x-slot>
-        <x-slot name="footer">
+    <script>
+        window.userPermissions = {
+            canManageEvents: @json(auth()->user()?->can('manage-events')),
+        };
+    </script>
+    {{-- Coordenador --}}
+    @can('manage-events')
+        <x-custom-modal x-model="showModal" :titleClass="'flex flex-row justify-between items-center'">
+            <x-slot name="title">
+                <div x-show="edit">
+                    Atualizar a data da banca
+                </div>
+                <div x-show="!edit && !showCreateModal">
+                    Avaliar o grupo
+                </div>
+                <div x-show="showCreateModal">
+                    Agendar uma nova banca
+                </div>
+                <div x-show="showEvaluationModal || edit">
+                    <x-secondary-button
+                        x-on:click="
+                        $el.blur();
+                        edit = !edit;
+                    "
+                    >
+                        <div x-show="edit" class="flex flex-row gap-2">
+                            Avaliar
+                            <x-lucide-clipboard-check class="text-white h-4 w-4"/>
+                        </div>
+                        <div x-show="!edit" class="flex flex-row gap-2">
+                            Editar
+                            <x-lucide-pencil class="text-white h-4 w-4"/>
+                        </div>
+                    </x-secondary-button>
+                </div>
+            </x-slot>
 
-        </x-slot>
-    </x-custom-modal>
+            <x-slot name="content">
+                {{-- Banner de mensagem --}}
+                <x-custom-banner/>
 
+                <template x-if="showCreateModal && !edit">
+                    <x-form-fields.event type="create" />
+                </template>
+                <template x-if="showEvaluationModal || edit">
+                    <x-form-fields.event />
+                </template>
+            </x-slot>
+
+            <x-slot name="footer">
+                <template x-if="showCreateModal || edit">
+                    <div>
+                        <x-secondary-button
+                            x-on:click="
+                                saveEvent;
+                                $el.blur();
+                            "
+                        >
+                            Salvar
+                        </x-secondary-button>
+                        <x-danger-button
+                            x-on:click="
+                                    $el.blur();
+                                    showCreateModal = false;
+                                    showModal = false;
+                                "
+                        >Fechar</x-danger-button>
+                    </div>
+                </template>
+                <template x-if="showEvaluationModal && !edit">
+                    <div>
+                        <template x-if="belongsTo">
+                            <x-secondary-button>Avaliar</x-secondary-button>
+                        </template>
+                        <template x-if="!belongsTo">
+                            <x-secondary-button>Avaliação</x-secondary-button>
+                        </template>
+                        <x-danger-button
+                            x-on:click="
+                                $el.blur();
+                                showEvaluationModal = false;
+                                showModal = false;
+                            "
+                        >Fechar</x-danger-button>
+                    </div>
+                </template>
+            </x-slot>
+        </x-custom-modal>
+
+    @endcan
+    {{-- Professor e aluno --}}
+    @if(!auth()->user()->canManageEvents())
+        <x-custom-modal x-model="showModal">
+            <x-slot name="title">
+                @if(auth()->user()->canEvaluate())
+                    Avaliar o grupo
+                @else
+                    Vizualizar a avaliação da banca
+                @endif
+            </x-slot>
+            <x-slot name="content">
+                {{-- Banner de mensagem --}}
+                <x-custom-banner/>
+
+                <x-form-fields.event/>
+            </x-slot>
+
+            <x-slot name="footer">
+                @if(auth()->user()->canEvaluate())
+                    <x-secondary-button>Avaliar</x-secondary-button>
+                    <x-danger-button
+                        x-on:click="
+                                $el.blur();
+                                showEvaluationModal = false;
+                                showModal = false;
+                            "
+                    >Fechar</x-danger-button>
+                @else
+                    <x-secondary-button>Avaliação</x-secondary-button>
+                    <x-danger-button
+                        x-on:click="
+                                $el.blur();
+                                showEvaluationModal = false;
+                                showModal = false;
+                            "
+                    >Fechar</x-danger-button>
+                @endif
+            </x-slot>
+        </x-custom-modal>
+    @endif
 
     <div class="p-0 border-4 rounded overflow-hidden border-strong-blue">
         <div class="bg-primary-blue bg-blend-darken">

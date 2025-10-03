@@ -1,12 +1,11 @@
+@php
+    $tabId = session('tabId');
+    $dynamicTokens = session('dynamic_tokens', []);
+    $dynamicToken = $dynamicTokens[$tabId][0] ?? null;
+@endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-        @php
-            $tabId = session('tabId');
-            $dynamicTokens = session('dynamic_tokens', []);
-            $dynamicToken = $dynamicTokens[$tabId][0] ?? null;
-        @endphp
-
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -15,7 +14,7 @@
         <meta name="dynamic-token" content="{{ $dynamicToken }}">
 
         <title>{{config('app.name') . ($title ?? '' ? ' | ' .$title : '')}}</title>
-        <link rel="icon" type="image/png" href="{{ asset('favicon.ico') }}?v=1">
+        <link rel="icon" type="image/icon" href="{{ asset('favicon.ico') }}?v=1">
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -37,6 +36,7 @@
         @endif
 
         <div class="min-h-screen bg-gray-100">
+            <!-- Navigation menu -->
             @livewire('navigation-menu')
 
             <!-- Page Heading -->

@@ -120,7 +120,7 @@
                             <span x-text="committee.id" class="text-sm text-gray-600 me-5"></span>
                             <span
                                 x-text="'CRIADOR: ' + committee.coordinator_name"
-                                class="whitespace-nowrap overflow-hidden max-w-[70%] text-ellipsis text-xs text-gray-700 font-medium"
+                                class="whitespace-nowrap overflow-hidden max-w-[70%] text-ellipsis text-xs text-gray-700 font-medium uppercase"
                             ></span>
                             <button class="px-3 my-1 whitespace-nowrap ms-auto bg-secondary-blue rounded-md text-white text-sm"
                                 x-on:click="
@@ -261,7 +261,7 @@
                                 <button
                                     type="button"
                                     class="flex items-center justify-start gap-2 px-3 py-2 rounded-md hover:bg-gray-200 transition cursor-pointer w-full max-w-full"
-                                    x-on:click="showPaper(`/${committee.paper.file_path}`)"
+                                    x-on:click="showPaper(`${committee.paper.file_path}`)"
                                 >
                                     <x-lucide-file-text class="w-4 h-4 text-gray-600 flex-shrink-0"/>
                                     <span class="text-sm text-gray-800 font-semibold truncate " x-text="committee.paper.title"></span>

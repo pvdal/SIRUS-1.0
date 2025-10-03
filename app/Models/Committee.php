@@ -13,12 +13,16 @@ class Committee extends Model
         'coordinator_id',
         'rubric_id',
         'paper_id',
+        'start',
+        'end',
         'state'
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'start' => 'datetime',
+        'end' => 'datetime',
     ];
 
     #region Relacionamentos

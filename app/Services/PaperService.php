@@ -89,14 +89,18 @@ class PaperService
         $newDir = 'papers/' . implode('/', $foldersPath);
 
         $extension = pathinfo($paper->file_path, PATHINFO_EXTENSION);
+        $oldFileName = pathinfo($paper->file_path, PATHINFO_FILENAME);
 
-        // Nome atual do arquivo
-        $newFileName = $paperTitle . '.' . $extension;
+        // Remove o sufixo de hash se existir (underscore + 10 caracteres)
+        $oldFileNameWithoutHash = preg_replace('/_[a-f0-9]{10}$/i', '', $oldFileName);
 
-        // Caminho novo (diretório + mesmo nome de arquivo)
-        $newPath = $newDir . '/' . $newFileName;
+        $oldFileBase = $oldFileNameWithoutHash . '.' . $extension;
+        $newFileBase = $paperTitle . '.' . $extension;
 
-        if($newPath !== $paper->file_path){
+        if($newDir !== dirname($paper->file_path) || $newFileBase !== $oldFileBase){
+            $hash = substr(hash('sha256', $paperTitle . time()), 0, 10);
+            $newFileName = $paperTitle . '_' . $hash . '.' . $extension;
+            $newPath = $newDir . '/' . $newFileName;
             // Cria pasta destino caso não exista
             Storage::disk('public')->makeDirectory($newDir);
 

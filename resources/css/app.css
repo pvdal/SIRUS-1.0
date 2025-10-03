@@ -23,17 +23,7 @@
     --light: #6b7280;
     --shadow: #ccc;
 }
-/*******************
-    FULLCALENDAR
-********************/
-@media(min-width: 640px){
-    /* Customização do link de paginação */
-    nav[role="navigation"] > div {
-        flex-direction: column;
-        align-items: center;
-    }
-}
-/**********************************
+/*********************************
     Retirar setas do campo number
 ***********************************/
 /* Chrome, Safari, Edge, Opera */
@@ -75,11 +65,9 @@ input[type=number] {
     height: 0;
 }
 
-@media (max-width: 640px) {
-    .fc-col-header-cell-cushion {
-        font-size: 0.75rem; /* menor tamanho */
-        white-space: normal; /* permite quebrar linha */
-        line-height: 1.1;
-    }
+.fc-toolbar-chunk .fc-button-group button {
+    background-color: #1e3a5f;   /* Cor de fundo azul escuro */
+    border-radius: 6px;          /* Cantos arredondados */
+    font-weight: 500;            /* Texto mais forte */
+    transition: background-color 0.2s ease;
 }
-

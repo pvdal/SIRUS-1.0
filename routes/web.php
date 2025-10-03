@@ -128,12 +128,15 @@ Route::middleware([
         Route::put('/courses/{id}/update', [CourseController::class,'update'])->name('courses.update');
         Route::put('/courses/{id}/{action}', [CourseController::class, 'toggleStatus'])->name('courses.toggle-status');
 
-        // calendar -> CommitteeController/Committee.php
+        // Committees -> CommitteeController/Committee.php
         Route::get('/members/search', [CommitteeController::class, 'search'])->name('committees.search-members');
         Route::get('/committees/show', [CommitteeController::class, 'show'])->name('committees.show');
         Route::post('/committees/save', [CommitteeController::class, 'store'])->name('committees.store');
         Route::put('/committees/{id}/update', [CommitteeController::class, 'update'])->name('committees.update');
         Route::put('/committees/{id}/{action}', [CommitteeController::class, 'toggleStatus'])->name('committees.toggle-status');
+
+        // Calendar -> EventController/Committee.php
+        Route::put('/events/{id}/update', [EventController::class, 'update'])->name('events.update');
     });
 });
 

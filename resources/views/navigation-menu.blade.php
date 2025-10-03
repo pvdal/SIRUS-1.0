@@ -18,9 +18,8 @@
                     </x-nav-link>
                 </div>
                 --}}
-                @if(auth()->user()->access_level === 3)
-                    <x-coord-nav-options :menuComponent="'nav-link'" :menuClass="'hidden space-x-8 sm:-my-px sm:ms-10 md:flex'"/>
-                @endif
+
+                <x-nav-options :menuComponent="'nav-link'" :menuClass="'hidden space-x-8 sm:-my-px sm:ms-10 md:flex'"/>
             </div>
 
             <div class="hidden md:flex sm:items-center sm:ms-6">
@@ -107,11 +106,13 @@
                                 {{ __('Profile') }}
                             </x-dropdown-link>
 
-                            @if (Laravel\Jetstream\Jetstream::hasApiFeatures() && auth()->user()->canManageApiTokens())
-                                <x-dropdown-link href="{{ route('api-tokens.index') }}">
-                                    {{ __('API Tokens') }}
-                                </x-dropdown-link>
-                            @endif
+                            @can('manage-api-tokens')
+                                @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
+                                    <x-dropdown-link href="{{ route('api-tokens.index') }}">
+                                        {{ __('API Tokens') }}
+                                    </x-dropdown-link>
+                                @endif
+                            @endcan
 
                             <div class="border-t border-gray-200"></div>
 
@@ -144,9 +145,8 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden md:hidden">
         <!-- Navigation Links -->
-        @if(auth()->user()->access_level === 3)
-            <x-coord-nav-options :menuComponent="'responsive-nav-link'" :menuClass="'pt-2 pb-3 space-y-1'" />
-        @endif
+        <x-coord-nav-options :menuComponent="'responsive-nav-link'" :menuClass="'pt-2 pb-3 space-y-1'" />
+
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="flex items-center px-4">

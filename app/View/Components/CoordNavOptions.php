@@ -21,6 +21,6 @@ class CoordNavOptions extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.nav-options.coord-nav-options');
+        return view('components.nav-options.nav-options');
     }
 }

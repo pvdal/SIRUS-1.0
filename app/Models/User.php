@@ -76,9 +76,24 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+    public function isAdmin(): bool
+    {
+        return $this->getAttribute('access_level') === 3; // só coordenadores podem ver
+    }
+
     public function canManageApiTokens(): bool
     {
         return $this->getAttribute('access_level') === 3; // só coordenadores podem ver
+    }
+
+    public function canManageEvents(): bool
+    {
+        return $this->getAttribute('access_level') === 3; // só coordenadores podem ver
+    }
+
+    public function canEvaluate(): bool
+    {
+        return in_array($this->getAttribute('access_level'), [2,3]); // só coordenadores podem ver
     }
 
     #region Notificações via email em fila

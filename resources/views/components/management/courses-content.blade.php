@@ -11,7 +11,7 @@
         </x-slot>
 
         <x-slot name="content">
-            <!-- Banner de mensagem -->
+            {{-- Banner de mensagem --}}
             <x-custom-banner/>
             {{-- Formulário --}}
             <div>

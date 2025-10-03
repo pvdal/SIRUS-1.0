@@ -18,7 +18,9 @@ class CoordinatorFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
+            'user_id' => User::factory()->state([
+                'access_level' => 3,
+            ]),
         ];
     }
 }

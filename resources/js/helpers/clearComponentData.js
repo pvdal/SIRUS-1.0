@@ -2,7 +2,13 @@ export function clearComponentData(context, type, formFields = [], addFilters = 
     switch (type){
         case 'store':
             formFields.forEach(field => {
-                context[field] = Array.isArray(context[field]) ? [] : '';
+                if (Array.isArray(context[field]))  {
+                    context[field] = [];
+                } else if(typeof context[field] === 'boolean')  {
+                    context[field] = false;
+                } else {
+                    context[field] = '';
+                }
             })
             context.errors = {};
             context.showBanner = false;

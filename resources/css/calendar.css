@@ -26,7 +26,7 @@
     }
 }
 
-@media (min-width: 371px) and (max-width: 600px) {
+@media (min-width: 351px) and (max-width: 600px) {
     .fc .fc-toolbar {
         display: flex;
         flex-wrap: wrap;
@@ -64,7 +64,7 @@
     }
 
 }
-@media (max-width: 370px) {
+@media (max-width: 350px) {
     /* Ajusta o container cabeçalho do calendário para coluna */
     .fc .fc-toolbar {
         display: flex;
@@ -77,11 +77,44 @@
     .fc .fc-toolbar-title {
         font-size: 1.125rem;
     }
+
+    .fc-event-time {
+        font-size: 0.75rem; /* menor */
+        max-width: 100%;
+    }
 }
 
-.fc-toolbar-chunk .fc-button-group button {
-    background-color: #1e3a5f;   /* Cor de fundo azul escuro */
-    border-radius: 6px;          /* Cantos arredondados */
-    font-weight: 500;            /* Texto mais forte */
-    transition: background-color 0.2s ease;
+@media(min-width: 640px){
+    /* Customização do link de paginação */
+    nav[role="navigation"] > div {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+/* permite highlight atravessar */
+.fc-daygrid-day {
+    overflow: visible;
+    position: relative;
+}
+
+/* não corta highlight, mas evita que eventos vazem */
+.fc-daygrid-day-frame {
+    overflow: visible; /* deixa highlight passar */
+    position: relative;
+}
+
+.fc-daygrid-event {
+    overflow: hidden;   /* corta só os textos/eventos */
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Abreviação dos dias (dom. seg. [...]) */
+@media (max-width: 640px) {
+    .fc-col-header-cell-cushion {
+        font-size: 0.75rem; /* menor tamanho */
+        white-space: normal; /* permite quebrar linha */
+        line-height: 1.1;
+    }
 }

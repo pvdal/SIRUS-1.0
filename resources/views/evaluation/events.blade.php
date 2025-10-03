@@ -12,7 +12,8 @@
     {{-- Conteúdo principal --}}
     <x-main-content>
         {{-- Chamada da função alpine -> recources/js/components/evaluation/eventsData.js--}}
-        <div x-data="eventsData()">
+        <div x-data="eventsData()"
+             x-init='init(@json($committees))'>
             <x-evaluation.events-content/>
         </div>
     </x-main-content>

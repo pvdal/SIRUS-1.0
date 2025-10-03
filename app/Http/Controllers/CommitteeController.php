@@ -49,43 +49,7 @@ class CommitteeController extends Controller
 
         // Mapeamento dos dados paginados
         $committeesData = $committees->getCollection()->map(function ($committee) {
-            $group = $committee->paper?->group;
-
-            return [
-                'id' => $committee->id,
-                'name' => mb_strtoupper($committee->name),
-                'members' => $committee->members
-                    ->map(fn($m) => [
-                        'user_id' => $m->user_id,
-                        'name' => $m->user->name,
-                        'user_type' => [
-                            'slug' => $m->user->access_level === 3 ? 'coordinator' : 'professor',
-                            'name' => $m->user->access_level === 3 ? 'Coordenador' : 'Professor',
-                        ],
-                        'member_type' => [
-                            'id' => $m->memberType?->id,
-                            'name' => $m->memberType?->name,
-                        ],
-                        'state' => ($m->user->state ?? 0),
-                    ])->values(),
-                'coordinator_name' => mb_strtoupper($committee->coordinator?->user?->name),
-                'group_id' => $group?->id,
-                'group_theme' => mb_strtoupper($group?->theme),
-                'group_state' => ($group?->state ?? 0),
-                'students' => $group?->students?->map(fn($s) => [
-                        'ra' => $s->ra,
-                        'name' => $s->user->name,
-                        'state' => $s->user->state,
-                    ])->values() ?? [],
-                'paper' => $committee->paper ? [
-                    'id' => $committee->paper->id,
-                    'title' => $committee->paper->title,
-                    'file_path' => $committee->paper->file_path,
-                ] : null,
-                'state' => ($committee->state ?? 0),
-                'created_at' => $committee->created_at,
-                'updated_at' => $committee->updated_at,
-            ];
+            return $this->mapCommittee($committee);
         })->values();
 
         #region Dados auxiliares
@@ -133,30 +97,7 @@ class CommitteeController extends Controller
             'committees' => $committeesData,
             'member_types' => $member_types,
             'groups' => $groups,
-            'academicStaff' => $coordinators->map(function ($coordinator) {
-                return [
-                    'id' => $coordinator->id,
-                    'name' => $coordinator->user->name ?? '(sem nome)',
-                    'user_id' => $coordinator->user_id,
-                    'user_type' => [
-                        'slug' => 'coordinator',
-                        'name' => 'Coordenador',
-                    ]
-                ];
-            })->concat(
-                $professors->map(function ($professor) {
-                    return [
-                        'id' => $professor->id,
-                        'name' => $professor->user->name ?? '(sem nome)',
-                        'user_id' => $professor->user_id,
-                        'user_type' => [
-                            'slug' => 'professor',
-                            'name' => 'Professor',
-                        ]
-                    ];
-                })
-            )->values()
-                ->toArray(),
+            'academicStaff' => $this->mapAcademicStaff($coordinators, $professors),
             'page' => $committees->currentPage(),
             'totalPages' => $committees->lastPage(),
         ]);
@@ -207,29 +148,7 @@ class CommitteeController extends Controller
 
         // Retorna array concatenada dos coordenadores + professores
         return response()->json(
-            $coordinators->map(function ($coordinator) {
-                return [
-                    'id' => $coordinator->id,
-                    'name' => $coordinator->user->name ?? '(sem nome)',
-                    'user_id' => $coordinator->user_id,
-                    'user_type' => [
-                        'slug' => 'coordinator',
-                        'name' => 'Coordenador',
-                    ]
-                ];
-            })->concat(
-                $professors->map(function ($professor) {
-                    return [
-                        'id' => $professor->id,
-                        'name' => $professor->user->name ?? '(sem nome)',
-                        'user_id' => $professor->user_id,
-                        'user_type' => [
-                            'slug' => 'professor',
-                            'name' => 'Professor',
-                        ]
-                    ];
-                })
-            )->values()->all()
+            $this->mapAcademicStaff($coordinators, $professors),
         );
     }
 
@@ -288,43 +207,7 @@ class CommitteeController extends Controller
 
         // Mapeia para retornar somente os campos necessários
         $committeesData = $committees->getCollection()->map(function ($committee) {
-            $group = $committee->paper->group;
-
-            return [
-                'id' => $committee->id,
-                'name' => mb_strtoupper($committee->name),
-                'members' => $committee->members
-                    ->map(fn($m) => [
-                        'user_id' => $m->user_id,
-                        'name' => $m->user->name,
-                        'user_type' => [
-                            'slug' => $m->coordinator_id ? 'coordinator' : 'professor',
-                            'name' => $m->coordinator_id ? 'Coordenador' : 'Professor',
-                        ],
-                        'member_type' => [
-                            'id' => $m->memberType?->id,
-                            'name' => $m->memberType?->name,
-                        ],
-                        'state' => $m->user->state,
-                    ])->values(),
-                'coordinator_name' => mb_strtoupper($committee->coordinator?->user?->name),
-                'group_id' => $group?->id,
-                'group_theme' => mb_strtoupper($group?->theme),
-                'group_state' => $group?->state,
-                'students' => $group?->students?->map(fn($s) => [
-                        'ra' => $s->ra,
-                        'name' => $s->user->name,
-                        'state' => $s->user->state,
-                    ])->values() ?? [],
-                'paper' => $committee->paper ? [
-                    'id' => $committee->paper->id,
-                    'title' => $committee->paper->title,
-                    'file_path' => $committee->paper->file_path,
-                ] : null,
-                'state' => ($committee->state ?? 0),
-                'created_at' => $committee->created_at,
-                'updated_at' => $committee->updated_at,
-            ];
+            return $this->mapCommittee($committee);
         })->values();
 
         #region Dados auxiliares
@@ -371,30 +254,7 @@ class CommitteeController extends Controller
             'data' => $committeesData,
             'member_types' => $member_types,
             'groups' => $groups,
-            'academicStaff' => $coordinators->map(function ($coordinator) {
-                return [
-                    'id' => $coordinator->id,
-                    'name' => $coordinator->user->name ?? '(sem nome)',
-                    'user_id' => $coordinator->user_id,
-                    'user_type' => [
-                        'slug' => 'coordinator',
-                        'name' => 'Coordenador',
-                    ]
-                ];
-            })->concat(
-                $professors->map(function ($professor) {
-                    return [
-                        'id' => $professor->id,
-                        'name' => $professor->user->name ?? '(sem nome)',
-                        'user_id' => $professor->user_id,
-                        'user_type' => [
-                            'slug' => 'professor',
-                            'name' => 'Professor',
-                        ]
-                    ];
-                })
-            )->values()
-                ->toArray(),
+            'academicStaff' => $this->mapAcademicStaff($coordinators, $professors),
             'page' => $committees->currentPage(),
             'totalPages' => $committees->lastPage(),
         ]);
@@ -412,7 +272,7 @@ class CommitteeController extends Controller
                 'required',
                 // Garante que o paper existe
                 Rule::exists('papers', 'id'),
-                // Garante que o paper ainda não possui uma banca
+                // Garante que o ‘paper’ ainda não possui uma banca
                 Rule::unique('committees', 'paper_id'),
             ],
             'rubric_id' => 'nullable|exists:rubrics,id',
@@ -450,43 +310,7 @@ class CommitteeController extends Controller
             }
         });
 
-        $paper = $committee->paper;
-        $group = $paper->group;
-
-        $committeeData = [
-            'id' => $committee->id,
-            'name' => mb_strtoupper($committee->name),
-            'members' => $committee->members
-                ->filter(fn($item) => $item->user)
-                ->map(fn($item) => [
-                    'user_id' => $item->user_id,
-                    'name' => $item->user->name,
-                    'user_type' => [
-                        'slug' => $item->committee?->coordinator_id == $item->user_id ? 'coordinator' : 'professor',
-                        'name' => $item->committee?->coordinator_id == $item->user_id ? 'Coordenador' : 'Professor',
-                    ],
-                    'member_type' => [
-                        'id' => $item->memberType?->id,
-                        'name' => $item->memberType?->name,
-                    ]
-                ])->values(),
-            'coordinator_name' => mb_strtoupper($committee->coordinator?->user?->name),
-            'group_id' => $group?->id,
-            'group_theme' => mb_strtoupper($group?->theme),
-            'group_state' => $group?->state,
-            'students' => $group?->students?->map(fn($s) => [
-                    'ra' => $s->ra,
-                    'name' => $s->user->name,
-                ])->values() ?? [],
-            'paper' => [
-                'id' => $paper->id,
-                'title' => $paper->title,
-                'file_path' => $paper->file_path,
-            ],
-            'state' => (int) $committee->state,
-            'created_at' => $committee->created_at,
-            'updated_at' => $committee->updated_at,
-        ];
+        $committeeData = $this->mapCommittee($committee);
 
         return response()->json([
             'success' => true,
@@ -507,6 +331,15 @@ class CommitteeController extends Controller
             ],422);
         }
 
+        // Busca a banca existente
+        $committee = Committee::find($id);
+
+        if(!$committee) {
+            return response()->json([
+                'message' => 'Banca não encontrada!',
+            ], 422);
+        }
+
         // o nullable de rubric é temporario
         $request->validate([
             'name' => "required|string|max:255|unique:committees,name,{$id},id",
@@ -523,16 +356,6 @@ class CommitteeController extends Controller
             'members.*.user_id' => 'required|exists:users,id',
             'members.*.member_type.id' => 'required|exists:member_types,id',
         ]);
-
-        // Busca a banca existente
-        $committee = Committee::find($id);
-
-        if(!$committee) {
-            return response()->json([
-                'message' => 'Banca não encontrada!',
-            ], 422);
-        }
-
 
         $committee->fill([
             'name' => $request['name'],
@@ -582,45 +405,19 @@ class CommitteeController extends Controller
         ])->where('committee_id', $committee->id)
             ->get();
 
+        $committee->load([
+            'coordinator.user:id,name',
+            'members.user:id,name,state,access_level',
+            'members.memberType',
+            'paper.group.students.user:id,name,state',
+        ]);
+
         $group = $committee->paper->group;
 
         return response()->json([
             'success' => true,
             'message' => 'Banca atualizada com sucesso!',
-            'data' => [
-                'id' => $committee->id,
-                'name' => mb_strtoupper($committee->name),
-                'members' => $professorsCommittees
-                    ->map(fn($m) => [
-                        'user_id' => $m->user_id,
-                        'name' => $m->user->name,
-                        'user_type' => [
-                            'slug' => $m->committee?->coordinator_id == $m->user_id ? 'coordinator' : 'professor',
-                            'name' => $m->committee?->coordinator_id == $m->user_id ? 'Coordenador' : 'Professor',
-                        ],
-                        'member_type' => [
-                            'id' => $m->memberType?->id,
-                            'name' => $m->memberType?->name,
-                        ],
-                        'state' => $m->user->state,
-                    ])->values(),
-                'coordinator_name' => mb_strtoupper($committee->coordinator?->user?->name),
-                'group_id' => $group?->id,
-                'group_theme' => mb_strtoupper($group?->theme),
-                'group_state' => $group?->state,
-                'students' => $group?->students?->map(fn($s) => [
-                        'ra' => $s->ra,
-                        'name' => $s->user->name,
-                    ])->values() ?? [],
-                'paper' => $committee->paper ? [
-                    'id' => $committee->paper->id,
-                    'title' => $committee->paper->title,
-                    'file_path' => $committee->paper->file_path,
-                ] : null,
-                'state' => (int) $committee->state,
-                'created_at' => $committee->created_at,
-                'updated_at' => $committee->updated_at,
-            ],
+            'data' => $this->mapCommittee($committee),
         ]);
     }
 
@@ -653,5 +450,65 @@ class CommitteeController extends Controller
             'created_at' => $committee->created_at,
             'updated_at' => $committee->updated_at,
         ]);
+    }
+
+    private function mapCommittee($committee): array
+    {
+        $group = $committee->paper?->group;
+
+        return [
+            'id' => $committee->id,
+            'name' => $committee->name,
+            'members' => $committee->members
+                ->filter(fn($member) => $member->user)
+                ->map(fn($m) => [
+                    'user_id' => $m->user_id,
+                    'name' => $m->user->name,
+                    'user_type' => [
+                        'slug' => $m->user->access_level === 3 ? 'coordinator' : 'professor',
+                        'name' => $m->user->access_level === 3 ? 'Coordenador' : 'Professor',
+                    ],
+                    'member_type' => [
+                        'id' => $m->memberType?->id,
+                        'name' => $m->memberType?->name,
+                    ],
+                    'state' => (int) $m->user->state,
+                ])->values() ?? [],
+            'coordinator_name' => $committee->coordinator?->user?->name,
+            'group_id' => $group?->id,
+            'group_theme' => $group?->theme,
+            'group_state' => (int) $group?->state,
+            'students' => $group?->students?->map(fn($s) => [
+                    'ra' => $s->ra,
+                    'name' => $s->user->name,
+                    'state' => (int) $s->user->state,
+                ])->values() ?? [],
+            'paper' => $committee->paper ? [
+                'id' => $committee->paper->id,
+                'title' => $committee->paper->title,
+                'file_path' => $committee->paper->file_path,
+            ] : null,
+            'state' => (int) $committee->state,
+            'created_at' => $committee->created_at,
+            'updated_at' => $committee->updated_at,
+        ];
+    }
+
+    private function mapAcademicStaff($coordinators, $professors): array
+    {
+        $mapStaff = fn($collection,$slug,$name) => $collection->map(fn($member) => [
+            'id' => $member->id,
+            'name' => $member->user->name ?? '(sem nome)',
+            'user_id' => $member->user_id,
+            'user_type' => [
+                'slug' => $slug,
+                'name' => $name,
+            ]
+        ]);
+
+        return $mapStaff($coordinators,'coordinator','Coordenador')
+            ->concat($mapStaff($professors,'professor','Professor'))
+            ->values()
+            ->toArray();
     }
 }

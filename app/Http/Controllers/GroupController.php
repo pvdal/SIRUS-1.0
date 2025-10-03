@@ -169,9 +169,9 @@ class GroupController extends Controller
             'theme' => 'required|string|max:255|unique:groups,theme',
             'members' => 'required|array|min:1',
             'members.*' => 'required|string|exists:students,ra',
-            'papers' => 'required|array|min:1|max:12',
+            'papers' => 'nullable|array|min:1|max:12',
             'papers.*.title' => [
-                'required',
+                'required_with:papers',
                 'string',
                 'max:255',
                 'unique:papers,title',
@@ -182,12 +182,12 @@ class GroupController extends Controller
                     }
                 }
             ],
-            'papers.*.file' => 'required|file|mimes:pdf|max:5120',
-            'papers.*.year' => "required|integer|digits:4|between:" . ($currentYear - 1) . "," . ($currentYear),
-            'papers.*.semester' => 'required|integer|in:1,2',
-            'papers.*.version' => 'required|string|in:evaluation,corrected',
-            'papers.*.course' => 'required|integer|exists:courses,id',
-            'papers.*.project' => 'required|integer|between:1,6',
+            'papers.*.file' => 'required_with:papers|file|mimes:pdf|max:5120',
+            'papers.*.year' => "required_with:papers|integer|digits:4|between:" . ($currentYear - 1) . "," . ($currentYear),
+            'papers.*.semester' => 'required_with:papers|integer|in:1,2',
+            'papers.*.version' => 'required_with:papers|string|in:evaluation,corrected',
+            'papers.*.course' => 'required_with:papers|integer|exists:courses,id',
+            'papers.*.project' => 'required_with:papers|integer|between:1,6',
         ]);
 
         // Verifica se algum aluno já está em outro grupo
@@ -214,15 +214,17 @@ class GroupController extends Controller
 
             Student::whereIn('ra', $request->members)
                 ->update(['group_id' => $group->id]);
+            if($request->papers) {
+                foreach ($request->papers as $i => $paper) {
+                    if ($request->hasFile("papers.$i.file")) {
 
-            foreach ($request->papers as $i => $paper) {
-                if ($request->hasFile("papers.$i.file")) {
+                        $folders = $this->prepareFolders($paper);
 
-                    $folders = $this->prepareFolders($paper);
-
-                    $paperService->createPaper($request->file("papers.$i.file"), $group->id, $folders);
+                        $paperService->createPaper($request->file("papers.$i.file"), $group->id, $folders);
+                    }
                 }
             }
+
         });
 
         $group->load(['papers', 'students.user']);
@@ -253,9 +255,9 @@ class GroupController extends Controller
             'theme' => "required|string|max:255|unique:groups,theme,{$id},id",
             'members' => 'required|array|min:1',
             'members.*' => 'required|string|exists:students,ra',
-            'papers' => 'required|array|min:1|max:12',
+            'papers' => 'nullable|array|min:1|max:12',
             'papers.*.title' => [
-                'required',
+                'required_with:papers',
                 'string',
                 'max:255',
                 function ($attribute, $value, $fail) use ($request, $id) {
@@ -305,11 +307,11 @@ class GroupController extends Controller
                 'mimes:pdf',
                 'max:5120'
             ],
-            'papers.*.year' => "required|integer|digits:4|between:" . ($currentYear - 1) . "," . ($currentYear),
-            'papers.*.semester' => 'required|integer|in:1,2',
-            'papers.*.version' => 'required|string|in:evaluation,corrected',
-            'papers.*.course' => 'required|integer|exists:courses,id',
-            'papers.*.project' => 'required|integer|between:1,6',
+            'papers.*.year' => "required_with:papers|integer|digits:4|between:" . ($currentYear - 1) . "," . ($currentYear),
+            'papers.*.semester' => 'required_with:papers|integer|in:1,2',
+            'papers.*.version' => 'required_with:papers|string|in:evaluation,corrected',
+            'papers.*.course' => 'required_with:papers|integer|exists:courses,id',
+            'papers.*.project' => 'required_with:papers|integer|between:1,6',
         ]);
 
         // Busca o grupo existente
@@ -357,51 +359,52 @@ class GroupController extends Controller
                         ->orWhere('group_id', '<>', $group->id);
                 })
                 ->update(['group_id' => $group->id]);
+            if($request->papers) {
+                // Identifica papers enviados no request (IDs existentes ou titles novos)
+                $sentPapers = array_filter(array_map(fn($p) => $p['id'] ?? null, $request->papers));
 
-            // Identifica papers enviados no request (IDs existentes ou titles novos)
-            $sentPapers = array_filter(array_map(fn($p) => $p['id'] ?? null, $request->papers));
+                $papersToInactivate = Paper::where('group_id', $group->id)
+                    ->where('state', 1)
+                    ->whereNotIn('id', $sentPapers)
+                    ->get();
 
-            $papersToInactivate = Paper::where('group_id', $group->id)
-                ->where('state', 1)
-                ->whereNotIn('id', $sentPapers)
-                ->get();
+                foreach ($papersToInactivate as $paper) {
+                    $paper->update([
+                        'state' => 0
+                    ]);
+                }
 
-            foreach ($papersToInactivate as $paper) {
-                $paper->update([
-                    'state' => 0
-                ]);
-            }
-
-            if($papersToInactivate->count() > 0 || $added > 0 || $removed > 0) {
-                $group->touch();
-            }
-
-            // Se tem arquivo novo, salva
-            foreach ($request->papers as $i => $paper) {
-                if ($request->hasFile("papers.$i.file")) {
-                    $folders = $this->prepareFolders($paper);
-
-                    $paperService->createPaper($request->file("papers.$i.file"), $group->id, $folders);
-
+                if($papersToInactivate->count() > 0 || $added > 0 || $removed > 0) {
                     $group->touch();
-                } else {
-                    $paperToUpdate = Paper::find($paper['id']);
-                    if (!$paperToUpdate || $paperToUpdate->group_id != $group->id || $paperToUpdate->group_id == null) {
-                        // Paper não existe ou está inativo
-                        Log::warning("Paper ID {$paper['id']} inválido ou removido");
-                        continue;
-                    }
-                    // Só processa de ativo
-                    if($paperToUpdate->state === 1) {
-                        $paperTitle = $paperToUpdate->title;
+                }
 
-                        if($paperTitle !== $paper['title']) {
-                            $paperTitle = $paper['title'];
-                            $group->touch();
-                        }
-
+                // Se tem arquivo novo, salva
+                foreach ($request->papers as $i => $paper) {
+                    if ($request->hasFile("papers.$i.file")) {
                         $folders = $this->prepareFolders($paper);
-                        $paperService->updatePaper($paperToUpdate, $group, $folders, $paperTitle);
+
+                        $paperService->createPaper($request->file("papers.$i.file"), $group->id, $folders);
+
+                        $group->touch();
+                    } else {
+                        $paperToUpdate = Paper::find($paper['id']);
+                        if (!$paperToUpdate || $paperToUpdate->group_id != $group->id || $paperToUpdate->group_id == null) {
+                            // Paper não existe ou está inativo
+                            Log::warning("Paper ID {$paper['id']} inválido ou removido");
+                            continue;
+                        }
+                        // Só processa de ativo
+                        if($paperToUpdate->state === 1) {
+                            $paperTitle = $paperToUpdate->title;
+
+                            if($paperTitle !== $paper['title']) {
+                                $paperTitle = $paper['title'];
+                                $group->touch();
+                            }
+
+                            $folders = $this->prepareFolders($paper);
+                            $paperService->updatePaper($paperToUpdate, $group, $folders, $paperTitle);
+                        }
                     }
                 }
             }
@@ -495,7 +498,7 @@ class GroupController extends Controller
     {
         return [
             'id' => $group->id,
-            'theme' => mb_strtoupper($group->theme),
+            'theme' => $group->theme,
             'state' => (int) $group->state,
             'papers' => $group->papers->map(fn($p) => [
                 'id' => $p->id,

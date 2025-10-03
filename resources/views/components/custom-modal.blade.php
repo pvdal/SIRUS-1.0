@@ -1,4 +1,4 @@
-@props(['model','id' => null, 'maxWidth' => '2xl', 'icon' => null,])
+@props(['model','id' => null, 'maxWidth' => '2xl', 'icon' => null, 'titleClass' => '',])
 
 @php
     $maxWidth = [
@@ -41,7 +41,7 @@
     >
         @isset($title)
         <div class="px-6 py-4 border-b dark:border-gray-100">
-            <h2 class="text-lg font-semibold text-gray-700">
+            <h2 class="text-lg font-semibold text-gray-700 {{ $titleClass }}">
                 {{ $title }}
             </h2>
         </div>
