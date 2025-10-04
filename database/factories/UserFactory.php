@@ -33,7 +33,7 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('123456789'),
             'two_factor_secret' => null,
             'two_factor_recovery_codes' => null,
-            'remember_token' => Str::random(10),
+            'remember_token' => null,
             'profile_photo_path' => null,
             'current_team_id' => null,
         ];

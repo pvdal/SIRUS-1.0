@@ -94,7 +94,6 @@ export default function eventsData() {
             this.initialDate.timeEnd = this.timeEnd;
             this.initialDate.dateStart = this.dateStart;
             this.initialDate.dateEnd = this.dateEnd;
-
             this.showModal = true;
         },
 

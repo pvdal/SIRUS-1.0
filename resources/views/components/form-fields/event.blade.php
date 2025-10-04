@@ -5,7 +5,7 @@
         <template x-if="committees.length < 1">
             <div class="rounded-xl bg-secondary-blue p-2 px-4">
                 <h3 class="block font-medium text-sm text-white">
-                    Todas as bancas cadastradas já possuem data definida.
+                    Não há bancas sem datas definidas.
                 </h3>
             </div>
         </template>
@@ -79,7 +79,7 @@
 
     {{-- Definição de data --}}
     <div class="flex flex-wrap gap-2 justify-center xs:justify-between mt-4">
-        <fieldset>
+        <fieldset class="max-w-[50%]">
             <legend class="text-sm font-medium w-full text-center xs:text-start">Data/hora inicial</legend>
             <div class="flex flex-col xs:flex-row items-center gap-2">
                 <div>
@@ -98,16 +98,22 @@
                         :disabled="(showEvaluationModal && !edit) || (showCreateModal && committees.length < 1)"/>
                 </div>
             </div>
+            <template x-if="errors?.dateStart || errors?.timeStart">
+                <div class="flex flex-wrap">
+                    <p class="text-red-600 text-sm" x-text="errors.dateStart?.[0]"></p>
+                    <p class="text-red-600 text-sm" x-text="errors.timeStart?.[0]"></p>
+                </div>
+            </template>
         </fieldset>
 
-        <fieldset>
+        <fieldset class="max-w-[50%]">
             <legend class="text-sm font-medium w-full text-center xs:text-start">Data/hora final</legend>
             <div class="flex flex-col xs:flex-row items-center gap-2">
                 <div>
                     <input
                         type="date"
                         class="w-full border-gray-300 focus:border-secondary-blue focus:ring-secondary-blue rounded-md shadow-sm mt-1"
-                        x-model="dateStart"
+                        x-model="dateEnd"
                         :disabled="(showEvaluationModal && !edit) || (showCreateModal && committees.length < 1)"/>
                 </div>
                 <div>
@@ -115,10 +121,16 @@
                         type="time"
                         step="1"
                         class="w-full border-gray-300 focus:border-secondary-blue focus:ring-secondary-blue rounded-md shadow-sm mt-1"
-                        x-model="timeStart"
+                        x-model="timeEnd"
                         :disabled="(showEvaluationModal && !edit) || (showCreateModal && committees.length < 1)"/>
                 </div>
             </div>
+            <template x-if="errors?.dateEnd || errors?.timeEnd">
+                <div class="flex flex-wrap">
+                    <p class="text-red-600 text-sm" x-text="errors.dateEnd?.[0]"></p>
+                    <p class="text-red-600 text-sm" x-text="errors.timeEnd?.[0]"></p>
+                </div>
+            </template>
         </fieldset>
     </div>
 </div>

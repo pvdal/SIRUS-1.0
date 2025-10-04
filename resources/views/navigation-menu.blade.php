@@ -145,7 +145,7 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden md:hidden">
         <!-- Navigation Links -->
-        <x-coord-nav-options :menuComponent="'responsive-nav-link'" :menuClass="'pt-2 pb-3 space-y-1'" />
+        <x-nav-options :menuComponent="'responsive-nav-link'" :menuClass="'pt-2 pb-3 space-y-1'" />
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
