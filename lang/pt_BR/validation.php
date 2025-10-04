@@ -198,6 +198,7 @@ return [
 
         'papers.*.title' => [
             'required' => 'O título é obrigatório.',
+            'required_with' => 'O título é obrigatório.',
             'string' => 'O título deve ser um texto válido.',
             'max' => 'O título não pode ultrapassar :max caracteres.',
             'unique' => 'Já existe um trabalho com este título.',
@@ -205,6 +206,7 @@ return [
 
         'papers.*.file' => [
             'required' => 'O PDF do trabalho é obrigatório.',
+            'required_with' => 'O PDF do trabalho é obrigatório.',
             'file' => 'O campo deve ser um arquivo.',
             'mimes' => 'O arquivo deve ser um PDF.',
             'max' => 'O PDF deve ter no máximo :max KB.',
@@ -213,30 +215,35 @@ return [
 
         'papers.*.year' => [
             'required' => 'O ano é obrigatório.',
+            'required_with' => 'O ano é obrigatório.',
             'digits' => 'O ano deve conter :digits dígitos.',
             'between' => 'O ano deve estar entre :min e :max.',
         ],
 
         'papers.*.semester' => [
             'required' => 'O semestre é obrigatório.',
+            'required_with' => 'O semestre é obrigatório.',
             'integer' => 'O semestre deve ser um número inteiro.',
             'in' => 'O semestre deve ser 1 ou 2.',
         ],
 
         'papers.*.version' => [
             'required' => 'A versão é obrigatória.',
+            'required_with' => 'A versão é obrigatória.',
             'string' => 'A versão deve ser um texto válido.',
             'in' => 'A versão deve ser "evaluation" ou "corrected".',
         ],
 
         'papers.*.course' => [
             'required' => 'O curso é obrigatório.',
+            'required_with' => 'O curso é obrigatório.',
             'integer' => 'O curso deve ser um número inteiro.',
             'exists' => 'O curso selecionado não existe.',
         ],
 
         'papers.*.project' => [
             'required' => 'O projeto é obrigatório.',
+            'required_with' => 'O projeto é obrigatório.',
             'integer' => 'O projeto deve ser um número inteiro.',
             'between' => 'O projeto deve estar entre :min e :max.',
         ],
