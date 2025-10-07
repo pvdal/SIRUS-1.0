@@ -9,7 +9,6 @@
         </h2>
     </x-slot>
 
-    {{-- AQUI ESTÁ A MUDANÇA: Envolvemos o conteúdo principal com o novo menu --}}
         <x-main-content>
             <div x-data="criteriaData()"
                  x-init='init(@json($criteria), {{ $page }}, {{ $totalPages }})'>
@@ -28,12 +27,13 @@
                         :class="'lg:justify-start'"
                     />
 
+                    {{--Conteúdo que mostra os critérios cadastrados--}}
                     <x-management.criteria-content/>
 
                     <x-management.pagination
                         :page-var="'page'"
                         :total-pages="'totalPages'"
-                        :load-function="'loadCriteria()'"
+                        :load-function="'loadCriteria'"
                     />
                 </x-nav-evaluation-table>
             </div>

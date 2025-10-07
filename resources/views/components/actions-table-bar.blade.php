@@ -67,9 +67,9 @@
             <ul x-show="statusFilter.drop"
                 @click.outside="statusFilter.drop = false"
                 class="absolute min-w-[170px] md:max-w-[200px] w-full border bg-white mt-1 rounded-lg max-h-60 overflow-auto z-50 scrollbar-custom">
-                <li @click="statusFilter.value = ''; statusFilter.name = 'Todos dos estados'; statusFilter.drop = false; {{ $loadFunction }}"
+                <li @click="statusFilter.value = ''; statusFilter.name = 'Todos os estados'; statusFilter.drop = false; {{ $loadFunction }}"
                     class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 break-words cursor-pointer">
-                    Todos dos estados
+                    Todos os estados
                 </li>
 
                 <li @click="statusFilter.value = 1; statusFilter.name = 'Apenas ativos'; statusFilter.drop = false; {{ $loadFunction }}"

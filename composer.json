@@ -13,6 +13,7 @@
         "laravel/tinker": "^2.10.1",
         "livewire/livewire": "^3.0",
         "mallardduck/blade-lucide-icons": "^1.23",
+        "phiki/phiki": "^2.0",
         "predis/predis": "^3.2"
     },
     "require-dev": {

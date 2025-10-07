@@ -6,7 +6,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use App\Models\Criterion;
-use Illuminate\Support\Facades\Log;
 
 class CriteriaController extends Controller
 {
@@ -16,23 +15,22 @@ class CriteriaController extends Controller
      */
     public function index(): View
     {
-        // Query inicial da tabela 'criteria' (15 por página).
         $criteria = Criterion::orderBy('name', 'asc')->paginate(15);
 
-        // Mapeia a coleção para um array simples.
         $criteriaData = $criteria->getCollection()->map(function ($criterion) {
             return [
                 'id' => $criterion->id,
                 'name' => $criterion->name,
-                'description' => $criterion->description,
+                'excellent' => $criterion->excellent,
+                'good' => $criterion->good,
+                'satisfactory' => $criterion->satisfactory,
+                'unsatisfactory' => $criterion->unsatisfactory,
                 'state' => (int) $criterion->state,
                 'created_at' => $criterion->created_at,
                 'updated_at' => $criterion->updated_at,
             ];
         })->values();
 
-        // Retorna a view de gestão de critérios com os dados.
-        // Lembre-se de criar a view em: resources/views/management/criteria.blade.php
         return view('management.criteria', [
             'criteria' => $criteriaData,
             'page' => $criteria->currentPage(),
@@ -48,36 +46,62 @@ class CriteriaController extends Controller
     {
         $query = Criterion::query()->orderBy('name', 'asc');
 
-        // Filtro de busca por texto
+        // Filtro por texto
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%");
+                    ->orWhere('excellent', 'like', "%{$search}%")
+                    ->orWhere('good', 'like', "%{$search}%")
+                    ->orWhere('satisfactory', 'like', "%{$search}%")
+                    ->orWhere('unsatisfactory', 'like', "%{$search}%");
             });
         }
 
-        // Filtro por status (ativo/inativo)
+//         Filtro por status
         if ($request->filled('status')) {
             $status = $request->input('status');
             $query->where('state', $status);
         }
 
-        // Filtro por período de criação
-        if ($request->filled('period')) {
-            $period = $request->input('period');
-            $query->when($period === 'today', fn($q) => $q->whereDate('created_at', today()));
-            $query->when($period === 'week', fn($q) => $q->whereBetween('created_at', [now()->subDays(7), now()]));
-            $query->when($period === 'month', fn($q) => $q->whereBetween('created_at', [now()->subDays(30), now()]));
+        if ($request->filled('status')) {
+            $status = $request->input('status');
+            $query->where('state', $status);
         }
 
-        $criteria = $query->paginate(15);
+        if ($request->filled('status') || $request->input('status') === '0') {
+            $status = $request->input('status');
+            $query->where('state', $status);
+        }
 
+
+
+        // Filtro por período
+        if ($request->filled('period')) {
+            $period = $request->input('period');
+            $query->when($period === 'today', function ($q) {
+                $q->whereDate('created_at', today());
+            });
+            $query->when($period === 'week', function ($q) {
+                $q->whereBetween('created_at', [now()->subDays(7), now()]);
+            });
+            $query->when($period === 'month', function ($q) {
+                $q->whereBetween('created_at', [now()->subDays(30), now()]);
+            });
+        }
+
+        // Paginação
+       $criteria = $query->paginate(15);
+
+        // Mapeando os dados
         $criteriaData = $criteria->getCollection()->map(function ($criterion) {
             return [
                 'id' => $criterion->id,
                 'name' => $criterion->name,
-                'description' => $criterion->description,
+                'excellent' => $criterion->excellent,
+                'good' => $criterion->good,
+                'satisfactory' => $criterion->satisfactory,
+                'unsatisfactory' => $criterion->unsatisfactory,
                 'state' => (int) $criterion->state,
                 'created_at' => $criterion->created_at,
                 'updated_at' => $criterion->updated_at,
@@ -99,13 +123,20 @@ class CriteriaController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:criteria,name',
-            'description' => 'nullable|string',
+            'excellent' => 'string',
+            'good' => 'string',
+            'satisfactory' => 'string',
+            'unsatisfactory' => 'string',
+        ]);
+        $criterion = Criterion::create([
+            'name' => $validated['name'],
+            'excellent' => $validated['excellent'] ?? null,
+            'good' => $validated['good'] ?? null,
+            'satisfactory' => $validated['satisfactory'] ?? null,
+            'unsatisfactory' => $validated['unsatisfactory'] ?? null,
+            'state' => 1,
         ]);
 
-        // Adiciona o estado padrão como ativo (1)
-        $validated['state'] = 1;
-
-        $criterion = Criterion::create($validated);
 
         return response()->json([
             'success' => true,
@@ -113,12 +144,16 @@ class CriteriaController extends Controller
             'data' => [
                 'id' => $criterion->id,
                 'name' => $criterion->name,
-                'description' => $criterion->description,
+                'excellent' => $criterion->excellent,
+                'good' => $criterion->good,
+                'satisfactory' => $criterion->satisfactory,
+                'unsatisfactory' => $criterion->unsatisfactory,
+
                 'state' => (int) $criterion->state,
                 'created_at' => $criterion->created_at,
                 'updated_at' => $criterion->updated_at,
             ]
-        ], 201); // HTTP 201 Created
+        ], 201);
     }
 
     /**
@@ -134,12 +169,20 @@ class CriteriaController extends Controller
         }
 
         $validated = $request->validate([
-            // Garante que o nome seja único, exceto para o próprio registro
             'name' => "required|string|max:255|unique:criteria,name,{$id}",
-            'description' => 'nullable|string',
+            'excellent' => 'nullable|string',
+            'good' => 'nullable|string',
+            'satisfactory' => 'nullable|string',
+            'unsatisfactory' => 'nullable|string',
         ]);
 
-        $criterion->update($validated);
+        $criterion->update([
+            'name' => $validated['name'],
+            'excellent' => $validated['excellent'] ?? null,
+            'good' => $validated['good'] ?? null,
+            'satisfactory' => $validated['satisfactory'] ?? null,
+            'unsatisfactory' => $validated['unsatisfactory'] ?? null,
+        ]);
 
         return response()->json([
             'success' => true,
@@ -147,7 +190,11 @@ class CriteriaController extends Controller
             'data' => [
                 'id' => $criterion->id,
                 'name' => $criterion->name,
-                'description' => $criterion->description,
+                'excellent' => $criterion->excellent,
+                'good' => $criterion->good,
+                'satisfactory' => $criterion->satisfactory,
+                'unsatisfactory' => $criterion->unsatisfactory,
+
                 'state' => (int) $criterion->state,
                 'created_at' => $criterion->created_at,
                 'updated_at' => $criterion->updated_at,
@@ -177,8 +224,19 @@ class CriteriaController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Status do critério atualizado com sucesso!',
-            'state' => (int) $criterion->state,
+            'state' => (int)$criterion->state,
             'updated_at' => $criterion->updated_at,
         ]);
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->get('q');
+
+        $results = Criterion::where('name', 'like', "%{$query}%")
+            ->where('state', 1)
+            ->get();
+
+        return response()->json($results);
     }
 }

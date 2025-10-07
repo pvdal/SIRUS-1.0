@@ -1,6 +1,8 @@
 <?php
 // Common
+use App\Http\Controllers\AxisController;
 use App\Http\Controllers\CriteriaController;
+use App\Http\Controllers\RubricController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Legal\LegalController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -89,15 +91,34 @@ Route::middleware([
     // Evaluations -> CommitteeController/Committee.php
    // Route::get('/evaluation', [EvaluationController::class, 'index'])->name('evaluations-table');
 
-    // users -> StudentController/Student.php ProfessorController/Professor.php CoordinatorController/Coordinator.php
-    Route::get('/evaluation/criteria', [CriteriaController::class, 'index'])->name('evaluation.criteria.table');
-    Route::get('/evaluation/axis', [AxisController::class, 'index'])->name('evaluation.axis.table');
-    Route::get('/evaluation/rubric', [RubricController::class, 'index'])->name('evaluation.rubric.table');
+    Route::get('/evaluation/criteria', [CriteriaController::class, 'index'])->name('evaluation.criteria-table');
+    Route::get('/evaluation/axis', [AxisController::class, 'index'])->name('evaluation.axis-table');
+    Route::get('/evaluation/rubric', [RubricController::class, 'index'])->name('evaluation.rubric-table');
 
     // Operações CRUD das tabelas e cards
     Route::prefix(config('secure.request_prefix')) // todas as rotas dentro desse grupo possuem o prefixo definido no.env
     ->middleware('secure.ajax') // middleware que traz camadas a mais de seguranças nas requisições ajax
     ->group(function () {
+
+        // Criterion -> CriteriaController/Criterion.php
+        Route::get('/criteria/show', [CriteriaController::class, 'show'])->name('criteria.show');
+        Route::post('/criteria/save', [CriteriaController::class, 'store'])->name('criteria.store');
+        Route::put('/criteria/{id}/update', [CriteriaController::class, 'update'])->name('criteria.update');
+        Route::put('/criteria/{id}/{action}', [CriteriaController::class, 'toggleStatus'])->name('criteria.toggle-status');
+        Route::get('/criteria/search', [CriteriaController::class, 'search'])->name('search-criteria');
+
+        // Axis -> AxisController/Axes.php
+        Route::get('/axis/show', [AxisController::class, 'show'])->name('axis.show');
+        Route::post('/axis/save', [AxisController::class, 'store'])->name('axis.store');
+        Route::put('/axis/{id}/update', [AxisController::class, 'update'])->name('axis.update');
+        Route::put('/axis/{id}/{action}', [AxisController::class, 'toggleStatus'])->name('axis.toggle-status');
+
+//        Route::get('/axis', [AxisController::class, 'index'])->name('axis.index');
+//        Route::post('/axis', [AxisController::class, 'store'])->name('axis.store');
+//        Route::put('/axis/{axis}', [AxisController::class, 'update'])->name('axis.update');
+//        Route::patch('/axis/{axis}/status', [AxisController::class, 'toggleStatus'])->name('axis.toggleStatus');
+
+
         // Students -> StudentController/Student.php
         Route::get('/students/show', [StudentController::class, 'show'])->name('students.show');
         Route::post('/students/save', [StudentController::class, 'store'])->name('students.store');

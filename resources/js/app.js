@@ -39,5 +39,7 @@ window.committeesData = committeesData;
 import eventsData from "./components/evaluation/eventsData.js";
 window.eventsData = eventsData;
 // Evaluation
-import {criteriaData} from "./components/management/criteriaData.js";
+import {criteriaData} from "./components/evaluation/criteriaData.js";
 window.criteriaData = criteriaData;
+import {axesData} from "./components/evaluation/axesData.js";
+window.axesData = axesData;

@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -12,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rubrics', function (Blueprint $table) {
+        Schema::create('axis_criteria', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->boolean('state')->default(true);
+            $table->foreignId('axis_id')->constrained('axes')->onDelete('cascade');
+            $table->foreignId('criteria_id')->constrained('criteria')->onDelete('cascade');
             $table->timestamps();
         });
-
     }
 
     /**
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rubrics');
+        Schema::dropIfExists('axis_criteria');
     }
 };

@@ -4,17 +4,17 @@
         <div class="flex justify-between h-16 w-full">
             <div class="flex">
                 <div class="hidden space-x-8 sm:-my-px xxs:ms-5 xs:ms-10 xxs:flex">
-                    <x-nav-link href="/evaluation/criteria" :active="request()->routeIs('evaluation.criteria.table')">
+                    <x-nav-link href="/evaluation/criteria" :active="request()->routeIs('evaluation.criteria-table')">
                         {{ __('Critérios') }}
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px xxs:ms-5 xs:ms-10 xxs:flex">
-                    <x-nav-link href="/evaluation/axis" :active="request()->routeIs('evaluation.axis.table')">
+                    <x-nav-link href="/evaluation/axis" :active="request()->routeIs('evaluation.axis-table')">
                         {{ __('Eixos') }}
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px xxs:ms-5 xs:ms-10 xxs:flex">
-                    <x-nav-link href="/evaluation/rubric" :active="request()->routeIs('evaluation.rubric.table')">
+                    <x-nav-link href="/evaluation/rubric" :active="request()->routeIs('evaluation.rubric-table')">
                         {{ __('Rubricas') }}
                     </x-nav-link>
                 </div>

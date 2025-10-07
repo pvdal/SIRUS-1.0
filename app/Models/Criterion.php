@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Criterion extends Model
 {
@@ -14,27 +16,19 @@ class Criterion extends Model
      *
      * @var array<int, string>
      */
+
     protected $fillable = [
-        'id',
-        'description',
+        'name',
+        'unsatisfactory',
+        'satisfactory',
+        'good',
+        'excellent',
+        'criteria_type',
         'state',
     ];
 
-    /**
-     * Os atributos que devem ser convertidos para tipos nativos.
-     * Isso garante que o 'state' sempre seja true/false no PHP.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'state' => 1,
-    ];
-
-    // No futuro, se um Critério pertencer a alguma outra coisa
-    // (ex: um Curso), você definiria o relacionamento aqui.
-    // Exemplo:
-    // public function course()
-    // {
-    //     return $this->belongsTo(Course::class);
-    // }
+    public function axes()
+    {
+        return $this->belongsToMany(Axis::class, 'axis_criterion', 'criteria_id', 'axis_id');
+    }
 }

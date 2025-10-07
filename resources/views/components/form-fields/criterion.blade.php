@@ -9,23 +9,32 @@
             <p class="text-red-600 text-sm" x-text="errors.name[0]"></p>
         </template>
     </div>
-
-    {{-- Descrição do Critério --}}
+    {{-- Descrição de Excelente --}}
     <div class="mt-4">
-        <x-label for="description" value="Descrição (opcional)"/>
-        {{-- Usamos <textarea> para descrições que podem ser mais longas --}}
-        <textarea id="description" autocomplete="off" class="w-full rounded border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm"
-                  placeholder="Detalhes sobre o que este critério avalia..." x-model="description"
-                  rows="4"></textarea>
-        <template x-if="errors.description">
-            <p class="text-red-600 text-sm" x-text="errors.description[0]"></p>
-        </template>
+        <x-label for="excellent" value="Descrição de excelente"/>
+        <textarea id="excellent" x-model="excellent" class="w-full rounded border-gray-300"
+                  placeholder="Detalhes sobre excelente..." rows="2"></textarea>
     </div>
 
-    <template x-if="edit && (created_at || updated_at)">
-        <div class="mt-5">
-            <p class="text-sm text-gray-800" x-text="created_at"></p>
-            <p class="text-sm text-gray-800" x-text="updated_at"></p>
-        </div>
-    </template>
+    {{-- Descrição de Bom --}}
+    <div class="mt-4">
+        <x-label for="good" value="Descrição de bom"/>
+        <textarea id="good" x-model="good" class="w-full rounded border-gray-300"
+                  placeholder="Detalhes sobre bom..." rows="2"></textarea>
+    </div>
+
+    {{-- Descrição de satisfactory --}}
+    <div class="mt-4">
+        <x-label for="satisfactory" value="Descrição de satisfatório"/>
+        <textarea id="satisfactory" x-model="satisfactory" class="w-full rounded border-gray-300"
+                  placeholder="Detalhes sobre satisfatório..." rows="2"></textarea>
+    </div>
+
+    {{-- Descrição de Insatisfatório --}}
+    <div class="mt-4">
+        <x-label for="unsatisfactory" value="Descrição de insatisfatório"/>
+        <textarea id="unsatisfactory" x-model="unsatisfactory" class="w-full rounded border-gray-300"
+                  placeholder="Detalhes sobre insatisfatório..." rows="2"></textarea>
+    </div>
+
 </div>

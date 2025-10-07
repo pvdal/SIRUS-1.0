@@ -15,15 +15,15 @@
             <x-custom-banner/>
             {{-- Formulário de Critério --}}
             <div>
-                {{-- Você precisará criar este componente de formulário --}}
+                {{-- Componente de formulário do Critério--}}
                 <x-form-fields.criterion/>
             </div>
         </x-slot>
 
         <x-slot name="footer">
             <x-secondary-button type="button" x-bind:disabled="saving"
-                                x-on:click="
-                    saveCriterion();
+                x-on:click="
+                    saveCriterion;
                     $el.blur();
                 "
             >
@@ -88,15 +88,19 @@
     </x-warning-modal>
 
     <div class="py-5 px-2 rounded-sm">
+
         {{-- Tabela de registros de critérios --}}
         <table class="min-w-full border border-gray-300 divide-y divide-gray-200 rounded-sm">
             <thead class="bg-gray-100">
-            <tr>
-                <th class="px-4 py-2 text-center text-gray-700">Nome</th>
-                <th class="px-4 py-2 text-center text-gray-700 hidden md:table-cell">Descrição</th>
-                <th class="px-4 py-2 text-center text-gray-700 hidden sm:table-cell">Estado</th>
-                <th class="px-4 py-2 text-center text-gray-700">Ações</th>
-            </tr>
+                <tr>
+                    <th class="px-4 py-2 text-center text-gray-700">Nome</th>
+                    <th class="px-4 py-2 text-center text-gray-700 hidden md:table-cell">Insatisfatório</th>
+                    <th class="px-4 py-2 text-center text-gray-700 hidden md:table-cell">Satisfatório</th>
+                    <th class="px-4 py-2 text-center text-gray-700 hidden md:table-cell">Bom</th>
+                    <th class="px-4 py-2 text-center text-gray-700 hidden md:table-cell">Excelente</th>
+                    <th class="px-4 py-2 text-center text-gray-700 hidden sm:table-cell">Estado</th>
+                    <th class="px-4 py-2 text-center text-gray-700">Ações</th>
+                </tr>
             </thead>
             <tbody class="bg-white">
             <template x-for="criterion in [...newCriteria, ...criteria]" :key="criterion.id">
@@ -106,7 +110,10 @@
                     x-transition:enter-end="opacity-100 transform scale-100 translate-y-0"
                 >
                     <td class="px-4 py-2 border text-center border-gray-300" x-text="criterion.name"></td>
-                    <td class="px-4 py-2 border text-center border-gray-300 hidden md:table-cell" x-text="criterion.description || '-'"></td>
+                    <td class="px-4 py-2 border text-center border-gray-300 hidden md:table-cell truncate max-w-[200px]" :title="criterion.unsatisfactory" x-text="criterion.unsatisfactory || '-'"></td>
+                    <td class="px-4 py-2 border text-center border-gray-300 hidden md:table-cell truncate max-w-[200px]" :title="criterion.satisfactory" x-text="criterion.satisfactory || '-'"></td>
+                    <td class="px-4 py-2 border text-center border-gray-300 hidden md:table-cell truncate max-w-[200px]" :title="criterion.good" x-text="criterion.good || '-'"></td>
+                    <td class="px-4 py-2 border text-center border-gray-300 hidden md:table-cell truncate max-w-[200px]" :title="criterion.excellent" x-text="criterion.excellent || '-'" ></td>
                     <td class="px-4 py-2 border text-center border-gray-300 hidden sm:table-cell" x-text="criterion.state ? 'Ativo' : 'Inativo'"></td>
                     <td class="px-4 py-2 border text-center border-gray-300">
                         <template x-if="criterion.state">
