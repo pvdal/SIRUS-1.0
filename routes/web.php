@@ -5,20 +5,20 @@ use App\Http\Controllers\CriteriaController;
 use App\Http\Controllers\RubricController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Legal\LegalController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\PaperController;
+use App\Http\Controllers\EventController;
 // Coordenação
 use App\Http\Controllers\CommitteeController;
 use App\Http\Controllers\CoordinatorController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EvaluationController;
-use App\Http\Controllers\EventController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\ProfessorController;
 use App\Http\Controllers\StudentController;
+// Rotas nativas de token de API pública
 use Laravel\Jetstream\Jetstream;
 use Laravel\Jetstream\Http\Controllers\Livewire\ApiTokenController;
-
+// use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 
 // Rota para homePage
@@ -95,7 +95,7 @@ Route::middleware([
     Route::get('/evaluation/axis', [AxisController::class, 'index'])->name('evaluation.axis-table');
     Route::get('/evaluation/rubric', [RubricController::class, 'index'])->name('evaluation.rubric-table');
 
-    // Operações CRUD das tabelas e cards
+    // Operações CRUD das tabelas e cards -> API privada
     Route::prefix(config('secure.request_prefix')) // todas as rotas dentro desse grupo possuem o prefixo definido no.env
     ->middleware('secure.ajax') // middleware que traz camadas a mais de seguranças nas requisições ajax
     ->group(function () {

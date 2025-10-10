@@ -4,7 +4,7 @@
     </x-slot>
 
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-dark leading-tight">
+        <h2 class="font-semibold text-xl leading-tight">
             {{ __('Cursos cadastrados') }}
         </h2>
     </x-slot>
@@ -15,23 +15,36 @@
         <div x-data="coursesData()"
              x-init='init(@json($courses), @json($coordinators), {{ $page}}, {{ $totalPages}})'>
             {{-- Menu utilitário das tabelas --}}
-            <x-actions-table-bar
-                :primaryAction="['label' => 'Cadastrar Curso', 'method' => 'showCreateModal']"
-                :clearAction="['label' => 'Limpar filtros', 'method' => 'clearFields()']"
-                :searchModel="'searchTerm'"
-                :statusFilter="'statusFilter'"
-                :registerPeriod="'registerPeriod'"
-                :loadFunction="'loadCourses()'"
-                :class="'md:justify-start'"
-            />
+            <template x-if="courses">
+                <x-actions-table-bar
+                    :primaryAction="['label' => 'Cadastrar Curso', 'method' => 'showCreateModal']"
+                    :clearAction="['label' => 'Limpar filtros', 'method' => 'clearFields()']"
+                    :searchModel="'searchTerm'"
+                    :search-placeholder="'Buscar cursos...'"
+                    :statusFilter="'statusFilter'"
+                    :registerPeriod="'registerPeriod'"
+                    :loadFunction="'loadCourses()'"
+                    :class="'md:justify-start'"
+                />
+            </template>
             {{-- Componente com o conteúdo que o alpine vai manipular --}}
-            <x-management.courses-content/>
+            <template x-if="courses">
+                <x-management.courses-content/>
+            </template>
+            {{-- Div exibida enquanto os dados não chegam no front --}}
+            <x-feedback.loading/>
+            {{-- Div exibida caso não haja registros no banco --}}
+            <template x-if="isEmpty && !loading">
+                <x-feedback.empty-state :model="['curso', 'cursos']"/>
+            </template>
             {{-- Paginação --}}
-            <x-management.pagination
-                :page-var="'page'"
-                :total-pages="'totalPages'"
-                :load-function="'loadCourses'"
-            />
+            <template x-if="page">
+                <x-feedback.pagination
+                    :page-var="'page'"
+                    :total-pages="'totalPages'"
+                    :load-function="'loadCourses'"
+                />
+            </template>
         </div>
     </x-main-content>
 </x-app-layout>

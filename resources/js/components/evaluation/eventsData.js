@@ -1,15 +1,15 @@
-export default function eventsData() {
+export function eventsData() {
     return {
         showModal: false,
         showCreateModal: false,
         showEvaluationModal: false,
         edit: false,
         showWarningModal: false,
-        committees: [],
+        events: [],
         belongsTo: false,
         // Campos do formulário
-        committeeId: '',
-        committeeTitle: '',
+        eventId: '',
+        eventTitle: '',
         group: '',
         paper: '',
         members: [],
@@ -23,34 +23,43 @@ export default function eventsData() {
             dateStart: '',
             dateEnd: '',
         },
-        // Variáveis de estado das requisições
         errors: {},
+        // Variáveis de estado das requisições
+        empty: {
+            data: false,
+            result: false,
+        },
+        get isEmpty() {
+            // retorna true apenas quando quiser considerar como "vazio"
+            return this.empty.result || this.empty.data;
+        },
         saving: false,
+        loading: false,
         showBanner: false,
         style: '',
         message: '',
         warningType: '',
         warningContent: '',
 
-        init(committees) {
-            this.committees = committees;
-
+        init(events) {
+            this.events = events;
+            // Escuta os despachos do calendar.js para cadastro
             window.addEventListener('open-create-modal', e => {
-                if(!window.userPermissions.canManageEvents) return;
+                if(!window.userPermissions.canManageEvents) return; // Se usuário sem permissão, aborta
 
                 this.showCreateModal = true;
                 this.show(e,'create');
             });
-
+            // Escuta os despachos do calendar.js para visualização e atualização
             window.addEventListener('open-evaluation-modal', e => {
                 this.showEvaluationModal = true;
                 this.show(e,'update');
             });
+            // Observa o id do evento para preencher os campos reativamente com os seus dados
+            this.$watch('eventId', (value) => {
+                if(!window.userPermissions.canManageEvents || !this.showCreateModal) return; // Se usuário sem permissão, ou o modal ativo é de avaliação, aborta
 
-            this.$watch('committeeId', (value) => {
-                if(!window.userPermissions.canManageEvents || !this.showCreateModal) return;
-
-                this.committeeTitle = '';
+                this.eventTitle = '';
                 this.group = '';
                 this.paper = '';
                 this.members = [];
@@ -58,7 +67,7 @@ export default function eventsData() {
                     this.fillCommitteeFields(value);
                 }
             });
-
+            // Reinicia os campos e estados dos modais
             this.$watch('showModal', (value) => {
                 if (!value) {
                     this.clearFields('create');
@@ -69,21 +78,21 @@ export default function eventsData() {
                 }
             });
         },
-
+        // Mostra os eventos marcados e ainda não marcados
         show(e,type) {
-                this.$nextTick(() => {
-                    if(type === 'create') {
-                        this.committeeId = e.detail.id;
-                    } else if(type === 'update') {
-                        this.committeeId = e.detail.id;
-                        this.committeeTitle = e.detail.title;
-                        this.group = e.detail.group;
-                        this.paper = e.detail.paper;
-                        this.members = e.detail.members;
+            this.$nextTick(() => {
+                if(type === 'create') {
+                    this.eventId = e.detail.id;
+                } else if(type === 'update') {
+                    this.eventId = e.detail.id;
+                    this.eventTitle = e.detail.title;
+                    this.group = e.detail.group;
+                    this.paper = e.detail.paper;
+                    this.members = e.detail.members;
 
-                        this.belongsTo = e.detail.members.some(m => m.belongsTo === true);
-                    }
-                });
+                    this.belongsTo = e.detail.members.some(m => m.belongsTo === true);
+                }
+            });
 
             this.dateStart = e.detail.dateStart ? e.detail.dateStart.toISOString().split('T')[0] : null;
             this.dateEnd = e.detail.dateEnd ? e.detail.dateEnd.toISOString().split('T')[0] : null;
@@ -96,14 +105,14 @@ export default function eventsData() {
             this.initialDate.dateEnd = this.dateEnd;
             this.showModal = true;
         },
-
+        // Preenche os campos do modal
         fillCommitteeFields(id) {
             if(!window.userPermissions.canManageEvents) return;
-            const committee = this.committees.find(c => c.id === parseInt(id, 10)); // força para número
+            const committee = this.events.find(c => c.id === parseInt(id, 10)); // força para número
 
             if(committee) {
                 this.$nextTick(() => {
-                    this.committeeTitle = committee.title;
+                    this.eventTitle = committee.title;
                     this.group = committee.group;
                     this.paper = committee.paper;
                     this.members = committee.members;
@@ -112,7 +121,7 @@ export default function eventsData() {
         },
 
         async saveEvent() {
-            if (!this.committeeId) {
+            if (!this.eventId) {
                 this.showMessage('warning', 'Nenhum evento selecionado para atualizar!');
                 return;
             }
@@ -120,7 +129,7 @@ export default function eventsData() {
             if(!window.userPermissions.canManageEvents) return;
 
             let update = this.edit;
-            let id = this.committeeId;
+            let id = this.eventId;
 
             const savedData = await saveData({
                 url: `/events/${id}/update`,
@@ -137,6 +146,11 @@ export default function eventsData() {
                 clearFields: !update,
             });
 
+            if(!update && savedData?.success) {
+                const filtered = this.events.filter(e => e.id !== parseInt(id, 10));
+                this.events.splice(0, this.events.length, ...filtered);
+            }
+
             window.dispatchEvent(new CustomEvent('reload-calendar', {
                 detail: {
                     reload: true,
@@ -152,11 +166,11 @@ export default function eventsData() {
                 this.showBanner = false;
             }, 3000);
         },
-
+        // Limpa/reinicia os campos
         clearFields(type) {
             clearComponentData(this, type, [
-                'committeeId',
-                'committeeTitle',
+                'eventId',
+                'eventTitle',
                 'group',
                 'paper',
                 'members',

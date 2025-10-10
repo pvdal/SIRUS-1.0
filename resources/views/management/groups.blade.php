@@ -24,31 +24,44 @@
                 paperUrl = '';
                 $dispatch('toggle-paper', false);
         "
-        x-init='init(@json($groups), @json($courses), {{ $page }}, {{ $totalPages}})'
+        x-init='init(@json($groups), @json($courses), {{ $page }}, {{ $totalPages }})'
     >
         {{-- Grupos cadastrados --}}
         <template x-if="showGroupCards">
             <x-main-content>
                 {{-- Menu utilitário das tabelas --}}
-                <x-actions-table-bar
-                    :primary-action="['label' => 'Cadastrar grupo', 'method' => 'showCreateModal']"
-                    :clear-action="['label' => 'Limpar filtros', 'method' => 'clearFields()']"
-                    :search-model="'searchTerm'"
-                    :status-filter="'statusFilter'"
-                    :register-period="'registerPeriod'"
-                    :load-function="'loadGroups()'"
-                    :class="'md:justify-start'"
-                />
+                <template x-if="groups">
+                    <x-actions-table-bar
+                        :primary-action="['label' => 'Cadastrar grupo', 'method' => 'showCreateModal']"
+                        :clear-action="['label' => 'Limpar filtros', 'method' => 'clearFields()']"
+                        :search-model="'searchTerm'"
+                        :search-placeholder="'Buscar grupos...'"
+                        :status-filter="'statusFilter'"
+                        :register-period="'registerPeriod'"
+                        :load-function="'loadGroups()'"
+                        :class="'md:justify-start'"
+                    />
+                </template>
                 {{-- Componente com o conteúdo --}}
-                <x-management.groups-content
-                    :courses="$courses"
-                />
+                <template x-if="groups">
+                    <x-management.groups-content
+                        :courses="$courses"
+                    />
+                </template>
+                {{-- Div exibida enquanto os dados não chegam no front --}}
+                <x-feedback.loading/>
+                {{-- Div exibida caso não haja registros no banco --}}
+                <template x-if="isEmpty && !loading">
+                    <x-feedback.empty-state :model="['grupo', 'grupos']"/>
+                </template>
                 {{-- Paginação --}}
-                <x-management.pagination
-                    :page-var="'page'"
-                    :total-pages="'totalPages'"
-                    :load-function="'loadGroups'"
-                />
+                <template x-if="page">
+                    <x-feedback.pagination
+                        :page-var="'page'"
+                        :total-pages="'totalPages'"
+                        :load-function="'loadGroups'"
+                    />
+                </template>
             </x-main-content>
         </template>
         {{-- Trabalhos cadastrados --}}

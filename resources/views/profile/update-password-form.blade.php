@@ -26,7 +26,7 @@
             <x-input-error for="password_confirmation" class="mt-2" />
         </div>
         <div class="col-span-6 sm:col-span-4">
-            <p class="block font-medium text-sm text-secondary-blue">A senha deve conter pelo menos um símbolo uma letra maiúscula e uma letra minúscula.</p>
+            <p class="block font-medium text-sm text-secondary-blue dark:text-blue-400">A senha deve conter pelo menos um símbolo uma letra maiúscula e uma letra minúscula.</p>
         </div>
     </x-slot>
 

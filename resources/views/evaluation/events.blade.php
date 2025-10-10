@@ -4,8 +4,8 @@
     </x-slot>
 
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Agenda de avaliação') }}
+        <h2 class="font-semibold text-xl text-dark leading-tight">
+            {{ __('Bancas agendadas') }}
         </h2>
     </x-slot>
 
@@ -13,8 +13,13 @@
     <x-main-content>
         {{-- Chamada da função alpine -> recources/js/components/evaluation/eventsData.js--}}
         <div x-data="eventsData()"
-             x-init='init(@json($committees))'>
-            <x-evaluation.events-content/>
+             x-init='init(@json($events))'>
+            {{-- Componente com o conteúdo que o alpine vai manipular --}}
+            <template x-if="events">
+                <x-evaluation.events-content/>
+            </template>
+            {{-- Div exibida enquanto os dados não chegam no front --}}
+            <x-feedback.loading/>
         </div>
     </x-main-content>
 </x-app-layout>

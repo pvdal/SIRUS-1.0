@@ -54,7 +54,14 @@ export function groupsData() {
         isLoadingPdf: true,
         // Variáveis de estado das tabelas
         loading: false,
-        empty: false,
+        empty: {
+            data: false,
+            result: false,
+        },
+        get isEmpty() {
+            // retorna true apenas quando quiser considerar como "vazio"
+            return this.empty.result || this.empty.data;
+        },
         page: 1,
         totalPage: 1,
         // Variáveis usadas na pesquisa de alunos no modal de cadastro
@@ -111,7 +118,7 @@ export function groupsData() {
             this.page = page;
             this.totalPages = totalPages;
             // Se a array vier vazia ou o objeto recebido não for array, o usuário terá como retorno que não há registros
-            this.empty = !Array.isArray(groups) || groups.length === 0;
+            this.empty.data = !Array.isArray(groups) || groups.length === 0;
 
             // Evento de escuta para a busca de alunos para cadastro no grupo
             this.$watch('searchStudent', (value) => {
@@ -278,6 +285,8 @@ export function groupsData() {
                 this.groups = response.data.data;
                 this.page = response.data.page;
                 this.totalPages = response.data.totalPages;
+
+                this.empty.result = !this.groups.length;
             } catch (error) {
                 if(error.response){
                     this.errors.load = error.response.data.message || 'Erro ao carregar os dados.';

@@ -2,7 +2,7 @@
 
 <div>
     @if($type === 'create')
-        <template x-if="committees.length < 1">
+        <template x-if="events.length < 1">
             <div class="rounded-xl bg-secondary-blue p-2 px-4">
                 <h3 class="block font-medium text-sm text-white">
                     Não há bancas sem datas definidas.
@@ -15,122 +15,125 @@
         <x-label for="id" value="ID da banca"/>
         <input
             id="id"
-            type="number"
-            x-model="committeeId"
-            :disabled="@cannot('manage-events') true @else committees.length < 1 @endcannot"
-            class="w-full border-gray-300 focus:border-secondary-blue focus:ring-secondary-blue rounded-md shadow-sm mt-1"
+            type="text"
+            @input="eventId = eventId.replace(/\D/g,'')"
+            x-model="eventId"
+            :disabled="{{ Gate::denies('manage-events') ? 'true' : ($type === 'evaluation' ? 'true' : 'events.length < 1') }}"
+            :readonly="{{ Gate::denies('manage-events') ? 'true' : ($type === 'evaluation' ? 'true' : 'false') }}"
+            class="w-full border-gray-300 focus:border-secondary-blue focus:ring-secondary-blue rounded-md shadow-sm mt-1 dark:bg-gray-800 dark:text-gray-200 dark:placeholder-gray-300 transition duration-150 ease-in-out"
             placeholder="ID da banca"
-            @cannot('manage-events') readonly @endcannot
         />
     </div>
 
     @if($type === 'create')
         <div class="mt-4">
-            <x-label for="committee_id" value="Bancas"/>
-            <select id="committee_id" class="w-full rounded border-gray-300" x-model="committeeId" >
+            <x-label for="event_id" value="Bancas"/>
+            <x-select id="event_id" x-model="eventId" class="w-full mt-1" >
                 <option value="" selected>Selecione uma banca</option>
-                <template x-for="committee in committees" :key="committee.id">
+                <template x-for="event in events" :key="event.id">
                     <option
-                        :value="committee.id"
-                        x-text="committee.title ?? '-'">
+                        :value="event.id"
+                        x-text="event.title ?? '-'">
                     </option>
                 </template>
-            </select>
-            <template x-if="errors.committeeId">
-                <p class="text-red-600 text-sm" x-text="errors.committeeId[0]"></p>
+            </x-select>
+            <template x-if="errors.eventId">
+                <x-form-fields.field-error x-text="errors.eventId[0]"/>
             </template>
         </div>
     @else
         <div class="mt-4">
             <x-label for="name" value="Nome da banca"/>
-            <x-input id="name" type="text" class="w-full"
-                     placeholder="Nome da banca" x-model="committeeTitle"
+            <x-input id="name" type="text" class="w-full mt-1"
+                     placeholder="Nome da banca" x-model="eventTitle"
                      readonly disabled/>
         </div>
     @endif
 
     <div class="mt-4">
         <x-label for="group" value="Nome do grupo"/>
-        <x-input id="name" type="text" class="w-full"
+        <x-input id="name" type="text" class="w-full mt-1"
                  placeholder="Nome do grupo" x-model="group"
                  readonly disabled/>
     </div>
 
     <div class="mt-4">
         <x-label for="paper" value="Título do trabalho"/>
-        <x-input id="name" type="text" class="w-full"
+        <x-input id="name" type="text" class="w-full mt-1"
                  placeholder="Título do trabalho" x-model="paper"
                  readonly disabled/>
     </div>
 
     {{-- Membros da banca --}}
-    <div x-show="members.length >0 " class="mt-4">
-        <h4 class="font-semibold">Membros da banca:</h4>
-        <ul class="space-y-1 mt-2">
-            <template x-for="member in members" :key="member.user_id">
-                <li class="flex items-center justify-between bg-gray-100 p-2 rounded">
-                    <span>
-                        <span x-text="(member.name ?? 'Sem nome') + ' - ' + (member.member_type?.name ?? 'Sem função')"></span>
-                    </span>
-                </li>
-            </template>
-        </ul>
-    </div>
+    <x-form-fields.selected-list
+        :title="'Membros da banca:'"
+        :list="'members'"
+        :key="'user_id'"
+    >
+        <span>
+            <span x-text="(item.name ?? 'Sem nome') + ' - ' + (item.member_type?.name ?? 'Sem função')"></span>
+        </span>
+    </x-form-fields.selected-list>
+
 
     {{-- Definição de data --}}
-    <div class="flex flex-wrap gap-2 justify-center xs:justify-between mt-4">
-        <fieldset class="max-w-[50%]">
-            <legend class="text-sm font-medium w-full text-center xs:text-start">Data/hora inicial</legend>
-            <div class="flex flex-col xs:flex-row items-center gap-2">
-                <div>
-                    <input
-                        type="date"
-                        class="w-full border-gray-300 focus:border-secondary-blue focus:ring-secondary-blue rounded-md shadow-sm mt-1"
-                        x-model="dateStart"
-                        :disabled="(showEvaluationModal && !edit) || (showCreateModal && committees.length < 1)"/>
+    <div class="flex flex-wrap sm:flex-nowrap gap-4 justify-center xs:justify-between mt-4">
+        <fieldset class="flex justify-center w-1/2">
+            <div>
+                <legend class="text-sm font-medium w-full text-center xs:text-start">Data/hora inicial</legend>
+                <div class="flex flex-col xs:flex-row items-center gap-2 mt-1">
+                    <div>
+                        <x-input
+                            type="date"
+                            class="w-full text-center"
+                            x-model="dateStart"
+                            x-bind:disabled="(showEvaluationModal && !edit) || (showCreateModal && events.length < 1)"/>
+                    </div>
+                    <div>
+                        <x-input
+                            type="time"
+                            step="1"
+                            class="w-full text-center"
+                            x-model="timeStart"
+                            x-bind:disabled="(showEvaluationModal && !edit) || (showCreateModal && events.length < 1)"/>
+                    </div>
                 </div>
-                <div>
-                    <input
-                        type="time"
-                        step="1"
-                        class="w-full border-gray-300 focus:border-secondary-blue focus:ring-secondary-blue rounded-md shadow-sm mt-1"
-                        x-model="timeStart"
-                        :disabled="(showEvaluationModal && !edit) || (showCreateModal && committees.length < 1)"/>
-                </div>
+                <template x-if="errors?.dateStart || errors?.timeStart">
+                    <div class="flex flex-wrap">
+                        <x-form-fields.field-error x-text="errors.dateStart?.[0]"/>
+                        <x-form-fields.field-error x-text="errors.timeStart?.[0]"/>
+                    </div>
+                </template>
             </div>
-            <template x-if="errors?.dateStart || errors?.timeStart">
-                <div class="flex flex-wrap">
-                    <p class="text-red-600 text-sm" x-text="errors.dateStart?.[0]"></p>
-                    <p class="text-red-600 text-sm" x-text="errors.timeStart?.[0]"></p>
-                </div>
-            </template>
         </fieldset>
 
-        <fieldset class="max-w-[50%]">
-            <legend class="text-sm font-medium w-full text-center xs:text-start">Data/hora final</legend>
-            <div class="flex flex-col xs:flex-row items-center gap-2">
-                <div>
-                    <input
-                        type="date"
-                        class="w-full border-gray-300 focus:border-secondary-blue focus:ring-secondary-blue rounded-md shadow-sm mt-1"
-                        x-model="dateEnd"
-                        :disabled="(showEvaluationModal && !edit) || (showCreateModal && committees.length < 1)"/>
+        <fieldset class="flex justify-center w-1/2">
+            <div>
+                <legend class="text-sm font-medium w-full text-center xs:text-start">Data/hora final</legend>
+                <div class="flex flex-col xs:flex-row items-center gap-2 mt-1">
+                    <div>
+                        <x-input
+                            type="date"
+                            class="w-full text-center"
+                            x-model="dateEnd"
+                            x-bind:disabled="(showEvaluationModal && !edit) || (showCreateModal && events.length < 1)"/>
+                    </div>
+                    <div>
+                        <x-input
+                            type="time"
+                            step="1"
+                            class="w-full text-center"
+                            x-model="timeEnd"
+                            x-bind:disabled="(showEvaluationModal && !edit) || (showCreateModal && events.length < 1)"/>
+                    </div>
                 </div>
-                <div>
-                    <input
-                        type="time"
-                        step="1"
-                        class="w-full border-gray-300 focus:border-secondary-blue focus:ring-secondary-blue rounded-md shadow-sm mt-1"
-                        x-model="timeEnd"
-                        :disabled="(showEvaluationModal && !edit) || (showCreateModal && committees.length < 1)"/>
-                </div>
+                <template x-if="errors?.dateEnd || errors?.timeEnd">
+                    <div class="flex flex-wrap">
+                        <x-form-fields.field-error x-text="errors.dateEnd?.[0]"/>
+                        <x-form-fields.field-error x-text="errors.timeEnd?.[0]"/>
+                    </div>
+                </template>
             </div>
-            <template x-if="errors?.dateEnd || errors?.timeEnd">
-                <div class="flex flex-wrap">
-                    <p class="text-red-600 text-sm" x-text="errors.dateEnd?.[0]"></p>
-                    <p class="text-red-600 text-sm" x-text="errors.timeEnd?.[0]"></p>
-                </div>
-            </template>
         </fieldset>
     </div>
 </div>

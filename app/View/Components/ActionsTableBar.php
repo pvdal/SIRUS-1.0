@@ -8,14 +8,14 @@ use Illuminate\View\Component;
 
 class ActionsTableBar extends Component
 {
-    public $primaryAction;
-    public $clearAction;
-    public $searchModel;
-    public $searchPlaceholder;
-    public $statusFilter;
-    public $registerPeriod;
+    public mixed $primaryAction;
+    public mixed $clearAction;
+    public mixed $searchModel;
+    public mixed $searchPlaceholder;
+    public mixed $statusFilter;
+    public mixed $registerPeriod;
 
-    public $loadFunction;
+    public mixed $loadFunction;
     /**
      * Create a new component instance.
      */

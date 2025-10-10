@@ -34,7 +34,7 @@ class CoordinatorController extends Controller
         // Faz uma query no banco trazendo 15 registros paginados
         $coordinators = Coordinator::with(
             'user:id,name,email,state,updated_at,created_at'
-        )->orderBy('id')->paginate(15);
+        )->orderBy('id')->paginate(30);
         // Pega a coleção paginada que retornou da query acima e mapeia com chaves amigáveis
         $coordinatorsData = $coordinators->getCollection()->map(function ($coordinator) {
             return [
@@ -96,7 +96,7 @@ class CoordinatorController extends Controller
         #endregion
 
         //paginação dos dados que vieram do banco
-        $coordinators = $query->paginate(15);
+        $coordinators = $query->paginate(30);
         //Log::info('Queries executadas:', DB::getQueryLog());
 
         // Mapeia para retornar somente os campos necessários com chaves amigáveis

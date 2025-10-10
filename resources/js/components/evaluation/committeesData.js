@@ -54,7 +54,14 @@ export function committeesData() {
         isLoadingPdf: true,
         // Variáveis de estado das tabelas
         loading: false,
-        empty: false,
+        empty: {
+            data: false,
+            result: false,
+        },
+        get isEmpty() {
+            // retorna true apenas quando quiser considerar como "vazio"
+            return this.empty.result || this.empty.data;
+        },
         page: 1,
         totalPage: 1,
         // Variáveis usadas na pesquisa de alunos no modal de cadastro
@@ -93,7 +100,7 @@ export function committeesData() {
             this.academicStaff = academicStaff;
             this.page = page;
             this.totalPages = totalPages;
-            this.empty = !Array.isArray(committees) || committees.length === 0;
+            this.empty.data = !Array.isArray(committees) || committees.length === 0;
             /*this.$watch('searchTerm', (value) => {
                 if(!value) {
                     this.loadCommittees();
@@ -175,47 +182,6 @@ export function committeesData() {
             }, 200); // debounce
         },
 
-        /*
-        // Busca de membros
-        searchMembers() {
-            if (this.searchTimeout) clearTimeout(this.searchTimeout);
-
-            this.searchTimeout = setTimeout(() => {
-                if (!this.showCreateModal) {
-                    // Se modal fechado, cancela a busca
-                    this.filteredMembers = [];
-                    this.searching = false;
-                    this.showNoMembersMsg = false;
-                    return;
-                }
-
-                const term = this.searchMember.trim().toLowerCase();
-                if (!term) {
-                    this.filteredMembers = [];
-                    return;
-                }
-
-                this.searching = true;
-                this.showNoMembersMsg = true;
-
-                try {
-                    // Busca local no array students
-                    this.filteredMembers = this.academicStaff.filter(member =>
-                        (
-                            member.name?.toLowerCase().includes(term) ||
-                            String(member.id).toLowerCase().includes(term) // pesquisa também pelo ID
-                        ) &&
-                        !this.members.some(m => m.id === String(member.id)) // não repete os já adicionados
-                    );
-                } catch (error) {
-                    console.error('Erro ao buscar professores:', error);
-                } finally {
-                    this.searching = false;
-                }
-            }, 100); // debounce
-        },
-         */
-
         // Adiciona membros
         addMember(member) {
             if (!this.member_type_id) {
@@ -284,6 +250,8 @@ export function committeesData() {
                 this.committees = response.data.data;
                 this.page = response.data.page;
                 this.totalPages = response.data.totalPages;
+
+                this.empty.result = !this.committees.length;
             } catch (error) {
                 if(error.response){
                     this.errors.load = error.response.data.message || 'Erro ao carregar os dados.';

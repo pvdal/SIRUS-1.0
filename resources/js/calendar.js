@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
         navLinks: true, // Clicar nos eventos
         selectable: window.userPermissions.canManageEvents, // Selecionar uma área
         selectMirror: window.userPermissions.canManageEvents, // Indicar visualmente a área selecionada antes de confirmar
-        longPressDelay: 100,
+        longPressDelay: 1000,
         editable: true, // Permite redimensionar e arrastar eventos,
 
         locale: ptBrLocale, // Linguagem: portugês
@@ -148,7 +148,18 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     }
 
+    window.addEventListener('resize', () => {
+        enforceViewByWidth();
+        calendar.updateSize();
+    });
 
+    window.addEventListener('reload-calendar', (e) => {
+        if(e.detail.reload) {
+            calendar.refetchEvents();
+        }
+    })
+
+    calendar.render();
 
     // Forçar view com base na largura da tela
     function enforceViewByWidth() {
@@ -179,19 +190,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     }
-
-    window.addEventListener('resize', () => {
-        enforceViewByWidth();
-        calendar.updateSize();
-    });
-
-    window.addEventListener('reload-calendar', (e) => {
-        if(e.detail.reload) {
-            calendar.refetchEvents();
-        }
-    })
-
     // Executa uma vez no load
     enforceViewByWidth();
-    calendar.render();
 });

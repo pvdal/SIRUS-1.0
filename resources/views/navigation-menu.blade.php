@@ -1,24 +1,28 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+<nav x-data="{ open: false }" class="bg-white border-b border-gray-100 dark:bg-gray-900 dark:border-gray-700 transition duration-150 ease-in-out">
     <!-- Primary Navigation Menu -->
     <div class="max-w-[2100px] mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
-                <div class="shrink-0 flex items-center">
+                <div class="shrink-0 flex items-center relative me-16">
                     <a href="{{ route('calendar') }}">
-                        <x-application-mark size="40" />
+                        <!-- Logo modo claro -->
+                        <x-application-logo
+                            size="40"
+                            class="absolute mt-3 ms-0 inset-0 transform transition-all duration-300 ease-in-out
+                   opacity-100 scale-100 dark:opacity-0 dark:scale-100"
+                        />
+
+                        <!-- Logo modo escuro -->
+                        <x-authentication-card-logo
+                            size="40"
+                            class="absolute mt-3 inset-0 transform transition-all duration-300 ease-in-out
+                   opacity-0 scale-100 dark:opacity-100 dark:scale-100"
+                        />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
-                {{--
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 md:flex">
-                    <x-nav-link href="{{ route('calendar') }}" :active="request()->routeIs('calendar')">
-                        {{ __('Calendar') }}
-                    </x-nav-link>
-                </div>
-                --}}
-
                 <x-nav-options :menuComponent="'nav-link'" :menuClass="'hidden space-x-8 sm:-my-px sm:ms-10 md:flex'"/>
             </div>
 
@@ -80,7 +84,7 @@
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
-                                <button class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
+                                <button class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition duration-150 ease-in-out">
                                     <img class="size-8 rounded-full object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
                                 </button>
                             @else
@@ -132,7 +136,13 @@
 
             <!-- Hamburger -->
             <div class="-me-2 flex items-center md:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+                <button @click="open = ! open"
+                        class="inline-flex items-center justify-center p-2 rounded-md
+                        text-gray-400 hover:text-gray-500 hover:bg-gray-100
+                        focus:outline-none focus:bg-gray-100 focus:text-gray-500
+                        dark:text-gray-300 dark:hover:text-gray-200 dark:hover:bg-gray-700
+                        dark:focus:bg-gray-700 dark:focus:text-gray-200
+                        transition duration-150 ease-in-out">
                     <svg class="size-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />

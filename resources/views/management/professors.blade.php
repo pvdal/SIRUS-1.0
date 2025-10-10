@@ -16,23 +16,36 @@
              x-init='init(@json($professors), {{ $page}}, {{ $totalPages}})'>
             <x-nav-users-table> {{-- Navegação das tabelas de usuário --}}
                 {{-- Menu utilitário das tabelas --}}
-                <x-actions-table-bar
-                    :primary-action="['label' => 'Cadastrar Professor', 'method' => 'showCreateModal']"
-                    :clear-action="['label' => 'Limpar filtros', 'method' => 'clearFields', 'param' => 'filters']"
-                    :search-model="'searchTerm'"
-                    :status-filter="'statusFilter'"
-                    :register-period="'registerPeriod'"
-                    :load-function="'loadProfessors()'"
-                    :class="'md:justify-start'"
-                />
+                <template x-if="professors">
+                    <x-actions-table-bar
+                        :primary-action="['label' => 'Cadastrar Professor', 'method' => 'showCreateModal']"
+                        :clear-action="['label' => 'Limpar filtros', 'method' => 'clearFields', 'param' => 'filters']"
+                        :search-model="'searchTerm'"
+                        :search-placeholder="'Buscar professores...'"
+                        :status-filter="'statusFilter'"
+                        :register-period="'registerPeriod'"
+                        :load-function="'loadProfessors()'"
+                        :class="'md:justify-start'"
+                    />
+                </template>
                 {{-- Componente com o conteúdo que o alpine vai manipular --}}
-                <x-management.professors-content/>
+                <template x-if="professors">
+                    <x-management.professors-content/>
+                </template>
+                {{-- Div exibida enquanto os dados não chegam no front --}}
+                <x-feedback.loading/>
+                {{-- Div exibida caso não haja registros no banco --}}
+                <template x-if="isEmpty && !loading">
+                    <x-feedback.empty-state :model="['professor', 'professores']"/>
+                </template>
                 {{-- Paginação --}}
-                <x-management.pagination
-                    :page-var="'page'"
-                    :total-pages="'totalPages'"
-                    :load-function="'loadProfessors'"
-                />
+                <template x-if="page">
+                    <x-feedback.pagination
+                        :page-var="'page'"
+                        :total-pages="'totalPages'"
+                        :load-function="'loadProfessors'"
+                    />
+                </template>
             </x-nav-users-table>
         </div>
     </x-main-content>

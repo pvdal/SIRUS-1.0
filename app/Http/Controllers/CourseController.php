@@ -34,7 +34,7 @@ class CourseController extends Controller
         // Faz uma query no banco trazendo 15 registros paginados
         $courses = Course::with(
             'coordinator.user:id,name,state'
-        )->orderBy('id')->paginate(15);
+        )->orderBy('id')->paginate(30);
         // Pega a coleção paginada que retornou da query acima e mapeia com chaves amigáveis
         $coursesData = $courses->getCollection()->map(function ($course) {
             return [
@@ -112,7 +112,7 @@ class CourseController extends Controller
         }
         #endregion
 
-        $courses = $query->paginate(15);
+        $courses = $query->paginate(30);
 
         $coordinators = Coordinator::with('user:id,name')
             ->whereHas('user', function ($q) {

@@ -1,6 +1,6 @@
-<nav class="bg-white ">
+<nav class="bg-white rounded-lg border-b border-gray-100 dark:bg-gray-900 dark:border-gray-700 transition duration-150 ease-in-out">
         <!-- Menu padrão (desktop e acima de 300px) -->
-    <div class="max-w-[2100px] mx-auto hidden xxs:block border-b border-gray-200">
+    <div class="max-w-[2100px] mx-auto hidden xxs:block border-b border-gray-100 dark:border-gray-700 transition duration-150 ease-in-out">
         <div class="flex justify-between h-16 w-full">
             <div class="flex">
                 <div class="hidden space-x-8 sm:-my-px xxs:ms-5 xs:ms-10 xxs:flex">

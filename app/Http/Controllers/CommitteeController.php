@@ -170,14 +170,18 @@ class CommitteeController extends Controller
                 $q->whereHas('paper', function ($sub) use ($search) {
                     $sub->where('title', 'like', "%{$search}%");
                 })
-                    ->orWhereHas('members.user', function ($sub) use ($search) {
-                        $sub->where('name', 'like', "%{$search}%");
+                    ->orWhereHas('members', function ($sub) use ($search) {
+                        $sub->whereHas('user', function ($sub2) use ($search) {
+                            $sub2->where('name', 'like', "%{$search}%");
+                        });
                     })
-                    ->orWhereHas('group', function ($sub) use ($search) {
+                    ->orWhereHas('paper.group', function ($sub) use ($search) {
                         $sub->where('theme', 'like', "%{$search}%");
                     })
-                    ->orWhereHas('group.students.user', function ($sub) use ($search) {
-                        $sub->where('name', 'like', "%{$search}%");
+                    ->orWhereHas('paper.group.students', function ($sub) use ($search) {
+                        $sub->whereHas('user', function ($sub2) use ($search) {
+                            $sub2->where('name', 'like', "%{$search}%");
+                        });
                     })
                     ->orWhere('name', 'like', "%{$search}%");
             });

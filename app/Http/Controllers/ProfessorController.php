@@ -35,7 +35,7 @@ class ProfessorController extends Controller
         // Faz uma query no banco trazendo 15 registros paginados
         $professors = Professor::with(
             'user:id,name,email,state,updated_at,created_at'
-        )->orderBy('id')->paginate(15);
+        )->orderBy('id')->paginate(30);
 
         // Pega a coleção paginada que retornou da query acima e mapeia com chaves amigáveis
         $professorsData = $professors->getCollection()->map(function ($professor) {
@@ -98,7 +98,7 @@ class ProfessorController extends Controller
         #endregion
 
         // Transforma a query que recebeu os filtros em objeto paginado
-        $professors = $query->paginate(15);
+        $professors = $query->paginate(30);
         //Log::info('Queries executadas:', DB::getQueryLog());
 
         // Mapeia para retornar somente os campos necessários

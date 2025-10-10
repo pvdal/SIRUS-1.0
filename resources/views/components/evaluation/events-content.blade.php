@@ -51,22 +51,17 @@
             <x-slot name="footer">
                 <template x-if="showCreateModal || edit">
                     <div>
-                        <button
+                        <x-secondary-button
                             x-on:click="
                                 saveEvent;
                                 $el.blur();
                             "
-                            class="
-                                'class' => 'inline-flex items-center justify-center px-4 py-2 bg-secondary-blue border
-                                 border-gray-300 rounded-md font-semibold text-xs text-white uppercase tracking-widest
-                                 shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-secondary-blue
-                                 focus:ring-offset-2 disabled:opacity-60 transition ease-in-out duration-150'
-                            "
-                            :disabled="committees.length < 1 && !edit"
-                            :title="committees.length < 1 && !edit ? 'Não é possível agendar nova data de banca.' : ''"
+
+                            x-bind:disabled="events.length < 1 && !edit"
+                            x-bind:title="events.length < 1 && !edit ? 'Não é possível agendar nova data de banca.' : ''"
                         >
                             Salvar
-                        </button>
+                        </x-secondary-button>
                         <x-danger-button
                             x-on:click="
                                     $el.blur();
@@ -98,7 +93,7 @@
 
     @endcan
     {{-- Professor e aluno --}}
-    @if(!auth()->user()->canManageEvents())
+    @cannot('manage-events')
         <x-custom-modal x-model="showModal">
             <x-slot name="title">
                 @if(auth()->user()->canEvaluate())
@@ -110,7 +105,7 @@
             <x-slot name="content">
                 {{-- Banner de mensagem --}}
                 <x-custom-banner/>
-
+                {{-- Formulário --}}
                 <x-form-fields.event/>
             </x-slot>
 
@@ -136,17 +131,17 @@
                 @endif
             </x-slot>
         </x-custom-modal>
-    @endif
+    @endcannot
 
-    <div class="p-0 border-4 rounded overflow-hidden border-strong-blue">
-        <div class="bg-primary-blue bg-blend-darken">
-            <h1 class="text-center text-white border-b border-gray-600 pb-5 p-4 text-base sm:text-lg md:text-2xl lg:text-3xl">
+    <div class="p-0 border-2 rounded-lg overflow-hidden border-strong-blue">
+        <div class="bg-primary-blue bg-blend-darken transition duration-150 ease-in-out">
+            <h1 class="text-center text-gray-100 uppercase border-b border-gray-600 dark:border-gray-900 pb-5 p-4 text-base sm:text-lg md:text-2xl lg:text-3xl transition duration-150 ease-in-out">
                 AGENDA DE AVALIAÇÃO DO SIMBAJU
             </h1>
         </div>
         <div class="flex justify-center">
-            <div id="calendar" class="p-4 w-full max-w-4xl">
-                <!-- conteúdo do calendário -->
+            <div id="calendar" class="p-4 w-full max-w-4xl bg-white text-black dark:bg-gray-800 dark:text-gray-300 transition duration-150 ease-in-out">
+                {{-- conteúdo do calendário --}}
             </div>
         </div>
     </div>

@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Committee;
 use App\Utils\TokenGenerator;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Models\Event;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -17,57 +15,69 @@ class EventController extends Controller
     /**
      * @throws RandomException
      */
+    /*
+     * Essa função inicializa a view blade, injetando os registros das bancas ainda sem datas definidas para os
+     * coordenadores realizarem o agendamento. Só recebe esses dados o usuário com nível de acesso 3.
+     */
     public function index(): View
     {
         // Inicializa o DynamicToken
         TokenGenerator::initializeTab();
 
-        $committeesData = [];
-
         if(auth()->user()?->can('manage-events')) {
-            $committees = Committee::with([
-                'paper.group',
-                'members' => function ($query) {
-                    $query->whereHas('user', function ($q) {
-                        $q->where('state', 1);
-                    })->with('user:id,name', 'memberType:id,name');
-                },
-            ])
-                ->where('state', 1)
-                ->whereNull('start')
-                ->whereNull('end')
-                ->get();
-
-            if($committees) {
-                $committeesData = $committees->map(function ($committee) {
-                    $group = $committee->paper?->group;
-                    return [
-                        'id' => (int) $committee->id,
-                        'title' => $committee->name,
-                        'group' => $group->theme,
-                        'paper' => $committee->paper?->title,
-                        'members' => $committee->members
-                            ->map(fn($m) => [
-                                'user_id' => $m->user_id,
-                                'name' => $m->user->name,
-                                'member_type' => [
-                                    'id' => $m->memberType?->id,
-                                    'name' => $m->memberType?->name,
-                                ],
-                            ])->values(),
-                    ];
-                })->values()->toArray();
-            }
+            $eventsData = $this->getEvents();
         }
 
         return view('evaluation.events', [
-            'committees' => $committeesData ?? [],
+            'events' => $eventsData ?? [],
         ]);
     }
 
+    private function getEvents(): array
+    {
+        $eventsData = [];
+
+        $events = Committee::with([
+            'paper.group',
+            'members' => function ($query) {
+                $query->whereHas('user', function ($q) {
+                    $q->where('state', 1);
+                })->with('user:id,name', 'memberType:id,name');
+            },
+        ])
+            ->where('state', 1)
+            ->whereNull('start') // Consulta apenas bancas sem datas definidas
+            ->whereNull('end')
+            ->get();
+
+        if($events) {
+            $eventsData = $events->map(function ($event) {
+                $group = $event->paper?->group;
+                return [
+                    'id' => (int) $event->id,
+                    'title' => $event->name,
+                    'group' => $group->theme,
+                    'paper' => $event->paper?->title,
+                    'members' => $event->members
+                        ->map(fn($m) => [
+                            'user_id' => $m->user_id,
+                            'name' => $m->user->name,
+                            'member_type' => [
+                                'id' => $m->memberType?->id,
+                                'name' => $m->memberType?->name,
+                            ],
+                        ])->values(),
+                ];
+            })->values()->toArray();
+        }
+
+        return $eventsData;
+    }
+
+
     public function show(): JsonResponse
     {
-        $committees = Committee::with([
+        $events = Committee::with([
             'paper.group',
             'members' => function ($query) {
                 $query->whereHas('user', function ($q) {
@@ -75,49 +85,56 @@ class EventController extends Controller
                 })->with('user:id,name', 'memberType:id,name');
             },
         ])->get();
+
         // Ajustar para formato que o FullCalendar espera
-            $data = $committees
-                ->filter(fn($c) => !empty($c->start) && !empty($c->end))
-                ->map(function($committee) {
-                    $start = $committee->start;
-                    $end = $committee->end;
-                    // Verifica se tem hora
-                    $allDay = (substr($start, 11) === '00:00:00' && substr($end, 11) === '00:00:00');
+        $data = $events
+            ->filter(fn($c) => !empty($c->start) && !empty($c->end))
+            ->map(function($event) {
+                $start = $event->start;
+                $end = $event->end;
+                // Verifica se tem hora
+                $allDay = (substr($start, 11) === '00:00:00' && substr($end, 11) === '00:00:00');
 
-                    $group = $committee->paper?->group;
+                $group = $event->paper?->group;
 
-                    return [
-                        'id' => (int) $committee->id,
-                        'title' => $committee->name,
-                        'start' => $start,
-                        'end'   => $end,
-                        'allDay' => $allDay,
-                        'extendedProps' => [
-                            'group' => $group->theme,
-                            'paper' => $committee->paper?->title,
-                            'members' => $committee->members
-                                ->map(fn($m) => [
-                                    'user_id' => $m->user_id,
-                                    'name' => $m->user->name,
-                                    'member_type' => [
-                                        'id' => $m->memberType?->id,
-                                        'name' => $m->memberType?->name,
-                                    ],
-                                    'belongsTo' => $m->user_id === auth()->id(),
-                                ])->values(),
-                        ]
-                    ];
-                });
-
+                return [
+                    'id' => (int) $event->id,
+                    'title' => $event->name,
+                    'start' => $start,
+                    'end'   => $end,
+                    'allDay' => $allDay,
+                    'extendedProps' => [
+                        'group' => $group->theme,
+                        'paper' => $event->paper?->title,
+                        'members' => $event->members
+                            ->map(fn($m) => [
+                                'user_id' => $m->user_id,
+                                'name' => $m->user->name,
+                                'member_type' => [
+                                    'id' => $m->memberType?->id,
+                                    'name' => $m->memberType?->name,
+                                ],
+                                'belongsTo' => $m->user_id === auth()->id(),
+                            ])->values(),
+                    ]
+                ];
+            });
 
         return response()->json($data);
     }
 
+    /*
+     * Essa função atualiza um registro de committees com os campos 'start' e 'end'. Apenas coordenadores tem acesso a
+     * rota que direciona a essa função, e só possível executá-la com sucesso um usuário administrador. Essa função é
+     * usada tanto para agendamento de novas bancas, quando atualização de datas, tanto pelo modal quanto diretamente
+     * pelo calendário.
+     */
     public function update(Request $request, $id): JsonResponse
     {
-
+        // Se o usuário não for administrador, a função aborta execução (403 -> forbidden)
         $this->authorize('manage-events');
 
+        #region Verificações de integridade
         if (!$id) {
             return response()->json([
                 'success' => false,
@@ -125,9 +142,9 @@ class EventController extends Controller
             ], 422);
         }
 
-        $committee = Committee::find($id);
+        $event = Committee::find($id);
 
-        if (!$committee) {
+        if (!$event) {
             return response()->json([
                 'success' => false,
                 'message' => 'Evento não encontrado!',
@@ -135,7 +152,7 @@ class EventController extends Controller
         }
 
         if($request->create) {
-            if ($committee->start !== null || $committee->end !== null) {
+            if ($event->start !== null || $event->end !== null) {
                 return response()->json([
                     'success' => false,
                     'message' => 'A banca já possui data agendada!',
@@ -159,19 +176,21 @@ class EventController extends Controller
                 'message' => 'O horário de término deve ser maior que o horário de início.'
             ], 422);
         }
+        #endregion
 
-        $committee->fill([
+        $event->fill([
             'start' => $start,
             'end'   => $end,
         ]);
 
-        if($committee->isDirty()) {
-            $committee->save();
+        if($event->isDirty()) { // Atualiza apenas em caso de alteração
+            $event->save();
         }
 
         return response()->json([
             'success' => true,
             'message' => 'Data atualizada com sucesso!',
+            'events' => $this->getEvents()
         ]);
     }
 }

@@ -40,7 +40,7 @@ class StudentController extends Controller
             'user:id,name,email,state,updated_at,created_at',
             'group:id,theme,state',
             'course:id,name,state',
-        )->orderBy('ra')->paginate(15);
+        )->orderBy('ra')->paginate(30);
 
         // Dados utilizados para o modal de cadastro e filtros
         $groups = Group::select(['id', 'theme'])->where('state', 1)
@@ -117,7 +117,7 @@ class StudentController extends Controller
         }
         #endregion
 
-        $students = $query->paginate(15);
+        $students = $query->paginate(30);
 
         $groups = Group::select(['id', 'theme'])->where('state', 1)
             ->orderBy('theme', 'asc')->get();
@@ -232,7 +232,7 @@ class StudentController extends Controller
             'course_id' => $request['course_id'],
         ]);
 
-        $student->load('group:id,theme', 'course:id,name');
+        $student->load('group:id,theme,state', 'course:id,name,state');
 
         $user = $student->user;
 
@@ -286,12 +286,14 @@ class StudentController extends Controller
             'group' => [
                 'id' => $student->group->id ?? null,
                 'name' => $student->group->theme ?? '',
+                'state' => (int) $student->group?->state,
             ],
             'course' => [
                 'id' => $student->course->id ?? null,
                 'name' => $student->course->name ?? '',
+                'state' => (int) $student->course?->state,
             ],
-            'state' => (int) $student->user->state,
+            'state' => (int) ($student->user->state ?? 0),
             'created_at' => $student->created_at ?? $user->created_at,
             'updated_at' => $student->updated_at ?? $user->updated_at,
         ];

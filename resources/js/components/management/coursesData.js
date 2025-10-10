@@ -37,7 +37,14 @@ export function coursesData(){
         coordinators: [],
 
         loading: false,
-        empty: false,
+        empty: {
+            data: false,
+            result: false,
+        },
+        get isEmpty() {
+            // retorna true apenas quando quiser considerar como "vazio"
+            return this.empty.result || this.empty.data;
+        },
         page: 1,
         totalPages: 1,
 
@@ -54,13 +61,7 @@ export function coursesData(){
             this.page = page;
             this.totalPages = totalPages;
 
-            this.empty =  this.courses.length === 0;
-
-            /*this.$watch('searchTerm', (value) => {
-                if(!value) {
-                    this.loadCourses();
-                }
-            });*/
+            this.empty.data =  !Array.isArray(courses) || courses.length === 0;
 
             this.$watch('showCreateModal', (value) => {
                 if(!value) {
@@ -102,6 +103,8 @@ export function coursesData(){
                 this.coordinators = response.data.coordinators;
                 this.page = response.data.page;
                 this.totalPages = response.data.totalPages;
+
+                this.empty.result = !this.courses.length;
 
             } catch (error) {
                 if(error.response){

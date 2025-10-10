@@ -35,7 +35,14 @@ export function professorsData() {
         newProfessors: [],
 
         loading: false,
-        empty: false,
+        empty: {
+            data: false,
+            result: false,
+        },
+        get isEmpty() {
+            // retorna true apenas quando quiser considerar como "vazio"
+            return this.empty.result || this.empty.data;
+        },
         page: 1,
         totalPages: 1,
 
@@ -44,13 +51,7 @@ export function professorsData() {
             this.page = page;
             this.totalPages = totalPages;
 
-            this.empty = !Array.isArray(professors) || professors.length === 0;
-
-            /*this.$watch('searchTerm', (value) => {
-                if(!value) {
-                    this.loadProfessors();
-                }
-            });*/
+            this.empty.data = !Array.isArray(professors) || professors.length === 0;
 
             this.$watch('showCreateModal', (value) => {
                 if(!value) {
@@ -84,6 +85,8 @@ export function professorsData() {
                 this.professors = response.data.data;
                 this.page = response.data.page;
                 this.totalPages = response.data.totalPages;
+
+                this.empty.result = !this.professors.length;
 
             } catch (error){
                 if(error.response){

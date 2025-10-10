@@ -50,7 +50,7 @@ export async function saveData({
 
         if (callbackSucesso) callbackSucesso(response.data);
 
-        contexto.empty = false;
+        contexto.empty.result = false;
 
         // Retorna o objeto salvo para uso na view
         return novo;

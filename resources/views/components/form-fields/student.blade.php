@@ -11,7 +11,7 @@
                  x-model="ra" x-bind:disabled="edit"
                  @keydown.enter="saveStudent"/>
         <template x-if="errors.ra">
-            <p class="text-red-600 text-sm" x-text="errors.ra[0]"></p>
+            <x-form-fields.field-error x-text="errors.ra[0]"/>
         </template>
     </div>
     {{-- Nome do aluno --}}
@@ -21,7 +21,7 @@
                  placeholder="Nome do aluno" x-model="name"
                  @keydown.enter="saveStudent"/>
         <template x-if="errors.name">
-            <p class="text-red-600 text-sm" x-text="errors.name[0]"></p>
+            <x-form-fields.field-error x-text="errors.name[0]"/>
         </template>
     </div>
     {{-- Email do aluno --}}
@@ -31,55 +31,39 @@
                  placeholder="E-mail do aluno" x-model="email"
                  @keydown.enter="saveStudent"/>
         <template x-if="errors.email">
-            <p class="text-red-600 text-sm" x-text="errors.email[0]"></p>
+            <x-form-fields.field-error x-text="errors.email[0]"/>
         </template>
     </div>
-    {{-- Semestre do aluno
-    <div class="mt-4">
-        <x-label for="semester" value="Semestre"/>
-        <select id="semester" class="w-full rounded border-gray-300" x-model="semester">
-            <option value="" disabled selected>Selecione o semestre</option>
-            <template x-for="i in 10" :key="i">
-                <option :value="i" x-text="i"></option>
-            </template>
-        </select>
-        <template x-if="errors.semester">
-            <p class="text-red-600 text-sm" x-text="errors.semester[0]"></p>
-        </template>
-    </div>--}}
     {{-- Grupo --}}
     <div class="mt-4">
         <x-label for="group_id" value="Grupo (opcional)"/>
-        <select id="group_id" class="w-full rounded border-gray-300" x-model="group_id">
+        <x-select id="group_id" x-model="group_id">
             <option value="" selected>Selecione um grupo</option>
             <template x-for="group in groups" :key="group.id">
                 <option :value="group.id" x-text="group.theme ?? '-'"></option>
             </template>
-        </select>
+        </x-select>
         <template x-if="errors.group_id">
-            <p class="text-red-600 text-sm" x-text="errors.group_id[0]"></p>
+            <x-form-fields.field-error x-text="errors.group_id[0]"/>
         </template>
     </div>
 
     {{-- Curso --}}
     <div class="mt-4">
         <x-label for="course_id" value="Curso (opcional)"/>
-        <select id="course_id" class="w-full rounded border-gray-300" x-model="course_id">
+        <x-select id="course_id" x-model="course_id">
             <option value="" selected>Selecione um curso</option>
             <template x-for="course in courses" :key="course.id">
                 <option :value="course.id" x-text="course.name ?? '-'"></option>
             </template>
-        </select>
+        </x-select>
         <template x-if="errors.course_id">
-            <p class="text-red-600 text-sm" x-text="errors.course_id[0]"></p>
+            <x-form-fields.field-error x-text="errors.course_id[0]"/>
         </template>
     </div>
 
     {{-- Timestamps --}}
     <template x-if="edit && (created_at || updated_at)">
-        <div class="mt-5">
-            <p class="text-sm text-gray-800" x-text="created_at"></p>
-            <p class="text-sm text-gray-800" x-text="updated_at"></p>
-        </div>
+        <x-form-fields.timestamps/>
     </template>
 </div>

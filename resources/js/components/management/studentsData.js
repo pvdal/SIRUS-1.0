@@ -54,7 +54,14 @@ export function studentsData() {
         courses: [],
         // Variáveis de estado das tabelas
         loading: false,
-        empty: false,
+        empty: {
+            data: false,
+            result: false,
+        },
+        get isEmpty() {
+            // retorna true apenas quando quiser considerar como "vazio"
+            return this.empty.result || this.empty.data;
+        },
         page: 1,
         totalPages: 1,
         // perPage: 12, // teste de paginação js
@@ -67,7 +74,7 @@ export function studentsData() {
             this.page = page;
             this.totalPages = totalPages;
 
-            this.empty = !Array.isArray(students) || students.length === 0;
+            this.empty.data = !Array.isArray(students) || students.length === 0;
 
             this.$watch('showCreateModal', (value) => {
                 if(!value) {
@@ -78,42 +85,6 @@ export function studentsData() {
                 }
             });
         },
-
-        //teste de paginação js
-        /*
-        init(students = [], groups = [], courses = []) {
-            this.students = Array.isArray(students) ? students : [];
-            this.groups = Array.isArray(groups) ? groups : [];
-            this.courses = Array.isArray(courses) ? courses : [];
-
-            this.page = 1;               // página inicial
-            this.perPage = 15;           // itens por página
-            this.totalPages = Math.ceil(this.students.length / this.perPage);
-            this.empty = this.students.length === 0;
-
-            this.$watch('showCreateModal', (value) => {
-                if (!value) {
-                    this.edit = false;
-                    this.studentId = null;
-                    this.clearFields('store');
-                    this.showBanner = false;
-                }
-            });
-        },
-
-
-        // teste de paginação js
-        get paginatedStudents() {
-            const start = (this.page - 1) * this.perPage;
-            const end = start + this.perPage;
-            return this.students.slice(start, end);
-        },
-        // teste de paginação js
-        changePage(newPage) {
-            if (newPage < 1 || newPage > this.totalPages) return;
-            this.page = newPage;
-        },
-        */
 
         async loadStudents(page = 1) {
             this.loading = true;
@@ -141,6 +112,8 @@ export function studentsData() {
                 this.courses = response.data.courses;
                 this.page = response.data.page;
                 this.totalPages = response.data.totalPages;
+
+                this.empty.result = !this.students.length;
 
                 // Paginação local (.js)
                 //this.page = 1;               // página inicial

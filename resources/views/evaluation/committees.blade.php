@@ -30,23 +30,36 @@
         <template x-if="showGroupCards">
             <x-main-content>
                 {{-- Menu utilitário das tabelas --}}
-                <x-actions-table-bar
-                    :primary-action="['label' => 'Cadastrar banca', 'method' => 'showCreateModal']"
-                    :clear-action="['label' => 'Limpar filtros', 'method' => 'clearFields()']"
-                    :search-model="'searchTerm'"
-                    :status-filter="'statusFilter'"
-                    :register-period="'registerPeriod'"
-                    :load-function="'loadCommittees()'"
-                    :class="'md:justify-start'"
-                />
+                <template x-if="committees">
+                    <x-actions-table-bar
+                        :primary-action="['label' => 'Cadastrar banca', 'method' => 'showCreateModal']"
+                        :clear-action="['label' => 'Limpar filtros', 'method' => 'clearFields()']"
+                        :search-model="'searchTerm'"
+                        :search-placeholder="'Buscar bancas...'"
+                        :status-filter="'statusFilter'"
+                        :register-period="'registerPeriod'"
+                        :load-function="'loadCommittees()'"
+                        :class="'md:justify-start'"
+                    />
+                </template>
                 {{-- Componente com o conteúdo --}}
-                <x-evaluation.committees-content/>
+                <template x-if="committees">
+                    <x-evaluation.committees-content/>
+                </template>
+                {{-- Div exibida enquanto os dados não chegam no front --}}
+                <x-feedback.loading/>
+                {{-- Div exibida caso não haja registros no banco --}}
+                <template x-if="isEmpty && !loading">
+                    <x-feedback.empty-state :model="['banca', 'bancas']"/>
+                </template>
                 {{-- Paginação --}}
-                <x-management.pagination
-                    :page-var="'page'"
-                    :total-pages="'totalPages'"
-                    :load-function="'loadCommittees'"
-                />
+                <template x-if="page">
+                    <x-feedback.pagination
+                        :page-var="'page'"
+                        :total-pages="'totalPages'"
+                        :load-function="'loadCommittees'"
+                    />
+                </template>
             </x-main-content>
         </template>
         {{-- Trabalhos cadastrados --}}
