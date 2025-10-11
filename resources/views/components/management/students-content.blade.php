@@ -71,7 +71,7 @@
         </x-slot>
     </x-warning-modal>
 
-    <div x-show="!isEmpty" class="py-5 px-2 rounded-sm">
+    <div x-show="!isEmpty && !loading" class="py-5 px-2 rounded-sm">
         {{-- Tabela de registros: recebe os dados iniciais direto do controller e na paginação recebe os dados pro ajax --}}
         <x-table.content
             :items="'students'"

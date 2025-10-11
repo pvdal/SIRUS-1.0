@@ -75,6 +75,8 @@ export function coursesData(){
 
         async loadCourses(page = 1) {
             this.loading = true;
+            this.empty.result = false;
+            this.empty.data = false;
 
             // muda o cursor para "aguardando"
             document.body.style.cursor = 'wait';

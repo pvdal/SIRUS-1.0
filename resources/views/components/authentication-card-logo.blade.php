@@ -1,4 +1,3 @@
-{{-- props(['width' => '190','height' => '101']) --}}
 @props(['size' => '101', 'class' => ''])
 
 @php

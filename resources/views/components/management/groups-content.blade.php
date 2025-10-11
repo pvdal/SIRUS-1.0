@@ -70,7 +70,7 @@
         </x-slot>
     </x-warning-modal>
     {{-- View dos cards --}}
-    <div x-show="!isEmpty" class="mx-auto p-6">
+    <div x-show="!isEmpty && !loading" class="mx-auto p-6">
         <x-card.grid
             :items="'groups'"
             :new-items="'newGroups'"

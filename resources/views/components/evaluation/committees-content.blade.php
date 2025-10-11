@@ -68,7 +68,7 @@
         </x-slot>
     </x-warning-modal>
     {{-- View dos cards --}}
-    <div x-show="!isEmpty" class="mx-auto p-6">
+    <div x-show="!isEmpty && !loading" class="mx-auto p-6">
         <div x-show="committees.length > 0" class="max-h-[60px] max-w-sm md:max-w-full flex flex-row justify-start mb-2 mx-auto space-x-1">
             <button class="px-3 whitespace-nowrap border rounded-md text-gray-700 dark:text-gray-100 text-sm transition duration-150 ease-in-out"
                 x-on:click="

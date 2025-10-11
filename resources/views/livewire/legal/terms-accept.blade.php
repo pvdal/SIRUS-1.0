@@ -5,7 +5,7 @@
                 Termos de uso e Políticas de privacidade
             </x-slot>
             <x-slot name="content">
-                <p class="text-sm text-gray-600">
+                <p class="text-sm text-gray-600 dark:text-gray-200">
                     Para ter acesso ao sistema SIRUS é necessário aceitar os nossos Termos de Uso e Política de Privacidade.
                     Caso você não concorde, entre em contato com o nosso suporte e solicite a exclusão do seu cadastro.
                 </p>
@@ -17,8 +17,8 @@
 
                             <div class="ms-2">
                                 {!! __('I agree to the :terms_of_service and :privacy_policy', [
-                                        'terms_of_service' => '<a target="_blank" href="'.route('terms.show').'" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-blue">'.__('Terms of Service').'</a>',
-                                        'privacy_policy' => '<a target="_blank" href="'.route('policy.show').'" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-blue">'.__('Privacy Policy').'</a>',
+                                        'terms_of_service' => '<a target="_blank" href="'.route('terms.show').'" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-blue">'.__('Terms of Service').'</a>',
+                                        'privacy_policy' => '<a target="_blank" href="'.route('policy.show').'" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-blue">'.__('Privacy Policy').'</a>',
                                 ]) !!}
                             </div>
                         </div>

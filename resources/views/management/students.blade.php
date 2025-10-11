@@ -46,12 +46,13 @@
                                 <ul x-show="courseFilter.drop"
                                     @click.outside="courseFilter.drop = false"
                                     class="absolute min-w-[170px] md:max-w-[200px] w-full border bg-white dark:bg-gray-700 dark:border-gray-900 mt-1 rounded-lg max-h-60 overflow-auto z-50 scrollbar-custom py-5 px-1 transition duration-150 ease-in-out">
+                                    <hr />
                                     <template x-if="courses.length == 0">
                                         <li class="px-4 py-1 text-sm text-gray-700 dark:text-gray-100 break-words rounded-sm transition duration-150 ease-in-out">
                                             Não há cursos cadastrados ainda!
                                         </li>
                                     </template>
-                                    <hr />
+
                                     <li @click="courseFilter.id = ''; courseFilter.name = 'Todos os cursos'; courseFilter.drop = false; loadStudents()"
                                         class="px-4 py-1 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 break-words cursor-pointer rounded-sm transition duration-150 ease-in-out"
                                         x-show="courses.length > 0"
@@ -83,12 +84,13 @@
                                 <ul x-show="groupFilter.drop"
                                     @click.outside="groupFilter.drop = false"
                                     class="absolute min-w-[170px] md:max-w-[200px] w-full border bg-white dark:bg-gray-700 dark:border-gray-900 mt-1 rounded-lg max-h-60 overflow-auto z-50 scrollbar-custom py-5 px-1 transition duration-150 ease-in-out">
+                                    <hr />
                                     <template x-if="groups.length == 0">
                                             <li class="px-4 py-1 text-sm text-gray-700 dark:text-gray-100 break-words rounded-sm transition duration-150 ease-in-out">
                                             Não há grupos cadastrados ainda!
                                         </li>
                                     </template>
-                                    <hr />
+
                                     <li @click="groupFilter.id = ''; groupFilter.theme = 'Todos os grupos'; groupFilter.drop = false; loadStudents()"
                                         class="px-4 py-1 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 break-words cursor-pointer rounded-sm transition duration-150 ease-in-out"
                                         x-show="groups.length > 0"

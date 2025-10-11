@@ -58,7 +58,7 @@
             <!-- Page Heading -->
             @if (isset($header))
                 <header class="bg-white shadow dark:bg-gray-900 transition duration-150 ease-in-out">
-                    <div class="flex flex-row max-w-[2100px] mx-auto px-4 py-6 sm:px-6 lg:px-8 justify-between text-gray-800 dark:text-gray-100 transition duration-150 ease-in-out">
+                    <div class="flex flex-row max-w-[2100px] mx-auto px-4 py-6 sm:px-6 lg:px-8 justify-between items-center text-gray-800 dark:text-gray-100 transition duration-150 ease-in-out">
                         {{ $header }}
                         <button
                             @click="toggleTheme()"
