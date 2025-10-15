@@ -24,13 +24,15 @@
             {{ __('Grupos') }}
         </x-dynamic-component>
     </div>
+@endcan
 
-    <div class="{{ $menuClass }}">
-        <x-dynamic-component :component="$menuComponent" href="{{ route('committees-table') }}" :active="request()->routeIS('committees-table')">
-            {{ __('Bancas') }}
-        </x-dynamic-component>
-    </div>
+<div class="{{ $menuClass }}">
+    <x-dynamic-component :component="$menuComponent" href="{{ route('committees-table') }}" :active="request()->routeIS('committees-table')">
+        {{ __('Bancas') }}
+    </x-dynamic-component>
+</div>
 
+@can('is-admin')
     <div class="{{ $menuClass }}">
         <x-dynamic-component :component="$menuComponent" href="{{ route('evaluation.criteria-table') }}" :active="request()->routeIS('evaluations-table')">
             {{ __('Avaliações') }}

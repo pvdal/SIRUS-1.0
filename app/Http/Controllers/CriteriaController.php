@@ -15,7 +15,7 @@ class CriteriaController extends Controller
      */
     public function index(): View
     {
-        $criteria = Criterion::orderBy('name', 'asc')->paginate(15);
+        $criteria = Criterion::orderBy('id', 'asc')->paginate(30);
 
         $criteriaData = $criteria->getCollection()->map(function ($criterion) {
             return [
@@ -44,7 +44,7 @@ class CriteriaController extends Controller
      */
     public function show(Request $request): JsonResponse
     {
-        $query = Criterion::query()->orderBy('name', 'asc');
+        $query = Criterion::query()->orderBy('id', 'asc');
 
         // Filtro por texto
         if ($request->filled('search')) {
@@ -91,7 +91,7 @@ class CriteriaController extends Controller
         }
 
         // Paginação
-       $criteria = $query->paginate(15);
+       $criteria = $query->paginate(30);
 
         // Mapeando os dados
         $criteriaData = $criteria->getCollection()->map(function ($criterion) {
@@ -123,11 +123,12 @@ class CriteriaController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:criteria,name',
-            'excellent' => 'string',
-            'good' => 'string',
-            'satisfactory' => 'string',
-            'unsatisfactory' => 'string',
+            'excellent' => 'nullable|string',
+            'good' => 'nullable|string',
+            'satisfactory' => 'nullable|string',
+            'unsatisfactory' => 'nullable|string',
         ]);
+        // É sempre bom especificar se é nullable ou required
         $criterion = Criterion::create([
             'name' => $validated['name'],
             'excellent' => $validated['excellent'] ?? null,

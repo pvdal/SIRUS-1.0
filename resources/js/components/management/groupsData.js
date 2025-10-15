@@ -451,6 +451,10 @@ export function groupsData() {
                return student;
             });
 
+            if (savedData && Object.keys(savedData).length > 0) {
+                this.empty.data = false;
+            }
+
             // Alteração dos dados nas arrays locais, de acordo com o update do controller
             if(update && savedData) {
                 this.papers.forEach(p => {

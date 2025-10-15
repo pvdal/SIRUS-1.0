@@ -36,10 +36,10 @@
                 <x-feedback.loading/>
                 {{-- Div exibida caso não haja registros no banco --}}
                 <template x-if="isEmpty && !loading">
-                    <x-feedback.empty-state :model="['professor', 'professores']"/>
+                    <x-feedback.empty-state />
                 </template>
                 {{-- Paginação --}}
-                <template x-if="page">
+                <template x-if="page && !loading">
                     <x-feedback.pagination
                         :page-var="'page'"
                         :total-pages="'totalPages'"

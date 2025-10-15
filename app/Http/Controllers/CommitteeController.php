@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\DB;
 //use Illuminate\Support\Facades\Log;
 
 // Static Classes and utils
+use Illuminate\Support\Facades\Gate;
 use Random\RandomException;
 use App\Utils\TokenGenerator;
 
@@ -45,52 +46,73 @@ class CommitteeController extends Controller
             'members.user:id,name,state,access_level', // todos membros (professor/coordenador)
             'members.memberType',
             'paper.group.students.user:id,name,state',
-        ])->orderBy('id')->paginate(15);
+        ])
+            ->orderBy('id')
+            ->when(Gate::denies('manage-events'), function ($query) {
+                $query->where(function ($q) {
+                    $q->whereHas('members', function ($sub) {
+                        $sub->where('user_id', auth()->id());
+                    })
+
+                    ->orWhereHas('paper.group.students', function ($sub) {
+                        $sub->where('user_id', auth()->id());
+                    });
+                })
+                ->where('state', 1);
+            })
+            ->paginate(16);
 
         // Mapeamento dos dados paginados
         $committeesData = $committees->getCollection()->map(function ($committee) {
             return $this->mapCommittee($committee);
         })->values();
 
+        $coordinators = [];
+        $professors = [];
+        $member_types = [];
+        $groups = [];
+
         #region Dados auxiliares
-        $coordinators = Coordinator::with('user:id,name')
-            ->whereHas('user', function ($sub) {
-                $sub->where('state', 1);
-            })
-            ->select(['id', 'user_id'])
-            ->orderBy(
-                User::select('name')
-                    ->whereColumn('users.id', 'coordinators.user_id')
-            )
-            ->get();
+        if(Gate::allows('manage-events')){
+            $coordinators = Coordinator::with('user:id,name')
+                ->whereHas('user', function ($sub) {
+                    $sub->where('state', 1);
+                })
+                ->select(['id', 'user_id'])
+                ->orderBy(
+                    User::select('name')
+                        ->whereColumn('users.id', 'coordinators.user_id')
+                )
+                ->get();
 
-        $professors = Professor::with('user:id,name')
-            ->whereHas('user', function ($sub) {
-                $sub->where('state', 1);
-            })
-            ->select(['id', 'user_id'])
-            ->orderBy(
-                User::select('name')
-                    ->whereColumn('users.id', 'professors.user_id')
-            )
-            ->get();
+            $professors = Professor::with('user:id,name')
+                ->whereHas('user', function ($sub) {
+                    $sub->where('state', 1);
+                })
+                ->select(['id', 'user_id'])
+                ->orderBy(
+                    User::select('name')
+                        ->whereColumn('users.id', 'professors.user_id')
+                )
+                ->get();
 
-        $member_types = MemberType::orderBy('name')->get();
+            $member_types = MemberType::orderBy('name')->get();
 
-        $groups = Group::with('papers:id,title,file_path,group_id')
-            ->where('state', 1)
-            ->orderBy('theme')
-            ->get()
-            ->map(fn($g) => [
-                'id' => $g->id,
-                'theme' => $g->theme,
-                'papers' => $g->papers->map(fn($p) => [
-                    'id' => $p->id,
-                    'title' => $p->title,
-                    'file_path' => $p->file_path,
-                ])->values()->all(),
-                'state' => ($g->state ?? 0),
-            ])->values()->all();
+            $groups = Group::with('papers:id,title,file_path,group_id')
+                ->where('state', 1)
+                ->orderBy('theme')
+                ->get()
+                ->map(fn($g) => [
+                    'id' => $g->id,
+                    'theme' => $g->theme,
+                    'papers' => $g->papers->map(fn($p) => [
+                        'id' => $p->id,
+                        'title' => $p->title,
+                        'file_path' => $p->file_path,
+                    ])->values()->all(),
+                    'state' => ($g->state ?? 0),
+                ])->values()->all();
+        }
         #endregion
 
         return view('evaluation.committees', [
@@ -106,6 +128,8 @@ class CommitteeController extends Controller
     // Buscar professores / coordenadores ativos por nome ou ‘id’ ordenados por nome
     public function search(Request $request): JsonResponse
     {
+        $this->authorize('manage-events');
+
         $q = $request->query('q', '');
 
         // Traz coordenadores ativos com nome ou ‘id’ pesquisado
@@ -161,9 +185,30 @@ class CommitteeController extends Controller
             'members.user:id,name,state',   // todos membros (professor/coordenador)
             'members.memberType',
             'paper.group.students.user:id,name,state',
-        ])->orderBy('id');
+        ])
+            ->when(Gate::denies('manage-events'), function ($query) {
+                $query->where(function ($q) {
+                    $q->whereHas('members', function ($sub) {
+                        $sub->where('user_id', auth()->id());
+                    })
+
+                        ->orWhereHas('paper.group.students', function ($sub) {
+                            $sub->where('user_id', auth()->id());
+                        });
+                })
+                    ->where('state', 1);
+            })
+            ->orderBy('id');
 
         #region Filtros
+        if($request->has('history') && $request->boolean('history')) {
+            $query->whereHas('members', function ($q) {
+                $q->whereHas('user', function ($sub) {
+                    $sub->where('id', auth()->user()->id);
+                });
+            });
+        }
+
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
@@ -206,7 +251,7 @@ class CommitteeController extends Controller
         }
         #endregion
 
-        $committees = $query->paginate(15);
+        $committees = $query->paginate(16);
         //Log::info('Queries executadas:', DB::getQueryLog());
 
         // Mapeia para retornar somente os campos necessários
@@ -270,6 +315,8 @@ class CommitteeController extends Controller
     // Cadastro de bancas (‘CREATE’)
     public function store(Request $request): JsonResponse
     {
+        $this->authorize('manage-events');
+
         $request->validate([
             'name' => 'required|string|max:255|unique:committees,name',
             'paper_id' => [
@@ -323,12 +370,13 @@ class CommitteeController extends Controller
         ]);
     }
 
-
     /**
      * @throws Throwable
      */
     public function update(Request $request, $id): JsonResponse
     {
+        $this->authorize('manage-events');
+
         if(!$id) {
             return response()->json([
                 'message' => 'Selecione uma banca!',
@@ -427,6 +475,8 @@ class CommitteeController extends Controller
 
     public function toggleStatus($id,$action): JsonResponse
     {
+        $this->authorize('manage-events');
+
         $committee = Committee::find($id);
 
         if (!$committee) {
@@ -500,6 +550,7 @@ class CommitteeController extends Controller
 
     private function mapAcademicStaff($coordinators, $professors): array
     {
+        if(Gate::denies('manage-events')) return [];
         $mapStaff = fn($collection,$slug,$name) => $collection->map(fn($member) => [
             'id' => $member->id,
             'name' => $member->user->name ?? '(sem nome)',

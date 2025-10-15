@@ -215,6 +215,10 @@ export function coursesData(){
                 })
             });
 
+            if (savedData && Object.keys(savedData).length > 0) {
+                this.empty.data = false;
+            }
+
             if(update && savedData) {
                 // Trata os timestamps
                 this.created_at = formatDateTime('Criado em', savedData.created_at);

@@ -28,6 +28,14 @@ export async function saveData({
             data: payload,
         });
 
+        let novo = response.data?.data ?? response.data;
+
+        // Só continua se o status for 2xx e existir um id ou campo esperado
+        if (!(response.status >= 200 && response.status < 300) || !novo?.id) {
+            // código para quando NÃO é 2xx ou novo.id não existe
+            return;
+        }
+
         if (clearFields) contexto.clearFields?.('store');
 
         if (response.data.success && response.data.message) {
@@ -35,8 +43,6 @@ export async function saveData({
         } else {
             contexto.showMessage('success', 'Salvo com sucesso!');
         }
-
-        let novo = response.data?.data ?? response.data;
 
         if (typeof formatResponse === 'function') {
             novo = formatResponse(novo);
@@ -47,6 +53,7 @@ export async function saveData({
             contexto[campoLista].unshift(novoComOrigin);
             if (contexto[campoLista].length > 10) contexto[campoLista].pop();
         }
+
 
         if (callbackSucesso) callbackSucesso(response.data);
 

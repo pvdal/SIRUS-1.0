@@ -4,7 +4,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import ptBrLocale from '@fullcalendar/core/locales/pt-br';
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('alpine:initialized', function () {
     const calendarEl = document.getElementById('calendar');
     if (!calendarEl) return;
 
@@ -91,6 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         eventClick: function(info) {
             // info.event contém os dados do evento
+            console.log(info.event.start, info.event.end);
             window.dispatchEvent(new CustomEvent('open-evaluation-modal', {
                 bubbles: true,
                 detail: {
@@ -123,10 +124,16 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!window.userPermissions.canManageEvents) {info.revert(); return;}
         const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
 
+        const toLocalDate = (date) => {
+            if (!date) return null;
+            const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+            return local.toISOString().split('T')[0];
+        };
+
         const payload = {
-            dateStart: info.event.start.toISOString().split('T')[0],
+            dateStart: toLocalDate(info.event.start),
             timeStart: info.event.start.toTimeString().split(' ')[0],
-            dateEnd: info.event.end ? info.event.end.toISOString().split('T')[0] : null,
+            dateEnd: info.event.end ? toLocalDate(info.event.end) : null,
             timeEnd: info.event.end ? info.event.end.toTimeString().split(' ')[0] : null,
         };
 

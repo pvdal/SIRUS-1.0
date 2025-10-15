@@ -1,72 +1,76 @@
 <div>
-    {{-- Modal de cadastro --}}
-    <x-custom-modal x-model="showCreateModal">
-        <x-slot name="title">
-            <template x-if="!edit">
-                <span>Cadastrar nova banca</span>
-            </template>
-            <template x-if="edit">
-                <span>Atualizar os dados da banca</span>
-            </template>
-        </x-slot>
+    @can('manage-events')
+        {{-- Modal de cadastro --}}
+        <x-custom-modal x-model="showCreateModal">
+            <x-slot name="title">
+                <template x-if="!edit">
+                    <span>Cadastrar nova banca</span>
+                </template>
+                <template x-if="edit">
+                    <span>Atualizar os dados da banca</span>
+                </template>
+            </x-slot>
 
-        <x-slot name="content">
-            {{-- Banner de mensagem --}}
-            <x-custom-banner/>
-            {{-- Formulário --}}
-            <x-form-fields.committee/>
-        </x-slot>
+            <x-slot name="content">
+                {{-- Banner de mensagem --}}
+                <x-custom-banner/>
+                {{-- Formulário --}}
+                <x-form-fields.committee/>
+            </x-slot>
 
-        <x-slot name="footer">
-            <x-secondary-button type="button" x-bind:disabled="saving" class="min-w-[110px]"
-                x-on:click="
+            <x-slot name="footer">
+                <x-secondary-button type="button" x-bind:disabled="saving" class="min-w-[110px]"
+                                    x-on:click="
                     saveCommittee;
                     $el.blur();
                 "
-            >
-                <span x-show="!saving">Salvar</span>
-                <span x-show="saving">Salvando...</span>
-            </x-secondary-button>
-            <x-danger-button type="button" class="min-w-[110px]"
-                             x-on:click="
+                >
+                    <span x-show="!saving">Salvar</span>
+                    <span x-show="saving">Salvando...</span>
+                </x-secondary-button>
+                <x-danger-button type="button" class="min-w-[110px]"
+                                 x-on:click="
                     showCreateModal = false;
                     clearFields('store');
                 "
-            >
-                Fechar
-            </x-danger-button>
-        </x-slot>
-    </x-custom-modal>
-    {{-- Component modal para avisos --}}
-    <x-warning-modal x-model="showWarningModal" @close="showWarningModal = false; clearFields('warning');" :maxWidth="'sm'" :warningType="'warningType'">
-        <x-slot name="title">
-            <template x-if="warningType">
-                <span x-text="warningType" class="font-semibold"></span>
-            </template>
-        </x-slot>
-
-        <x-slot name="content">
-            <template x-if="warningContent">
-                <p x-text="warningContent"></p>
-            </template>
-        </x-slot>
-
-        <x-slot name="footer">
-            <template x-if="warningType === 'Confirmação'">
-                <x-danger-button type="button"
-                    x-on:click="
-                        toggleStatus();
-                        $el.blur();
-                    "
-                    x-text="warningAction"
                 >
+                    Fechar
                 </x-danger-button>
-            </template>
-            <x-secondary-button type="button" @click="showWarningModal = false; clearFields('warning');" class="ms-4">
-                Voltar
-            </x-secondary-button>
-        </x-slot>
-    </x-warning-modal>
+            </x-slot>
+        </x-custom-modal>
+
+
+        {{-- Component modal para avisos --}}
+        <x-warning-modal x-model="showWarningModal" @close="showWarningModal = false; clearFields('warning');" :maxWidth="'sm'" :warningType="'warningType'">
+            <x-slot name="title">
+                <template x-if="warningType">
+                    <span x-text="warningType" class="font-semibold"></span>
+                </template>
+            </x-slot>
+
+            <x-slot name="content">
+                <template x-if="warningContent">
+                    <p x-text="warningContent"></p>
+                </template>
+            </x-slot>
+
+            <x-slot name="footer">
+                <template x-if="warningType === 'Confirmação'">
+                    <x-danger-button type="button"
+                        x-on:click="
+                            toggleStatus();
+                            $el.blur();
+                        "
+                        x-text="warningAction"
+                    >
+                    </x-danger-button>
+                </template>
+                <x-secondary-button type="button" @click="showWarningModal = false; clearFields('warning');" class="ms-4">
+                    Voltar
+                </x-secondary-button>
+            </x-slot>
+        </x-warning-modal>
+    @endcan
     {{-- View dos cards --}}
     <div x-show="!isEmpty && !loading" class="mx-auto p-6">
         <div x-show="committees.length > 0" class="max-h-[60px] max-w-sm md:max-w-full flex flex-row justify-start mb-2 mx-auto space-x-1">
@@ -102,11 +106,13 @@
                 >
                     <x-slot name="header">
                         <span x-text="item.id" class="text-sm text-gray-600 dark:text-gray-300 me-3 transition duration-150 ease-in-out"></span>
-                        <span
-                            x-text="'CRIADOR: ' + item.coordinator_name"
-                            class="whitespace-nowrap overflow-hidden text-ellipsis text-xs text-gray-700 dark:text-gray-200 font-medium uppercase
+                        @can('evaluate')
+                            <span
+                                x-text="'CRIADOR: ' + item.coordinator_name"
+                                class="whitespace-nowrap overflow-hidden text-ellipsis text-xs text-gray-700 dark:text-gray-200 font-medium uppercase
                                     transition duration-150 ease-in-out"
-                        ></span>
+                            ></span>
+                        @endcan
                         <button class="px-3 my-1 whitespace-nowrap ms-auto bg-secondary-blue rounded-md text-white dark:text-gray-200 text-sm"
                                 x-on:click="
                             $el.blur();
@@ -129,54 +135,66 @@
                             ></li>
                         </template>
                     </x-slot>
-
-                    <x-slot name="state">
+                    @can('manage-events')
+                        <x-slot name="state">
                         <span
-                            class="text-xs py-1 ms-4 px-3 font-bold rounded-s-lg rounded-e-lg"
+                            class="text-xs py-1 ms-4 px-3 font-bold rounded-s-lg rounded-e-lg transition duration-150 ease-in-out"
                             :class="item?.state === 1
                             ? 'bg-secondary-blue text-white dark:text-gray-200'
-                            : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-200'"
+                            : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-200'"
                             x-text="item?.state === 1 ? 'Ativo' : 'Inativo'">
                         </span>
-                    </x-slot>
+                        </x-slot>
+                    @endcan
 
                     <x-slot name="actions">
-                        <template x-if="item.state">
-                            <x-button type="button" class="min-w-[90px]"
-                                x-on:click="
-                                    showCommittee(item.id);
-                                    $el.blur();
-                               "
-                            >
-                                Alterar
-                            </x-button>
-                        </template>
-                        <template x-if="item.state">
-                            <x-danger-button type="button" class="min-w-[98px]" x-bind:disabled="isInactivating(item.id)"
-                                             x-on:click="warning('confirmação', item.name, item.id, 'inativar'); $el.blur();">
-                                <template x-if="isInactivating(item.id)">
-                                    <span>Inativando...</span>
-                                </template>
-                                <template x-if="!isInactivating(item.id)">
-                                    <span>Inativar</span>
-                                </template>
-                            </x-danger-button>
-                        </template>
-                        <template x-if="!item.state">
-                            <x-management.activate-button type="button" class="min-w-[98px]" x-bind:disabled="isActivating(item.id)"
-                                  x-on:click="
+                        @can('manage-events')
+                            <template x-if="item.state">
+                                <x-button type="button" class="min-w-[90px]"
+                                    x-on:click="
+                                        showCommittee(item.id);
+                                        $el.blur();
+                                   "
+                                >
+                                    Alterar
+                                </x-button>
+                            </template>
+                            <template x-if="item.state">
+                                <x-danger-button type="button" class="min-w-[98px]" x-bind:disabled="isInactivating(item.id)"
+                                                 x-on:click="warning('confirmação', item.name, item.id, 'inativar'); $el.blur();">
+                                    <template x-if="isInactivating(item.id)">
+                                        <span>Inativando...</span>
+                                    </template>
+                                    <template x-if="!isInactivating(item.id)">
+                                        <span>Inativar</span>
+                                    </template>
+                                </x-danger-button>
+                            </template>
+                            <template x-if="!item.state">
+                                <x-management.activate-button type="button" class="min-w-[98px]" x-bind:disabled="isActivating(item.id)"
+                                                              x-on:click="
                                       warning('confirmação',item.name, item.id, 'ativar');
                                       $el.blur();
                                   "
+                                >
+                                    <template x-if="isActivating(item.id)">
+                                        <span>Ativando...</span>
+                                    </template>
+                                    <template x-if="!isActivating(item.id)">
+                                        <span>Ativar</span>
+                                    </template>
+                                </x-management.activate-button>
+                            </template>
+                        @endcan
+                        @cannot('manage-events')
+                            <x-button type="button" class="min-w-[90px]"
+                                x-on:click="
+                                    $el.blur();
+                                "
                             >
-                                <template x-if="isActivating(item.id)">
-                                    <span>Ativando...</span>
-                                </template>
-                                <template x-if="!isActivating(item.id)">
-                                    <span>Ativar</span>
-                                </template>
-                            </x-management.activate-button>
-                        </template>
+                                Avaliação
+                            </x-button>
+                        @endcannot
                     </x-slot>
                 </x-card.content>
 
@@ -210,16 +228,17 @@
                             ></li>
                         </template>
                     </x-slot>
-
-                    <x-slot name="state">
-                        <span
-                            class="text-xs py-1 ms-4 px-3 font-bold rounded-s-lg rounded-e-lg"
-                            :class="item?.group_state === 1
-                            ? 'bg-secondary-blue text-white dark:text-gray-200'
-                            : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-200'"
-                            x-text="item?.group_state === 1 ? 'Ativo' : 'Inativo'">
-                        </span>
-                    </x-slot>
+                    @can('manage-events')
+                        <x-slot name="state">
+                            <span
+                                class="text-xs py-1 ms-4 px-3 font-bold rounded-s-lg rounded-e-lg transition duration-150 ease-in-out"
+                                :class="item?.group_state === 1
+                                ? 'bg-secondary-blue text-white dark:text-gray-200'
+                                : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-200'"
+                                x-text="item?.group_state === 1 ? 'Ativo' : 'Inativo'">
+                            </span>
+                        </x-slot>
+                    @endcan
 
                     <x-slot name="paperAction">
                         <template x-if="item?.paper">

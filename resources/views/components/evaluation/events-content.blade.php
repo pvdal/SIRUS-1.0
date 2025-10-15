@@ -6,34 +6,40 @@
     </script>
     {{-- Coordenador --}}
     @can('manage-events')
-        <x-custom-modal x-model="showModal" :titleClass="'flex flex-row justify-between items-center'">
+        <x-custom-modal x-model="showModal" :headerActions="true">
             <x-slot name="title">
-                <div x-show="edit">
-                    Atualizar a data da banca
-                </div>
-                <div x-show="!edit && !showCreateModal">
-                    Avaliar o grupo
-                </div>
-                <div x-show="showCreateModal">
-                    Agendar uma nova banca
-                </div>
-                <div x-show="showEvaluationModal || edit">
-                    <x-secondary-button
-                        x-on:click="
-                        $el.blur();
-                        edit = !edit;
-                    "
-                    >
-                        <div x-show="edit" class="flex flex-row gap-2">
-                            Avaliar
-                            <x-lucide-clipboard-check class="text-white h-4 w-4"/>
+                <div class="flex flex-wrap items-center justify-start gap-3">
+                    <h1 class="me-auto text-lg font-semibold text-gray-700 dark:text-gray-200">
+                        <div x-show="edit">
+                            Atualizar a data da banca
                         </div>
-                        <div x-show="!edit" class="flex flex-row gap-2">
-                            Editar
-                            <x-lucide-pencil class="text-white h-4 w-4"/>
+                        <div x-show="!edit && !showCreateModal">
+                            Avaliar o grupo
                         </div>
-                    </x-secondary-button>
+                        <div x-show="showCreateModal">
+                            Agendar uma nova banca
+                        </div>
+                    </h1>
+
+                    <div x-show="showEvaluationModal || edit">
+                        <x-secondary-button
+                            x-on:click="
+                                $el.blur();
+                                edit = !edit;
+                            "
+                        >
+                            <div x-show="edit" class="flex flex-row gap-2">
+                                Avaliar
+                                <x-lucide-clipboard-check class="text-white h-4 w-4"/>
+                            </div>
+                            <div x-show="!edit" class="flex flex-row gap-2">
+                                Editar
+                                <x-lucide-pencil class="text-white h-4 w-4"/>
+                            </div>
+                        </x-secondary-button>
+                    </div>
                 </div>
+
             </x-slot>
 
             <x-slot name="content">
@@ -111,16 +117,26 @@
 
             <x-slot name="footer">
                 @if(auth()->user()->canEvaluate())
-                    <x-secondary-button>Avaliar</x-secondary-button>
+                    <template x-if="belongsTo">
+                        <x-secondary-button>Avaliar</x-secondary-button>
+                    </template>
+                    <template x-if="!belongsTo">
+                        <x-secondary-button>Avaliação</x-secondary-button>
+                    </template>
                     <x-danger-button
                         x-on:click="
-                                $el.blur();
-                                showEvaluationModal = false;
-                                showModal = false;
-                            "
+                            $el.blur();
+                            showEvaluationModal = false;
+                            showModal = false;
+                        "
                     >Fechar</x-danger-button>
                 @else
-                    <x-secondary-button>Avaliação</x-secondary-button>
+                    <template x-if="belongsTo">
+                        <x-secondary-button>Avaliar</x-secondary-button>
+                    </template>
+                    <template x-if="!belongsTo">
+                        <x-secondary-button>Avaliação</x-secondary-button>
+                    </template>
                     <x-danger-button
                         x-on:click="
                                 $el.blur();

@@ -53,7 +53,7 @@ export function eventsData() {
             // Escuta os despachos do calendar.js para visualização e atualização
             window.addEventListener('open-evaluation-modal', e => {
                 this.showEvaluationModal = true;
-                this.show(e,'update');
+                this.show(e,'view');
             });
             // Observa o id do evento para preencher os campos reativamente com os seus dados
             this.$watch('eventId', (value) => {
@@ -83,7 +83,8 @@ export function eventsData() {
             this.$nextTick(() => {
                 if(type === 'create') {
                     this.eventId = e.detail.id;
-                } else if(type === 'update') {
+
+                } else if(type === 'view') {
                     this.eventId = e.detail.id;
                     this.eventTitle = e.detail.title;
                     this.group = e.detail.group;
@@ -94,15 +95,38 @@ export function eventsData() {
                 }
             });
 
-            this.dateStart = e.detail.dateStart ? e.detail.dateStart.toISOString().split('T')[0] : null;
-            this.dateEnd = e.detail.dateEnd ? e.detail.dateEnd.toISOString().split('T')[0] : null;
-            this.timeStart = e.detail.timeStart ? e.detail.timeStart.toLocaleTimeString('pt-BR', { hour12: false }) : null;
-            this.timeEnd = e.detail.timeEnd ? e.detail.timeEnd.toLocaleTimeString('pt-BR', { hour12: false }) : null;
+            // Correto ---------
+            if (type === 'create') {
+                // Normaliza usando UTC -> ISO, pois vem direto do FullCalendar (select)
+                this.dateStart = e.detail.dateStart
+                    ? e.detail.dateStart.toISOString().split('T')[0]
+                    : null;
+                this.dateEnd = e.detail.dateEnd
+                    ? e.detail.dateEnd.toISOString().split('T')[0]
+                    : null;
+            } else {
+                // Mantém no fuso local, pois o eventClick já traz o datetime correto
+                this.dateStart = e.detail.dateStart
+                    ? e.detail.dateStart.toLocaleDateString('en-CA')
+                    : null;
+                this.dateEnd = e.detail.dateEnd
+                    ? e.detail.dateEnd.toLocaleDateString('en-CA')
+                    : null;
+            }
 
-            this.initialDate.timeStart = this.timeStart;
-            this.initialDate.timeEnd = this.timeEnd;
-            this.initialDate.dateStart = this.dateStart;
-            this.initialDate.dateEnd = this.dateEnd;
+            this.timeStart = e.detail.timeStart
+                ? e.detail.timeStart.toLocaleTimeString('pt-BR', { hour12: false })
+                : null;
+            this.timeEnd = e.detail.timeEnd
+                ? e.detail.timeEnd.toLocaleTimeString('pt-BR', { hour12: false })
+                : null;
+
+            if(type === 'create') {
+                this.initialDate.timeStart = this.timeStart;
+                this.initialDate.timeEnd = this.timeEnd;
+                this.initialDate.dateStart = this.dateStart;
+                this.initialDate.dateEnd = this.dateEnd;
+            }
             this.showModal = true;
         },
         // Preenche os campos do modal
@@ -135,10 +159,10 @@ export function eventsData() {
                 url: `/events/${id}/update`,
                 method: 'put',
                 payload: {
-                    dateStart: this.dateStart,
-                    dateEnd: this.dateEnd,
-                    timeStart: this.timeStart,
-                    timeEnd: this.timeEnd,
+                    date_start: null,
+                    date_end: null,
+                    time_start: null,
+                    time_end: null,
                     create: !update,
                 },
                 contexto: this,

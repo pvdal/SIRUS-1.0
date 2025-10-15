@@ -4,7 +4,9 @@
     </x-slot>
 
     <x-slot name="header">
+        <h2 id="page-title" x-text="window.headerTitle ?? ''" class="font-semibold text-xl">Grupos cadastrados</h2>
         <div x-data="{ showPaper: false }"
+             x-init="document.getElementById('page-title')?.remove()"
              x-on:toggle-paper.window="showPaper = $event.detail"
              class="flex items-center justify-between"
         >
@@ -27,7 +29,7 @@
         x-init='init(@json($groups), @json($courses), {{ $page }}, {{ $totalPages }})'
     >
         {{-- Grupos cadastrados --}}
-        <template x-if="showGroupCards">
+        <div x-show="showGroupCards">
             <x-main-content>
                 {{-- Menu utilitário das tabelas --}}
                 <template x-if="groups">
@@ -52,10 +54,10 @@
                 <x-feedback.loading/>
                 {{-- Div exibida caso não haja registros no banco --}}
                 <template x-if="isEmpty && !loading">
-                    <x-feedback.empty-state :model="['grupo', 'grupos']"/>
+                    <x-feedback.empty-state/>
                 </template>
                 {{-- Paginação --}}
-                <template x-if="page">
+                <template x-if="page && !loading">
                     <x-feedback.pagination
                         :page-var="'page'"
                         :total-pages="'totalPages'"
@@ -63,7 +65,7 @@
                     />
                 </template>
             </x-main-content>
-        </template>
+        </div>
         {{-- Trabalhos cadastrados --}}
         <template x-if="showGroupPaper">
             <div class="relative">

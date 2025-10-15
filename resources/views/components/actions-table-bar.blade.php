@@ -10,7 +10,7 @@
         ? $primaryMethod . ($primaryParam ? "('{$primaryParam}');" : "= true; ") . '$el.blur();'
         : '$el.blur();';
 
-    $clearButton = $primaryMethod
+    $clearButton = $clearMethod
         ? $clearMethod . ($clearParam ? "('{$clearParam}');" : "; ") . '$el.blur();'
         : '$el.blur();';
 

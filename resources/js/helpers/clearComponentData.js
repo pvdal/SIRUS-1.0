@@ -14,11 +14,11 @@ export function clearComponentData(context, type, formFields = [], addFilters = 
             context.showBanner = false;
             break;
         case 'filters':
-            context.searchTerm = '';
-            context.statusFilter = {};
-            context.registerPeriod = {};
+            if('searchTerm' in context) context.searchTerm = '';
+            if('statusFilter' in context) context.statusFilter = {};
+            if ('registerPeriod' in context) context.registerPeriod = {};
             addFilters.forEach(filter => {
-                context[filter] = {};
+                if (filter in context) context[filter] = {};
             })
             break;
         case 'warning':

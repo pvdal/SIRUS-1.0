@@ -6,7 +6,14 @@ export function axesData() {
         showWarningModal: false,
         loading: false,
         saving: false,
-        empty: false,
+        empty: {
+            data: false,
+            result: false,
+        },
+        get isEmpty() {
+            // retorna true apenas quando quiser considerar como "vazio"
+            return this.empty.result || this.empty.data;
+        },
         searchTerm:'',
 
         // --- CAMPOS DE FORMULÁRIO ---
@@ -59,7 +66,7 @@ export function axesData() {
             this.amount = amount;
             this.page = page;
             this.totalPages = totalPages;
-            this.empty = !Array.isArray(axes) || axes.length === 0;
+            this.empty.data = !Array.isArray(axes) || axes.length === 0;
 
             // Limpa ao fechar o modal
             this.$watch('showCreateModal', (value) => {
@@ -92,7 +99,11 @@ export function axesData() {
 
         async loadAxes(page = 1) {
             this.loading = true;
+            this.empty.result = false;
+            this.empty.data = false;
+
             document.body.style.cursor = 'wait';
+
             this.errors = {};
             this.newAxes = [];
 
@@ -109,6 +120,8 @@ export function axesData() {
                 this.axes = response.data.data;
                 this.page = response.data.page;
                 this.totalPages = response.data.totalPages;
+
+                this.empty.result = !this.axes.length;
 
             } catch (error){
                 if(error.response){
@@ -219,23 +232,30 @@ export function axesData() {
                 clearFields: !isUpdate,
             });
 
+            if (savedData && Object.keys(savedData).length > 0) {
+                this.empty.data = false;
+            }
+
             if (savedData) {
                 if (isUpdate) {
                     // CORREÇÃO: Usar savedData.id e savedData diretamente
                     this.axes = this.axes.map(a => a.id === savedData.id ? savedData : a);
                     this.newAxes = this.newAxes.map(a => a.id === savedData.id ? savedData : a);
-                    this.showMessage('success', 'Eixo atualizado com sucesso!');
-                } else {
-                    // CORREÇÃO: Usar savedData diretamente
-                    this.axes.unshift(savedData);
-                    this.showMessage('success', 'Eixo cadastrado com sucesso!');
+
+                    // Trata os timestamps
+                    this.created_at = formatDateTime('Criado em', savedData.created_at);
+                    this.updated_at = formatDateTime('Atualizado em', savedData.updated_at, savedData.created_at);
+                    // A definição dessas mensagens é feita pelo controller no return, chave 'message'
+                    //this.showMessage('success', 'Eixo atualizado com sucesso!');
                 }
 
-                // Fecha modal e limpa campos
-                this.showCreateModal = false;
-                this.name = '';
-                this.selectedCriteria = [];
-                this.edit = false;
+                // Há um watcher que seta false pro edit automaticamente no fechamento do modal (linha 72).
+                // limpeza de campos quem deve fazer é o helper saveData a partir dos campos declarados em clearComponentsData.
+                // Fechar o modal logo após update não parece consistente com o resto do sistema.
+                //this.showCreateModal = false;
+                //this.name = '';
+                //this.selectedCriteria = [];
+                //this.edit = false;
             }
         },
 

@@ -78,9 +78,9 @@
 
     {{-- Definição de data --}}
     <div class="flex flex-wrap sm:flex-nowrap gap-4 justify-center xs:justify-between mt-4">
-        <fieldset class="flex justify-center w-1/2">
+        <fieldset class="flex flex-col justify-center items-center w-1/2">
             <div>
-                <legend class="text-sm font-medium w-full text-center xs:text-start">Data/hora inicial</legend>
+                <legend class="text-sm font-medium w-full text-center xs:text-start">Data/hora de início</legend>
                 <div class="flex flex-col xs:flex-row items-center gap-2 mt-1">
                     <div>
                         <x-input
@@ -98,10 +98,10 @@
                             x-bind:disabled="(showEvaluationModal && !edit) || (showCreateModal && events.length < 1)"/>
                     </div>
                 </div>
-                <template x-if="errors?.dateStart || errors?.timeStart">
+                <template x-if="errors?.date_start || errors?.time_start">
                     <div class="flex flex-wrap">
-                        <x-form-fields.field-error x-text="errors.dateStart?.[0]"/>
-                        <x-form-fields.field-error x-text="errors.timeStart?.[0]"/>
+                        <x-form-fields.field-error x-text="errors.date_start?.[0]"/>
+                        <x-form-fields.field-error x-text="errors.time_start?.[0]"/>
                     </div>
                 </template>
             </div>
@@ -109,7 +109,7 @@
 
         <fieldset class="flex justify-center w-1/2">
             <div>
-                <legend class="text-sm font-medium w-full text-center xs:text-start">Data/hora final</legend>
+                <legend class="text-sm font-medium w-full text-center xs:text-start">Data/hora de fim</legend>
                 <div class="flex flex-col xs:flex-row items-center gap-2 mt-1">
                     <div>
                         <x-input
@@ -127,10 +127,10 @@
                             x-bind:disabled="(showEvaluationModal && !edit) || (showCreateModal && events.length < 1)"/>
                     </div>
                 </div>
-                <template x-if="errors?.dateEnd || errors?.timeEnd">
+                <template x-if="errors?.date_end || errors?.time_end">
                     <div class="flex flex-wrap">
-                        <x-form-fields.field-error x-text="errors.dateEnd?.[0]"/>
-                        <x-form-fields.field-error x-text="errors.timeEnd?.[0]"/>
+                        <x-form-fields.field-error x-text="errors.date_end?.[0]"/>
+                        <x-form-fields.field-error x-text="errors.time_end?.[0]"/>
                     </div>
                 </template>
             </div>

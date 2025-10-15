@@ -41,7 +41,7 @@
             @endif
 
             {{-- Scroll interno da lista --}}
-            <div class="flex-1  dark:bg-gray-600/30  overflow-y-auto scrollbar-custom border border-gray-200 dark:border-gray-700 px-6 mx-5 rounded-md max-h-[120px] transition duration-150 ease-in-out">
+            <div class="flex-1  dark:bg-gray-600/30  overflow-y-auto scrollbar-custom border border-gray-200 dark:border-gray-700 px-6 mx-5 rounded-md max-h-[105px] transition duration-150 ease-in-out">
                 <ul class="space-y-1 text-gray-600 dark:text-gray-300 text-sm py-1 transition duration-150 ease-in-out">
                     {{ $members }}
                 </ul>
@@ -61,18 +61,19 @@
         @endif
         <hr class="border-t mt-auto border-gray-300 dark:border-gray-700 mx-4 transition duration-150 ease-in-out"/>
         {{-- Ações --}}
-        @if($actions || $state)
-            <div class="flex flex-wrap gap-3 items-center justify-between px-5 py-2 flex-shrink-0 min-h-[50px]">
+
+        <div class="flex flex-wrap gap-3 items-center justify-between px-5 py-2 flex-shrink-0 min-h-[50px]">
+            <div class="me-auto">
                 @if($state)
                     {{ $state }}
                 @endif
+            </div>
 
+            <div class="flex flex-wrap gap-2 ms-4">
                 @if($actions)
-                    <div class="flex flex-wrap gap-2 ms-4">
-                        {{ $actions }}
-                    </div>
+                    {{ $actions }}
                 @endif
             </div>
-        @endif
+        </div>
     </div>
 </div>

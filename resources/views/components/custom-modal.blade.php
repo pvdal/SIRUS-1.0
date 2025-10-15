@@ -1,4 +1,4 @@
-@props(['model','id' => null, 'maxWidth' => '2xl', 'icon' => null, 'titleClass' => '',])
+@props(['model','id' => null, 'maxWidth' => '2xl', 'icon' => null, 'headerActions' => false,])
 
 @php
     $maxWidth = [
@@ -41,9 +41,11 @@
     >
         @isset($title)
         <div class="px-6 py-4 border-b dark:border-gray-700">
-            <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200 {{ $titleClass }}">
+            @if(!$headerActions)
+                <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200">{{ $title }}</h2>
+            @else
                 {{ $title }}
-            </h2>
+            @endif
         </div>
         @endisset
         @isset($content)

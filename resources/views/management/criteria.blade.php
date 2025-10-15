@@ -15,26 +15,36 @@
 
                 <x-nav-evaluation-table>
                     {{-- ... seu conteúdo de tabela, filtros, etc. ... --}}
-                    <x-actions-table-bar
-                        :primary-action="['label' => 'Cadastrar Critério', 'method' => 'showCreateModal', 'additional' => 'edit = false;']"
-                        :clear-action="['label' => 'Limpar filtros', 'method' => 'clearFields()']"
-                        :search-model="'searchTerm'"
-                        :search-placeholder="'Buscar critérios...'"
-                        :searchWidth="'xs:w-6/12'"
-                        :status-filter="'statusFilter'"
-                        :register-period="'registerPeriod'"
-                        :load-function="'loadCriteria()'"
-                        :class="'lg:justify-start'"
-                    />
-
+                    <template x-if="criteria">
+                        <x-actions-table-bar
+                            :primary-action="['label' => 'Cadastrar Critério', 'method' => 'showCreateModal', 'additional' => 'edit = false;']"
+                            :clear-action="['label' => 'Limpar filtros', 'method' => 'clearFields()']"
+                            :search-model="'searchTerm'"
+                            :search-placeholder="'Buscar critérios...'"
+                            :status-filter="'statusFilter'"
+                            :register-period="'registerPeriod'"
+                            :load-function="'loadCriteria()'"
+                            :class="'lg:justify-start'"
+                        />
+                    </template>
                     {{--Conteúdo que mostra os critérios cadastrados--}}
-                    <x-management.criteria-content/>
-
-                    <x-management.pagination
-                        :page-var="'page'"
-                        :total-pages="'totalPages'"
-                        :load-function="'loadCriteria'"
-                    />
+                    <template x-if="criteria">
+                        <x-management.criteria-content/>
+                    </template>
+                    {{-- Div exibida enquanto os dados não chegam no front --}}
+                    <x-feedback.loading/>
+                    {{-- Div exibida caso não haja registros no banco --}}
+                    <template x-if="isEmpty && !loading">
+                        <x-feedback.empty-state />
+                    </template>
+                    {{-- Paginação --}}
+                    <template x-if="page && !loading">
+                        <x-feedback.pagination
+                            :page-var="'page'"
+                            :total-pages="'totalPages'"
+                            :load-function="'loadCriteria'"
+                        />
+                    </template>
                 </x-nav-evaluation-table>
             </div>
         </x-main-content>

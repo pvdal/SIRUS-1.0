@@ -1,5 +1,5 @@
 @php
-    [$singular, $plural] = $model;
+   // [$singular, $plural] = $model;
 @endphp
 
 <div class="px-10 pb-10 pt-14">

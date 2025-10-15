@@ -17,6 +17,10 @@ export function committeesData() {
             name: '',
             drop: false,
         },
+        historyFilter: false,
+        toggleHistory(){
+            this.$dispatch('toggle-history', this.historyFilter);
+        },
         // Variáveis dos campos do formulário
         name: '',
         coordinator_id: '',
@@ -245,6 +249,7 @@ export function committeesData() {
                     search: this.searchTerm,
                     status: this.statusFilter.value,
                     period: this.registerPeriod.value,
+                    history: this.historyFilter,
                 }
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
                 const response = await axios.get(`/${requestPrefix}/committees/show`, {params});
@@ -254,6 +259,7 @@ export function committeesData() {
                 this.totalPages = response.data.totalPages;
 
                 this.empty.result = !this.committees.length;
+                this.toggleHistory();
             } catch (error) {
                 if(error.response){
                     this.errors.load = error.response.data.message || 'Erro ao carregar os dados.';
@@ -356,6 +362,10 @@ export function committeesData() {
                 clearFields: !update,
             });
 
+            if (savedData && Object.keys(savedData).length > 0) {
+                this.empty.data = false;
+            }
+
             if(update && savedData) {
                 // Trata os timestamps
                 this.created_at = formatDateTime('Criado em', savedData.created_at);
@@ -418,12 +428,13 @@ export function committeesData() {
             } catch (error) {
                 console.error('Erro ao alterar status: ', error);
                 const msg = error.response?.data?.message || 'Erro inesperado.'
+
                 window.dispatchEvent(new CustomEvent('banner-message', {
                     detail: {
                         style: 'danger',
-                        message: msg,
+                        message: (error.response?.data?.success === false && msg) ? msg : 'Erro inesperado!',
                     }
-                }));
+                }))
             } finally {
                 this.inactivatingIds = this.inactivatingIds.filter(item => item !== targetId);
                 this.activatingIds = this.activatingIds.filter(item => item !== targetId);

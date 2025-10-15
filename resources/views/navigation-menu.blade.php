@@ -4,7 +4,7 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
-                <div class="shrink-0 flex items-center relative me-16">
+                <div class="shrink-0 flex items-center relative me-20">
                     <a href="{{ route('calendar') }}">
                         <!-- Logo modo claro -->
                         <x-application-logo

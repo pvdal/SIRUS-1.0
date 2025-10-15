@@ -81,7 +81,7 @@
                 <p class="p-2 text-gray-500">Nenhum docente encontrado.</p>
             </template>
             <ul x-show="filteredMembers.length > 0 || searching" class="max-h-80 overflow-y-auto scrollbar-custom"
-                x-bind:class="{ 'border rounded bg-gray-200 dark:bg-gray-700 shadow-sm dark:shadow-gray-500': filteredMembers.length > 0}"
+                x-bind:class="{ 'border rounded bg-gray-100 dark:bg-gray-700 shadow-sm dark:shadow-gray-700': filteredMembers.length > 0}"
             >
                 <template x-if="searching">
                     <li class="p-2 text-gray-500">Buscando...</li>
@@ -89,9 +89,9 @@
 
                 <template x-for="member in filteredMembers" :key="member.user_id">
                     <li
-                        class="p-2 border-b"
+                        class="p-2 border-b border-gray-300"
                         @click="!member.committee && addMember(member)"
-                        :class="{ 'opacity-50 cursor-normal': member.committee, 'cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600': !member.committee }"
+                        :class="{ 'opacity-50 cursor-normal': member.committee, 'cursor-pointer hover:bg-gray-200/50 dark:hover:bg-gray-600': !member.committee }"
                     >
                         <div>
                             <span x-text="member.user_type.name + ': ' + member.name + ' - ' + member.id"></span>

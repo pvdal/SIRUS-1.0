@@ -42,26 +42,11 @@
     </x-custom-modal>
 
     {{-- Component modal para avisos (reutilizável) --}}
-    <x-warning-modal x-model="showWarningModal" @close="showWarningModal = false; clearFields('warning');" :maxWidth="'sm'">
+    <x-warning-modal x-model="showWarningModal" @close="showWarningModal = false; clearFields('warning');" :maxWidth="'sm'" :warningType="'warningType'">
         <x-slot name="title">
-            <div class="flex items-center gap-2">
-                <template x-if="warningType === 'Confirmação'">
-                    <div class="flex items-center gap-2 text-secondary-orange">
-                        <div class="bg-secondary-orange rounded-[20px] p-2">
-                            <x-lucide-alert-triangle class="text-white w-5 h-5" />
-                        </div>
-                        <span x-text="warningType" class="font-semibold"></span>
-                    </div>
-                </template>
-                <template x-if="warningType === 'Erro'">
-                    <div class="flex items-center gap-2 text-red-700">
-                        <div class="bg-red-700 rounded-[20px] p-2">
-                            <x-lucide-x-circle class="text-white w-5 h-5" />
-                        </div>
-                        <span x-text="warningType" class="font-semibold"></span>
-                    </div>
-                </template>
-            </div>
+            <template x-if="warningType">
+                <span x-text="warningType" class="font-semibold"></span>
+            </template>
         </x-slot>
 
         <x-slot name="content">
@@ -87,89 +72,68 @@
         </x-slot>
     </x-warning-modal>
 
-    <div class="py-5 px-2 rounded-sm">
-
-        {{-- Tabela de registros de critérios --}}
-        <table class="min-w-full border border-gray-300 divide-y divide-gray-200 rounded-sm">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th class="px-4 py-2 text-center text-gray-700">Nome</th>
-                    <th class="px-4 py-2 text-center text-gray-700 hidden md:table-cell">Insatisfatório</th>
-                    <th class="px-4 py-2 text-center text-gray-700 hidden md:table-cell">Satisfatório</th>
-                    <th class="px-4 py-2 text-center text-gray-700 hidden md:table-cell">Bom</th>
-                    <th class="px-4 py-2 text-center text-gray-700 hidden md:table-cell">Excelente</th>
-                    <th class="px-4 py-2 text-center text-gray-700 hidden sm:table-cell">Estado</th>
-                    <th class="px-4 py-2 text-center text-gray-700">Ações</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white">
-            <template x-for="criterion in [...newCriteria, ...criteria]" :key="criterion.id">
-                <tr :class="{ 'hover:bg-gray-50': true, 'bg-green-50': criterion.origin === 'new' }"
-                    x-transition:enter="transition ease-out duration-500"
-                    x-transition:enter-start="opacity-0 transform scale-95 -translate-y-2"
-                    x-transition:enter-end="opacity-100 transform scale-100 translate-y-0"
-                >
-                    <td class="px-4 py-2 border text-center border-gray-300" x-text="criterion.name"></td>
-                    <td class="px-4 py-2 border text-center border-gray-300 hidden md:table-cell truncate max-w-[200px]" :title="criterion.unsatisfactory" x-text="criterion.unsatisfactory || '-'"></td>
-                    <td class="px-4 py-2 border text-center border-gray-300 hidden md:table-cell truncate max-w-[200px]" :title="criterion.satisfactory" x-text="criterion.satisfactory || '-'"></td>
-                    <td class="px-4 py-2 border text-center border-gray-300 hidden md:table-cell truncate max-w-[200px]" :title="criterion.good" x-text="criterion.good || '-'"></td>
-                    <td class="px-4 py-2 border text-center border-gray-300 hidden md:table-cell truncate max-w-[200px]" :title="criterion.excellent" x-text="criterion.excellent || '-'" ></td>
-                    <td class="px-4 py-2 border text-center border-gray-300 hidden sm:table-cell" x-text="criterion.state ? 'Ativo' : 'Inativo'"></td>
-                    <td class="px-4 py-2 border text-center border-gray-300">
-                        <template x-if="criterion.state">
-                            <x-button type="button" class="min-w-[98px] mb-1"
-                                      x-on:click="
-                                    showCriterion(criterion);
+    <div x-show="!isEmpty && !loading" class="py-5 px-2 rounded-sm">
+        {{-- Tabela de registros de critérios: recebe os dados iniciais direto do controller e na paginação recebe os dados por ajax --}}
+        <x-table.content
+            :items="'criteria'"
+            :new-items="'newCriteria'"
+            :item-key="'id'"
+            :haveActions="true"
+        >
+            <x-slot name="columns">
+                <x-table.th >ID</x-table.th>
+                <x-table.th >Nome</x-table.th>
+                <x-table.th class="hidden md:table-cell">Insatisfatório</x-table.th>
+                <x-table.th class="hidden md:table-cell">Satisfatório</x-table.th>
+                <x-table.th class="hidden md:table-cell">Bom</x-table.th>
+                <x-table.th class="hidden md:table-cell">Excelente</x-table.th>
+                <x-table.th class="hidden sm:table-cell">Estado</x-table.th>
+            </x-slot>
+            <x-slot name="rows">
+                <x-table.td x-text="item.id"></x-table.td>
+                <x-table.td x-text="item.name"></x-table.td>
+                <x-table.td class="hidden md:table-cell truncate max-w-[200px]" x-bind:title="item.unsatisfactory" x-text="item.unsatisfactory || '-'"></x-table.td>
+                <x-table.td class="hidden md:table-cell truncate max-w-[200px]" x-bind:title="item.satisfactory" x-text="item.satisfactory || '-'"></x-table.td>
+                <x-table.td class="hidden md:table-cell truncate max-w-[200px]" x-bind:title="item.good" x-text="item.good || '-'"></x-table.td>
+                <x-table.td class="hidden md:table-cell truncate max-w-[200px]" x-bind:title="item.excellent" x-text="item.excellent || '-'" ></x-table.td>
+                <x-table.td class="hidden sm:table-cell" x-text="item.state ? 'Ativo' : 'Inativo'"></x-table.td>
+            </x-slot>
+            <x-slot name="actions">
+                <div class="flex flex-wrap gap-2 items-center justify-center">
+                    <template x-if="item.state">
+                        <x-button type="button" class="min-w-[98px]"
+                                  x-on:click="
+                                    showCriterion(item);
                                     $el.blur();
                                 "
-                            >
-                                Alterar
-                            </x-button>
-                        </template>
-                        <template x-if="criterion.state">
-                            <x-danger-button type="button" class="min-w-[98px]" x-bind:disabled="isInactivating(criterion.id)"
-                                             x-on:click="
-                                    warning('confirmação', criterion.name, criterion.id, 'inativar');
+                        >
+                            Alterar
+                        </x-button>
+                    </template>
+                    <template x-if="item.state">
+                        <x-danger-button type="button" class="min-w-[98px]" x-bind:disabled="isInactivating(item.id)"
+                                         x-on:click="
+                                    warning('confirmação', item.name, item.id, 'inativar');
                                     $el.blur();
                                 "
-                            >
-                                <span x-show="isInactivating(criterion.id)">Inativando...</span>
-                                <span x-show="!isInactivating(criterion.id)">Inativar</span>
-                            </x-danger-button>
-                        </template>
-                        <template x-if="!criterion.state">
-                            <x-management.activate-button type="button" class="min-w-[98px]" x-bind:disabled="isActivating(criterion.id)"
-                                                          x-on:click="
-                                    warning('confirmação', criterion.name, criterion.id, 'ativar');
+                        >
+                            <span x-show="isInactivating(item.id)">Inativando...</span>
+                            <span x-show="!isInactivating(item.id)">Inativar</span>
+                        </x-danger-button>
+                    </template>
+                    <template x-if="!item.state">
+                        <x-management.activate-button type="button" class="min-w-[98px]" x-bind:disabled="isActivating(item.id)"
+                                                      x-on:click="
+                                    warning('confirmação', item.name, item.id, 'ativar');
                                     $el.blur();
                                 "
-                            >
-                                <span x-show="isActivating(criterion.id)">Ativando...</span>
-                                <span x-show="!isActivating(criterion.id)">Ativar</span>
-                            </x-management.activate-button>
-                        </template>
-                    </td>
-                </tr>
-            </template>
-            </tbody>
-        </table>
+                        >
+                            <span x-show="isActivating(item.id)">Ativando...</span>
+                            <span x-show="!isActivating(item.id)">Ativar</span>
+                        </x-management.activate-button>
+                    </template>
+                </div>
+            </x-slot>
+        </x-table.content>
     </div>
-
-    <div x-show="loading" class="flex justify-center py-4">
-        <svg class="animate-spin h-6 w-6 text-secondary-blue" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-        </svg>
-    </div>
-
-    <template x-if="empty">
-        <div class="flex flex-col items-center justify-center pb-8 pt-2 text-center">
-            <p class="text-gray-700 text-md font-medium">
-                Nenhum critério foi cadastrado até o momento.
-            </p>
-            <p class="text-gray-500 mt-1 text-sm">
-                Assim que houverem critérios registrados, eles aparecerão aqui.
-            </p>
-        </div>
-    </template>
 </div>

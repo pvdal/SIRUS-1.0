@@ -46,7 +46,14 @@ export function criteriaData() {
 
         // Variáveis de estado da tabela
         loading: false,
-        empty: false,
+        empty: {
+            data: false,
+            result: false,
+        },
+        get isEmpty() {
+            // retorna true apenas quando quiser considerar como "vazio"
+            return this.empty.result || this.empty.data;
+        },
         page: 1,
         totalPages: 1,
 
@@ -55,7 +62,7 @@ export function criteriaData() {
             this.criteria = criteria;
             this.page = page;
             this.totalPages = totalPages;
-            this.empty = !Array.isArray(criteria) || criteria.length === 0;
+            this.empty.data = !Array.isArray(criteria) || criteria.length === 0;
 
             // Limpa o formulário e reseta o estado quando o modal é fechado
             this.$watch('showCreateModal', (value) => {
@@ -92,11 +99,14 @@ export function criteriaData() {
         //Filtro de busca
         async loadCriteria(page = 1) {
             this.loading = true;
+            this.empty.result = false;
+            this.empty.data = false;
 
             // muda o cursor para "aguardando"
             document.body.style.cursor = 'wait';
 
             this.errors = {};
+            this.newCriteria = [];
 
             try {
                 const params = {
@@ -113,11 +123,7 @@ export function criteriaData() {
                 this.page = response.data.page;
                 this.totalPages = response.data.totalPages;
 
-                // Paginação local (.js)
-                //this.page = 1;               // página inicial
-                //this.perPage = 15;           // itens por página
-                //this.totalPages = Math.ceil(this.students.length / this.perPage);
-
+                this.empty.result = !this.criteria.length;
             }
             catch (error){
                 if(error.response){
@@ -161,6 +167,10 @@ export function criteriaData() {
                 campoLista: isUpdate ? null : 'newCriteria', // Adiciona na lista de 'novos' se for cadastro
                 clearFields: !isUpdate, // Limpa os campos se for cadastro
             });
+
+            if (savedData && Object.keys(savedData).length > 0) {
+                this.empty.data = false;
+            }
 
             if (isUpdate && savedData) {
                 // Atualiza os timestamps no modal

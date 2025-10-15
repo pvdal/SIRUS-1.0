@@ -84,7 +84,9 @@ class EventController extends Controller
                     $q->where('state', 1);
                 })->with('user:id,name', 'memberType:id,name');
             },
-        ])->get();
+        ])
+            ->where('state', 1)
+            ->get();
 
         // Ajustar para formato que o FullCalendar espera
         $data = $events
@@ -141,7 +143,7 @@ class EventController extends Controller
                 'message' => 'Selecione um evento!',
             ], 422);
         }
-
+        // Log::info($request);
         $event = Committee::find($id);
 
         if (!$event) {
@@ -161,14 +163,14 @@ class EventController extends Controller
         }
 
         $request->validate([
-            'dateStart' => 'required|date_format:Y-m-d',
-            'dateEnd'   => 'required|date_format:Y-m-d|after_or_equal:dateStart',
-            'timeStart' => 'required|date_format:H:i:s',
-            'timeEnd'   => 'required|date_format:H:i:s',
+            'date_start' => 'required|date_format:Y-m-d',
+            'date_end'   => 'required|date_format:Y-m-d|after_or_equal:dateStart',
+            'time_start' => 'required|date_format:H:i:s',
+            'time_end'   => 'required|date_format:H:i:s',
         ]);
 
-        $start = strtotime($request->dateStart . ' ' . $request->timeStart);
-        $end = strtotime($request->dateEnd . ' ' . $request->timeEnd);
+        $start = strtotime($request->date_start . ' ' . $request->time_start);
+        $end = strtotime($request->date_end . ' ' . $request->time_end);
 
         if ($end <= $start) {
             return response()->json([

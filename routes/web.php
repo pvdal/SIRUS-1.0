@@ -54,11 +54,17 @@ Route::middleware([
     // Calendar -> EventController/Committee.php
     Route::get('/calendar', [EventController::class, 'index'])->name('calendar');
 
+    // Committees -> CommitteeController/Committee.php
+    Route::get('/committees', [CommitteeController::class, 'index'])->name('committees-table');
+
     Route::prefix(config('secure.request_prefix')) // todas as rotas dentro desse grupo possuem o prefixo definido no.env
     ->middleware('secure.ajax') // middleware que traz camadas a mais de seguranças nas requisições ajax
     ->group(function () {
         // Calendar -> EventController/Committee.php
         Route::get('/events/show', [EventController::class, 'show'])->name('events.show');
+
+        // Committees -> CommitteeController/Committee.php
+        Route::get('/committees/show', [CommitteeController::class, 'show'])->name('committees.show');
     });
 });
 
@@ -84,9 +90,6 @@ Route::middleware([
 
     // Courses -> CourseController/Course.php
     Route::get('/courses', [CourseController::class, 'index'])->name('courses-table');
-
-    // calendar -> CommitteeController/Committee.php
-    Route::get('/committees', [CommitteeController::class, 'index'])->name('committees-table');
 
     // Evaluations -> CommitteeController/Committee.php
    // Route::get('/evaluation', [EvaluationController::class, 'index'])->name('evaluations-table');
@@ -152,7 +155,6 @@ Route::middleware([
 
         // Committees -> CommitteeController/Committee.php
         Route::get('/members/search', [CommitteeController::class, 'search'])->name('committees.search-members');
-        Route::get('/committees/show', [CommitteeController::class, 'show'])->name('committees.show');
         Route::post('/committees/save', [CommitteeController::class, 'store'])->name('committees.store');
         Route::put('/committees/{id}/update', [CommitteeController::class, 'update'])->name('committees.update');
         Route::put('/committees/{id}/{action}', [CommitteeController::class, 'toggleStatus'])->name('committees.toggle-status');

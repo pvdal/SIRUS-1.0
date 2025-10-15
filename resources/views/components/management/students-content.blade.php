@@ -111,10 +111,10 @@
                     </template>
                     <template x-if="item.state">
                         <x-danger-button type="button" class="min-w-[98px]" x-bind:disabled="isInactivating(item.user_id)"
-                                         x-on:click="
-                                    warning('confirmação', item.name, item.user_id, 'inativar');
-                                    $el.blur();
-                                "
+                        x-on:click="
+                            warning('confirmação', item.name, item.user_id, 'inativar');
+                            $el.blur();
+                        "
                         >
                             <template x-if="isInactivating(item.user_id)">
                                 <span>Inativando...</span>
@@ -126,10 +126,10 @@
                     </template>
                     <template x-if="!item.state">
                         <x-management.activate-button type="button" class="min-w-[98px]" x-bind:disabled="isActivating(item.user_id)"
-                                                      x-on:click="
-                                    warning('confirmação', item.name, item.user_id, 'ativar');
-                                    $el.blur();
-                                "
+                            x-on:click="
+                                warning('confirmação', item.name, item.user_id, 'ativar');
+                                $el.blur();
+                            "
                         >
                             <template x-if="isActivating(item.user_id)">
                                 <span>Ativando...</span>

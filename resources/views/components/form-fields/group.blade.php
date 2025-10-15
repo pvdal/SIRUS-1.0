@@ -160,7 +160,7 @@
                                         'flex items-center justify-between transition duration-150 ease-in-out': true,
                                         'cursor-pointer': paper.state !== 0,
                                         'cursor-default opacity-50': paper.state === 0,
-                                        'pb-2': paperExpanded[paper.id ?? tempId]
+                                        'pb-2': paperExpanded[paper.id ?? paper.tempId]
                                     }"
                                     @click="paperExpanded[paper.id ?? paper.tempId] = !paperExpanded[paper.id ?? paper.tempId]"
                                     :title="paper.title"
@@ -324,7 +324,7 @@
     </template>
     <ul
         x-show="filteredStudents.length > 0 || searching" class="max-h-80 overflow-y-auto scrollbar-custom"
-        x-bind:class="{ 'border rounded bg-gray-100 dark:bg-gray-700 shadow-sm dark:shadow-gray-500': filteredStudents.length > 0}"
+        x-bind:class="{ 'border rounded bg-gray-100 dark:bg-gray-700 shadow-sm dark:shadow-gray-700': filteredStudents.length > 0}"
     >
         <template x-if="searching">
             <li class="p-2 text-gray-500">Buscando...</li>
@@ -332,9 +332,9 @@
 
         <template x-for="student in filteredStudents" :key="student.ra">
             <li
-                class="p-2 border-b"
+                class="p-2 border-b border-gray-300"
                 @click="!student.group && addMember(student)"
-                :class="{ 'opacity-50 cursor-normal': student.group, 'cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600': !student.group }"
+                :class="{ 'opacity-50 cursor-normal': student.group, 'cursor-pointer hover:bg-gray-200/50 dark:hover:bg-gray-600': !student.group }"
             >
                 <div>
                     <span x-text="student.name + ': ' + student.ra"></span>

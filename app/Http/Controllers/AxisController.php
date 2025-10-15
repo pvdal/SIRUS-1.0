@@ -16,7 +16,7 @@ class AxisController extends Controller
     {
         // MUDANÇA IMPORTANTE:
         // Não precisamos mais de withCount(). Apenas with('criteria') para o modal de edição.
-        $axisCollection = Axis::with('criteria')->orderBy('name', 'asc')->paginate(15);
+        $axisCollection = Axis::with('criteria')->orderBy('id')->paginate(30);
 
         $totalAmount = $axisCollection->total();
 
@@ -66,7 +66,11 @@ class AxisController extends Controller
             $axis->criteria()->sync($validatedData['criteria']);
         }
 
-        return response()->json($axis, 201);
+        return response()->json([
+            'success' => true,
+            'message' => 'Eixo cadastrado com sucesso!',
+            'data' => $axis
+        ],201);
     }
 
     /**
@@ -93,13 +97,28 @@ class AxisController extends Controller
 
         $axis->criteria()->sync($request->input('criteria', []));
 
-        return response()->json($axis);
+        // Recarrega a relação para garantir que vem atualizada
+        $axis->load('criteria');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Eixo atualizado com sucesso!',
+            'data' => [
+                'id' => $axis->id,
+                'name' => $axis->name,
+                'amount' => $axis->amount,
+                'state' => (int) $axis->state,
+                'created_at' => $axis->created_at,
+                'updated_at' => $axis->updated_at,
+                'criteria' => $axis->criteria,
+            ],
+        ]);
     }
 
 
     public function show(Request $request): \Illuminate\Http\JsonResponse
     {
-        $query = Axis::query()->orderBy('name');
+        $query = Axis::query()->orderBy('id');
 
         // Filtro por busca (nome do eixo)
         if ($request->filled('search')) {
@@ -138,9 +157,7 @@ class AxisController extends Controller
         }
 
         // Paginação
-        $perPage = 10;
-        $page = $request->get('page', 1);
-        $axes = $query->orderBy('created_at', 'desc')->paginate($perPage, ['*'], 'page', $page);
+        $axes = $query->paginate(30);
 
         return response()->json([
             'data' => $axes->items(),
