@@ -87,7 +87,7 @@
                 <x-table.td class="hidden md:table-cell" x-text="item.id"></x-table.td>
                 <x-table.td x-text="item.name"></x-table.td>
                 <x-table.td class="hidden sm:table-cell" x-text="item.shift_pt"></x-table.td>
-                <x-table.td class="hidden md:table-cell" x-bind:class="item.coordinator_state == 0 && item.coordinator_name ? 'line-through text-gray-400' : ''" x-text="item.coordinator_name || '-'"></x-table.td>
+                <x-table.td class="hidden md:table-cell" x-bind:class="item.coordinator_state === 0 && item.coordinator_name ? 'line-through text-gray-400' : ''" x-text="item.coordinator_name || '-'"></x-table.td>
                 <x-table.td class="hidden md:table-cell" x-text="item.state === 1 ? 'Ativo' : 'Inativo'"></x-table.td>
             </x-slot>
 

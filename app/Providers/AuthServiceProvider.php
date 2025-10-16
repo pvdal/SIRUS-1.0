@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Committee;
 use App\Models\Paper;
 use App\Models\Student;
 use App\Models\User;
@@ -40,6 +41,49 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define('evaluate', function ($user) {
             return $user->canEvaluate();
+        });
+
+        Gate::define('evaluate-paper', function (User $user, Committee $committee) {
+            // Bloqueia acesso direto para nível 1
+            if($user->access_level === 1) {
+                return false;
+            }
+
+            // Verifica se o usuário faz parte da banca passada como parâmetro
+            $member =  UserCommittee::where('committee_id', $committee->id)
+                ->where('user_id', $user->id)
+                ->first();
+
+            // Se não é membro, não pode avaliar
+            if (!$member) {
+                return false;
+            }
+
+            // Só pode avaliar se ainda não tiver avaliado
+            return $member->evaluated_at === null;
+        });
+
+        Gate::define('view-evaluation', function ($user, Committee $committee) {
+            // Usuário nível 3 tem acesso total de leitura
+            if($user->isAdmin()) {
+                return true;
+            }
+
+            if($user->access_level === 2) {
+                // Verifica se o usuário faz parte da banca passada como parâmetro
+                return UserCommittee::where('committee_id', $committee->id)
+                    ->where('user_id', $user->id)
+                    ->exists();
+            }
+
+            if($user->access_level === 1) {
+                // Caso o usuário tenha nível 1, só pode ver a avaliação caso seja membro
+                // do grupo que detém o paper submetido à banca
+                $paper = Paper::find($committee->paper_id);
+                return $paper->group_id === $user->group_id;
+            }
+
+            return false;
         });
 
         Gate::define('view-paper', function (User $user, Paper $paper) {

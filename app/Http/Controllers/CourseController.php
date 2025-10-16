@@ -174,7 +174,7 @@ class CourseController extends Controller
         ]);
         //$end = microtime(true);
         //Log::info('Tempo criação user direto + professor: ' . ($end - $start) . ' segundos');
-        $course->load('coordinator.user:id,name');
+        $course->load('coordinator.user:id,name,state');
 
         return response()->json([
             'success' => true,
@@ -223,6 +223,8 @@ class CourseController extends Controller
         if($course->isDirty()) {
             $course->save();
         }
+
+        $course->load('coordinator.user:id,name,state');
 
         return response()->json([
             'success' => true,

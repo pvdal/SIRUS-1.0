@@ -43,28 +43,49 @@ input[type=number] {
 ****************************************/
 /* Chrome, Edge (Chromium) e Safari */
 .scrollbar-custom::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
 }
 
+/* Track (fundo da barra) */
 .scrollbar-custom::-webkit-scrollbar-track {
-    background: #f1f1f1; /* cor da trilha */
+    background: #f1f1f1;
     border-radius: 10px;
     cursor: default;
 }
 
+/* Track — tema escuro */
+.dark .scrollbar-custom::-webkit-scrollbar-track {
+    background: #a0aec0; /* cinza bem escuro */
+    border-radius: 10px;
+    cursor: default;
+}
+
+/* Thumb (o "polegar") */
 .scrollbar-custom::-webkit-scrollbar-thumb {
-    background-color: #a0aec0; /* cor do "polegar" (scroll) */
+    background-color: #a0aec0; /* claro */
     border-radius: 10px;
-    border: 2px solid #f1f1f1;
     cursor: default;
 }
 
-.scrollbar-custom::-webkit-scrollbar-thumb:hover {
-    background-color: #8a99b0; /* cor do "polegar" (scroll) */
+/* Thumb — tema escuro */
+.dark .scrollbar-custom::-webkit-scrollbar-thumb {
+    background-color: #6b788e; /* cinza-azulado médio-escuro */
+    border-radius: 10px;
+    cursor: default;
 }
 
-/* Esconder as setas (botões) da scrollbar em WebKit */
+/* Hover (efeito ao passar o mouse) */
+.scrollbar-custom::-webkit-scrollbar-thumb:hover {
+    background-color: #8a99b0;
+}
+
+/* Hover — tema escuro */
+.dark .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+    background-color: #5d697e; /* um pouco mais claro pra destacar */
+}
+
+/* Esconder setas (botões) no WebKit */
 .scrollbar-custom::-webkit-scrollbar-button {
     display: none;
     width: 0;
@@ -72,9 +93,11 @@ input[type=number] {
 }
 
 /* Firefox */
-.dark .scrollbar-custom {
-    scrollbar-width: auto;
-    scrollbar-color: #4a5560 #2d3748; /* thumb e track */
+@-moz-document url-prefix() {
+    .dark .scrollbar-custom {
+        scrollbar-width: auto;
+        scrollbar-color: #4a5560 #2d3748; /* thumb e track */
+    }
 }
 
 /**********************************

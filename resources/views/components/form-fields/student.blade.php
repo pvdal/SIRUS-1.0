@@ -17,7 +17,7 @@
     {{-- Nome do aluno --}}
     <div class="mt-4">
         <x-label for="name" value="Nome do Aluno"/>
-        <x-input id="name" type="text" autocomplete="name" class="w-full"
+        <x-input id="name" type="text" autocomplete="name" class="w-full mt-1"
                  placeholder="Nome do aluno" x-model="name"
                  @keydown.enter="saveStudent"/>
         <template x-if="errors.name">
@@ -27,7 +27,7 @@
     {{-- Email do aluno --}}
     <div class="mt-4">
         <x-label for="email" value="Email do Aluno"/>
-        <x-input id="email" type="text" autocomplete="email" class="w-full"
+        <x-input id="email" type="text" autocomplete="email" class="w-full mt-1"
                  placeholder="E-mail do aluno" x-model="email"
                  @keydown.enter="saveStudent"/>
         <template x-if="errors.email">
@@ -37,7 +37,7 @@
     {{-- Grupo --}}
     <div class="mt-4">
         <x-label for="group_id" value="Grupo (opcional)"/>
-        <x-select id="group_id" x-model="group_id">
+        <x-select id="group_id" x-model="group_id" class="w-full mt-1">
             <option value="" selected>Selecione um grupo</option>
             <template x-for="group in groups" :key="group.id">
                 <option :value="group.id" x-text="group.theme ?? '-'"></option>
@@ -51,7 +51,7 @@
     {{-- Curso --}}
     <div class="mt-4">
         <x-label for="course_id" value="Curso (opcional)"/>
-        <x-select id="course_id" x-model="course_id">
+        <x-select id="course_id" x-model="course_id" class="w-full mt-1">
             <option value="" selected>Selecione um curso</option>
             <template x-for="course in courses" :key="course.id">
                 <option :value="course.id" x-text="course.name ?? '-'"></option>

@@ -21,7 +21,7 @@
             <div x-show="showPaper" x-cloak>
                 <x-button x-on:click="$dispatch('toggle-groups')">Visualizar Bancas</x-button>
             </div>
-            <div x-show="showHistory" x-cloak>
+            <div x-show="showHistory && !showPaper" x-cloak>
                 <h2 class="font-semibold text-xl">Histórico de avaliações</h2>
             </div>
             <h2 x-show="!showPaper && !showHistory" x-cloak class="font-semibold text-xl">{{ $header }}</h2>

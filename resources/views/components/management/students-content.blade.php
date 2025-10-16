@@ -92,8 +92,8 @@
                 <x-table.td class="hidden md:table-cell" x-text="item.ra"></x-table.td>
                 <x-table.td x-text="item.name"></x-table.td>
                 <x-table.td class="hidden lg:table-cell" x-text="item.email"></x-table.td>
-                <x-table.td class="hidden md:table-cell" x-bind:class="item.group && item.group.state === 0 ? 'line-through text-gray-400' : ''" x-text="item.group?.name || '-'"></x-table.td>
-                <x-table.td class="hidden xl:table-cell" x-bind:class="item.course && item.course.state === 0 ? 'line-through text-gray-400' : ''" x-text="item.course?.name || '-'"></x-table.td>
+                <x-table.td class="hidden md:table-cell" x-bind:class="item.group && item.group.id &&  item.group.state === 0 ? 'line-through text-gray-400' : ''" x-text="item.group?.name || '-'"></x-table.td>
+                <x-table.td class="hidden xl:table-cell" x-bind:class="item.course && item.course.id && item.course.state === 0 ? 'line-through text-gray-400' : ''" x-text="item.course?.name || '-'"></x-table.td>
                 <x-table.td class="hidden xl:table-cell" x-text="item.state === 1 ? 'Ativo' : 'Inativo'"></x-table.td>
             </x-slot>
 

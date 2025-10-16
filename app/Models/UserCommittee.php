@@ -11,12 +11,14 @@ class UserCommittee extends Model
         'user_id',
         'committee_id',
         'member_type_id',
+        'evaluated_at',
         'state'
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'evaluated_at' => 'datetime',
     ];
 
     #region Relacionamentos
