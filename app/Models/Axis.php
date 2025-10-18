@@ -34,7 +34,9 @@ class Axis extends Model
      * Define a relação de muitos-para-muitos com o model Criterion.
      * Um Eixo pode ter vários Critérios.
      */
-    public function criteria()
+    // relação many-to-many com criteria via axis_criteria (pivot com weight)
+
+    public function criteria(): BelongsToMany
     {
         return $this->belongsToMany(Criterion::class, 'axis_criteria', 'axis_id', 'criteria_id');
     }
@@ -47,6 +49,7 @@ class Axis extends Model
      *
      * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
+
 
 
 }

@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('rubric_axis', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('rubric_id')->constrained('rubrics')->onDelete('cascade');
+            $table->foreignId('rubrics_id')->constrained('rubrics')->onDelete('cascade');
             $table->foreignId('axis_id')->constrained('axes')->onDelete('cascade');
-            $table->unsignedInteger('amount'); //quantidade de critérios dentro do eixo
+            $table->integer('weight');// Peso do Eixo na rubrica
+            $table->enum('type', ['individual', 'in group']);// Tipo de avaliação do eixo
             $table->timestamps();
         });
     }

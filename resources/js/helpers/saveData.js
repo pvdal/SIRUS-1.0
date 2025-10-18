@@ -51,7 +51,7 @@ export async function saveData({
 
         if (callbackSucesso) callbackSucesso(response.data);
 
-        contexto.empty.result = false;
+
 
         // Retorna o objeto salvo para uso na view
         return novo;
@@ -95,15 +95,18 @@ export async function saveData({
                 || 'Erro inesperado ao salvar!';
 
             if(error.response?.data?.success === false) {
-                contexto.showMessage('warning', message);
+                contexto.showMessage('warning', error.response?.data?.message);
             } else {
-                contexto.showMessage('danger', message);
+                contexto.showMessage('danger', error.response?.data?.message);
             }
+            console.log(error);
+            console.log(error.response?.data?.message);
         } else {
             contexto.showMessage('danger', 'Erro inesperado ao salvar!');
-            //console.error(error);
+            console.log(error);
+            console.log(error.response?.data?.message);
         }
-        // throw error;
+        throw error;
     } finally {
         contexto.saving = false;
     }

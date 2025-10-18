@@ -48,3 +48,7 @@ import {criteriaData} from "./components/evaluation/criteriaData.js";
 window.criteriaData = criteriaData;
 import {axesData} from "./components/evaluation/axesData.js";
 window.axesData = axesData;
+import {rubricsData} from "./components/evaluation/rubricsData.js";
+window.rubricsData = rubricsData;
+
+

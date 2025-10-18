@@ -45,7 +45,7 @@ Route::middleware([
     /*Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');*/
-
+    Route::get('/rubrics/{rubric}/model-view', [RubricController::class, 'showModelView'])->name('rubrics.model_view');
     // Groups -> PaperController/Paper.php -> Quem chama essa rota é o iframe em groups.blade.php
     Route::get('/papers/{filepath}', [PaperController::class, 'showPaper'])
         ->where('filepath', '.*')
@@ -115,6 +115,13 @@ Route::middleware([
         Route::post('/axis/save', [AxisController::class, 'store'])->name('axis.store');
         Route::put('/axis/{id}/update', [AxisController::class, 'update'])->name('axis.update');
         Route::put('/axis/{id}/{action}', [AxisController::class, 'toggleStatus'])->name('axis.toggle-status');
+        Route::get('/axis/search', [AxisController::class, 'search'])->name('axis.search-axes');
+
+        // Rubric -> RubricController/Rubric.php
+        Route::get('/rubrics/show', [RubricController::class, 'show'])->name('rubric.show');
+        Route::post('/rubrics/save', [RubricController::class, 'store'])->name('rubric.store');
+        Route::put('/rubrics/{id}/update', [RubricController::class, 'update'])->name('rubric.update');
+        Route::put('/rubrics/{id}/{action}', [RubricController::class, 'toggleStatus'])->name('rubric.toggle-status');
 
 //        Route::get('/axis', [AxisController::class, 'index'])->name('axis.index');
 //        Route::post('/axis', [AxisController::class, 'store'])->name('axis.store');

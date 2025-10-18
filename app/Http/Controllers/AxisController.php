@@ -198,5 +198,16 @@ class AxisController extends Controller
         ]);
     }
 
+    public function search(Request $request)
+    {
+        $query = $request->get('q');
+
+        $results = Axis::where('name', 'like', "%{$query}%")
+            ->where('state', 1)
+            ->get();
+
+        return response()->json($results);
+    }
+
 
 }
