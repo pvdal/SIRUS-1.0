@@ -4,16 +4,16 @@
     </x-slot>
 
     <x-slot name="header">
-        <h2 id="page-title" x-text="window.headerTitle ?? ''" class="font-semibold text-xl">Grupos cadastrados</h2>
+        <h2 id="page-title" x-text="window.headerTitle ?? ''" class="font-semibold text-xl leading-tight">Grupos cadastrados</h2>
         <div x-data="{ showPaper: false }"
              x-init="document.getElementById('page-title')?.remove()"
              x-on:toggle-paper.window="showPaper = $event.detail"
              class="flex items-center justify-between"
         >
             <div x-show="showPaper" x-cloak>
-                <x-button x-on:click="$dispatch('toggle-groups')">Visualizar Grupos</x-button>
+                <x-button x-on:click="$dispatch('toggle-groups'); $dispatch('toggle-nav-bar', true);">Visualizar Grupos</x-button>
             </div>
-            <h2 x-show="!showPaper" x-cloak class="font-semibold text-xl">Grupos cadastrados</h2>
+            <h2 x-show="!showPaper" x-cloak class="font-semibold text-xl leading-tight">Grupos cadastrados</h2>
         </div>
     </x-slot>
 
@@ -28,8 +28,11 @@
         "
         x-init='init(@json($groups), @json($courses), {{ $page }}, {{ $totalPages }})'
     >
+        {{-- Div exibida enquanto os dados não chegam no front --}}
+        {{-- Estou chamando fora devido a necessidade de remover o modal da página do DOM para exibir o PDF com scroll --}}
+        <x-feedback.loading/>
         {{-- Grupos cadastrados --}}
-        <div x-show="showGroupCards">
+        <template x-if="showGroupCards">
             <x-main-content>
                 {{-- Menu utilitário das tabelas --}}
                 <template x-if="groups">
@@ -50,8 +53,6 @@
                         :courses="$courses"
                     />
                 </template>
-                {{-- Div exibida enquanto os dados não chegam no front --}}
-                <x-feedback.loading/>
                 {{-- Div exibida caso não haja registros no banco --}}
                 <template x-if="isEmpty && !loading">
                     <x-feedback.empty-state/>
@@ -65,7 +66,7 @@
                     />
                 </template>
             </x-main-content>
-        </div>
+        </template>
         {{-- Trabalhos cadastrados --}}
         <template x-if="showGroupPaper">
             <div class="relative">

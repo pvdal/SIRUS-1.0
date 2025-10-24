@@ -16,7 +16,7 @@
                     <tr :class="
                         {
                             'hover:bg-gray-100/40 dark:hover:bg-gray-900/20': true,
-                            'bg-green-900 dark:hover:bg-green-800': item.origin === 'new',
+                            'bg-green-200 hover:bg-green-300/70 dark:bg-green-900 dark:hover:bg-green-800': item.origin === 'new',
                         }"
                         x-transition:enter="transition ease-out duration-500"
                         x-transition:enter-start="opacity-0 transform scale-95 -translate-y-2"

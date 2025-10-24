@@ -372,8 +372,6 @@ export function groupsData() {
             }
 
             this.papers = this.papers.filter(p => p.id !== paperId && p.tempId !== paperId)
-
-            console.log(this.errors);
         },
 
         async saveGroup() {
@@ -453,6 +451,7 @@ export function groupsData() {
 
             if (savedData && Object.keys(savedData).length > 0) {
                 this.empty.data = false;
+                this.empty.result = false;
             }
 
             // Alteração dos dados nas arrays locais, de acordo com o update do controller

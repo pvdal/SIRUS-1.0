@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 // Common
+use App\Models\Rubric;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -23,6 +24,7 @@ use Illuminate\Support\Facades\DB;
 
 // Static Classes and utils
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Random\RandomException;
 use App\Utils\TokenGenerator;
 
@@ -46,6 +48,7 @@ class CommitteeController extends Controller
             'members.user:id,name,state,access_level', // todos membros (professor/coordenador)
             'members.memberType',
             'paper.group.students.user:id,name,state',
+            'rubric:id,name,state',
         ])
             ->orderBy('id')
             ->when(Gate::denies('manage-events'), function ($query) {
@@ -71,6 +74,7 @@ class CommitteeController extends Controller
         $professors = [];
         $member_types = [];
         $groups = [];
+        $rubrics = [];
 
         #region Dados auxiliares
         if(Gate::allows('manage-events')){
@@ -112,6 +116,14 @@ class CommitteeController extends Controller
                     ])->values()->all(),
                     'state' => ($g->state ?? 0),
                 ])->values()->all();
+
+            $rubrics = Rubric::where('state', 1)
+                ->orderBy('name')
+                ->get()
+                ->map(fn($rubric) => [
+                    'id' => $rubric->id,
+                    'name' => $rubric->name,
+                ]);
         }
         #endregion
 
@@ -119,6 +131,7 @@ class CommitteeController extends Controller
             'committees' => $committeesData,
             'member_types' => $member_types,
             'groups' => $groups,
+            'rubrics' => $rubrics,
             'academicStaff' => $this->mapAcademicStaff($coordinators, $professors),
             'page' => $committees->currentPage(),
             'totalPages' => $committees->lastPage(),
@@ -185,6 +198,7 @@ class CommitteeController extends Controller
             'members.user:id,name,state',   // todos membros (professor/coordenador)
             'members.memberType',
             'paper.group.students.user:id,name,state',
+            'rubric:id,name,state'
         ])
             ->when(Gate::denies('manage-events'), function ($query) {
                 $query->where(function ($q) {
@@ -316,21 +330,24 @@ class CommitteeController extends Controller
     public function store(Request $request): JsonResponse
     {
         $this->authorize('manage-events');
-
         $request->validate([
             'name' => 'required|string|max:255|unique:committees,name',
-            'paper_id' => [
-                'required',
-                // Garante que o paper existe
-                Rule::exists('papers', 'id'),
-                // Garante que o ‘paper’ ainda não possui uma banca
-                Rule::unique('committees', 'paper_id'),
-            ],
-            'rubric_id' => 'nullable|exists:rubrics,id',
+            'group_id' => 'required|exists:groups,id',
+            'paper_id' => 'required|exists:papers,id|unique:committees,paper_id',
+            'rubric_id' => 'required|exists:rubrics,id',
             'members' => 'required|array|min:3',
             'members.*.user_id' => 'required|exists:users,id',
             'members.*.member_type.id' => 'required|exists:member_types,id',
         ]);
+
+        // Verificar se há user_id duplicado
+        $userIds = collect($request->members)->pluck('user_id');
+        if ($userIds->unique()->count() !== $userIds->count()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Os membros não podem conter usuários duplicados.',
+            ], 422);
+        }
 
         $coordinator = auth()->user()->coordinator;
         if (!$coordinator) {
@@ -349,6 +366,7 @@ class CommitteeController extends Controller
                 'name' => $request->name,
                 'coordinator_id' => $request->coordinator_id,
                 'paper_id' => $request->paper_id,
+                'rubric_id' => $request->rubric_id,
                 'state' => 1,
             ]);
 
@@ -403,15 +421,25 @@ class CommitteeController extends Controller
                 }),
                 "unique:committees,paper_id,{$id},id",
             ],
-            'rubric_id' => 'nullable|exists:rubrics,id',
+            'rubric_id' => 'required|exists:rubrics,id',
             'members' => 'required|array|min:3',
             'members.*.user_id' => 'required|exists:users,id',
             'members.*.member_type.id' => 'required|exists:member_types,id',
         ]);
 
+        // Verificar se há user_id duplicado
+        $userIds = collect($request->members)->pluck('user_id');
+        if ($userIds->unique()->count() !== $userIds->count()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Os membros não podem conter usuários duplicados.',
+            ], 422);
+        }
+
         $committee->fill([
             'name' => $request['name'],
             //'group_id' => $request['group_id'],
+            'rubric_id' => $request['rubric_id'],
             'paper_id' => $request['paper_id'],
         ]);
 
@@ -462,6 +490,7 @@ class CommitteeController extends Controller
             'members.user:id,name,state,access_level',
             'members.memberType',
             'paper.group.students.user:id,name,state',
+            'rubric:id,name,state'
         ]);
 
         $group = $committee->paper->group;
@@ -541,6 +570,11 @@ class CommitteeController extends Controller
                 'id' => $committee->paper->id,
                 'title' => $committee->paper->title,
                 'file_path' => $committee->paper->file_path,
+            ] : null,
+            'rubric' => $committee->rubric ? [
+                'id' => $committee->rubric->id,
+                'name' => $committee->rubric->name,
+                'state' => (int) $committee->rubric->state,
             ] : null,
             'state' => (int) $committee->state,
             'created_at' => $committee->created_at,

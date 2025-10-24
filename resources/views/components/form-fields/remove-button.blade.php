@@ -1,3 +1,7 @@
+@php
+    $additional = $additional ?? '';
+@endphp
+
 <button
     type="button"
     {{ $attributes->merge([
@@ -8,7 +12,7 @@
                    bg-red-200 dark:bg-red-500 dark:hover:bg-red-600
                    transition-colors duration-150'
     ]) }}
-    x-on:click="{!! $action !!}({!! $key !!})"
+    x-on:click="{!! $additional !!} {!! $action !!}({!! $key !!})"
     title="Remover"
 >
     <x-lucide-x class="h-4 w-4"/>

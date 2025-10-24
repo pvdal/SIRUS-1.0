@@ -42,15 +42,26 @@
     </div>
 
     {{-- Rubrica --}}
-    <div class="mt-4">
-        <x-label for="rubric_id" value="Rubrica"/>
-        <x-select id="rubric_id" class="w-full mt-1" x-model="rubric_id">
-            <option value="" selected>Selecione uma rubrica</option>
+    <div class="pt-4">
+        <div class="mt-4">
+            <x-label for="rubric_id" value="Rubrica em grupo"/>
+            <x-select id="rubric_id" class="w-full mt-1" x-model="rubric_id">
+                <option value="">Selecione uma rubrica</option>
+                <template x-for="rubric in rubrics" :key="rubric.id">
+                    <option :value="rubric.id" x-text="rubric.name ?? '-'"></option>
+                </template>
+            </x-select>
+            <template x-if="errors.rubric_id">
+                <x-form-fields.field-error x-text="errors.rubric_id[0]"/>
+            </template>
+        </div>
 
-        </x-select>
-        <template x-if="errors.rubric_id">
-            <x-form-fields.field-error x-text="errors.rubric_id[0]"/>
-        </template>
+        <div class="mt-4">
+            <x-label for="individual_rubric_id" value="Rubrica individual"/>
+            <x-select id="individual_rubric_id" class="w-full mt-1">
+                <option value="">Selecione uma rubrica</option>
+            </x-select>
+        </div>
     </div>
 
     {{-- Membros --}}
@@ -89,18 +100,25 @@
 
                 <template x-for="member in filteredMembers" :key="member.user_id">
                     <li
-                        class="p-2 border-b border-gray-300"
-                        @click="!member.committee && addMember(member)"
-                        :class="{ 'opacity-50 cursor-normal': member.committee, 'cursor-pointer hover:bg-gray-200/50 dark:hover:bg-gray-600': !member.committee }"
+                        class="p-2 border-b border-gray-300 cursor-pointer hover:bg-gray-200/50 dark:hover:bg-gray-600"
+                        x-on:click="
+                            if(!member.belongsTo) {
+                                addMember(member);
+                                member.belongsTo = true;
+                            }
+                        "
+                        x-on:remove-member.window="
+                            if($event.detail === member.user_id) {
+                                member.belongsTo = false
+                            }
+                        "
+                        :class="{
+                            'line-through opacity-60 bg-gray-200/50 dark:bg-gray-600 !cursor-default ': member.belongsTo
+                        }"
                     >
                         <div>
                             <span x-text="member.user_type.name + ': ' + member.name + ' - ' + member.id"></span>
                         </div>
-                        <template x-if="member.committee">
-                            <div>
-                                <span x-text="'Banca:' + member.committee"></span>
-                            </div>
-                        </template>
                     </li>
                 </template>
             </ul>
@@ -116,7 +134,7 @@
         <span>
             <span x-text="(item.user_type?.name ?? 'Sem tipo') + ': ' + item.name + ' - ' + (item.member_type?.name ?? 'Sem função')"></span>
         </span>
-        <x-form-fields.remove-button :action="'removeMember'" :key="'item.user_id'"/>
+        <x-form-fields.remove-button :action="'removeMember'" :additional="'$dispatch(\'remove-member\', item.user_id);'" :key="'item.user_id'"/>
     </x-form-fields.selected-list>
 
     {{-- Timestamps --}}

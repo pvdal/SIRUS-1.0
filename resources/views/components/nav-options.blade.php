@@ -34,7 +34,7 @@
 
 @can('is-admin')
     <div class="{{ $menuClass }}">
-        <x-dynamic-component :component="$menuComponent" href="{{ route('evaluation.criteria-table') }}" :active="request()->routeIS('evaluations-table')">
+        <x-dynamic-component :component="$menuComponent" href="{{ route('evaluation.criteria-table') }}" :active="request()->routeIS('evaluation.criteria-table', 'evaluation.axis-table', 'evaluation.rubric-table')">
             {{ __('Avaliações') }}
         </x-dynamic-component>
     </div>

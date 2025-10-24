@@ -48,7 +48,7 @@ class AxisController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255|unique:axes,name',
-            'criteria' => 'nullable|array',
+            'criteria' => 'required|array',
             'criteria.*' => 'exists:criteria,id'
         ]);
 
@@ -82,7 +82,7 @@ class AxisController extends Controller
 
         $validatedData = $request->validate([
             'name' => ['required', 'string', 'max:255', Rule::unique('axes')->ignore($axis->id)],
-            'criteria' => 'nullable|array',
+            'criteria' => 'nullable|array|min:1',
             'criteria.*' => 'exists:criteria,id'
         ]);
 

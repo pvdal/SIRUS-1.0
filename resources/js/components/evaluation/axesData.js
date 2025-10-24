@@ -200,8 +200,6 @@ export function axesData() {
             if (!this.selectedCriteria.some(c => c.id === criterion.id)) {
                 this.selectedCriteria.push(criterion);
             }
-            this.searchCriterion = '';
-            this.filteredCriteria = [];
         },
 
         removeCriterion(id) {
@@ -234,6 +232,7 @@ export function axesData() {
 
             if (savedData && Object.keys(savedData).length > 0) {
                 this.empty.data = false;
+                this.empty.result = false;
             }
 
             if (savedData) {

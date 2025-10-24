@@ -18,8 +18,6 @@ export function rubricsData() {
         },
         searchRubric:'',
 
-
-
         // Variáveis de estado das tabelas
         loading: false,
         empty: {
@@ -74,15 +72,14 @@ export function rubricsData() {
         showModelIframe: false,     // Controla a exibição do iframe
         modelIframeUrl: '',         // Guarda a URL para o iframe
         rubricForModelView: null,
+        showModel: false,   // Boolean que exibe ou não a div da rubrica
         showModelModal: false,
-
-
 
         init(rubrics, page, totalPages) {
             this.rubrics = rubrics;
             this.page = page;
             this.totalPages = totalPages;
-            this.empty = !Array.isArray(rubrics) || rubrics.length === 0;
+            this.empty.data = !Array.isArray(rubrics) || rubrics.length === 0;
 
             // Observador para a busca de eixos
             this.$watch('searchAxis', (value) => {
@@ -162,8 +159,8 @@ export function rubricsData() {
             // console.log('Eixo adicionado. Estado atual de this.axes:', JSON.stringify(this.axes, null, 2));
 
             // Limpa a busca para uma melhor experiência do usuário
-            this.searchAxis = '';
-            this.filteredAxes = [];
+            //this.searchAxis = '';
+            //this.filteredAxes = [];
         },
 
         // addAxis(axis) {
@@ -204,8 +201,9 @@ export function rubricsData() {
 
         async loadRubrics(page = 1) {
             this.loading = true;
-            // this.empty.result = false;
-            // this.empty.data = false;
+            this.empty.result = false;
+            this.empty.data = false;
+
             document.body.style.cursor = 'wait';
 
             this.errors = {};
@@ -219,9 +217,7 @@ export function rubricsData() {
                     period: this.registerPeriod.value,
                 };
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
-
-                const finalUrl = `/${requestPrefix}/rubrics/show`.replace(/\/{2,}/g, '/');
-                const response = await axios.get(finalUrl, { params });
+                const response = await axios.get(`/${requestPrefix}/rubrics/show`, { params });
 
                 // const response = await axios.get(`{/${requestPrefix}/rubrics/show`, {params});
 
@@ -229,13 +225,6 @@ export function rubricsData() {
                 this.page = response.data.page;
                 this.totalPages = response.data.totalPages;
                 this.empty.result = !this.rubrics.length;
-
-                // 5. Processa a resposta
-                this.rubrics = response.data.data;
-                this.page = response.data.page;
-                this.totalPages = response.data.totalPages;
-                this.empty = this.rubrics.length === 0;
-
             } catch (error) {
                 if(error.response){
                     this.errors.load = error.response.data.message || 'Erro ao carregar os dados.';
@@ -255,78 +244,72 @@ export function rubricsData() {
             return this.axes.reduce((sum, a) => sum + (Number(a.weight) || 0), 0);
         },
 
-
-
         /**
          * Função para ser chamada ao submeter o formulário.
          */
         //Save rubric com o saveData.js
 
-        // async saveRubric() {
-        //
-        //     // Verificar se a soma dos eixos é 100%
-        //     if (this.totalWeight !== 100) {
-        //         this.showMessage('danger', 'A soma dos pesos de todos os eixos deve ser exatamente 100%!');
-        //         this.saving = false;
-        //         return;
-        //     }
-        //
-        //     const isUpdate = this.edit;
-        //
-        //     let url = '/rubrics/save';
-        //     let method = 'post';
-        //     let id = null;
-        //
-        //     if (isUpdate && this.rubricId) {
-        //         id = this.rubricId;
-        //         url = `/rubrics/${id}/update`;
-        //         method = 'put';
-        //     }
-        //
-        //     // Prepara o payload como JSON
-        //     const payload = {
-        //         rubric_id: this .rubricId,
-        //         name: this.rubric.name,
-        //         type: this.rubric.type,
-        //         axes: this.axes.map(axis => ({
-        //             id: axis.id,
-        //             weight: parseFloat(axis.weight) || 0
-        //         }))
-        //     };
-        //
-        //
-        //     const savedData = await saveData({
-        //         url,
-        //         method,
-        //         payload,
-        //         contexto: this,
-        //         campoLista: isUpdate ? null : 'newRubrics',  // só adiciona na lista se criar novo
-        //         clearFields: !isUpdate,
-        //     });
-        //
-        //     if (savedData && Object.keys(savedData).length > 0) {
-        //         this.empty.data = false;
-        //     }
-        //
-        //     if (isUpdate && savedData) {
-        //         if (isUpdate) {
-        //             this.rubrics = this.rubric.map(a => a.id === savedData.id ? savedData : a);
-        //             this.newRubrics = this.newRubrics.map(a => a.id === savedData.id ? savedData : a);
-        //
-        //             // Trata os timestamps
-        //             this.created_at = formatDateTime('Criado em', savedData.created_at);
-        //             this.updated_at = formatDateTime('Atualizado em', savedData.updated_at, savedData.created_at);
-        //         }
-        //     }
-        // },
+        async saveRubric() {
+            // Verificar se a soma dos eixos é 100%
+            if (this.rubric.name && this.rubric.type && this.axes.length > 0 && this.totalWeight !== 100) {
+                this.showMessage('warning', 'A soma dos pesos de todos os eixos deve ser exatamente 100%!');
+                this.saving = false;
+                this.errors = {}
+                return;
+            }
+
+            const isUpdate = this.edit;
+            let url = '/rubrics/save';
+            let method = 'post';
+            let id = null;
+            if (isUpdate && this.rubricId) {
+               id = this.rubricId;
+               url = `/rubrics/${id}/update`;
+               method = 'put';
+           }
+            // Prepara o payload como JSON
+            const payload = {
+                rubric_id: this .rubricId,
+                name: this.rubric.name,
+                type: this.rubric.type,
+                axes: this.axes.map(axis => ({
+                    id: axis.id,
+                    weight: parseFloat(axis.weight) || 0
+                }))
+            };
+
+            const savedData = await saveData({
+                url,
+                method,
+                payload,
+                contexto: this,
+                campoLista: isUpdate ? null : 'newRubrics',  // só adiciona na lista se criar novo
+                clearFields: !isUpdate,
+            });
+
+            if (savedData && Object.keys(savedData).length > 0) {
+                this.empty.data = false;
+                this.empty.result = false;
+            }
+
+            if (isUpdate && savedData) {
+                this.rubrics = this.rubrics.map(a => a.id === savedData.id ? savedData : a);
+                this.newRubrics = this.newRubrics.map(a => a.id === savedData.id ? savedData : a);
+
+                // Trata os timestamps
+                this.created_at = formatDateTime('Criado em', savedData.created_at);
+                this.updated_at = formatDateTime('Atualizado em', savedData.updated_at, savedData.created_at);
+            }
+        },
 
         // Save rubric sem o saveData.js
+        /*
         async saveRubric() {
             this.saving = true;
             this.errors = {};
 
             if (this.totalWeight !== 100) {
-                this.showMessage('danger', 'A soma dos pesos de todos os eixos deve ser exatamente 100%!');
+                this.showMessage('warning', 'A soma dos pesos de todos os eixos deve ser exatamente 100%!');
                 this.saving = false;
                 return;
             }
@@ -379,7 +362,6 @@ export function rubricsData() {
                 }
 
                 // 6. Fecha o modal e mostra a mensagem de sucesso.
-                this.showCreateModal = false;
                 this.showMessage('success', serverResponse.message);
 
             } catch (error) {
@@ -395,7 +377,7 @@ export function rubricsData() {
                 this.saving = false;
             }
         },
-
+        */
 
         showRubric(id) {
             this.rubricId = id;
@@ -422,8 +404,8 @@ export function rubricsData() {
 
             if (rubric.axes && Array.isArray(rubric.axes)) {
                 this.axes = rubric.axes.map(r => ({ id: r.id, name: r.name ,type: r.type, weight: r.weight}));
-                console.log("Valor do 'type' que está a ser lido:", rubric.axes[0].type);
-                console.log("A comparação `rubric.axes[0].type === 'in group'` retorna:", rubric.axes[0].type === 'in group');
+                //console.log("Valor do 'type' que está a ser lido:", rubric.axes[0].type);
+                //console.log("A comparação `rubric.axes[0].type === 'in group'` retorna:", rubric.axes[0].type === 'in group');
             } else {
                 this.axes = [];
             }
@@ -467,7 +449,6 @@ export function rubricsData() {
 
             this.showWarningModal = false;
 
-
             try {
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
                 const response = await axios.put(`/${requestPrefix}/rubrics/${targetId}/${action}`);
@@ -481,7 +462,6 @@ export function rubricsData() {
 
                 this.rubrics.forEach(updateState);
                 this.newRubrics.forEach(updateState);
-
             } catch (error) {
                 console.error('Erro ao alterar status: ', error);
                 const msg = error.response?.data?.message || 'Erro inesperado.'
@@ -529,7 +509,6 @@ export function rubricsData() {
                 [],             // Não há campos de formulário para limpar neste caso
                 ['registerPeriod'] // Lista de filtros adicionais a serem limpos
             );
-            this.edit = false;
             this.rubric = {
                 id: null,
                 name: '',
@@ -538,11 +517,11 @@ export function rubricsData() {
             this.axes = [];
             this.searchAxis = '';
             this.filteredAxes = [];
-            this.errors = {};
-            this.showBanner = false;
             this.created_at = '';
             this.updated_at = '';
-
+            // this.edit = false; // o $watcher do showCreateModal já faz isso cada vez que o modal é fechado
+            this.errors = {};
+            // this.showBanner = false; // O próprio showMessage reseta essa variável após 3 segundos, só faz sentido manter caso queira forçar a remoção
 
         },
 
@@ -550,7 +529,9 @@ export function rubricsData() {
             this.style = style;
             this.message = message;
             this.showBanner = true;
-            setTimeout(() => this.showBanner = false, 3000);
+            setTimeout(() => {
+                this.showBanner = false;
+            }, 3000);
         },
 
         // warning(type,id, name, rubricId, action = null) {
@@ -605,8 +586,10 @@ export function rubricsData() {
             if (rubricToShow) {
                 this.rubricForModelView = rubricToShow;
                 this.showRubricCards = false;
+                this.showModel = true;
                 // A lógica de troca de visibilidade agora é controlada pelos eventos
                 this.$dispatch('toggle-rubric-model', true);
+                this.$dispatch('toggle-nav-bar', false);
                 // console.log('Dados para o modelo:', this.rubricForModelView);
                 // console.log('JSON:', JSON.stringify(this.rubricForModelView, null, 2));
 

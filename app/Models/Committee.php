@@ -43,5 +43,11 @@ class Committee extends Model
     {
         return $this->belongsTo(Paper::class);
     }
+
+    // Relacionamento com Rubric
+    public function rubric(): BelongsTo
+    {
+        return $this->belongsTo(Rubric::class);
+    }
     #endregion
 }

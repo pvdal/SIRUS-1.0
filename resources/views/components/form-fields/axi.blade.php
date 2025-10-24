@@ -35,7 +35,20 @@
         <template x-for="criterion in filteredCriteria" :key="criterion.id">
             <li
                 class="p-2 border-b border-gray-300 cursor-pointer hover:bg-gray-200/50 dark:hover:bg-gray-600"
-                @click="addCriterion(criterion)"
+                x-on:remove-criterion.window="
+                    if($event.detail === criterion.id) {
+                        criterion.belongsTo = false;
+                    }
+                "
+                x-on:click="
+                    if(!criterion.belongsTo) {
+                        addCriterion(criterion);
+                        criterion.belongsTo = true;
+                    }
+                "
+                :class="{
+                    'line-through opacity-60 bg-gray-200/50 dark:bg-gray-600 !cursor-default ': criterion.belongsTo
+                }"
             >
                 <span x-text="criterion.name"></span>
             </li>
@@ -54,7 +67,7 @@
                 <span x-text="item.description"></span>
             </template>
         </span>
-        <x-form-fields.remove-button :action="'removeCriterion'" :key="'item.id'"/>
+        <x-form-fields.remove-button :action="'removeCriterion'" :additional="'$dispatch(\'remove-criterion\',item.id);'" :key="'item.id'"/>
     </x-form-fields.selected-list>
 
     {{-- Timestamps --}}

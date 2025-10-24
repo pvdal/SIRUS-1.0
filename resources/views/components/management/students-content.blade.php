@@ -22,7 +22,7 @@
         <x-slot name="footer">
             <x-secondary-button type="button" x-bind:disabled="saving"
                 x-on:click="
-                    saveStudent;
+                    saveStudent();
                     $el.blur();
                 "
             >

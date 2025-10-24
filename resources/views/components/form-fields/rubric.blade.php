@@ -62,7 +62,20 @@
         <template x-for="axis in filteredAxes" :key="axis.id">
             <li
                 class="p-2 border-b border-gray-300 cursor-pointer hover:bg-gray-200/50 dark:hover:bg-gray-600"
-                @click="addAxis(axis)"
+                x-on:click="
+                    if(!axis.belongsTo) {
+                        addAxis(axis);
+                        axis.belongsTo = true;
+                    }
+                "
+                x-on:remove-axis.window="
+                    if($event.detail === axis.id) {
+                        axis.belongsTo = false;
+                    }
+                "
+                :class="{
+                    'line-through opacity-60 bg-gray-200/50 dark:bg-gray-600 !cursor-default ': axis.belongsTo
+                }"
             >
                 <span x-text="axis.name"></span>
             </li>
@@ -73,53 +86,56 @@
         <h4 class="font-medium text-gray-700 dark:text-gray-200">Eixos selecionados:</h4>
         <ul class="space-y-1 mt-1">
             {{-- Para cada eixo na nossa lista 'axes'... --}}
-            <template x-for="axis in axes" :key="axis.id">
-                {{-- O item da lista agora usa flex para alinhar tudo na mesma linha --}}
-                <li class="flex items-center justify-between bg-gray-100 dark:bg-gray-700 p-2 px-4 rounded">
+            <template x-for="(axis, index) in axes" :key="axis.id">
+                <div>
+                    {{-- O item da lista agora usa flex para alinhar tudo na mesma linha --}}
+                    <li class="flex items-center justify-between bg-gray-100 dark:bg-gray-700 p-2 px-4 rounded">
 
-                    {{-- Um container para o nome do eixo e o seu campo de peso --}}
-                    <div class="flex items-center flex-grow gap-4">
-                        <span x-text="axis.name" class="flex-shrink-0"></span>
+                        {{-- Um container para o nome do eixo e o seu campo de peso --}}
+                        <div class="flex items-center flex-grow gap-4">
+                            <span x-text="axis.name" class="flex-shrink-0"></span>
 
-                        {{-- Campo para definir o peso do eixo --}}
-                        <div class="flex items-center gap-2 ml-auto">
-                            <label :for="'weight-' + axis.id" class="text-sm font-medium  text-gray-700 dark:text-gray-200">Peso:</label>
-                            <input :id="'weight-' + axis.id"
-                                   type="number"
-                                   {{-- 'x-model' liga este input diretamente à propriedade 'weight' do objeto 'axis' --}}
-                                   x-model="axis.weight"
-                                   placeholder="%"
-                                   min=0
-                                   max= 100
-                                   class="w-20 text-center border-gray-300  rounded-md shadow-sm h-8 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                            >
+                            {{-- Campo para definir o peso do eixo --}}
+                            <div class="flex items-center gap-2 ml-auto">
+                                <label :for="'weight-' + axis.id" class="text-sm font-medium  text-gray-700 dark:text-gray-200">Peso:</label>
+                                <x-input x-bind:id="'weight-' + axis.id" {{-- x-input já tem formatação para tema escuro --}}
+                                type="text"
+                                         {{-- O mais importante é que o controller faça essa validação, isso aqui é apenas camada extra --}}
+                                         @input="
+                                       axis.weight = axis.weight.replace(/\D/g, '');
+                                       if (axis.weight > 100) axis.weight = 100;
+                                   " {{-- Alguns navegadores não respeitam o type number, com essa linha toda entrada alfabética é removida --}}
+                                         {{-- 'x-model' liga este input diretamente à propriedade 'weight' do objeto 'axis' --}}
+                                         x-model="axis.weight"
+                                         placeholder="%"
+                                         class="w-20 text-center border-gray-300  rounded-md shadow-sm h-8 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                />
+                            </div>
                         </div>
-                    </div>
-
-                    {{-- Botão para remover o eixo (agora com uma pequena margem à esquerda) --}}
-                    <button @click="removeAxis(axis.id)"
-                            title="Remover Eixo"
-                            class="ml-4 text-red-500 hover:text-red-700 h-[20px] w-[20px] rounded-sm bg-red-100 flex-shrink-0">
-                        ✕
-                    </button>
-                </li>
+                        {{-- Botão para remover o eixo (agora com uma pequena margem à esquerda) --}}
+                        <x-form-fields.remove-button class="ms-5" :action="'removeAxis'" :additional="'$dispatch(\'remove-axis\', axis.id);'" title="Remover Eixo" :key="'axis.id'"/>
+                    </li>
+                    {{-- Exibição de erro para os pesos (ex: "Todos os eixos devem ter um peso") --}}
+                    <template x-if="axes.length > 0 && errors && errors['axes.' + index + '.weight']">
+                        {{-- Erro normalizado, vem do back com chave string, exemplo: axes.1.weight
+                             o index torna possível exibir um campo de erro para cada item do loop.
+                             OBS: O 'template' só suporta um elemento, por isso cerquei esse conteúdo
+                             com um contêiner --}}
+                        <x-form-fields.field-error x-text="errors['axes.' + index + '.weight']?.[0]"/>
+                    </template>
+                </div>
             </template>
         </ul>
 
         <div class="mt-2">
             <p class="text-sm"
-               :class="totalWeight === 100 ? 'text-green-600' : 'text-red-600'">
+               :class="totalWeight === 100 ? 'text-green-600' : 'text-red-600 dark:text-red-400'">
                 Soma total: <span x-text="totalWeight"></span>%
             </p>
             <template x-if="totalWeight !== 100">
-                <p class="text-xs text-red-500">A soma dos pesos deve ser exatamente 100%</p>
+                <p class="text-xs text-red-500 dark:text-red-300">A soma dos pesos deve ser exatamente 100%</p>
             </template>
         </div>
-
-        {{-- Exibição de erro para os pesos (ex: "Todos os eixos devem ter um peso") --}}
-        <template x-if="errors.axes_weights">
-            <p class="text-sm text-red-600" x-text="errors.axes_weights[0]"></p>
-        </template>
     {{-- Timestamps --}}
     </div>
 

@@ -20,10 +20,10 @@
 
             <x-slot name="footer">
                 <x-secondary-button type="button" x-bind:disabled="saving" class="min-w-[110px]"
-                                    x-on:click="
-                    saveCommittee;
-                    $el.blur();
-                "
+                    x-on:click="
+                        saveCommittee();
+                        $el.blur();
+                    "
                 >
                     <span x-show="!saving">Salvar</span>
                     <span x-show="saving">Salvando...</span>

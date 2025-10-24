@@ -11,7 +11,7 @@
                 $header = 'Histórico de avaliações';
             }
         @endphp
-        <h2 id="page-title" x-text="window.headerTitle ?? ''" class="font-semibold text-xl">{{ $header }}</h2>
+        <h2 id="page-title" x-text="window.headerTitle ?? ''" class="font-semibold text-xl leading-tight">{{ $header }}</h2>
         <div x-data="{ showPaper: false, showHistory: false }"
              x-init="document.getElementById('page-title')?.remove()"
              x-on:toggle-paper.window="showPaper = $event.detail"
@@ -19,12 +19,12 @@
              class="flex items-center justify-between"
         >
             <div x-show="showPaper" x-cloak>
-                <x-button x-on:click="$dispatch('toggle-groups')">Visualizar Bancas</x-button>
+                <x-button x-on:click="$dispatch('toggle-groups'); $dispatch('toggle-nav-bar', true);">Visualizar Bancas</x-button>
             </div>
             <div x-show="showHistory && !showPaper" x-cloak>
-                <h2 class="font-semibold text-xl">Histórico de avaliações</h2>
+                <h2 class="font-semibold text-xl leading-tight">Histórico de avaliações</h2>
             </div>
-            <h2 x-show="!showPaper && !showHistory" x-cloak class="font-semibold text-xl">{{ $header }}</h2>
+            <h2 x-show="!showPaper && !showHistory" x-cloak class="font-semibold text-xl leading-tight">{{ $header }}</h2>
         </div>
     </x-slot>
 
@@ -32,12 +32,12 @@
     <div
         x-data="committeesData()"
         x-on:toggle-groups.window="
-                showGroupCards = true;
-                showGroupPaper = false;
-                paperUrl = '';
-                $dispatch('toggle-paper', false);
+            showGroupCards = true;
+            showGroupPaper = false;
+            paperUrl = '';
+            $dispatch('toggle-paper', false);
         "
-        x-init='init(@json($committees), @json($member_types), @json($groups), @json($academicStaff), {{ $page}}, {{ $totalPages}})'
+        x-init='init(@json($committees), @json($member_types), @json($groups), @json($rubrics), @json($academicStaff), {{ $page}}, {{ $totalPages}})'
     >
         {{-- Grupos cadastrados --}}
         <div x-show="showGroupCards">

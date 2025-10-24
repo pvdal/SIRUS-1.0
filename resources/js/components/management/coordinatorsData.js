@@ -159,6 +159,7 @@ export function coordinatorsData() {
 
             if (savedData && Object.keys(savedData).length > 0) {
                 this.empty.data = false;
+                this.empty.result = false;
             }
 
             if(update && savedData) {

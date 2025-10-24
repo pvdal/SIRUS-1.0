@@ -131,10 +131,11 @@ document.addEventListener('alpine:initialized', function () {
         };
 
         const payload = {
-            dateStart: toLocalDate(info.event.start),
-            timeStart: info.event.start.toTimeString().split(' ')[0],
-            dateEnd: info.event.end ? toLocalDate(info.event.end) : null,
-            timeEnd: info.event.end ? info.event.end.toTimeString().split(' ')[0] : null,
+            date_start: toLocalDate(info.event.start),
+            time_start: info.event.start.toTimeString().split(' ')[0],
+            date_end: info.event.end ? toLocalDate(info.event.end) : null,
+            time_end: info.event.end ? info.event.end.toTimeString().split(' ')[0] : null,
+            create: false,
         };
 
         axios.put(`${requestPrefix}/events/${info.event.id}/update`, payload, { withCredentials: true })

@@ -19,7 +19,7 @@
 
         <x-slot name="footer">
             <x-secondary-button type="button" x-bind:disabled="saving"
-                                x-on:click="saveRubric; $el.blur();">
+                                x-on:click="saveRubric(); $el.blur();">
                 <span x-show="!saving">Salvar</span>
                 <span x-show="saving">Salvando...</span>
             </x-secondary-button>
@@ -248,24 +248,4 @@
             </x-card.layout>
         </x-card.grid>
     </div>
-    {{-- Estado de Carregamento (Loading) --}}
-    <div x-show="loading" class="flex justify-center py-4">
-        <svg class="animate-spin h-6 w-6 text-secondary-blue" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10"
-                    stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor"
-                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z">
-            </path>
-        </svg>
-    </div>
-    <template x-if="empty">
-        <div class="flex flex-col items-center justify-center pb-8 text-center">
-            <p class="text-gray-700 text-md font-medium">
-                Nenhuma rubrica foi cadastrada até o momento.
-            </p>
-            <p class="text-gray-500 mt-1 text-sm">
-                Assim que houverem rubricas registradas, elas aparecerão aqui.
-            </p>
-        </div>
-    </template>
 </div>

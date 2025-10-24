@@ -86,5 +86,25 @@
         </div>
         @livewireScripts
         @stack('scripts')
+        @if(config('accessibility.libras'))
+            <div x-data="{ vlActive: localStorage.getItem('vlibras_enabled') === 'true' }"
+                 x-on:toggle-vlibras.window="vlActive = !vlActive"
+                 class="flex">
+
+                <div vw class="enabled" x-show="vlActive" x-cloak>
+                    <div vw-access-button class="active"></div>
+                    <div vw-plugin-wrapper>
+                        <div class="vw-plugin-top-wrapper"></div>
+                    </div>
+                </div>
+
+                <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        new window.VLibras.Widget('https://vlibras.gov.br/app');
+                    });
+                </script>
+            </div>
+        @endif
     </body>
 </html>

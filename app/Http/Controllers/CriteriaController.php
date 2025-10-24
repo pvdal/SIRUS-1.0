@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use App\Models\Criterion;
 
@@ -123,10 +124,10 @@ class CriteriaController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:criteria,name',
-            'excellent' => 'nullable|string',
-            'good' => 'nullable|string',
-            'satisfactory' => 'nullable|string',
-            'unsatisfactory' => 'nullable|string',
+            'excellent' => 'required|string',
+            'good' => 'required|string',
+            'satisfactory' => 'required|string',
+            'unsatisfactory' => 'required|string',
         ]);
         // É sempre bom especificar se é nullable ou required
         $criterion = Criterion::create([
@@ -171,10 +172,10 @@ class CriteriaController extends Controller
 
         $validated = $request->validate([
             'name' => "required|string|max:255|unique:criteria,name,{$id}",
-            'excellent' => 'nullable|string',
-            'good' => 'nullable|string',
-            'satisfactory' => 'nullable|string',
-            'unsatisfactory' => 'nullable|string',
+            'excellent' => 'required|string',
+            'good' => 'required|string',
+            'satisfactory' => 'required|string',
+            'unsatisfactory' => 'required|string',
         ]);
 
         $criterion->update([

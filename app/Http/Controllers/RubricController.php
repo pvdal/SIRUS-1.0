@@ -27,7 +27,7 @@ class RubricController extends Controller
 
         $axesAvailable = Axis::all(['name']);
         $rubrics = Rubric::with(['axes.criteria']) // eager load: axes -> criteria (cada criteria terá pivot axis_criteria)
-        ->select(['id','name','state'])
+        ->select(['id','name','state','created_at','updated_at'])
             ->orderBy('id', 'desc') // Ordenar por mais recente é comum
             ->paginate(15);
 
@@ -70,9 +70,18 @@ class RubricController extends Controller
             'name' => 'required|string|max:255',
             'type' => 'required|string|in:individual,in group',
             'axes' => 'required|array|min:1',
-            'axes.*.id' => ['required', 'integer', Rule::exists('axes', 'id')],
-            'axes.*.weight' => 'required|numeric|min:0',
+            'axes.*.id' => 'required|integer|exists:axes,id',
+            'axes.*.weight' => 'required|numeric|min:1',
         ]);
+
+        // Verificar se a soma dos pesos é exatamente 100
+        $totalWeight = collect($validatedData['axes'])->sum('weight');
+
+        if ($totalWeight !== 100) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'axes' => ['A soma dos pesos dos eixos deve ser exatamente 100%.'],
+            ]);
+        }
 
         // 2. TRANSAÇÃO: Garante que a operação seja "tudo ou nada".
         try {
@@ -114,6 +123,7 @@ class RubricController extends Controller
             ], 201);
 
         } catch (\Exception $e) {
+            Log::error($e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Ocorreu um erro ao salvar a rúbrica.',
@@ -238,45 +248,51 @@ class RubricController extends Controller
             'name' => 'required|string|max:255',
             'type' => 'required|string|in:individual,in group',
             'axes' => 'required|array|min:1',
-            'axes.*.id' => ['required', 'integer', Rule::exists('axes', 'id')],
-            'axes.*.weight' => 'required|numeric|min:0',
+            'axes.*.id' => 'required|integer|exists:axes,id',
+            'axes.*.weight' => 'required|numeric|min:1',
         ]);
 
+        // Verificar se a soma dos pesos é exatamente 100
+        $totalWeight = collect($validatedData['axes'])->sum('weight');
+
+        if ($totalWeight !== 100) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'axes' => ['A soma dos pesos dos eixos deve ser exatamente 100%.'],
+            ]);
+        }
 
         // 2. TRANSAÇÃO: Novamente, para garantir a integridade.
+        DB::transaction(function () use ($validatedData, $rubric) {
+            // 3. ATUALIZA A RÚBRICA: Modifica a linha na tabela 'rubrics'.
+            $rubric->update([
+                'name' => $validatedData['name'],
+            ]);
 
-            DB::transaction(function () use ($validatedData, $rubric) {
-                // 3. ATUALIZA A RÚBRICA: Modifica a linha na tabela 'rubrics'.
-                $rubric->update([
-                    'name' => $validatedData['name'],
-                ]);
+            // 4. PREPARA OS DADOS PARA A PIVÔ (Exatamente igual ao store)
+            $axesToSync = [];
+            foreach ($validatedData['axes'] as $axisData) {
+                $axesToSync[$axisData['id']] = [
+                    'type' => $validatedData['type'],
+                    'weight' => $axisData['weight'],
+                ];
+            }
 
-                // 4. PREPARA OS DADOS PARA A PIVÔ (Exatamente igual ao store)
-                $axesToSync = [];
-                foreach ($validatedData['axes'] as $axisData) {
-                    $axesToSync[$axisData['id']] = [
-                        'type' => $validatedData['type'],
-                        'weight' => $axisData['weight'],
-                    ];
-                }
+            // 5. A MAGIA DO SYNC NA ATUALIZAÇÃO
+            // O sync vai:
+            //   - Adicionar novos eixos que estão no array mas não no banco.
+            //   - Remover eixos que estão no banco mas não no array.
+            //   - Atualizar o 'weight' dos eixos que já existiam.
+            $rubric->axes()->sync($axesToSync);
+        });
 
-                // 5. A MAGIA DO SYNC NA ATUALIZAÇÃO
-                // O sync vai:
-                //   - Adicionar novos eixos que estão no array mas não no banco.
-                //   - Remover eixos que estão no banco mas não no array.
-                //   - Atualizar o 'weight' dos eixos que já existiam.
-                $rubric->axes()->sync($axesToSync);
-            });
+        // 6. PREPARA A RESPOSTA DE SUCESSO
+        $rubric->load('axes');
 
-            // 6. PREPARA A RESPOSTA DE SUCESSO
-            $rubric->load('axes');
-            $responseData = $this->mapRubric($rubric);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Rubrica atualizada com sucesso!',
-                'data' => $responseData
-            ], 200);
+        return response()->json([
+            'success' => true,
+            'message' => 'Rubrica atualizada com sucesso!',
+            'data' =>  $this->mapRubric($rubric)
+        ], 200);
     }
 
     /**

@@ -28,7 +28,10 @@
     @if($type === 'create')
         <div class="mt-4">
             <x-label for="event_id" value="Bancas"/>
-            <x-select id="event_id" x-model="eventId" class="w-full mt-1" >
+            <x-select id="event_id" x-model="eventId" class="w-full mt-1"
+                x-bind:disabled="{{ Gate::denies('manage-events') ? 'true' : 'events.length < 1' }}"
+                x-bind:readonly="{{ Gate::denies('manage-events') ? 'true' : 'events.length < 1' }}"
+            >
                 <option value="" selected>Selecione uma banca</option>
                 <template x-for="event in events" :key="event.id">
                     <option

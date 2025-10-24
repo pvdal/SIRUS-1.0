@@ -4,7 +4,7 @@
         <x-label for="ra" value="RA do Aluno"/>
         <x-input id="ra"
                  type="text"
-                 autocomplete="ra"
+                 autocomplete="text"
                  class="w-full"
                  @input="ra = ra.replace(/\D/g,'')"
                  placeholder="RA do aluno"

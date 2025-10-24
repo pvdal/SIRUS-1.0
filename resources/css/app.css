@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 [x-cloak] {
-    display: none;
+    display: none !important;
 }
 :root {
     --primary-blue: #1E3A5F;
@@ -131,17 +131,13 @@ select::-ms-expand {
     display: none;
 }
 
-/*********************************************************
-    Autofill com tonalidade green-900/50 no tema escuro
-    OBS: No caso de senha salva é comum que o navegador
-    insira um highlight no input, se for uma cor muito
-    clara estoura o tema dark
-**********************************************************/
-
 /******************************************************
     Autofill com um tom branco levemente amarelado.
     Caso haja problemas futuros, é possível definir
     chave light também, e outras.
+    OBS: No caso de senha salva é comum que o navegador
+    insira um highlight no input, se for uma cor muito
+    clara estoura o tema dark
  ******************************************************/
 .dark input:-webkit-autofill,
 .dark input:-webkit-autofill:hover,

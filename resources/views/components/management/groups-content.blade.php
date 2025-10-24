@@ -22,7 +22,7 @@
         <x-slot name="footer">
             <x-secondary-button type="button" x-bind:disabled="saving"
                 x-on:click="
-                    saveGroup;
+                    saveGroup();
                     $el.blur();
                 "
             >
@@ -30,7 +30,7 @@
                 <span x-show="saving">Salvando...</span>
             </x-secondary-button>
             <x-danger-button type="button"
-                             x-on:click="
+                x-on:click="
                     showCreateModal = false;
                     clearFields('store');
                 "

@@ -27,6 +27,7 @@ export function committeesData() {
         members: [],
         group_id: null,
         paper_id: null,
+        rubric_id: null,
         paper_title: null,
         member_type_id: '',
         created_at: '',
@@ -52,6 +53,7 @@ export function committeesData() {
         memberTypes: [],
         groups: [],
         papers: [],
+        rubrics: [],
         // Variáveis para visualização dos trabalhos
         showGroupPaper: false,
         paperUrl: '',
@@ -97,10 +99,11 @@ export function committeesData() {
 
         showingCommittee: false,
 
-        init(committees, memberTypes, groups, academicStaff, page, totalPages) {
+        init(committees, memberTypes, groups, rubrics,academicStaff, page, totalPages) {
             this.committees = committees;
             this.memberTypes = memberTypes;
             this.groups = groups;
+            this.rubrics = rubrics;
             this.academicStaff = academicStaff;
             this.page = page;
             this.totalPages = totalPages;
@@ -131,13 +134,6 @@ export function committeesData() {
                     this.paper_id = null;
                 }
             });
-            /*
-            this.$watch('searchTerm', (value) => {
-                if(!value) {
-                    this.loadCommittees();
-                }
-            });
-            */
             // Garante que ao modal ser fechado o estado das variáveis de update sejam resetados, isso evita que ao fechar o modal de update o create se comporte como update
             this.$watch('showCreateModal', (value) => {
                 if (!value) {
@@ -293,6 +289,7 @@ export function committeesData() {
             this.name = committee.name || '';
             this.coordinator_id = committee.coordinator_id || null;
             this.group_id = committee.group_id || null;
+            this.rubric_id = committee.rubric?.id || null;
 
             if (committee.members && Array.isArray(committee.members)) {
                 this.members = committee.members.map(m => ({
@@ -356,6 +353,7 @@ export function committeesData() {
                     members: this.members,
                     group_id: this.group_id,
                     paper_id: this.paper_id,
+                    rubric_id: this.rubric_id,
                 },
                 contexto: this,
                 campoLista: update ? null : 'newCommittees',
@@ -364,6 +362,7 @@ export function committeesData() {
 
             if (savedData && Object.keys(savedData).length > 0) {
                 this.empty.data = false;
+                this.empty.result = false;
             }
 
             if(update && savedData) {

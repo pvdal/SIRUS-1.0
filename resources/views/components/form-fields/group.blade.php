@@ -333,8 +333,22 @@
         <template x-for="student in filteredStudents" :key="student.ra">
             <li
                 class="p-2 border-b border-gray-300"
-                @click="!student.group && addMember(student)"
-                :class="{ 'opacity-50 cursor-normal': student.group, 'cursor-pointer hover:bg-gray-200/50 dark:hover:bg-gray-600': !student.group }"
+                x-on:click="
+                    if(!student.belongsTo && !student.group) {
+                        addMember(student);
+                        student.belongsTo = true;
+                    }
+                "
+                x-on:remove-student.window="
+                    if(String($event.detail) === String(student.ra)) {
+                        student.belongsTo = false;
+                    }
+                "
+                :class="{
+                    'opacity-50 cursor-normal': student.group,
+                    'cursor-pointer hover:bg-gray-200/50 dark:hover:bg-gray-600': !student.group,
+                    'line-through opacity-60 bg-gray-200/50 dark:bg-gray-600 !cursor-default': student.belongsTo
+                }"
             >
                 <div>
                     <span x-text="student.name + ': ' + student.ra"></span>
@@ -363,7 +377,7 @@
                 <span class="whitespace-nowrap ml-1" x-text="'- ' + item.ra"></span>
             </span>
         </span>
-        <x-form-fields.remove-button class="ms-5" :action="'removeMember'" :key="'item.ra'"/>
+        <x-form-fields.remove-button class="ms-5" :action="'removeMember'" :additional="'$dispatch(\'remove-student\', item.ra);'" :key="'item.ra'"/>
     </x-form-fields.selected-list>
 
     {{-- Timestamps --}}

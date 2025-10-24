@@ -59,7 +59,7 @@
                     <div>
                         <x-secondary-button
                             x-on:click="
-                                saveEvent;
+                                saveEvent();
                                 $el.blur();
                             "
 

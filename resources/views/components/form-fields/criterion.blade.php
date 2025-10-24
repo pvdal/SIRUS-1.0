@@ -2,7 +2,7 @@
     {{-- Nome do Critério --}}
     <div class="mt-4">
         <x-label for="name" value="Nome do Critério"/>
-        <x-input id="name" type="text" autocomplete="off" class="w-full"
+        <x-input id="name" type="text" autocomplete="off" class="w-full mt-1"
                  placeholder="Ex: Ortografia e Gramática" x-model="name"
                  @keydown.enter.prevent="saveCriterion()"/>
         <template x-if="errors.name">
@@ -12,7 +12,7 @@
     {{-- Descrição de Excelente --}}
     <div class="mt-4">
         <x-label for="excellent" value="Descrição de excelente"/>
-        <textarea id="excellent" x-model="excellent" class="w-full border-gray-300 focus:border-secondary-blue focus:ring-secondary-blue rounded-md shadow-sm dark:bg-gray-800 dark:text-gray-200 dark:placeholder-gray-300 transition duration-150 ease-in-out"
+        <textarea id="excellent" x-model="excellent" class="w-full mt-1 border-gray-300 focus:border-secondary-blue focus:ring-secondary-blue rounded-md shadow-sm dark:bg-gray-800 dark:text-gray-200 dark:placeholder-gray-300 transition duration-150 ease-in-out"
                   placeholder="Detalhes sobre excelente..." rows="2"></textarea>
         <template x-if="errors.excellent">
             <x-form-fields.field-error x-text="errors.excellent[0]"/>
@@ -22,7 +22,7 @@
     {{-- Descrição de Bom --}}
     <div class="mt-4">
         <x-label for="good" value="Descrição de bom"/>
-        <textarea id="good" x-model="good" class="w-full border-gray-300 focus:border-secondary-blue focus:ring-secondary-blue rounded-md shadow-sm dark:bg-gray-800 dark:text-gray-200 dark:placeholder-gray-300 transition duration-150 ease-in-out"
+        <textarea id="good" x-model="good" class="w-full mt-1 border-gray-300 focus:border-secondary-blue focus:ring-secondary-blue rounded-md shadow-sm dark:bg-gray-800 dark:text-gray-200 dark:placeholder-gray-300 transition duration-150 ease-in-out"
                   placeholder="Detalhes sobre bom..." rows="2"></textarea>
         <template x-if="errors.good">
             <x-form-fields.field-error x-text="errors.good[0]"/>
@@ -32,7 +32,7 @@
     {{-- Descrição de satisfactory --}}
     <div class="mt-4">
         <x-label for="satisfactory" value="Descrição de satisfatório"/>
-        <textarea id="satisfactory" x-model="satisfactory" class="w-full border-gray-300 focus:border-secondary-blue focus:ring-secondary-blue rounded-md shadow-sm dark:bg-gray-800 dark:text-gray-200 dark:placeholder-gray-300 transition duration-150 ease-in-out"
+        <textarea id="satisfactory" x-model="satisfactory" class="w-full mt-1 border-gray-300 focus:border-secondary-blue focus:ring-secondary-blue rounded-md shadow-sm dark:bg-gray-800 dark:text-gray-200 dark:placeholder-gray-300 transition duration-150 ease-in-out"
                   placeholder="Detalhes sobre satisfatório..." rows="2"></textarea>
         <template x-if="errors.satisfactory">
             <x-form-fields.field-error x-text="errors.satisfactory[0]"/>
@@ -42,7 +42,7 @@
     {{-- Descrição de Insatisfatório --}}
     <div class="mt-4">
         <x-label for="unsatisfactory" value="Descrição de insatisfatório"/>
-        <textarea id="unsatisfactory" x-model="unsatisfactory" class="w-full border-gray-300 focus:border-secondary-blue focus:ring-secondary-blue rounded-md shadow-sm dark:bg-gray-800 dark:text-gray-200 dark:placeholder-gray-300 transition duration-150 ease-in-out"
+        <textarea id="unsatisfactory" x-model="unsatisfactory" class="w-full mt-1 border-gray-300 focus:border-secondary-blue focus:ring-secondary-blue rounded-md shadow-sm dark:bg-gray-800 dark:text-gray-200 dark:placeholder-gray-300 transition duration-150 ease-in-out"
                   placeholder="Detalhes sobre insatisfatório..." rows="2"></textarea>
         <template x-if="errors.unsatisfactory">
             <x-form-fields.field-error x-text="errors.unsatisfactory[0]"/>
