@@ -1,12 +1,13 @@
 export async function saveData({
-                                   url,
-                                   payload,
-                                   contexto,
-                                   campoLista = null,
-                                   callbackSucesso = null,
-                                   clearFields = true,
-                                   method = 'post',
-                                   formatResponse = null,
+                                    url,
+                                    payload,
+                                    contexto,
+                                    campoLista = null,
+                                    callbackSucesso = null,
+                                    feedback = true,
+                                    clearFields = true,
+                                    method = 'post',
+                                    formatResponse = null,
                                }) {
     if (contexto.saving) return;
 
@@ -32,10 +33,12 @@ export async function saveData({
 
         if (clearFields) contexto.clearFields?.('store');
 
-        if (response.data.success && response.data.message) {
-            contexto.showMessage('success', response.data.message);
-        } else {
-            contexto.showMessage('success', 'Salvo com sucesso!');
+        if(feedback) {
+            if (response.data.success && response.data.message) {
+                contexto.showMessage('success', response.data.message);
+            } else {
+                contexto.showMessage('success', 'Salvo com sucesso!');
+            }
         }
 
         if (typeof formatResponse === 'function') {

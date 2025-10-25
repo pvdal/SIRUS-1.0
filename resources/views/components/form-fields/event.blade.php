@@ -1,9 +1,24 @@
 @props(['type' => 'evaluation'])
 
 <div>
+    @can('manage-events')
+        <div x-show="edit" class="mt-5">
+            <x-danger-button
+                x-on:click="
+                    $el.blur();
+                    cancelEvent();
+                "
+            >
+                <div class="flex flex-row gap-2">
+                    Cancelar
+                    <x-lucide-x class="text-white h-4 w-4"/>
+                </div>
+            </x-danger-button>
+        </div>
+    @endcan
     @if($type === 'create')
         <template x-if="events.length < 1">
-            <div class="rounded-xl bg-secondary-blue p-2 px-4">
+            <div class="rounded-md bg-secondary-blue p-2 px-4">
                 <h3 class="block font-medium text-sm text-white">
                     Não há bancas sem datas definidas.
                 </h3>
@@ -32,7 +47,7 @@
                 x-bind:disabled="{{ Gate::denies('manage-events') ? 'true' : 'events.length < 1' }}"
                 x-bind:readonly="{{ Gate::denies('manage-events') ? 'true' : 'events.length < 1' }}"
             >
-                <option value="" selected>Selecione uma banca</option>
+                <option value="">Selecione uma banca</option>
                 <template x-for="event in events" :key="event.id">
                     <option
                         :value="event.id"

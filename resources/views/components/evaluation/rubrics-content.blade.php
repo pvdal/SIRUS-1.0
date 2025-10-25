@@ -1,6 +1,6 @@
 <div>
     {{-- Modal de cadastro --}}
-    <x-custom-modal x-model="showCreateModal" maxWidth="3xl">
+    <x-custom-modal x-model="showCreateModal">
         <x-slot name="title">
             <template x-if="!edit">
                 <span>Cadastrar nova Rubrica</span>

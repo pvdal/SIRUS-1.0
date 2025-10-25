@@ -33,48 +33,6 @@ class EventController extends Controller
         ]);
     }
 
-    private function getEvents(): array
-    {
-        $eventsData = [];
-
-        $events = Committee::with([
-            'paper.group',
-            'members' => function ($query) {
-                $query->whereHas('user', function ($q) {
-                    $q->where('state', 1);
-                })->with('user:id,name', 'memberType:id,name');
-            },
-        ])
-            ->where('state', 1)
-            ->whereNull('start') // Consulta apenas bancas sem datas definidas
-            ->whereNull('end')
-            ->get();
-
-        if($events) {
-            $eventsData = $events->map(function ($event) {
-                $group = $event->paper?->group;
-                return [
-                    'id' => (int) $event->id,
-                    'title' => $event->name,
-                    'group' => $group->theme,
-                    'paper' => $event->paper?->title,
-                    'members' => $event->members
-                        ->map(fn($m) => [
-                            'user_id' => $m->user_id,
-                            'name' => $m->user->name,
-                            'member_type' => [
-                                'id' => $m->memberType?->id,
-                                'name' => $m->memberType?->name,
-                            ],
-                        ])->values(),
-                ];
-            })->values()->toArray();
-        }
-
-        return $eventsData;
-    }
-
-
     public function show(): JsonResponse
     {
         $events = Committee::with([
@@ -162,6 +120,19 @@ class EventController extends Controller
             }
         }
 
+        if($request->cancel) {
+            $event->update([
+                'start' => null,
+                'end' => null,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => "Evento $id ($event->name) cancelado com sucesso!",
+                'events' => $this->getEvents()
+            ]);
+        }
+
         $request->validate([
             'date_start' => 'required|date_format:Y-m-d',
             'date_end'   => 'required|date_format:Y-m-d|after_or_equal:dateStart',
@@ -194,5 +165,46 @@ class EventController extends Controller
             'message' => 'Data atualizada com sucesso!',
             'events' => $this->getEvents()
         ]);
+    }
+
+    private function getEvents(): array
+    {
+        $eventsData = [];
+
+        $events = Committee::with([
+            'paper.group',
+            'members' => function ($query) {
+                $query->whereHas('user', function ($q) {
+                    $q->where('state', 1);
+                })->with('user:id,name', 'memberType:id,name');
+            },
+        ])
+            ->where('state', 1)
+            ->whereNull('start') // Consulta apenas bancas sem datas definidas
+            ->whereNull('end')
+            ->get();
+
+        if($events) {
+            $eventsData = $events->map(function ($event) {
+                $group = $event->paper?->group;
+                return [
+                    'id' => (int) $event->id,
+                    'title' => $event->name,
+                    'group' => $group->theme,
+                    'paper' => $event->paper?->title,
+                    'members' => $event->members
+                        ->map(fn($m) => [
+                            'user_id' => $m->user_id,
+                            'name' => $m->user->name,
+                            'member_type' => [
+                                'id' => $m->memberType?->id,
+                                'name' => $m->memberType?->name,
+                            ],
+                        ])->values(),
+                ];
+            })->values()->toArray();
+        }
+
+        return $eventsData;
     }
 }

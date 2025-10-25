@@ -91,7 +91,7 @@ document.addEventListener('alpine:initialized', function () {
 
         eventClick: function(info) {
             // info.event contém os dados do evento
-            console.log(info.event.start, info.event.end);
+            // console.log(info.event.start, info.event.end);
             window.dispatchEvent(new CustomEvent('open-evaluation-modal', {
                 bubbles: true,
                 detail: {

@@ -28,7 +28,7 @@ class RubricController extends Controller
         $axesAvailable = Axis::all(['name']);
         $rubrics = Rubric::with(['axes.criteria']) // eager load: axes -> criteria (cada criteria terá pivot axis_criteria)
         ->select(['id','name','state','created_at','updated_at'])
-            ->orderBy('id', 'desc') // Ordenar por mais recente é comum
+            ->orderBy('id') // Ordenar por mais recente é comum
             ->paginate(15);
 
         $rubricsData = $rubrics->getCollection()->map(function ($rubric) {
@@ -171,6 +171,19 @@ class RubricController extends Controller
 
         if ($request->filled('status')) {
             $query->where('state', $request->input('status'));
+        }
+
+        if ($request->filled('period')) {
+            $period = $request->input('period');
+            $query->when($period === 'today', function ($q) {
+                $q->whereDate('created_at', today());
+            });
+            $query->when($period === 'week', function ($q) {
+                $q->whereBetween('created_at', [now()->subDays(7), now()]);
+            });
+            $query->when($period === 'month', function ($q) {
+                $q->whereBetween('created_at', [now()->subDays(30), now()]);
+            });
         }
 
         // Paginação

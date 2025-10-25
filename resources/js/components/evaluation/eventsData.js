@@ -95,7 +95,6 @@ export function eventsData() {
                 }
             });
 
-            // Correto ---------
             if (type === 'create') {
                 // Normaliza usando UTC -> ISO, pois vem direto do FullCalendar (select)
                 this.dateStart = e.detail.dateStart
@@ -181,6 +180,51 @@ export function eventsData() {
                 }
             }));
         },
+
+        async cancelEvent() {
+            if (!this.eventId) {
+                this.showMessage('warning', 'Nenhum evento selecionado para atualizar!');
+                return;
+            }
+
+            if(!window.userPermissions.canManageEvents) return;
+
+            let update = this.edit;
+            let id = this.eventId;
+
+            this.edit = false;
+            this.eventId = '';
+
+            const savedData = await saveData({
+                url: `/events/${id}/update`,
+                method: 'put',
+                payload: {
+                    cancel: true,
+                },
+                contexto: this,
+                campoLista: null,
+                clearFields: true,
+                feedback: false,
+            });
+            if(savedData?.success && savedData?.events) {
+                this.events.splice(0, this.events.length, ...savedData.events);
+
+                this.showModal = false;
+                window.dispatchEvent(new CustomEvent('reload-calendar', {
+                    detail: {
+                        reload: true,
+                    }
+                }));
+
+                window.dispatchEvent(new CustomEvent('banner-message', {
+                    detail: {
+                        style: 'success',
+                        message: savedData?.message ? savedData?.message : 'Evento cancelado com sucesso!',
+                    }
+                }));
+            }
+        },
+
         //window.userPermissions.canManageEvents
         showMessage(style, message) {
             this.style = style;

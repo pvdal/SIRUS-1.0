@@ -49,6 +49,9 @@
           x-init="init()"
           @endif
     >
+        @if(config('accessibility.daltonism'))
+            <x-accessibility.daltonism-filters/>
+        @endif
         {{-- Feedback messages: success, fail...--}}
         <x-banner />
         {{-- Impede que o usuário tenha acesso ao sistema caso não aceite os termos de uso e políticas de privacidade juntamente com o middleware 'terms-accepted' --}}
@@ -56,7 +59,7 @@
             @livewire('legal.terms-accept')
         @endif
 
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-700 transition duration-150 ease-in-out">
+        <div id="app" class="min-h-screen bg-gray-100 dark:bg-gray-700 transition duration-150 ease-in-out">
             <!-- Navigation menu -->
             @livewire('navigation-menu')
 
@@ -105,6 +108,39 @@
                     });
                 </script>
             </div>
+        @endif
+        @if(config('accessibility.daltonism'))
+            {{-- script dos filtros de daltonismo --}}
+            <script>
+                const app = document.getElementById('app');
+                const select = document.getElementById('type-daltonism');
+
+                const filters = {
+                    normal: 'none',
+                    achromatomaly: 'url(#achromatomaly)',
+                    achromatopsia: 'url(#achromatopsia)',
+                    deuteranomaly: 'url(#deuteranomaly)',
+                    deuteranopia: 'url(#deuteranopia)',
+                    protanomaly: 'url(#protanomaly)',
+                    protanopia: 'url(#protanopia)',
+                    tritanomaly: 'url(#tritanomaly)',
+                    tritanopia: 'url(#tritanopia)',
+                };
+
+                // Recupera o filtro salvo (ou "normal" por padrão)
+                const savedFilter = localStorage.getItem('daltonismFilter') || 'normal';
+
+                // Aplica o filtro salvo imediatamente
+                app.style.filter = filters[savedFilter] || 'none';
+                select.value = savedFilter;
+
+                // Quando o usuário muda o filtro
+                select.addEventListener('change', () => {
+                    const selected = select.value;
+                    app.style.filter = filters[selected] || 'none';
+                    localStorage.setItem('daltonismFilter', selected);
+                });
+            </script>
         @endif
     </body>
 </html>
