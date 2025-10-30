@@ -132,16 +132,6 @@ class AxisController extends Controller
             $query->where('state', $status);
         }
 
-        if ($request->filled('status')) {
-            $status = $request->input('status');
-            $query->where('state', $status);
-        }
-
-        if ($request->filled('status') || $request->input('status') === '0') {
-            $status = $request->input('status');
-            $query->where('state', $status);
-        }
-
         // Filtro por período de cadastro
         if ($request->filled('period')) {
             $period = $request->input('period');
@@ -159,8 +149,20 @@ class AxisController extends Controller
         // Paginação
         $axes = $query->paginate(30);
 
+        $axisData = $axes->getCollection()->map(function ($axis) {
+            return [
+                'id' => $axis->id,
+                'name' => $axis->name,
+                'amount' => $axis->amount, // Lendo diretamente da coluna do banco.
+                'state' => (int) $axis->state,
+                'created_at' => $axis->created_at,
+                'updated_at' => $axis->updated_at,
+                'criteria' => $axis->criteria, // Necessário para o modal de edição
+            ];
+        })->values();
+
         return response()->json([
-            'data' => $axes->items(),
+            'data' => $axisData,
             'page' => $axes->currentPage(),
             'totalPages' => $axes->lastPage(),
         ]);

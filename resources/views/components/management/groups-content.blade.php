@@ -96,7 +96,7 @@
                     </x-slot>
 
                     <x-slot name="paperAction">
-                        <template x-if="item?.papers?.length">
+                        <template x-if="item?.papers?.length && item.papers[item.papers.length -1]?.file_path">
                             <x-card.link-button
                                 x-on:click="showPaper(`${item.papers[item.papers.length -1]?.file_path}`)"
                             >

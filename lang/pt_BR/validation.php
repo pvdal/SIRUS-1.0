@@ -179,21 +179,23 @@ return [
             'rule-name' => 'custom-message',
         ],
 
-        'members.*' => [
-            'required' => 'O campo membros é obrigatório.',
-            'string' => 'O campo membros deve conter valores válidos.',
-            'exists' => 'Um dos membros selecionados não é válido.',
-        ],
         'members' => [
             'required' => 'O campo membros é obrigatório.',
             'array' => 'O campo membros deve ser uma lista.',
             'min' => 'O campo membros deve ter ao menos :min membros.',
         ],
+
+        'members.*' => [
+            'required' => 'O campo membros é obrigatório.',
+            'string' => 'O campo membros deve conter valores válidos.',
+            'exists' => 'Um dos membros selecionados não é válido.',
+        ],
+
         'papers' => [
             'required' => 'É obrigatório enviar pelo menos um trabalho.',
             'array' => 'O campo trabalhos deve ser uma lista.',
-            'min' => 'Envie pelo menos :min trabalho(s).',
-            'max' => 'Envie no máximo :max trabalho(s).',
+            'min' => 'Envie pelo menos :min trabalhos.',
+            'max' => 'Envie no máximo :max trabalhos.',
         ],
 
         'papers.*.title' => [
@@ -248,11 +250,29 @@ return [
             'between' => 'O projeto deve estar entre :min e :max.',
         ],
 
+        'axes.*.id' => [
+            'required' => 'O ID dos eixos é obrigatório.',
+            'integer' => 'O ID dos eixos deve ser um número inteiro.',
+            'exists'   => 'O eixo selecionado não existe no sistema.',
+        ],
+
         'axes.*.weight' => [
             'required' => 'O peso dos eixos é obrigatório.',
-            'numeric' => 'O campo eixos deve ser um número.',
+            'numeric' => 'O peso dos eixos deve ser um número.',
             'min' => 'O peso de cada eixo deve ser pelo menos :min',
-        ]
+        ],
+
+        'rubrics.*.id' => [
+            'required' => 'O ID das rubricas é obrigatório.',
+            'integer' => 'O ID das rubricas deve ser um número inteiro.',
+            'exists'   => 'A rubrica selecionado não existe no sistema.',
+        ],
+
+        'rubrics.*.weight' => [
+            'required' => 'O peso das rubricas é obrigatório.',
+            'numeric' => 'O peso das rubricas deve ser um número.',
+            'min' => 'O peso de cada rubrica deve ser pelo menos :min',
+        ],
     ],
 
     /*
@@ -289,6 +309,8 @@ return [
         'good'       => 'bom',
         'course_id'  => 'curso',
         'group_id'   => 'grupo',
+        'group_rubric' => 'rubrica em grupo',
+        'individual_rubric' => 'rubrica individual',
         'marital_status' => 'estado civil',
         'profession' => 'profissão',
         'nationality' => 'nacionalidade',
@@ -307,7 +329,7 @@ return [
         'paper_id'   => 'trabalho',
         'password'   => 'senha',
         'phone'      => 'telefone',
-        'rubric_id'  => 'rubrica',
+        'rubrics'  => 'rubrica',
         'satisfactory' => 'satisfatório',
         'second'     => 'segundo',
         'semester'   => 'semestre',

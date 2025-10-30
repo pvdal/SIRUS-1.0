@@ -61,13 +61,13 @@
         :list="'selectedCriteria'"
         :key="'id'"
     >
-        <span class="flex flex-col">
-            <span x-text="item.name"></span>
+        <span class="ms-1 flex flex-wrap overflow-hidden max-w-[90%]">
+            <span class="truncate block xs:whitespace-normal max-w-full" x-text="item.name"></span>
             <template x-if="item.description">
-                <span x-text="item.description"></span>
+                <span class="truncate block xs:whitespace-normal max-w-full ml-1" x-text="'- ' + item.description"></span>
             </template>
         </span>
-        <x-form-fields.remove-button :action="'removeCriterion'" :additional="'$dispatch(\'remove-criterion\',item.id);'" :key="'item.id'"/>
+        <x-form-fields.remove-button class="ms-5" :action="'removeCriterion'" :additional="'$dispatch(\'remove-criterion\',item.id);'" :key="'item.id'"/>
     </x-form-fields.selected-list>
 
     {{-- Timestamps --}}

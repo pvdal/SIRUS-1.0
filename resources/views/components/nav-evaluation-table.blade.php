@@ -24,17 +24,17 @@
     <!-- Menu responsivo (somente abaixo de 300px) -->
     <div class="block xxs:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link href="/evaluation/criteria" :active="request()->routeIs('evaluation.criteria.table')">
+            <x-responsive-nav-link href="/evaluation/criteria" :active="request()->routeIs('evaluation.criteria-table')">
                 {{ __('Critérios') }}
             </x-responsive-nav-link>
         </div>
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link href="/evaluation/axis" :active="request()->routeIs('evaluation.axis.table')">
+            <x-responsive-nav-link href="/evaluation/axis" :active="request()->routeIs('evaluation.axis-table')">
                 {{ __('Eixos') }}
             </x-responsive-nav-link>
         </div>
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link href="/evaluation/rubric" :active="request()->routeIs('evaluation.rubric.table')">
+            <x-responsive-nav-link href="/evaluation/rubric" :active="request()->routeIs('evaluation.rubric-table')">
                 {{ __('Rubricas') }}
             </x-responsive-nav-link>
         </div>

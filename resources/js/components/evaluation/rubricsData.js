@@ -274,7 +274,7 @@ export function rubricsData() {
                 type: this.rubric.type,
                 axes: this.axes.map(axis => ({
                     id: axis.id,
-                    weight: parseFloat(axis.weight) || 0
+                    weight: parseFloat(axis.weight)
                 }))
             };
 
@@ -397,8 +397,9 @@ export function rubricsData() {
             this.rubric = {
                 id: rubric.id,
                 name: rubric.name,
+                type: rubric.type,
                 // verificação de segurança para o caso de não haver eixos.
-                type: (rubric.axes && rubric.axes.length > 0) ? rubric.axes[0].type : null
+                //type: (rubric.axes && rubric.axes.length > 0) ? rubric.axes[0].type : null
             };
 
 
@@ -584,6 +585,7 @@ export function rubricsData() {
             const rubricToShow = this.rubrics.find(r => r.id === rubricId) || this.newRubrics.find(r => r.id === rubricId);
 
             if (rubricToShow) {
+                console.log(rubricToShow);
                 this.rubricForModelView = rubricToShow;
                 this.showRubricCards = false;
                 this.showModel = true;

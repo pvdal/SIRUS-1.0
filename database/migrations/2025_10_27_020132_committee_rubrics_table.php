@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -12,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rubrics', function (Blueprint $table) {
+        Schema::create('committee_rubrics', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->tinyInteger('type');// Tipo de avaliação do eixo
+            $table->foreignId('committee_id')->constrained('committees');
+            $table->foreignId('rubric_id')->constrained('rubrics');
+            $table->integer('weight');// Peso do rubrica na banca
             $table->boolean('state')->default(true);
             $table->timestamps();
         });
-
     }
 
     /**
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rubrics');
+        Schema::dropIfExists('committee_rubrics');
     }
 };

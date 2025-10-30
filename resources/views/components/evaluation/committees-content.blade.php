@@ -3,12 +3,21 @@
         {{-- Modal de cadastro --}}
         <x-custom-modal x-model="showCreateModal">
             <x-slot name="title">
-                <template x-if="!edit">
-                    <span>Cadastrar nova banca</span>
-                </template>
-                <template x-if="edit">
-                    <span>Atualizar os dados da banca</span>
-                </template>
+                <div class="flex flex-wrap items-center justify-start gap-3">
+                    <template x-if="!edit">
+                        <span class="mr-auto">Cadastrar nova banca</span>
+                    </template>
+                    <template x-if="edit">
+                        <span class="mr-auto">Atualizar os dados da banca</span>
+                    </template>
+
+                    <template x-if="belongsTo">
+                        <x-secondary-button>Avaliar</x-secondary-button>
+                    </template>
+                    <template x-if="!belongsTo">
+                        <x-secondary-button>Avaliação</x-secondary-button>
+                    </template>
+                </div>
             </x-slot>
 
             <x-slot name="content">

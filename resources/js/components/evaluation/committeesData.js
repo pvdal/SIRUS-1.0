@@ -21,17 +21,24 @@ export function committeesData() {
         toggleHistory(){
             this.$dispatch('toggle-history', this.historyFilter);
         },
+        searchRubric: '',
+        filteredRubrics: [],
+        showNoRubricsMsg: false,
         // Variáveis dos campos do formulário
         name: '',
         coordinator_id: '',
         members: [],
         group_id: null,
         paper_id: null,
-        rubric_id: null,
+        rubric_id: {
+            group: null,
+            individual: null,
+        },
         paper_title: null,
         member_type_id: '',
         created_at: '',
         updated_at: '',
+        belongsTo: false,
         // Controla a visualização do input de paper
         groupSelected: false,
         // Variáveis de estado das requisições
@@ -75,6 +82,8 @@ export function committeesData() {
         searchMember: '',
         filteredMembers: [],
         searching: false,
+        searchingMembers: false,
+        searchingRubrics: false,
         searchTimeout: null,
         showNoMembersMsg: false,
         // Altera o modo do card
@@ -99,11 +108,10 @@ export function committeesData() {
 
         showingCommittee: false,
 
-        init(committees, memberTypes, groups, rubrics,academicStaff, page, totalPages) {
+        init(committees, memberTypes, groups, academicStaff, page, totalPages) {
             this.committees = committees;
             this.memberTypes = memberTypes;
             this.groups = groups;
-            this.rubrics = rubrics;
             this.academicStaff = academicStaff;
             this.page = page;
             this.totalPages = totalPages;
@@ -123,6 +131,11 @@ export function committeesData() {
             // Evento de escuta para a busca de alunos para cadastro no grupo
             this.$watch('searchMember', () => {
                 this.searchMembers();
+            });
+
+            // Evento de escuta para a busca de rubricas para cadastro no grupo
+            this.$watch('searchRubric', () => {
+                this.searchRubrics();
             });
 
             // Verifica
@@ -145,6 +158,61 @@ export function committeesData() {
             });
         },
 
+        searchRubrics() {
+            if (this.searchTimeout) clearTimeout(this.searchTimeout);
+
+            this.searchTimeout = setTimeout(async () => {
+                if (!this.showCreateModal) {
+                    // Se modal fechado, cancela a busca
+                    this.filteredRubrics = [];
+                    this.searching = false;
+                    this.searchingRubrics = false;
+                    this.showNoRubricsMsg = false;
+                    return;
+                }
+
+                const term = this.searchRubric.trim();
+                if (!term) {
+                    this.filteredRubrics = [];
+                    this.showNoRubricsMsg = false;
+                    return;
+                }
+
+                this.searching = true;
+                this.searchingRubrics = false;
+                this.showNoRubricsMsg = true;
+                try {
+                    const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
+                    const response = await axios.get(`/${requestPrefix}/rubrics/search`, {
+                        params: { q: term }
+                    });
+                    // Filtra membros que ainda não estão na lista de membros
+                    this.filteredRubrics = response.data.filter(member =>
+                        !this.rubrics.some(m => m.id === member.id)
+                    );
+                } catch (error) {
+                    console.error('Erro ao buscar professores:', error);
+                } finally {
+                    this.searching = false;
+                    this.searchingRubrics = false;
+                }
+            }, 200); // debounce
+        },
+
+        addRubric(rubric) {
+            if (!this.rubrics.some(r => r.id === rubric.id)) {
+                this.rubrics.push({ id: rubric.id, name: rubric.name, type: rubric.type });
+            }
+        },
+
+        removeRubric(id) {
+            this.rubrics = this.rubrics.filter(r => r.id !== id);
+        },
+        get totalWeight() {
+            return this.rubrics.reduce((sum, r) => sum + (Number(r.weight) || 0), 0);
+        },
+
+
         searchMembers() {
             if (this.searchTimeout) clearTimeout(this.searchTimeout);
 
@@ -153,6 +221,7 @@ export function committeesData() {
                     // Se modal fechado, cancela a busca
                     this.filteredMembers = [];
                     this.searching = false;
+                    this.searchingMembers = false;
                     this.showNoMembersMsg = false;
                     return;
                 }
@@ -160,10 +229,12 @@ export function committeesData() {
                 const term = this.searchMember.trim();
                 if (!term) {
                     this.filteredMembers = [];
+                    this.showNoMembersMsg = false;
                     return;
                 }
 
                 this.searching = true;
+                this.searchingMembers = false;
                 this.showNoMembersMsg = true;
                 try {
                     const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
@@ -178,6 +249,7 @@ export function committeesData() {
                     console.error('Erro ao buscar professores:', error);
                 } finally {
                     this.searching = false;
+                    this.searchingMembers = false;
                 }
             }, 200); // debounce
         },
@@ -289,7 +361,18 @@ export function committeesData() {
             this.name = committee.name || '';
             this.coordinator_id = committee.coordinator_id || null;
             this.group_id = committee.group_id || null;
-            this.rubric_id = committee.rubric?.id || null;
+
+            if (committee.rubrics && Array.isArray(committee.rubrics)) {
+                this.rubrics = committee.rubrics.map(r => ({
+                    id: r.id,
+                    name: r.name,
+                    type: r.type,
+                    weight: r.weight,
+                    state: r.state ?? 1
+                }));
+            } else {
+                this.members = [];
+            }
 
             if (committee.members && Array.isArray(committee.members)) {
                 this.members = committee.members.map(m => ({
@@ -315,6 +398,8 @@ export function committeesData() {
                 this.paper_id = null;
                 this.paper_title = null;
             }
+
+            this.belongsTo = committee.members.some(m => m.belongsTo === true);
 
             // Trata os timestamps
             this.created_at = formatDateTime('Criado em', committee.created_at);
@@ -344,7 +429,7 @@ export function committeesData() {
                 url = `/committees/${id}/update`;  // rota para atualizar
                 method = 'put'; // 'post'/'put'/'patch' conforme backend
             }
-
+            console.log(this.rubrics);
             const savedData = await saveData({
                 url: url,
                 method,
@@ -353,7 +438,7 @@ export function committeesData() {
                     members: this.members,
                     group_id: this.group_id,
                     paper_id: this.paper_id,
-                    rubric_id: this.rubric_id,
+                    rubrics: this.rubrics,
                 },
                 contexto: this,
                 campoLista: update ? null : 'newCommittees',
@@ -448,6 +533,9 @@ export function committeesData() {
                     'searchMember',
                     'filteredMembers',
                     'members',
+                    'searchRubric',
+                    'filteredRubrics',
+                    'rubrics',
                     'group_id',
                     'paper_id',
                     'member_type_id',

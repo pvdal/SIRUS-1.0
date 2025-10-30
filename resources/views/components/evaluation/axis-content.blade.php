@@ -66,16 +66,16 @@
             :haveActions="true"
         >
             <x-slot name="columns">
-                <x-table.th>ID</x-table.th>
+                <x-table.th class="hidden sm:table-cell">ID</x-table.th>
                 <x-table.th>Nome</x-table.th>
-                <x-table.th class="hidden sm:table-cell">Quantidade de Critérios</x-table.th>
-                <x-table.th class="hidden sm:table-cell">Status</x-table.th>
+                <x-table.th class="hidden xs:table-cell">Quantidade de Critérios</x-table.th>
+                <x-table.th class="hidden md:table-cell">Status</x-table.th>
             </x-slot>
             <x-slot name="rows">
-                <x-table.td x-text="item.id"></x-table.td>
+                <x-table.td class="hidden sm:table-cell" x-text="item.id"></x-table.td>
                 <x-table.td x-text="item.name"></x-table.td>
-                <x-table.td class="hidden sm:table-cell" x-text="item.amount || 0"></x-table.td>
-                <x-table.td class="hidden sm:table-cell" x-text="item.state == 1 ? 'Ativo' : 'Inativo'"></x-table.td>
+                <x-table.td class="hidden xs:table-cell" x-text="item.amount || 0"></x-table.td>
+                <x-table.td class="hidden md:table-cell" x-text="item.state == 1 ? 'Ativo' : 'Inativo'"></x-table.td>
             </x-slot>
             <x-slot name="actions">
                 <div class="flex flex-wrap gap-2 items-center justify-center">

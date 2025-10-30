@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('committee_id')->nullable()->constrained('committees')->nullOnDelete();
             $table->foreignId('member_type_id')->nullable()->constrained('member_types')->nullOnDelete();
+            $table->timestamp('evaluated_at')->nullable()->default(null);
             $table->boolean('state')->default(true);
             $table->timestamps();
 

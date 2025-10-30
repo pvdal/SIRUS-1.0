@@ -22,6 +22,11 @@ class Rubric extends Model
             ->withPivot('weight', 'type'); // Informa ao Eloquent para buscar os campos da tabela pivô
     }
 
+    public function committees(): HasMany
+    {
+        return $this->HasMany(CommitteeRubric::class);
+    }
+
     public function toFrontendStructure(): array
     {
         $this->load(['axes' => function($q) {

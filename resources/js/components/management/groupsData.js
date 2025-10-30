@@ -393,6 +393,7 @@ export function groupsData() {
                     formData.append(`papers[${index}][project]`, p.project ?? '');
                 });
             }
+
             //console.log(this.papers);
             //console.log(formData);
 

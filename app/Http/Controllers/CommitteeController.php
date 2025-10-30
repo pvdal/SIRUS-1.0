@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 // Common
+use App\Models\CommitteeRubric;
 use App\Models\Rubric;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -48,7 +49,7 @@ class CommitteeController extends Controller
             'members.user:id,name,state,access_level', // todos membros (professor/coordenador)
             'members.memberType',
             'paper.group.students.user:id,name,state',
-            'rubric:id,name,state',
+            'rubrics.rubric:id,name,type,state',
         ])
             ->orderBy('id')
             ->when(Gate::denies('manage-events'), function ($query) {
@@ -123,6 +124,7 @@ class CommitteeController extends Controller
                 ->map(fn($rubric) => [
                     'id' => $rubric->id,
                     'name' => $rubric->name,
+                    'type' => $rubric->type,
                 ]);
         }
         #endregion
@@ -138,8 +140,49 @@ class CommitteeController extends Controller
         ]);
     }
 
+    // Buscar rubricas ativas por nome ou ‘id’ ordenados por nome
+    public function searchRubrics(Request $request): JsonResponse
+    {
+        $this->authorize('manage-events');
+
+        $q = strtolower($request->query('q', ''));
+
+        // Mapeamento de palavras-chave para type
+        $typeMap = [
+            'grupo' => 1,
+            'individual' => 2,
+        ];
+
+        // Verifica se a query corresponde a algum type
+        $typeFilter = $typeMap[$q] ?? null;
+
+        // Traz rubricas ativas com nome ou ‘id’ pesquisado
+        $rubrics = Rubric::where('state', 1)
+            ->where(function ($query) use ($q, $typeFilter) {
+                if ($typeFilter) {
+                    $query->where('type', $typeFilter);
+                } else {
+                    $query->where('name', 'like', '%' . $q . '%')
+                        ->orWhere('id', 'like', '%' . $q . '%');
+                }
+            })
+            ->limit(15)
+            ->orderBy('name')
+            ->get();
+
+        // Mapeia rubricas para o formato JSON
+        $mapped = $rubrics->map(fn($rubric) => [
+            'id' => $rubric->id,
+            'name' => $rubric->name ?? '(sem nome)',
+            'type' => $rubric->type,
+            'state' => $rubric->state,
+        ])->toArray();
+
+        return response()->json($mapped);
+    }
+
     // Buscar professores / coordenadores ativos por nome ou ‘id’ ordenados por nome
-    public function search(Request $request): JsonResponse
+    public function searchMembers(Request $request): JsonResponse
     {
         $this->authorize('manage-events');
 
@@ -198,7 +241,7 @@ class CommitteeController extends Controller
             'members.user:id,name,state',   // todos membros (professor/coordenador)
             'members.memberType',
             'paper.group.students.user:id,name,state',
-            'rubric:id,name,state'
+            'rubrics.rubric:id,name,type,state',
         ])
             ->when(Gate::denies('manage-events'), function ($query) {
                 $query->where(function ($q) {
@@ -334,20 +377,44 @@ class CommitteeController extends Controller
             'name' => 'required|string|max:255|unique:committees,name',
             'group_id' => 'required|exists:groups,id',
             'paper_id' => 'required|exists:papers,id|unique:committees,paper_id',
-            'rubric_id' => 'required|exists:rubrics,id',
+            'rubrics' => 'required|array|min:2',
+            'rubrics.*.id' => 'required|integer|exists:rubrics,id',
+            'rubrics.*.weight' => 'required|numeric|min:1',
             'members' => 'required|array|min:3',
             'members.*.user_id' => 'required|exists:users,id',
             'members.*.member_type.id' => 'required|exists:member_types,id',
         ]);
 
+        #region Verificação extra
+        // Verificar se a soma dos pesos é exatamente 100
+        $totalWeight = collect($request->rubrics)->sum('weight');
+        if ($totalWeight !== 100) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'rubrics' => ['A soma dos pesos das rubricas deve ser exatamente 100%.'],
+            ]);
+        }
+        // Verificar se há rubricas duplicadas
+        $rubricIds = collect($request->rubrics)->pluck('id');
+        if ($rubricIds->unique()->count() !== $rubricIds->count()) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'rubrics' => ['Não podem haver rubricas duplicadas.'],
+            ]);
+        }
+        // Verificar se há tipos de rubricas duplicadas
+        $rubricTypes = collect($request->rubrics)->pluck('type');
+        if ($rubricTypes->unique()->count() !== $rubricTypes->count()) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'rubrics' => ['Pode haver apenas uma rubrica de cada tipo.'],
+            ]);
+        }
         // Verificar se há user_id duplicado
         $userIds = collect($request->members)->pluck('user_id');
         if ($userIds->unique()->count() !== $userIds->count()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Os membros não podem conter usuários duplicados.',
-            ], 422);
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'members' => ['Não podem haver usuários duplicados.'],
+            ]);
         }
+        #endregion
 
         $coordinator = auth()->user()->coordinator;
         if (!$coordinator) {
@@ -366,7 +433,6 @@ class CommitteeController extends Controller
                 'name' => $request->name,
                 'coordinator_id' => $request->coordinator_id,
                 'paper_id' => $request->paper_id,
-                'rubric_id' => $request->rubric_id,
                 'state' => 1,
             ]);
 
@@ -375,6 +441,15 @@ class CommitteeController extends Controller
                     'committee_id' => $committee->id,
                     'user_id' => $member['user_id'],
                     'member_type_id' => $member['member_type']['id'],
+                ]);
+            }
+
+            foreach ($request->rubrics as $rubric) {
+                committeeRubric::create([
+                    'committee_id' => $committee->id,
+                    'rubric_id' => $rubric['id'],
+                    'weight' => $rubric['weight'],
+                    'state' => 1,
                 ]);
             }
         });
@@ -410,7 +485,6 @@ class CommitteeController extends Controller
             ], 422);
         }
 
-        // o nullable de rubric é temporario
         $request->validate([
             'name' => "required|string|max:255|unique:committees,name,{$id},id",
             'group_id' => 'required|exists:groups,id',
@@ -421,25 +495,47 @@ class CommitteeController extends Controller
                 }),
                 "unique:committees,paper_id,{$id},id",
             ],
-            'rubric_id' => 'required|exists:rubrics,id',
+            'rubrics' => 'required|array|min:2',
+            'rubrics.*.id' => 'required|integer|exists:rubrics,id',
+            'rubrics.*.weight' => 'required|numeric|min:1',
             'members' => 'required|array|min:3',
             'members.*.user_id' => 'required|exists:users,id',
             'members.*.member_type.id' => 'required|exists:member_types,id',
         ]);
 
+        #region Verificação extra
+        // Verificar se a soma dos pesos é exatamente 100
+        $totalWeight = collect($request->rubrics)->sum('weight');
+        if ($totalWeight !== 100) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'rubrics' => ['A soma dos pesos das rubricas deve ser exatamente 100%.'],
+            ]);
+        }
+        // Verificar se há rubricas duplicadas
+        $rubricIds = collect($request->rubrics)->pluck('id');
+        if ($rubricIds->unique()->count() !== $rubricIds->count()) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'rubrics' => ['Não podem haver rubricas duplicadas.'],
+            ]);
+        }
+        // Verificar se há tipos de rubricas duplicadas
+        $rubricTypes = collect($request->rubrics)->pluck('type');
+        if ($rubricTypes->unique()->count() !== $rubricTypes->count()) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'rubrics' => ['Pode haver apenas uma rubrica de cada tipo.'],
+            ]);
+        }
         // Verificar se há user_id duplicado
         $userIds = collect($request->members)->pluck('user_id');
         if ($userIds->unique()->count() !== $userIds->count()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Os membros não podem conter usuários duplicados.',
-            ], 422);
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'members' => ['Não podem haver usuários duplicados.'],
+            ]);
         }
+        #endregion
 
         $committee->fill([
             'name' => $request['name'],
-            //'group_id' => $request['group_id'],
-            'rubric_id' => $request['rubric_id'],
             'paper_id' => $request['paper_id'],
         ]);
 
@@ -451,7 +547,15 @@ class CommitteeController extends Controller
             ->map(fn($m) => ['user_id' => $m['user_id'], 'member_type_id' => $m['member_type']['id']])
             ->values();
 
-        DB::transaction(function () use ($request, &$committee, &$existingMembers, &$newMembers) {
+        $existingRubrics = $committee->rubrics
+            ->map(fn($r) => ['rubric_id' => $r->rubric_id, 'weight' => $r->weight])
+            ->values();
+
+        $newRubrics = collect($request['rubrics'])
+            ->map(fn($r) => ['rubric_id' => $r['id'], 'weight' => $r['weight']])
+            ->values();
+
+        DB::transaction(function () use ($request, &$committee, &$existingMembers, &$newMembers, &$existingRubrics, &$newRubrics) {
             if($committee->isDirty()) {
                 $committee->save();
             }
@@ -470,8 +574,24 @@ class CommitteeController extends Controller
                 }
                 $committee->touch();
             }
+
+            if ($existingRubrics->toArray() !== $newRubrics->toArray()) {
+                // Só atualiza se houver mudança
+                $committee->rubrics()->delete();
+
+                foreach ($request->rubrics as $rubric) {
+                    committeeRubric::create([
+                        'committee_id' => $committee->id,
+                        'rubric_id' => $rubric['id'],
+                        'weight' => $rubric['weight'],
+                        'state' => 1,
+                    ]);
+                }
+                $committee->touch();
+            }
         });
 
+        /*
         $professorsCommittees = UserCommittee::with([
             'user:id,name,state',
             'committee.coordinator.user:id,name',
@@ -485,15 +605,16 @@ class CommitteeController extends Controller
         ])->where('committee_id', $committee->id)
             ->get();
 
+        $group = $committee->paper->group;
+        */
+
         $committee->load([
             'coordinator.user:id,name',
             'members.user:id,name,state,access_level',
             'members.memberType',
             'paper.group.students.user:id,name,state',
-            'rubric:id,name,state'
+            'rubrics.rubric:id,name,type,state',
         ]);
-
-        $group = $committee->paper->group;
 
         return response()->json([
             'success' => true,
@@ -556,6 +677,7 @@ class CommitteeController extends Controller
                         'name' => $m->memberType?->name,
                     ],
                     'state' => (int) $m->user->state,
+                    'belongsTo' => $m->user_id === auth()->id(),
                 ])->values() ?? [],
             'coordinator_name' => $committee->coordinator?->user?->name,
             'group_id' => $group?->id,
@@ -571,11 +693,13 @@ class CommitteeController extends Controller
                 'title' => $committee->paper->title,
                 'file_path' => $committee->paper->file_path,
             ] : null,
-            'rubric' => $committee->rubric ? [
-                'id' => $committee->rubric->id,
-                'name' => $committee->rubric->name,
-                'state' => (int) $committee->rubric->state,
-            ] : null,
+            'rubrics' => $committee?->rubrics?->map(fn($r) => [
+                'id' => $r->rubric->id,
+                'name' => $r->rubric->name,
+                'type' => $r->rubric->type,
+                'weight' => $r->weight,
+                'state' => (int) $r->rubric->state,
+                ])->values() ?? [],
             'state' => (int) $committee->state,
             'created_at' => $committee->created_at,
             'updated_at' => $committee->updated_at,

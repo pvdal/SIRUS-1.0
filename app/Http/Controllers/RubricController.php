@@ -27,9 +27,9 @@ class RubricController extends Controller
 
         $axesAvailable = Axis::all(['name']);
         $rubrics = Rubric::with(['axes.criteria']) // eager load: axes -> criteria (cada criteria terá pivot axis_criteria)
-        ->select(['id','name','state','created_at','updated_at'])
+            ->select(['id','name','type','state','created_at','updated_at'])
             ->orderBy('id') // Ordenar por mais recente é comum
-            ->paginate(15);
+            ->paginate(16);
 
         $rubricsData = $rubrics->getCollection()->map(function ($rubric) {
             return $this->mapRubric($rubric);
@@ -65,10 +65,11 @@ class RubricController extends Controller
 
     public function store(Request $request): JsonResponse
     {
+        Log::info($request);
         // 1. VALIDAÇÃO: O "filtro de segurança" que garante que os dados estão corretos.
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'type' => 'required|string|in:individual,in group',
+            'type' => 'required|integer|in:1,2',
             'axes' => 'required|array|min:1',
             'axes.*.id' => 'required|integer|exists:axes,id',
             'axes.*.weight' => 'required|numeric|min:1',
@@ -89,6 +90,7 @@ class RubricController extends Controller
                 // 3. CRIA A RÚBRICA: Insere na tabela 'rubrics'.
                 $newRubric = Rubric::create([
                     'name' => $validatedData['name'],
+                    'type' => $validatedData['type'],
                     'state' => 1, // Ativo por padrão
                 ]);
 
@@ -97,7 +99,6 @@ class RubricController extends Controller
                 foreach ($validatedData['axes'] as $axisData) {
                     // O formato do array é: [ id_do_eixo => [ dados_da_tabela_pivo ] ]
                     $axesToSync[$axisData['id']] = [
-                        'type' => $validatedData['type'],
                         'weight' => $axisData['weight'],
                         // Adicione aqui valores padrão para outros campos da tabela pivô, se necessário
                         // 'amount' => 1,
@@ -187,35 +188,11 @@ class RubricController extends Controller
         }
 
         // Paginação
-        $perPage = 10; // ou receber via request
-        $rubrics = $query->paginate($perPage);
+        $rubrics = $query->paginate(16);
 
-        // Formata o retorno para o front
-        $data = $rubrics->map(function ($rubric) {
-            return [
-                'id' => $rubric->id,
-                'name' => $rubric->name,
-                'state' => $rubric->state,
-                'axes' => $rubric->axes->map(function($axis) {
-                    return [
-                        'id' => $axis->id,
-                        'name' => $axis->name,
-                        'criteria' => $axis->criteria->map(function($criterion) {
-                            return [
-                                'id' => $criterion->id,
-                                'name' => $criterion->name,
-                                'weight_i' => $criterion->weight_i,
-                                'weight_s' => $criterion->weight_s,
-                                'weight_g' => $criterion->weight_g,
-                                'weight_e' => $criterion->weight_e,
-                            ];
-                        }),
-                    ];
-                }),
-                'created_at' => $rubric->created_at,
-                'updated_at' => $rubric->updated_at,
-            ];
-        });
+        $data = $rubrics->getCollection()->map(function ($rubric) {
+            return $this->mapRubric($rubric);
+        })->values();
 
         return response()->json([
             'data' => $data,
@@ -259,7 +236,7 @@ class RubricController extends Controller
 //        dump($rubric);
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'type' => 'required|string|in:individual,in group',
+            'type' => 'required|integer|in:1,2',
             'axes' => 'required|array|min:1',
             'axes.*.id' => 'required|integer|exists:axes,id',
             'axes.*.weight' => 'required|numeric|min:1',
@@ -279,13 +256,13 @@ class RubricController extends Controller
             // 3. ATUALIZA A RÚBRICA: Modifica a linha na tabela 'rubrics'.
             $rubric->update([
                 'name' => $validatedData['name'],
+                'type' => $validatedData['type'],
             ]);
 
             // 4. PREPARA OS DADOS PARA A PIVÔ (Exatamente igual ao store)
             $axesToSync = [];
             foreach ($validatedData['axes'] as $axisData) {
                 $axesToSync[$axisData['id']] = [
-                    'type' => $validatedData['type'],
                     'weight' => $axisData['weight'],
                 ];
             }
@@ -321,6 +298,7 @@ class RubricController extends Controller
         return [
             'id' => $rubric->id,
             'name' => $rubric->name,
+            'type' => $rubric->type,
             'state' => $rubric->state,
             'created_at' => $rubric->created_at,
             'updated_at' => $rubric->updated_at,

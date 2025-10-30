@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('coordinator_id')->nullable()->constrained('coordinators')->nullOnDelete();
-            $table->foreignId('rubric_id')->nullable()->constrained('rubrics')->nullOnDelete();
+            //$table->foreignId('rubric_id')->nullable()->constrained('rubrics')->nullOnDelete();
             $table->foreignId('paper_id')->nullable()->constrained('papers')->nullOnDelete();
             $table->dateTime('start')->nullable();
             $table->dateTime('end')->nullable();

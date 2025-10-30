@@ -81,21 +81,21 @@
             :haveActions="true"
         >
             <x-slot name="columns">
-                <x-table.th >ID</x-table.th>
+                <x-table.th class="hidden sm:table-cell">ID</x-table.th>
                 <x-table.th >Nome</x-table.th>
                 <x-table.th class="hidden md:table-cell">Insatisfatório</x-table.th>
-                <x-table.th class="hidden md:table-cell">Satisfatório</x-table.th>
-                <x-table.th class="hidden md:table-cell">Bom</x-table.th>
-                <x-table.th class="hidden md:table-cell">Excelente</x-table.th>
+                <x-table.th class="hidden lg:table-cell">Satisfatório</x-table.th>
+                <x-table.th class="hidden xlg:table-cell">Bom</x-table.th>
+                <x-table.th class="hidden xlg:table-cell">Excelente</x-table.th>
                 <x-table.th class="hidden sm:table-cell">Estado</x-table.th>
             </x-slot>
             <x-slot name="rows">
-                <x-table.td x-text="item.id"></x-table.td>
+                <x-table.td class="hidden sm:table-cell" x-text="item.id"></x-table.td>
                 <x-table.td x-text="item.name"></x-table.td>
                 <x-table.td class="hidden md:table-cell truncate max-w-[200px]" x-bind:title="item.unsatisfactory" x-text="item.unsatisfactory || '-'"></x-table.td>
-                <x-table.td class="hidden md:table-cell truncate max-w-[200px]" x-bind:title="item.satisfactory" x-text="item.satisfactory || '-'"></x-table.td>
-                <x-table.td class="hidden md:table-cell truncate max-w-[200px]" x-bind:title="item.good" x-text="item.good || '-'"></x-table.td>
-                <x-table.td class="hidden md:table-cell truncate max-w-[200px]" x-bind:title="item.excellent" x-text="item.excellent || '-'" ></x-table.td>
+                <x-table.td class="hidden lg:table-cell truncate max-w-[200px]" x-bind:title="item.satisfactory" x-text="item.satisfactory || '-'"></x-table.td>
+                <x-table.td class="hidden xlg:table-cell truncate max-w-[200px]" x-bind:title="item.good" x-text="item.good || '-'"></x-table.td>
+                <x-table.td class="hidden xlg:table-cell truncate max-w-[200px]" x-bind:title="item.excellent" x-text="item.excellent || '-'" ></x-table.td>
                 <x-table.td class="hidden sm:table-cell" x-text="item.state ? 'Ativo' : 'Inativo'"></x-table.td>
             </x-slot>
             <x-slot name="actions">

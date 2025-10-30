@@ -4,7 +4,6 @@
     class="bg-white border-b border-gray-100 dark:bg-gray-900 dark:border-gray-700 transition duration-150 ease-in-out">
     <!-- Primary Navigation Menu -->
     <div x-show="showNavBar"
-
          class="max-w-[2100px] mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
@@ -28,10 +27,10 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <x-nav-options :menuComponent="'nav-link'" :menuClass="'hidden space-x-8 sm:-my-px sm:ms-10 md:flex'"/>
+                <x-nav-options :menuComponent="'nav-link'" :menuClass="'hidden space-x-8 sm:-my-px sm:ms-10 lg:flex'"/>
             </div>
 
-            <div class="hidden md:flex sm:items-center sm:ms-6">
+            <div class="hidden lg:flex sm:items-center sm:ms-6">
                 <!-- Teams Dropdown -->
                 @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
                     <div class="ms-3 relative">
@@ -140,7 +139,7 @@
             </div>
 
             <!-- Hamburger -->
-            <div class="-me-2 flex items-center md:hidden">
+            <div class="-me-2 flex items-center lg:hidden">
                 <button @click="open = ! open"
                         class="inline-flex items-center justify-center p-2 rounded-md
                         text-gray-400 hover:text-gray-500 hover:bg-gray-100
@@ -158,7 +157,7 @@
     </div>
 
     <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden md:hidden">
+    <div :class="{'block': open, 'hidden': ! open}" class="hidden lg:hidden">
         <!-- Navigation Links -->
         <x-nav-options :menuComponent="'responsive-nav-link'" :menuClass="'pt-2 pb-3 space-y-1'" />
 

@@ -61,7 +61,7 @@
 <div class="flex">
     <div class="bg-white w-full m-1 my-2 lg:mx-2 p-4 sm:p-6 overflow-visible shadow-xl dark:shadow-gray-600/50 rounded-lg dark:bg-gray-900 transition duration-150 ease-in-out">
         <h1 class="text-xl font-bold mb-4 dark:text-gray-200 transition duration-150 ease-in-out" x-text="rubricForModelView.name"></h1>
-        <template x-if="rubricForModelView.axes && rubricForModelView.axes.length > 0">
+        <template x-if="rubricForModelView?.axes?.length > 0">
             <div class="text-sm mb-4">
                 <strong class="dark:text-gray-200 transition duration-150 ease-in-out">Tipo de Avaliação:</strong>
                 <span class="px-2 py-1 text-xs font-semibold rounded-full"
@@ -74,7 +74,7 @@
         {{-- ========================================== --}}
         {{--   VISÃO PARA RÚBRICA DO TIPO "EM GRUPO"    --}}
         {{-- ========================================== --}}
-        <template x-if="rubricForModelView.axes && rubricForModelView.axes.length > 0 && rubricForModelView.axes[0].type === 'in group'">
+        <template x-if="rubricForModelView?.axes?.length > 0 && rubricForModelView.type === 1">
             {{-- Loop nos Eixos em grupo--}}
             <template x-for="axis in rubricForModelView.axes" :key="axis.id">
                 <div class="mb-8">
@@ -118,7 +118,7 @@
         {{--   VISÃO PARA RÚBRICA DO TIPO "INDIVIDUAL"  --}}
         {{-- ========================================== --}}
         {{-- CONDIÇÃO CORRIGIDA: Verifica o 'type' do PRIMEIRO eixo --}}
-        <template x-if="rubricForModelView.axes && rubricForModelView.axes.length > 0 && rubricForModelView.axes[0].type === 'individual'">
+        <template x-if="rubricForModelView?.axes?.length > 0 && rubricForModelView.type === 2">
             <div class="space-y-12">
                 {{-- O resto do seu código para a visão 'individual' continua aqui... --}}
                 {{-- Loop para simular 5 alunos (para o preview) --}}

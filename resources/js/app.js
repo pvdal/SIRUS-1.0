@@ -1,5 +1,6 @@
 import './bootstrap';
 import './calendar.js';
+//import './accessibility.js';
 
 /**
  * Appearance

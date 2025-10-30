@@ -195,13 +195,19 @@
                                     x-show="paperExpanded[paper.id ?? paper.tempId] && paper.state !== 0"
                                     class="flex flex-wrap justify-center md:justify-start overflow-hidden gap-5 px-6 py-4 md:px-14 pb-2 bg-gray-50 dark:bg-gray-600/50"
                                 >
+                                    {{-- DEBUG: log dos valores
+                                    <div class="col-span-full p-2 bg-yellow-100 dark:bg-yellow-800 mb-2 rounded">
+                                        <strong>DEBUG paper:</strong>
+                                        <pre x-text="JSON.stringify(paper, null, 2)"></pre>
+                                    </div>--}}
                                     <div>
                                         <x-label>Projeto</x-label>
                                         <x-input x-model="paper.title" type="text" class="mt-1 w-32 dark:!bg-gray-700 sm:w-[277px] md:w-[572px] truncate"/>
                                     </div>
+
                                     <div>
                                         <x-label>Ano</x-label>
-                                        <x-select x-model="paper.year" class="mt-1 w-32 dark:!bg-gray-700">
+                                        <x-select x-model="paper.year" x-ref="yearSelect" class="mt-1 w-32 dark:!bg-gray-700">
                                             @for($i = $currentYear -1; $i< ($currentYear + 1); $i++)
                                                 <option value="{{ $i }}">{{ $i }}</option>
                                             @endfor

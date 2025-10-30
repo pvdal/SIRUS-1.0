@@ -3,14 +3,14 @@
         <x-label value="Tipo de Avaliação" class="mb-2 font-semibold" />
         <div class="flex items-center gap-x-6">
             <div class="flex items-center">
-                <input id="individual" type="radio" value="individual" x-model="rubric.type"
+                <input id="individual" type="radio" value="2" x-model="rubric.type"
                        class="h-4 w-4 text-secondary-blue focus:ring-secondary-blue border-gray-300">
                 <label for="individual" class="ml-2 block text-sm font-medium text-gray-700 dark:text-gray-200 cursor-pointer">
                     Individual
                 </label>
             </div>
             <div class="flex items-center">
-                <input id="in group" type="radio" value="in group" x-model="rubric.type"
+                <input id="in group" type="radio" value="1" x-model="rubric.type"
                        class="h-4 w-4 text-secondary-blue focus:ring-secondary-blue border-gray-300">
                 <label for="in group" class="ml-2 block text-sm font-medium text-gray-700 dark:text-gray-200 cursor-pointer">
                     Em Grupo
@@ -37,7 +37,7 @@
 
     {{-- Campo de busca para os Eixos --}}
     <div class="pt-4">
-        <x-label value="Adicionar Eixos à Rúbrica"/>
+        <x-label value="Adicionar Eixos à Rubrica"/>
         <x-input id="searchAxis" type="search"
                  x-model="searchAxis"
                  placeholder="Buscar eixo por nome..."
@@ -92,28 +92,33 @@
                     <li class="flex items-center justify-between bg-gray-100 dark:bg-gray-700 p-2 px-4 rounded">
 
                         {{-- Um container para o nome do eixo e o seu campo de peso --}}
-                        <div class="flex items-center flex-grow gap-4">
-                            <span x-text="axis.name" class="flex-shrink-0"></span>
+                        <div class="flex flex-wrap items-center flex-grow gap-4">
+                            <span x-text="axis.name"
+                                  class="mr-auto line-clamp-2"
+                            ></span>
 
                             {{-- Campo para definir o peso do eixo --}}
-                            <div class="flex items-center gap-2 ml-auto">
-                                <label :for="'weight-' + axis.id" class="text-sm font-medium  text-gray-700 dark:text-gray-200">Peso:</label>
-                                <x-input x-bind:id="'weight-' + axis.id" {{-- x-input já tem formatação para tema escuro --}}
-                                type="text"
-                                         {{-- O mais importante é que o controller faça essa validação, isso aqui é apenas camada extra --}}
-                                         @input="
+                            <div class="flex flex-wrap items-center gap-2">
+                                <x-label x-bind:for="'weight-' + axis.id">Peso:</x-label>
+                                <x-input x-bind:id="'weight-' + axis.id" type="text" {{-- x-input já tem formatação para tema escuro --}}
+                                    @input="
                                        axis.weight = axis.weight.replace(/\D/g, '');
                                        if (axis.weight > 100) axis.weight = 100;
-                                   " {{-- Alguns navegadores não respeitam o type number, com essa linha toda entrada alfabética é removida --}}
-                                         {{-- 'x-model' liga este input diretamente à propriedade 'weight' do objeto 'axis' --}}
-                                         x-model="axis.weight"
-                                         placeholder="%"
-                                         class="w-20 text-center border-gray-300  rounded-md shadow-sm h-8 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                    " {{-- Alguns navegadores não respeitam o type number, com essa linha toda entrada alfabética é removida --}}
+                                    {{-- 'x-model' liga este input diretamente à propriedade 'weight' do objeto 'axis' --}}
+                                    x-model="axis.weight"
+                                    placeholder="%"
+                                    class="w-16 text-center text-sm h-8"
                                 />
                             </div>
                         </div>
                         {{-- Botão para remover o eixo (agora com uma pequena margem à esquerda) --}}
-                        <x-form-fields.remove-button class="ms-5" :action="'removeAxis'" :additional="'$dispatch(\'remove-axis\', axis.id);'" title="Remover Eixo" :key="'axis.id'"/>
+                        <x-form-fields.remove-button
+                            class="ms-5"
+                            :action="'removeAxis'"
+                            :additional="'$dispatch(\'remove-axis\', axis.id);'"
+                            title="Remover Eixo"
+                            :key="'axis.id'"/>
                     </li>
                     {{-- Exibição de erro para os pesos (ex: "Todos os eixos devem ter um peso") --}}
                     <template x-if="axes.length > 0 && errors && errors['axes.' + index + '.weight']">
@@ -127,7 +132,7 @@
             </template>
         </ul>
 
-        <div class="mt-2">
+        <div class="mt-6">
             <p class="text-sm"
                :class="totalWeight === 100 ? 'text-green-600' : 'text-red-600 dark:text-red-400'">
                 Soma total: <span x-text="totalWeight"></span>%
@@ -136,7 +141,6 @@
                 <p class="text-xs text-red-500 dark:text-red-300">A soma dos pesos deve ser exatamente 100%</p>
             </template>
         </div>
-    {{-- Timestamps --}}
     </div>
 
     <template x-if="edit && (created_at || updated_at)">

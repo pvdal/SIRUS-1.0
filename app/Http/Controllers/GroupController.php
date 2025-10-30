@@ -269,19 +269,19 @@ class GroupController extends Controller
                     $paper = $request->papers[$index] ?? null;
                     $paperId = $paper['id'] ?? null;
 
-                    $exists = Paper::where('group_id', $id)
-                        ->where('title', $value)
+                    // Verifica se já existe um paper com o mesmo título em qualquer grupo
+                    $exists = Paper::where('title', $value)
                         ->when($paperId, fn($q) => $q->where('id', '!=', $paperId))
                         ->exists();
 
                     if ($exists) {
-                        $fail("Já existe um trabalho com o título '{$value}' neste grupo.");
+                        $fail("Já existe um trabalho com este título cadastrado no sistema.");
                     }
 
                     // Garante que não hajam trabalhos com títulos duplicados na array
                     $titles = array_map(fn($p) => $p['title'], $request->papers);
                     if (count(array_filter($titles, fn($t) => $t === $value)) > 1) {
-                        $fail("O arquivo com título '{$value}' está duplicado");
+                        $fail("Este arquivo está com título duplicado neste envio.");
                     }
                 }
             ],
@@ -359,6 +359,7 @@ class GroupController extends Controller
                         ->orWhere('group_id', '<>', $group->id);
                 })
                 ->update(['group_id' => $group->id]);
+
             if($request->papers) {
                 // Identifica papers enviados no request (IDs existentes ou titles novos)
                 $sentPapers = array_filter(array_map(fn($p) => $p['id'] ?? null, $request->papers));
@@ -407,6 +408,12 @@ class GroupController extends Controller
                         }
                     }
                 }
+            } else if (empty($request->papers)) {
+                Paper::where('group_id', $group->id)
+                    ->where('state', 1)
+                    ->update(['state' => 0]);
+
+                $group->touch();
             }
         });
 
@@ -503,7 +510,7 @@ class GroupController extends Controller
             'papers' => $group->papers->map(fn($p) => [
                 'id' => $p->id,
                 'title' => $p->title ?? 'Sem título',
-                'file_path' => $p->file_path ?? null,
+                'file_path' => $p->state ? $p->file_path : null,
                 'year' => $p->year ?? null,
                 'semester' => $p->semester ?? null,
                 'version' => $p->version ?? null,

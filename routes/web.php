@@ -161,7 +161,8 @@ Route::middleware([
         Route::put('/courses/{id}/{action}', [CourseController::class, 'toggleStatus'])->name('courses.toggle-status');
 
         // Committees -> CommitteeController/Committee.php
-        Route::get('/members/search', [CommitteeController::class, 'search'])->name('committees.search-members');
+        Route::get('/rubrics/search', [CommitteeController::class, 'searchRubrics'])->name('committees.search-rubrics');
+        Route::get('/members/search', [CommitteeController::class, 'searchMembers'])->name('committees.search-members');
         Route::post('/committees/save', [CommitteeController::class, 'store'])->name('committees.store');
         Route::put('/committees/{id}/update', [CommitteeController::class, 'update'])->name('committees.update');
         Route::put('/committees/{id}/{action}', [CommitteeController::class, 'toggleStatus'])->name('committees.toggle-status');

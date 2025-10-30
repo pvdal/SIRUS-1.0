@@ -4,10 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Committee extends Model
 {
+    /**
+     * @var \Illuminate\Support\HigherOrderCollectionProxy|mixed
+     */
     protected $fillable = [
         'name',
         'coordinator_id',
@@ -45,9 +49,9 @@ class Committee extends Model
     }
 
     // Relacionamento com Rubric
-    public function rubric(): BelongsTo
+    public function rubrics(): HasMany
     {
-        return $this->belongsTo(Rubric::class);
+        return $this->HasMany(CommitteeRubric::class);
     }
     #endregion
 }
