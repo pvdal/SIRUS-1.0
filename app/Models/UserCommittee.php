@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class UserCommittee extends Model
 {
@@ -46,4 +47,21 @@ class UserCommittee extends Model
         return $this->belongsTo(Paper::class);
     }
     #endregion
+
+
+    //Cada registro de avaliação pode ter várias avaliações em grupo.
+    public function groupEvaluations(): HasMany
+    {
+        return $this->hasMany(GroupEvaluation::class);
+    }
+
+
+
+    //Este registro de avaliação pode ter várias avaliações individuais.
+
+    public function individualEvaluations(): HasMany
+    {
+        return $this->hasMany(IndividualEvaluation::class);
+    }
+
 }

@@ -79,8 +79,13 @@ class AuthServiceProvider extends ServiceProvider
             if($user->access_level === 1) {
                 // Caso o usuário tenha nível 1, só pode ver a avaliação caso seja membro
                 // do grupo que detém o paper submetido à banca
-                $paper = Paper::find($committee->paper_id);
-                return $paper->group_id === $user->group_id;
+                $studentGroupId = $user->student->group_id;
+                $paper = $committee->paper;
+                if (!$paper) {
+                    return false; // A banca não tem trabalho associado
+                }
+                
+                return $paper->group_id === $studentGroupId;
             }
 
             return false;

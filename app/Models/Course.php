@@ -50,5 +50,11 @@ class Course extends Model
     {
         return $this->hasMany(Paper::class);
     }
+
+    //Relacionamento com Students
+    public function students(): hasMany
+    {
+        return $this->hasMany(Student::class, 'course_id');
+    }
     #endregion
 }

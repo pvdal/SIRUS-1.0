@@ -80,10 +80,10 @@
                 <template x-if="showEvaluationModal && !edit">
                     <div>
                         <template x-if="belongsTo">
-                            <x-secondary-button>Avaliar</x-secondary-button>
+                            <x-secondary-button x-show="belongsTo" @click="openEvaluationForm()">Avaliar</x-secondary-button>
                         </template>
                         <template x-if="!belongsTo">
-                            <x-secondary-button>Avaliação</x-secondary-button>
+                            <x-secondary-button @click="openEvaluationForm()">Avaliação</x-secondary-button>
                         </template>
                         <x-danger-button
                             x-on:click="
@@ -100,7 +100,7 @@
     @endcan
     {{-- Professor e aluno --}}
     @cannot('manage-events')
-        <x-custom-modal x-model="showModal">
+        <x-custom-modal x-model="showModal" :headerActions="true">
             <x-slot name="title">
                 @if(auth()->user()->canEvaluate())
                     Avaliar o grupo
@@ -118,10 +118,10 @@
             <x-slot name="footer">
                 @if(auth()->user()->canEvaluate())
                     <template x-if="belongsTo">
-                        <x-secondary-button>Avaliar</x-secondary-button>
+                        <x-secondary-button x-show="belongsTo" @click="openEvaluationForm()">Avaliar</x-secondary-button>
                     </template>
                     <template x-if="!belongsTo">
-                        <x-secondary-button>Avaliação</x-secondary-button>
+                        <x-secondary-button @click="openEvaluationForm()">Avaliação</x-secondary-button>
                     </template>
                     <x-danger-button
                         x-on:click="
@@ -135,7 +135,7 @@
                         <x-secondary-button>Avaliar</x-secondary-button>
                     </template>
                     <template x-if="!belongsTo">
-                        <x-secondary-button>Avaliação</x-secondary-button>
+                        <x-secondary-button @click="openEvaluationForm()">Avaliação</x-secondary-button>
                     </template>
                     <x-danger-button
                         x-on:click="

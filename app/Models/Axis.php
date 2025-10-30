@@ -28,6 +28,11 @@ class Axis extends Model
     ];
 
 
+    public function rubrics(): belongsToMany
+    {
+        return $this->belongsToMany(Rubric::class, 'rubric_axis')
+            ->withPivot('weight', 'type');
+    }
 
 
     /**

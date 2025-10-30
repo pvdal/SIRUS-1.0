@@ -51,5 +51,8 @@ import {axesData} from "./components/evaluation/axesData.js";
 window.axesData = axesData;
 import {rubricsData} from "./components/evaluation/rubricsData.js";
 window.rubricsData = rubricsData;
-
+import {evaluationFormData} from "./components/evaluation/evaluationFormData.js";
+window.evaluationFormData = evaluationFormData;
+import {evaluationResultTabs} from "./components/evaluation/evaluationResultTabs.js";
+window.evaluationResultTabs = evaluationResultTabs;
 

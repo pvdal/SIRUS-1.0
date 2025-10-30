@@ -68,6 +68,7 @@ class EventController extends Controller
                         'paper' => $event->paper?->title,
                         'members' => $event->members
                             ->map(fn($m) => [
+                                'user_committee_id' => $m->id,
                                 'user_id' => $m->user_id,
                                 'name' => $m->user->name,
                                 'member_type' => [

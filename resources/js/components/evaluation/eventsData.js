@@ -3,6 +3,7 @@ export function eventsData() {
         showModal: false,
         showCreateModal: false,
         showEvaluationModal: false,
+        showEvaluationForm: false,
         edit: false,
         showWarningModal: false,
         events: [],
@@ -40,6 +41,9 @@ export function eventsData() {
         message: '',
         warningType: '',
         warningContent: '',
+
+        //Variável para uso da rubrica
+        userCommitteeId: null,
 
         init(events) {
             this.events = events;
@@ -92,6 +96,22 @@ export function eventsData() {
                     this.members = e.detail.members;
 
                     this.belongsTo = e.detail.members.some(m => m.belongsTo === true);
+                    this.userCommitteeId = null;
+
+                    const currentUserMember = e.detail.members.find(m => m.belongsTo === true);
+                    console.log("caiu aqui",currentUserMember);
+
+                    if (currentUserMember) {
+                        this.belongsTo = true;
+
+                        // Pegamos o ID da tabela pivo (user_committees)
+                        // **PONTO DE ATENÇÃO**: Verifique se o nome da propriedade é 'user_committee_id'
+                        // Pode ser 'id', 'pivot_id', etc., dependendo de como seu backend envia.
+                        this.userCommitteeId = currentUserMember.user_committee_id;
+
+                    } else {
+                        this.belongsTo = false;
+                    }
                 }
             });
 
@@ -252,6 +272,38 @@ export function eventsData() {
             this.timeEnd   = this.initialDate.timeEnd ?? '';
             this.dateStart = this.initialDate.dateStart ?? '';
             this.dateEnd   = this.initialDate.dateEnd ?? '';
-        }
+        },
+
+        //função para esconder o modal de detalhes e mostrar a tela de avaliação
+
+        // openEvaluationForm() {
+        //     if (this.eventId) {
+        //         this.showEvaluationModal = false; // Esconde o modal de detalhes
+        //         this.showModal = false;
+        //         this.showEvaluationForm = true;   // Mostra o formulário de avaliação
+        //
+        //         // Dispara um evento global para que o componente de avaliação saiba qual evento carregar
+        //         window.dispatchEvent(new CustomEvent('start-evaluation', {
+        //             detail: {
+        //                 eventId: this.eventId
+        //             }
+        //         }));
+        //     }
+        // },
+
+        openEvaluationForm() {
+            // this.eventId é o committee_id
+            if (this.eventId) {
+
+                // Constrói a URL para a rota que os Gates entendem
+                const evaluationUrl = `/evaluation/${this.eventId}`;
+
+                // Redireciona para rota
+                window.location.href = evaluationUrl;
+
+            } else {
+                alert("Erro: Não foi possível encontrar o ID da Banca (CommitteeID).");
+            }
+        },
     }
 }

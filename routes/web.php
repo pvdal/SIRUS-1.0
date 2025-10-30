@@ -57,6 +57,12 @@ Route::middleware([
     // Committees -> CommitteeController/Committee.php
     Route::get('/committees', [CommitteeController::class, 'index'])->name('committees-table');
 
+    // Evaluation -> EvaluationController/Evaluation.php
+    Route::post('/evaluation/store', [EvaluationController::class, 'store'])->name('evaluations.store');
+    Route::get('/evaluation/{committee}', [EvaluationController::class, 'index'])
+        ->middleware(['auth', 'can:view-evaluation,committee'])
+        ->name('evaluations.index');
+
     Route::prefix(config('secure.request_prefix')) // todas as rotas dentro desse grupo possuem o prefixo definido no.env
     ->middleware('secure.ajax') // middleware que traz camadas a mais de seguranças nas requisições ajax
     ->group(function () {
@@ -92,8 +98,6 @@ Route::middleware([
     Route::get('/courses', [CourseController::class, 'index'])->name('courses-table');
 
     // Evaluations -> CommitteeController/Committee.php
-   // Route::get('/evaluation', [EvaluationController::class, 'index'])->name('evaluations-table');
-
     Route::get('/evaluation/criteria', [CriteriaController::class, 'index'])->name('evaluation.criteria-table');
     Route::get('/evaluation/axis', [AxisController::class, 'index'])->name('evaluation.axis-table');
     Route::get('/evaluation/rubric', [RubricController::class, 'index'])->name('evaluation.rubric-table');

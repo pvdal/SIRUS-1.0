@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Criterion extends Model
@@ -27,7 +28,7 @@ class Criterion extends Model
         'state',
     ];
 
-    public function axes()
+    public function axes(): belongsToMany
     {
         return $this->belongsToMany(Axis::class, 'axis_criterion', 'criteria_id', 'axis_id');
     }
