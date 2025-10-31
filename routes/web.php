@@ -37,42 +37,6 @@ ROute::get('/legal/terms', [LegalController::class, 'showTerms'])->name('terms.s
 //Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
 // Rotas acessíveis a qualquer usuário autenticado e verificado
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    /*Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');*/
-    Route::get('/rubrics/{rubric}/model-view', [RubricController::class, 'showModelView'])->name('rubrics.model_view');
-    // Groups -> PaperController/Paper.php -> Quem chama essa rota é o iframe em groups.blade.php
-    Route::get('/papers/{filepath}', [PaperController::class, 'showPaper'])
-        ->where('filepath', '.*')
-        ->name('papers.show');
-
-    // Calendar -> EventController/Committee.php
-    Route::get('/calendar', [EventController::class, 'index'])->name('calendar');
-
-    // Committees -> CommitteeController/Committee.php
-    Route::get('/committees', [CommitteeController::class, 'index'])->name('committees-table');
-
-    // Evaluation -> EvaluationController/Evaluation.php
-    Route::post('/evaluation/store', [EvaluationController::class, 'store'])->name('evaluations.store');
-    Route::get('/evaluation/{committee}', [EvaluationController::class, 'index'])
-        ->middleware(['auth', 'can:view-evaluation,committee'])
-        ->name('evaluations.index');
-
-    Route::prefix(config('secure.request_prefix')) // todas as rotas dentro desse grupo possuem o prefixo definido no.env
-    ->middleware('secure.ajax') // middleware que traz camadas a mais de seguranças nas requisições ajax
-    ->group(function () {
-        // Calendar -> EventController/Committee.php
-        Route::get('/events/show', [EventController::class, 'show'])->name('events.show');
-
-        // Committees -> CommitteeController/Committee.php
-        Route::get('/committees/show', [CommitteeController::class, 'show'])->name('committees.show');
-    });
-});
 
 // rotas do coordenador
 Route::middleware([
@@ -177,3 +141,39 @@ Route::middleware([
 });
 
 // Rotas do aluno
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    /*Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');*/
+    Route::get('/rubrics/{rubric}/model-view', [RubricController::class, 'showModelView'])->name('rubrics.model_view');
+    // Groups -> PaperController/Paper.php -> Quem chama essa rota é o iframe em groups.blade.php
+    Route::get('/papers/{filepath}', [PaperController::class, 'showPaper'])
+        ->where('filepath', '.*')
+        ->name('papers.show');
+
+    // Calendar -> EventController/Committee.php
+    Route::get('/calendar', [EventController::class, 'index'])->name('calendar');
+
+    // Committees -> CommitteeController/Committee.php
+    Route::get('/committees', [CommitteeController::class, 'index'])->name('committees-table');
+
+    // Evaluation -> EvaluationController/Evaluation.php
+    Route::post('/evaluation/store', [EvaluationController::class, 'store'])->name('evaluations.store');
+    Route::get('/evaluation/{committee}', [EvaluationController::class, 'index'])
+        ->middleware(['auth', 'can:view-evaluation,committee'])
+        ->name('evaluations.index');
+
+    Route::prefix(config('secure.request_prefix')) // todas as rotas dentro desse grupo possuem o prefixo definido no.env
+    ->middleware('secure.ajax') // middleware que traz camadas a mais de seguranças nas requisições ajax
+    ->group(function () {
+        // Calendar -> EventController/Committee.php
+        Route::get('/events/show', [EventController::class, 'show'])->name('events.show');
+
+        // Committees -> CommitteeController/Committee.php
+        Route::get('/committees/show', [CommitteeController::class, 'show'])->name('committees.show');
+    });
+});

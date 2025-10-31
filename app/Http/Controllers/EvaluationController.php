@@ -20,34 +20,28 @@ class EvaluationController extends Controller
      * PONTO DE ENTRADA PRINCIPAL
      * Decide se o usuário deve AVALIAR ou VER RESULTADOS.
      */
-    public function index(Committee $committee): View // Define que o retorno é uma View
+    public function index(Committee $committee): View
     {
         $user = Auth::user();
-
-        // Tenta encontrar o registro de avaliação deste usuário para esta banca
         $userCommittee = $committee->members()
             ->where('user_id', $user->id)
             ->first();
 
-        // --- A BIFURCAÇÃO (O "GARFO") ---
-
-        // CONDIÇÃO:
-        // 1. O usuário é Aluno (Nível 1)
-        // 2. O usuário é Admin/Coordenador (Nível 3+) E NÃO é membro da banca
-        if ($user->access_level === 1 || ($user->isAdmin() && $userCommittee === null))
-        {
-            // CAMINHO A: Mostrar a tela de TABS com TODOS os resultados
-            return $this->showResultsView($committee);
-
-        } else {
-
-            // CAMINHO B: Mostrar o formulário de avaliação do PRÓPRIO usuário
-            // (Garante que $userCommittee não é null, pois senão teria caído no 'if' acima)
-            if (!$userCommittee) {
-                // Segurança: Professor Nível 2 que não é da banca, mas o Gate 'view-evaluation' falhou.
-                abort(403, 'Você não é membro desta banca.');
-            }
+        if ($user->access_level === 2){
             return $this->showEvaluatorView($userCommittee);
+        }
+
+        else if ($user->access_level === 1 || $user->isAdmin())
+        {
+            if (Gate::allows('evaluate-paper', $committee)) {
+                return $this->showEvaluatorView($userCommittee);
+            } else {
+                return $this->showResultsView($committee); // Mostra as TABS
+            }
+        }
+        // Caminho de Segurança:
+        else {
+            abort(403, 'Seu nível de acesso não tem permissão para esta página.');
         }
     }
 
@@ -58,7 +52,7 @@ class EvaluationController extends Controller
     private function showResultsView(Committee $committee): View
     {
         // 1. Carrega os dados base
-        $committee->load('paper.group.students.user', 'rubric.axes.criteria');
+        $committee->load('paper.group.students.user', 'rubrics.rubric.axes.criteria');
 
         // 2. Carrega TODOS os avaliadores que JÁ SUBMETERAM a avaliação
         $completedEvaluations = $committee->members()
@@ -134,11 +128,13 @@ class EvaluationController extends Controller
     private function formatBaseEvaluationData(Committee $committee)
     {
         // Garante que os dados estão carregados
-        $committee->loadMissing('paper.group.students.user', 'rubric.axes.criteria');
+        $committee->loadMissing('paper.group.students.user', 'rubrics.rubric.axes.criteria');
 
         $paper = $committee->paper;
         $group = $paper->group;
-        $rubric = $committee->rubric;
+
+        $firstCommitteeRubric = $committee->rubrics->first();
+        $rubric = $firstCommitteeRubric ? $firstCommitteeRubric->rubric : null;
 
         if (!$paper || !$group || !$rubric) {
             abort(404, 'Dados incompletos para esta banca (Falta Paper, Grupo ou Rubrica).');
@@ -160,6 +156,9 @@ class EvaluationController extends Controller
         ];
 
         $allAxes = $rubric->axes->map(function ($axis) {
+            if (!$axis->pivot) {
+                return null;
+            }
             $axisType = $axis->pivot->type;
             return [
                 'id'   => $axis->id,
