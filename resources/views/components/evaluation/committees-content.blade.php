@@ -11,11 +11,15 @@
                         <span class="mr-auto">Atualizar os dados da banca</span>
                     </template>
 
-                    <template x-if="belongsTo">
-                        <x-secondary-button>Avaliar</x-secondary-button>
-                    </template>
-                    <template x-if="!belongsTo">
-                        <x-secondary-button>Avaliação</x-secondary-button>
+                    <template x-if="edit">
+                        <div>
+                            <template x-if="belongsTo">
+                                <x-secondary-button>Avaliar</x-secondary-button>
+                            </template>
+                            <template x-if="!belongsTo">
+                                <x-secondary-button>Avaliação</x-secondary-button>
+                            </template>
+                        </div>
                     </template>
                 </div>
             </x-slot>

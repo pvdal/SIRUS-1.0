@@ -65,8 +65,8 @@
             <div class="text-sm mb-4">
                 <strong class="dark:text-gray-200 transition duration-150 ease-in-out">Tipo de Avaliação:</strong>
                 <span class="px-2 py-1 text-xs font-semibold rounded-full"
-                      :class="rubricForModelView.axes[0].type === 'individual' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'"
-                      x-text="rubricForModelView.axes[0].type === 'individual' ? 'Individual' : 'Em Grupo'">
+                      :class="rubricForModelView.type === 2 ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'"
+                      x-text="rubricForModelView.type === 2 ? 'Individual' : 'Em Grupo'">
                 </span>
             </div>
         </template>

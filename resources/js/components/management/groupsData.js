@@ -303,7 +303,7 @@ export function groupsData() {
                 document.body.style.cursor = 'default';
             }
         },
-        course_id: '',
+
         showGroup(id) {
             this.groupId = id;
             const group = this.groups.find(g => g.id === id) || this.newGroups.find(g => g.id === id);
@@ -325,7 +325,7 @@ export function groupsData() {
             } else {
                 this.members = [];
             }
-            this.course_id = 1;
+
             // Pega o nome do arquivo, se existir
             if (group.papers && group.papers.length > 0) {
                 this.papers = group.papers.map(p => ({

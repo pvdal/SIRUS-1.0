@@ -36,8 +36,6 @@ ROute::get('/legal/terms', [LegalController::class, 'showTerms'])->name('terms.s
 //Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.store');
 //Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
-// Rotas acessíveis a qualquer usuário autenticado e verificado
-
 // rotas do coordenador
 Route::middleware([
     'auth:sanctum',
@@ -140,7 +138,7 @@ Route::middleware([
     });
 });
 
-// Rotas do aluno
+// Rotas acessíveis a qualquer usuário autenticado e verificado
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),

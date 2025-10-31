@@ -271,7 +271,7 @@ export function rubricsData() {
             const payload = {
                 rubric_id: this .rubricId,
                 name: this.rubric.name,
-                type: this.rubric.type,
+                type: Number(this.rubric.type),
                 axes: this.axes.map(axis => ({
                     id: axis.id,
                     weight: parseFloat(axis.weight)
