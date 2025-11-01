@@ -6,22 +6,29 @@ use App\Models\Committee;
 use App\Models\UserCommittee;
 use App\Models\GroupEvaluation;
 use App\Models\IndividualEvaluation;
+use App\Utils\TokenGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
-use Illuminate\View\View; // Importe a classe View
+use Illuminate\View\View;
+use Random\RandomException;
+
+// Importe a classe View
 
 class EvaluationController extends Controller
 {
     /**
      * PONTO DE ENTRADA PRINCIPAL
      * Decide se o usuário deve AVALIAR ou VER RESULTADOS.
+     * @throws RandomException
      */
     public function index(Committee $committee): View
     {
+        TokenGenerator::initializeTab();
+
         $user = Auth::user();
         $userCommittee = $committee->members()
             ->where('user_id', $user->id)
@@ -116,7 +123,6 @@ class EvaluationController extends Controller
             $data['individualSelections'] = (object)$indivSels;
         }
 
-
         return view('evaluation.evaluation', ['evaluationData' => $data]);
     }
 
@@ -125,28 +131,83 @@ class EvaluationController extends Controller
      * Função auxiliar para formatar os dados base (Rubrica, Alunos, etc.)
      * Reutilizada pelos dois métodos acima para evitar duplicação.
      */
+
+    private function formatAxis($axis, $type) // $type é 'in group' ou 'individual'
+    {
+        return [
+            'id'   => $axis->id,
+            'name' => $axis->name,
+            'type' => $type, // <-- Usa o TIPO que passámos (da rubrica mãe)
+            'criteria' => $axis->criteria->map(function ($criterion) {
+                return [
+                    'id'   => $criterion->id,
+                    'name' => $criterion->name,
+                    'descriptions' => [
+                        'insatisfatorio' => $criterion->unsatisfactory,
+                        'regular'        => $criterion->satisfactory,
+                        'bom'            => $criterion->good,
+                        'excellent'      => $criterion->excellent,
+                    ]
+                ];
+            })
+        ];
+    }
     private function formatBaseEvaluationData(Committee $committee)
     {
-        // Garante que os dados estão carregados
-        $committee->loadMissing('paper.group.students.user', 'rubrics.rubric.axes.criteria');
+        // 1. Carrega as relações N:N corretamente
+        $committee->loadMissing([
+            'paper.group.students.user',
+            'rubrics.rubric.axes.criteria' // Committee -> CommitteeRubric -> Rubric -> Axis -> Criterion
+        ]);
 
         $paper = $committee->paper;
         $group = $paper->group;
 
-        $firstCommitteeRubric = $committee->rubrics->first();
-        $rubric = $firstCommitteeRubric ? $firstCommitteeRubric->rubric : null;
+        $committeeRubrics = $committee->rubrics;
 
-        if (!$paper || !$group || !$rubric) {
+        $groupCommitteeRubric = $committeeRubrics->first(function ($cr) {
+            // Verifica se a rubrica existe E se o tipo dela é 1 (Grupo)
+            return $cr->rubric && $cr->rubric->type == 1;
+        });
+
+        $individualCommitteeRubric = $committeeRubrics->first(function ($cr) {
+            // Verifica se a rubrica existe E se o tipo dela é 2 (Individual)
+            return $cr->rubric && $cr->rubric->type == 2;
+        });
+
+        // 4. Extrai os modelos 'Rubric' reais
+        $groupRubric = $groupCommitteeRubric ? $groupCommitteeRubric->rubric : null;
+        $individualRubric = $individualCommitteeRubric ? $individualCommitteeRubric->rubric : null;
+
+        if (!$paper || !$group || $committeeRubrics->isEmpty()) {
             abort(404, 'Dados incompletos para esta banca (Falta Paper, Grupo ou Rubrica).');
         }
 
-        // Formata os dados
         $students = $group->students->map(function ($student) {
             return [
                 'id'   => $student->ra,
                 'name' => $student->user->name,
             ];
         });
+
+        $allAxes = collect();
+
+        // Adiciona os Eixos da Rubrica de GRUPO (Type 1)
+        if ($groupRubric) {
+            $groupAxes = $groupRubric->axes->map(function ($axis) {
+                return $this->formatAxis($axis, 'in group'); // Corrigido
+            });
+            $allAxes = $allAxes->merge($groupAxes);
+        }
+
+        // Adiciona os Eixos da Rubrica INDIVIDUAL (Type 2)
+        if ($individualRubric) {
+            $individualAxes = $individualRubric->axes->map(function ($axis) {
+                return $this->formatAxis($axis, 'individual'); // Corrigido
+            });
+            $allAxes = $allAxes->merge($individualAxes);
+        }
+
 
         $gradeLevels = [
             ['label' => 'Insatisfatório', 'value' => 2, 'key' => 'insatisfatorio'],
@@ -155,45 +216,25 @@ class EvaluationController extends Controller
             ['label' => 'Excelente',     'value' => 10, 'key' => 'excellent']
         ];
 
-        $allAxes = $rubric->axes->map(function ($axis) {
-            if (!$axis->pivot) {
-                return null;
-            }
-            $axisType = $axis->pivot->type;
-            return [
-                'id'   => $axis->id,
-                'name' => $axis->name,
-                'type' => $axisType,
-                'criteria' => $axis->criteria->map(function ($criterion) {
-                    return [
-                        'id'   => $criterion->id,
-                        'name' => $criterion->name,
-                        'descriptions' => [
-                            'insatisfatorio' => $criterion->unsatisfactory,
-                            'regular'        => $criterion->satisfactory,
-                            'bom'            => $criterion->good,
-                            'excellent'      => $criterion->excellent,
-                        ]
-                    ];
-                })
-            ];
-        });
 
         // Retorna o pacote de dados base
         return [
-            'evaluatorName' => Auth::user()->name, // Nome do usuário logado (Aluno ou Coord.)
+            'evaluatorName' => Auth::user()->name,
             'groupName'     => $group->theme,
             'paperTitle'    => $paper->title,
             'paperProject'  => $paper->project,
             'students'      => $students,
             'gradeLevels'   => $gradeLevels,
             'rubric'        => [
-                'id' => $rubric->id,
-                'name' => $rubric->name,
+                'id' => $committee->id,
+                'nameGroup' => $groupRubric->name,
+                'nameIndividual' => $individualRubric->name,
                 'axes' => $allAxes,
             ],
         ];
     }
+
+
 
 
     /**
@@ -283,4 +324,5 @@ class EvaluationController extends Controller
             return response()->json(['error' => 'Ocorreu um erro ao salvar a avaliação.', 'message' => $e->getMessage()], 500);
         }
     }
+
 }

@@ -59,9 +59,6 @@
                         </div>
                     </div>
 
-                    <div class="text-center my-6">
-                        <h1 class="text-3xl font-bold" x-text="rubric.name"></h1>
-                    </div>
 
                     <template x-if="evaluations.length === 0">
                         <div class="my-4 p-4 bg-blue-100 border-l-4 border-blue-500 text-blue-700" role="alert">
@@ -90,6 +87,10 @@
                                         Avaliação submetida por <strong x-text="evaluation.evaluatorName"></strong> em <span x-text="evaluation.evaluatedAt"></span>
                                     </p>
 
+                                    <div class="text-center my-6">
+                                        <h1 class="text-3xl font-bold" x-text="rubric.nameGroup"></h1>
+                                    </div>
+
                                     <template x-for="axis in rubric.axes.filter(a => a.type === 'in group')" :key="axis.id">
                                         <div class="border dark:border-gray-700 rounded-lg p-1">
                                             <h3 class="text-xl font-bold mb-3 px-4 pt-4" x-text="axis.name"></h3>
@@ -113,9 +114,13 @@
                                         </div>
                                     </template>
 
+                                    <div class="text-center my-6">
+                                        <h1 class="text-3xl font-bold" x-text="rubric.nameIndividual"></h1>
+                                    </div>
+
                                     <template x-for="axis in rubric.axes.filter(a => a.type === 'individual')" :key="axis.id">
                                         <div class="border dark:border-gray-700 rounded-lg p-4">
-                                            <h3 class="text-xl font-bold mb-6 text-center" x-text="axis.name"></h3>
+                                            <h3 class="text-xl font-bold mb-3 px-4 pt-4" x-text="axis.name"></h3>
                                             <div class="space-y-6">
                                                 <template x-for="criterion in axis.criteria" :key="criterion.id">
                                                     <div class="p-1">
