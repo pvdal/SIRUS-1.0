@@ -98,7 +98,12 @@ export function evaluationFormData(initialData) { // <<<< NOVA VERSÃO
             // 2. Envia os dados para o Controller
             axios.post('/evaluation/store', payload)
                 .then(response => {
-                    alert('Avaliação salva com sucesso!');
+                    window.dispatchEvent(new CustomEvent('banner-message', {
+                        detail: {
+                            style: 'success',
+                            message: 'Avaliação salva com sucesso!',
+                        }
+                    }));
                     // Recarrega a página para travar a avaliação (modo somente leitura)
                     window.location.reload();
                 })

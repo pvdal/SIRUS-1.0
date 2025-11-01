@@ -27,6 +27,7 @@ class EvaluationController extends Controller
      */
     public function index(Committee $committee): View
     {
+        // Inicializa o DynamicToken
         TokenGenerator::initializeTab();
 
         $user = Auth::user();

@@ -13,11 +13,11 @@
 
                     <template x-if="edit">
                         <div>
-                            <template x-if="belongsTo">
-                                <x-secondary-button>Avaliar</x-secondary-button>
+                            <template x-if="belongsTo && !evaluatedByUser">
+                                <x-secondary-button x-on:click="openEvaluationForm()">Avaliar</x-secondary-button>
                             </template>
-                            <template x-if="!belongsTo">
-                                <x-secondary-button>Avaliação</x-secondary-button>
+                            <template x-if="!belongsTo || evaluatedByUser">
+                                <x-secondary-button x-on:click="openEvaluationForm()">Avaliação</x-secondary-button>
                             </template>
                         </div>
                     </template>

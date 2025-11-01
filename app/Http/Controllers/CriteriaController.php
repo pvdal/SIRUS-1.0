@@ -2,20 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Utils\TokenGenerator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use App\Models\Criterion;
+use Random\RandomException;
 
 class CriteriaController extends Controller
 {
     /**
      * Exibição inicial de critérios (página principal)
      * 'READ'
+     * @throws RandomException
      */
     public function index(): View
     {
+        // Inicializa o DynamicToken
+        TokenGenerator::initializeTab();
+
         $criteria = Criterion::orderBy('id', 'asc')->paginate(30);
 
         $criteriaData = $criteria->getCollection()->map(function ($criterion) {

@@ -79,10 +79,10 @@
                 </template>
                 <template x-if="showEvaluationModal && !edit">
                     <div>
-                        <template x-if="belongsTo">
+                        <template x-if="belongsTo && !evaluatedByUser">
                             <x-secondary-button x-show="belongsTo" @click="openEvaluationForm()">Avaliar</x-secondary-button>
                         </template>
-                        <template x-if="!belongsTo">
+                        <template x-if="!belongsTo || evaluatedByUser">
                             <x-secondary-button @click="openEvaluationForm()">Avaliação</x-secondary-button>
                         </template>
                         <x-danger-button

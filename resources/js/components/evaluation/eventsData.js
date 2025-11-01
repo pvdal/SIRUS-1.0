@@ -8,6 +8,7 @@ export function eventsData() {
         showWarningModal: false,
         events: [],
         belongsTo: false,
+        evaluatedByUser: false,
         // Campos do formulário
         eventId: '',
         eventTitle: '',
@@ -96,10 +97,11 @@ export function eventsData() {
                     this.members = e.detail.members;
 
                     this.belongsTo = e.detail.members.some(m => m.belongsTo === true);
+                    this.evaluatedByUser = e.detail.members.some(m => m.evaluatedByUser === true);
                     this.userCommitteeId = null;
 
                     const currentUserMember = e.detail.members.find(m => m.belongsTo === true);
-                    console.log("caiu aqui",currentUserMember);
+                    //console.log("caiu aqui",currentUserMember);
 
                     if (currentUserMember) {
                         this.belongsTo = true;

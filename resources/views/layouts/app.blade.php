@@ -104,7 +104,9 @@
 
         <div id="app" class="min-h-screen bg-gray-100 dark:bg-gray-700 transition duration-150 ease-in-out">
             <!-- Navigation menu -->
-            @livewire('navigation-menu')
+            @if(!request()->routeIs('evaluations.store', 'evaluations.index'))
+                @livewire('navigation-menu')
+            @endif
 
             <!-- Page Heading -->
             @if (isset($header))

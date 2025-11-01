@@ -39,6 +39,7 @@ export function committeesData() {
         created_at: '',
         updated_at: '',
         belongsTo: false,
+        evaluatedByUser: false,
         // Controla a visualização do input de paper
         groupSelected: false,
         // Variáveis de estado das requisições
@@ -400,6 +401,7 @@ export function committeesData() {
             }
 
             this.belongsTo = committee.members.some(m => m.belongsTo === true);
+            this.evaluatedByUser = committee.members.some(m => m.evaluatedByUser === true);
 
             // Trata os timestamps
             this.created_at = formatDateTime('Criado em', committee.created_at);
@@ -511,14 +513,14 @@ export function committeesData() {
                 this.newCommittees.forEach(updateState);
             } catch (error) {
                 console.error('Erro ao alterar status: ', error);
-                const msg = error.response?.data?.message || 'Erro inesperado.'
+                const msg = error.response?.data?.message || 'Erro inesperado.';
 
                 window.dispatchEvent(new CustomEvent('banner-message', {
                     detail: {
                         style: 'danger',
                         message: (error.response?.data?.success === false && msg) ? msg : 'Erro inesperado!',
                     }
-                }))
+                }));
             } finally {
                 this.inactivatingIds = this.inactivatingIds.filter(item => item !== targetId);
                 this.activatingIds = this.activatingIds.filter(item => item !== targetId);
@@ -574,6 +576,24 @@ export function committeesData() {
                     break;
             }
             this.showWarningModal = true;
+        },
+
+        openEvaluationForm() {
+            // this.eventId é o committee_id
+            if (this.committeeId) {
+
+                // Constrói a URL para a rota que os Gates entendem
+                // Redireciona para rota
+                window.location.href = `/evaluation/${this.committeeId}`;
+
+            } else {
+                window.dispatchEvent(new CustomEvent('banner-message', {
+                    detail: {
+                        style: 'danger',
+                        message: 'Não foi possível encontrar o ID da Banca.',
+                    }
+                }))
+            }
         },
     }
 }

@@ -22,4 +22,6 @@
             <x-feedback.loading/>
         </div>
     </x-main-content>
+    {{-- Trecho importante, força refresh do script, garante bom comportamento do dynamicToken --}}
+    @forceFresh
 </x-app-layout>

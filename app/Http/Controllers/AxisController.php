@@ -3,17 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Axis;
+use App\Utils\TokenGenerator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Random\RandomException;
 
 class AxisController extends Controller
 {
     /**
      * Lista os eixos.
+     * @throws RandomException
      */
     public function index()
     {
+        // Inicializa o DynamicToken
+        TokenGenerator::initializeTab();
+
         // MUDANÇA IMPORTANTE:
         // Não precisamos mais de withCount(). Apenas with('criteria') para o modal de edição.
         $axisCollection = Axis::with('criteria')->orderBy('id')->paginate(30);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Committee;
+use App\Models\UserCommittee;
 use App\Utils\TokenGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -76,6 +77,10 @@ class EventController extends Controller
                                     'name' => $m->memberType?->name,
                                 ],
                                 'belongsTo' => $m->user_id === auth()->id(),
+                                'evaluatedByUser' => UserCommittee::where('user_id', auth()->id())
+                                    ->where('committee_id', $event->id)
+                                    ->whereNotNull('evaluated_at')
+                                    ->exists(), // retorna true/false inline
                             ])->values(),
                     ]
                 ];
@@ -119,6 +124,19 @@ class EventController extends Controller
                     'message' => 'A banca já possui data agendada!',
                 ], 422);
             }
+        }
+
+        // Verifica se já houve avaliação
+        $evaluated = UserCommittee::where('committee_id', $id)
+            ->whereNotNull('evaluated_at')
+            ->first();
+
+        // Se não é membro, não pode avaliar
+        if ($evaluated) {
+            return response()->json([
+                'success' => false,
+                'message' => 'A banca já possui possui avaliações realizadas, não é possível atualizar seus dados!',
+            ], 422);
         }
 
         if($request->cancel) {

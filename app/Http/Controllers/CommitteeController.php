@@ -485,6 +485,18 @@ class CommitteeController extends Controller
             ], 422);
         }
 
+        $evaluated = UserCommittee::where('committee_id', $id)
+            ->whereNotNull('evaluated_at')
+            ->first();
+
+        // Se não é membro, não pode avaliar
+        if ($evaluated) {
+            return response()->json([
+                'success' => false,
+                'message' => 'A banca já possui possui avaliações realizadas, não é possível atualizar seus dados!',
+            ], 422);
+        }
+
         $request->validate([
             'name' => "required|string|max:255|unique:committees,name,{$id},id",
             'group_id' => 'required|exists:groups,id',
@@ -678,6 +690,10 @@ class CommitteeController extends Controller
                     ],
                     'state' => (int) $m->user->state,
                     'belongsTo' => $m->user_id === auth()->id(),
+                    'evaluatedByUser' => UserCommittee::where('user_id', auth()->id())
+                        ->where('committee_id', $committee->id)
+                        ->whereNotNull('evaluated_at')
+                        ->exists(), // retorna true/false inline
                 ])->values() ?? [],
             'coordinator_name' => $committee->coordinator?->user?->name,
             'group_id' => $group?->id,

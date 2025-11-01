@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Sanctum\PersonalAccessToken;
@@ -42,5 +43,17 @@ class AppServiceProvider extends ServiceProvider
             }
         });
 
+        Blade::directive('forceFresh', function () {
+            return <<<'EOT'
+            <script>
+            (() => {
+                const navType = performance.getEntriesByType("navigation")[0]?.type;
+                if (navType === "back_forward") {
+                    window.location = window.location.href;
+                }
+            })();
+            </script>
+            EOT;
+        });
     }
 }

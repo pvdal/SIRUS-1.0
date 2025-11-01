@@ -1,4 +1,4 @@
-<x-rubric-preview>
+<x-app-layout>
     <x-slot name="title">
         Avaliação
     </x-slot>
@@ -151,7 +151,7 @@
                             </template>
                         </div>
                     </div> <div class="flex justify-end p-4">
-                        <x-danger-button x-on:click="history.back()">
+                        <x-danger-button x-on:click="window.location = document.referrer || '/calendar';">
                             Voltar
                         </x-danger-button>
                     </div>
@@ -160,6 +160,4 @@
             </div>
         </div>
     </div>
-
-
-</x-rubric-preview>
+</x-app-layout>

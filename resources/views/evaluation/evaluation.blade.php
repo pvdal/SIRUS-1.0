@@ -145,7 +145,9 @@
                     </div>
 
                     <div class="flex justify-end gap-3 mt-10 border-t border-gray-200 dark:border-gray-700 pt-6">
-                        <x-danger-button x-on:click="history.back()">Voltar</x-danger-button>
+                        <x-danger-button x-on:click="window.location = document.referrer || '/calendar';">
+                            Voltar
+                        </x-danger-button>
 
                         <template x-if="!isReadOnly">
                             <x-secondary-button
