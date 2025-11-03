@@ -1,10 +1,11 @@
 export function groupsData() {
     return {
-        // Variáveis relacionadas ao actions-table-bar.
+        // Variáveis de modais
         showGroupCards: true,
         showCreateModal: false,
         edit: false, // O edit define se o modal vai direcionar a função para store ou ‘update’.
         showWarningModal: false,
+        // Variáveis relacionadas ao actions-table-bar.
         searchTerm: '',
         statusFilter: {
             value: '',
@@ -30,6 +31,14 @@ export function groupsData() {
 
         },
         fileObjectUrl: null,
+        papers: [], // Guarda todos os trabalhos do grupo
+        paperExpanded: {}, // Controla a expansão do menu accordion
+        dropAll() { // Colapsa todos os menus da array papers
+            for (let key in this.paperExpanded) {
+                this.paperExpanded[key] = false;
+            }
+        },
+        courses: [], // Array de cursos para o menu de cadastro de papers
         members: [],
         created_at: '',
         updated_at: '',
@@ -41,6 +50,7 @@ export function groupsData() {
         message: '',
         warningType: '',
         warningContent: '',
+        warningAction: '',
         // Variáveis usadas para alteração de status
         groupId: null,
         activatingIds: [],
@@ -71,46 +81,6 @@ export function groupsData() {
         searching: false,
         searchTimeout: null,
         showNoStudentsMsg: false,
-
-        papers: [], // Guarda todos os trabalhos do grupo
-        paperExpanded: {}, // Controla a expansão do menu accordion
-        dropAll() { // Colapsa todos os menus da array papers
-            for (let key in this.paperExpanded) {
-                this.paperExpanded[key] = false;
-            }
-        },
-        courses: [], // Array de cursos para o menu de cadastro de papers
-        addPaper() { // Função para adicionar ‘papers’
-            if (!this.file.file || this.file.file.type !== 'application/pdf') {
-                this.showMessage('warning', 'Apenas documentos PDF são permitidos!');
-                return;
-            }
-            const newPaper = {
-                id: null,
-                tempId: Date.now() + Math.floor(Math.random() * 10000),
-
-                ...this.file, // copia todos os campos do objeto
-                title: this.file.title.replace(/\.pdf$/i,''),
-            };
-            this.papers.push(newPaper);
-            this.paperExpanded[newPaper.tempId] = false;
-
-            //console.log(this.papers[0]);
-            //console.log(this.papers[0].file);
-            // limpa buffer
-            this.file = {
-                title: '',
-                file: null,
-                url: null,
-                year: new Date().getFullYear(),
-                semester: 1,
-                project: 1,
-                version: 'evaluation',
-                course: null
-            };
-            // Limpa a referência do ‘input’ como PDF
-            this.$refs.pdfFile.value = '';
-        },
 
         init(groups, courses, page, totalPages) {
             this.groups = groups;
@@ -200,52 +170,6 @@ export function groupsData() {
                 }
             }, 200); // debounce
         },
-
-       /*
-        async searchStudents() {
-            // Cancela o debounce anterior
-            if (this.searchTimeout) clearTimeout(this.searchTimeout);
-
-            const term = this.searchStudent.trim().toLowerCase();
-
-            if (!term) {
-                this.filteredStudents = [];
-                this.searching = false;
-                this.showNoStudentsMsg = false;
-                return;
-            }
-
-            this.searching = true;
-
-            this.searchTimeout = setTimeout(() => {
-                if (!this.showCreateModal) {
-                    this.filteredStudents = [];
-                    this.searching = false;
-                    this.showNoStudentsMsg = false;
-                    return;
-                }
-
-                // Filtragem eficiente usando for loop simples
-                const result = [];
-                const termLower = term;
-
-                for (let i = 0; i < this.students.length; i++) {
-                    const aluno = this.students[i];
-
-                    // Ignora alunos já membros
-                    if (this.members.some(m => m.ra === aluno.ra)) continue;
-
-                    // Checa name ou ra
-                    if (aluno.name.toLowerCase().includes(termLower) || aluno.ra.toLowerCase().includes(termLower)) {
-                        result.push(aluno);
-                    }
-                }
-
-                this.filteredStudents = result;
-                this.searching = false;
-                this.showNoStudentsMsg = result.length === 0;
-            }, 400);
-        },*/
 
         addMember(student) {
             if (!this.members.some(m => m.ra === student.ra)) {
@@ -362,6 +286,38 @@ export function groupsData() {
 
             this.showCreateModal = true;
             this.edit = true;  // indica modo edição
+        },
+
+        addPaper() { // Função para adicionar ‘papers’
+            if (!this.file.file || this.file.file.type !== 'application/pdf') {
+                this.showMessage('warning', 'Apenas documentos PDF são permitidos!');
+                return;
+            }
+            const newPaper = {
+                id: null,
+                tempId: Date.now() + Math.floor(Math.random() * 10000),
+
+                ...this.file, // copia todos os campos do objeto
+                title: this.file.title.replace(/\.pdf$/i,''),
+            };
+            this.papers.push(newPaper);
+            this.paperExpanded[newPaper.tempId] = false;
+
+            //console.log(this.papers[0]);
+            //console.log(this.papers[0].file);
+            // limpa buffer
+            this.file = {
+                title: '',
+                file: null,
+                url: null,
+                year: new Date().getFullYear(),
+                semester: 1,
+                project: 1,
+                version: 'evaluation',
+                course: null
+            };
+            // Limpa a referência do ‘input’ como PDF
+            this.$refs.pdfFile.value = '';
         },
 
         removePaper(paperId) {
@@ -563,8 +519,6 @@ export function groupsData() {
                 this.showBanner = false;
             }, 3000);
         },
-
-        warningAction: '',
 
         warning(type, name, id, action=null) {
             type = type.toLowerCase();

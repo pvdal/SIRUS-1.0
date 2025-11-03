@@ -102,11 +102,13 @@
     @cannot('manage-events')
         <x-custom-modal x-model="showModal" :headerActions="true">
             <x-slot name="title">
-                @if(auth()->user()->canEvaluate())
-                    Avaliar o grupo
-                @else
-                    Vizualizar a avaliação da banca
-                @endif
+                <h1 class="me-auto text-lg font-semibold text-gray-700 dark:text-gray-200">
+                    @if(auth()->user()->canEvaluate())
+                        Avaliar o grupo
+                    @else
+                        Vizualizar a avaliação da banca
+                    @endif
+                </h1>
             </x-slot>
             <x-slot name="content">
                 {{-- Banner de mensagem --}}
@@ -117,10 +119,10 @@
 
             <x-slot name="footer">
                 @if(auth()->user()->canEvaluate())
-                    <template x-if="belongsTo">
-                        <x-secondary-button x-show="belongsTo" @click="openEvaluationForm()">Avaliar</x-secondary-button>
+                    <template x-if="belongsTo && !evaluatedByUser">
+                        <x-secondary-button @click="openEvaluationForm()">Avaliar</x-secondary-button>
                     </template>
-                    <template x-if="!belongsTo">
+                    <template x-if="!belongsTo || evaluatedByUser">
                         <x-secondary-button @click="openEvaluationForm()">Avaliação</x-secondary-button>
                     </template>
                     <x-danger-button
@@ -132,9 +134,6 @@
                     >Fechar</x-danger-button>
                 @else
                     <template x-if="belongsTo">
-                        <x-secondary-button>Avaliar</x-secondary-button>
-                    </template>
-                    <template x-if="!belongsTo">
                         <x-secondary-button @click="openEvaluationForm()">Avaliação</x-secondary-button>
                     </template>
                     <x-danger-button

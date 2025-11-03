@@ -98,11 +98,12 @@ export function eventsData() {
 
                     this.belongsTo = e.detail.belongsTo === true;
                     this.evaluatedByUser = e.detail.evaluatedByUser === true;
-                    this.userCommitteeId = null;
 
+                    /*
                     const currentUserMember = e.detail.members.find(m => m.belongsTo === true);
                     //console.log("caiu aqui",currentUserMember);
 
+                    this.userCommitteeId = null;
                     if (currentUserMember) {
                         this.belongsTo = true;
 
@@ -114,6 +115,7 @@ export function eventsData() {
                     } else {
                         this.belongsTo = false;
                     }
+                    */
                 }
             });
 

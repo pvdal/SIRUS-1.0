@@ -104,7 +104,9 @@ document.addEventListener('alpine:initialized', function () {
                     timeStart: info.event.start,
                     dateEnd: info.event.end,
                     timeEnd: info.event.end,
-                    allDay: info.event.allDay
+                    allDay: info.event.allDay,
+                    belongsTo: info.event.extendedProps.belongsTo,
+                    evaluatedByUser: info.event.extendedProps.evaluatedByUser,
                 }
             }))
         },

@@ -20,7 +20,7 @@
         }
     </style>
 
-    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
+    <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg rounded-lg transition-all">
 
@@ -84,10 +84,10 @@
                                                     <td class="py-3 px-2 text-center cursor-pointer"
                                                         @click="groupSelections[criterion.id] = level.value"
                                                         :class="{
-                                            'bg-blue-100 dark:bg-blue-900/40 border border-blue-400 text-blue-800 dark:text-blue-200 font-semibold rounded-md':
-                                                groupSelections[criterion.id] == level.value,
-                                            'hover:bg-blue-50 dark:hover:bg-blue-900/10 rounded-md': groupSelections[criterion.id] != level.value
-                                        }">
+                                                            'bg-blue-100 dark:bg-blue-900/40 border border-blue-400 text-blue-800 dark:text-blue-200 font-semibold rounded-md':
+                                                                groupSelections[criterion.id] == level.value,
+                                                            'hover:bg-blue-50 dark:hover:bg-blue-900/10 rounded-md': groupSelections[criterion.id] != level.value
+                                                        }">
                                                         <span x-text="criterion.descriptions[level.key]" class="text-xs leading-snug"></span>
                                                     </td>
                                                 </template>
@@ -135,10 +135,10 @@
                                                         <td class="py-4 px-4 text-center cursor-pointer transition-colors duration-200 ease-in-out"
                                                             @click="individualSelections[student.id] = { ...individualSelections[student.id], [criterion.id]: level.value }"
                                                             :class="{
-                                                'bg-orange-100 dark:bg-orange-900/50 border-2 border-orange-400 text-orange-800 dark:text-orange-200 font-semibold rounded-md':
-                                                    individualSelections[student.id] && individualSelections[student.id][criterion.id] == level.value,
-                                                'hover:bg-orange-50 dark:hover:bg-orange-900/10 rounded-md': !(individualSelections[student.id] && individualSelections[student.id][criterion.id] == level.value)
-                                            }">
+                                                                'bg-orange-100 dark:bg-orange-900/50 border-2 border-orange-400 text-orange-800 dark:text-orange-200 font-semibold rounded-md':
+                                                                    individualSelections[student.id] && individualSelections[student.id][criterion.id] == level.value,
+                                                                'hover:bg-orange-50 dark:hover:bg-orange-900/10 rounded-md': !(individualSelections[student.id] && individualSelections[student.id][criterion.id] == level.value)
+                                                            }">
                                                             <span x-text="criterion.descriptions[level.key]" class="text-xs leading-snug"></span>
                                                         </td>
                                                     </template>

@@ -32,6 +32,7 @@ class QueuedSendPasswordNotification extends Notification implements ShouldQueue
             ->line('Sua conta foi criada com sucesso.')
             ->line('Sua senha temporária é: ' . $this->password)
             ->action('Acessar SIRUS', url('/login'))
+            ->line('Caso não tenha criado nenhuma conta, ignore este e-mail.')
             ->line('Obrigado por usar o SIRUS!');
     }
 }

@@ -40,7 +40,7 @@ ROute::get('/legal/terms', [LegalController::class, 'showTerms'])->name('terms.s
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
-    'verified',
+    //'verified',
     'access.level:3',
 ])->group(function () {
     // Retirado do vendor: isso limita a rota à usuários de nível 3
@@ -142,7 +142,7 @@ Route::middleware([
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
-    'verified',
+    //'verified',
 ])->group(function () {
     /*Route::get('/dashboard', function () {
         return view('dashboard');
@@ -162,7 +162,6 @@ Route::middleware([
     // Evaluation -> EvaluationController/Evaluation.php
     Route::post('/evaluation/store', [EvaluationController::class, 'store'])->name('evaluations.store');
     Route::get('/evaluation/{committee}', [EvaluationController::class, 'index'])
-        ->middleware('can:view-evaluation,committee')
         ->name('evaluations.index');
 
     Route::prefix(config('secure.request_prefix')) // todas as rotas dentro desse grupo possuem o prefixo definido no.env

@@ -7,6 +7,7 @@ use App\Models\UserCommittee;
 use App\Models\GroupEvaluation;
 use App\Models\IndividualEvaluation;
 use App\Utils\TokenGenerator;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -25,8 +26,14 @@ class EvaluationController extends Controller
      * Decide se o usuário deve AVALIAR ou VER RESULTADOS.
      * @throws RandomException
      */
-    public function index(Committee $committee): View
+    public function index(Committee $committee): View|RedirectResponse
     {
+        if (Gate::denies('view-evaluation', $committee)) {
+            return back()->with([
+                'flash.banner' => 'Você não tem permissão para acessar esta avaliação.',
+                'flash.bannerStyle' => 'danger'
+            ]);
+        }
         // Inicializa o DynamicToken
         TokenGenerator::initializeTab();
 
@@ -36,13 +43,20 @@ class EvaluationController extends Controller
             ->first();
 
         if ($user->access_level === 2){
+            if(is_null($userCommittee?->evaluated_at) && $response = $this->validateCommitteeSchedule($committee)) {
+                return $response;
+            }
             return $this->showEvaluatorView($userCommittee);
         }
 
         else if ($user->access_level === 1 || $user->isAdmin())
         {
             if (Gate::allows('evaluate-paper', $committee)) {
+                if($response = $this->validateCommitteeSchedule($committee)) {
+                    return $response;
+                }
                 return $this->showEvaluatorView($userCommittee);
+
             } else {
                 return $this->showResultsView($committee); // Mostra as TABS
             }
@@ -51,6 +65,32 @@ class EvaluationController extends Controller
         else {
             abort(403, 'Seu nível de acesso não tem permissão para esta página.');
         }
+    }
+
+    private function validateCommitteeSchedule($committee)
+    {
+        $now = Carbon::now();
+        $start = Carbon::parse($committee->start);
+        $end = Carbon::parse($committee->end)->addHours(4);
+
+        if(is_null($committee->start) && is_null($committee->end)){
+            return back()->with([
+                'flash.banner' => 'Banca não agendada!',
+                'flash.bannerStyle' => 'danger'
+            ]);
+        } else if($now->lt($start)) {
+            return back()->with([
+                'flash.banner' => 'Banca não iniciada!',
+                'flash.bannerStyle' => 'danger'
+            ]);
+        } else if($now->gt($end)){
+            return back()->with([
+                'flash.banner' => 'Banca finalizada!',
+                'flash.bannerStyle' => 'danger'
+            ]);
+        }
+
+        return null;
     }
 
     /**

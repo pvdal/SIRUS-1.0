@@ -1,11 +1,11 @@
 export function committeesData() {
     return {
-        // Variáveis relacionadas ao actions-table-bar.
+        // Variáveis de modais
         showGroupCards: true,
         showCreateModal: false,
         edit: false, // O edit define se o modal vai direcionar a função para store ou update.
-        expanded: false,
         showWarningModal: false,
+        // Variáveis relacionadas ao actions-table-bar.
         searchTerm: '',
         statusFilter: {
             value: '',
@@ -21,27 +21,24 @@ export function committeesData() {
         toggleHistory(){
             this.$dispatch('toggle-history', this.historyFilter);
         },
-        searchRubric: '',
-        filteredRubrics: [],
-        showNoRubricsMsg: false,
         // Variáveis dos campos do formulário
         name: '',
         coordinator_id: '',
-        members: [],
+        showingCommittee: false,
         group_id: null,
+        groupSelected: false,// Controla a visualização do input de paper
         paper_id: null,
+        paper_title: null,
         rubric_id: {
             group: null,
             individual: null,
         },
-        paper_title: null,
+        members: [],
         member_type_id: '',
         created_at: '',
         updated_at: '',
         belongsTo: false,
         evaluatedByUser: false,
-        // Controla a visualização do input de paper
-        groupSelected: false,
         // Variáveis de estado das requisições
         errors: {},
         saving: false,
@@ -50,6 +47,7 @@ export function committeesData() {
         message: '',
         warningType: '',
         warningContent: '',
+        warningAction: '',
         // Variáveis que armazenam coleção de registros e preparam alteração de estado (ativo/inativo) o update
         committeeId: null,
         activatingIds: [],
@@ -78,12 +76,15 @@ export function committeesData() {
         },
         page: 1,
         totalPage: 1,
-        // Variáveis usadas na pesquisa de alunos no modal de cadastro
+        // Variáveis usadas na pesquisa de membros e rubricas no modal de cadastro
         academicStaff: [],
         searchMember: '',
         filteredMembers: [],
         searching: false,
         searchingMembers: false,
+        searchRubric: '',
+        filteredRubrics: [],
+        showNoRubricsMsg: false,
         searchingRubrics: false,
         searchTimeout: null,
         showNoMembersMsg: false,
@@ -107,7 +108,7 @@ export function committeesData() {
             return Object.values(this.cardTypes).includes('committee');
         },
 
-        showingCommittee: false,
+        expanded: false,
 
         init(committees, memberTypes, groups, academicStaff, page, totalPages) {
             this.committees = committees;
@@ -117,11 +118,6 @@ export function committeesData() {
             this.page = page;
             this.totalPages = totalPages;
             this.empty.data = !Array.isArray(committees) || committees.length === 0;
-            /*this.$watch('searchTerm', (value) => {
-                if(!value) {
-                    this.loadCommittees();
-                }
-            });*/
 
             this.$watch('committees', () => {
                 this.committees.forEach(c => {
@@ -139,7 +135,7 @@ export function committeesData() {
                 this.searchRubrics();
             });
 
-            // Verifica
+            // Mostra os papers de cada grupo selecionado
             this.$watch('group_id', () => {
                 this.groupSelected = !!this.group_id;
                 this.showGroupPapers();
@@ -209,10 +205,10 @@ export function committeesData() {
         removeRubric(id) {
             this.rubrics = this.rubrics.filter(r => r.id !== id);
         },
+
         get totalWeight() {
             return this.rubrics.reduce((sum, r) => sum + (Number(r.weight) || 0), 0);
         },
-
 
         searchMembers() {
             if (this.searchTimeout) clearTimeout(this.searchTimeout);
@@ -527,6 +523,20 @@ export function committeesData() {
             }
         },
 
+        openEvaluationForm(id) {
+            if (this.committeeId || id) {
+                // Constrói a URL
+                window.location.href = `/evaluation/${this.committeeId || id}`;
+            } else {
+                window.dispatchEvent(new CustomEvent('banner-message', {
+                    detail: {
+                        style: 'danger',
+                        message: 'Não foi possível encontrar o ID da Banca.',
+                    }
+                }))
+            }
+        },
+
         clearFields(type) {
             clearComponentData(this, type,
                 [
@@ -554,8 +564,6 @@ export function committeesData() {
             }, 3000);
         },
 
-        warningAction: '',
-
         warning(type, name, id, action=null) {
             type = type.toLowerCase();
             switch (type){
@@ -576,24 +584,6 @@ export function committeesData() {
                     break;
             }
             this.showWarningModal = true;
-        },
-
-        openEvaluationForm(id) {
-            // this.eventId é o committee_id
-            if (this.committeeId || id) {
-
-                // Constrói a URL para a rota que os Gates entendem
-                // Redireciona para rota
-                window.location.href = `/evaluation/${this.committeeId || id}`;
-
-            } else {
-                window.dispatchEvent(new CustomEvent('banner-message', {
-                    detail: {
-                        style: 'danger',
-                        message: 'Não foi possível encontrar o ID da Banca.',
-                    }
-                }))
-            }
         },
     }
 }

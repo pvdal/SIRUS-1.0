@@ -22,7 +22,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg rounded-lg transition-all">
 
                 <div class="p-6 md:p-8 text-gray-900 dark:text-gray-100"
                      x-data='evaluationResultTabs(@json($pageData))'>
@@ -146,7 +146,8 @@
                                                         <span class="text-xs text-gray-500 dark:text-gray-400">Peso: <span x-text="axis.weight + '%'"></span></span>
                                                     </div>
                                                     <template x-for="criterion in axis.criteria" :key="criterion.id">
-                                                        <div class="overflow-x-auto">
+                                                        <div class="overflow-x-auto border rounded-lg p-3">
+                                                            <p class="font-medium text-gray-800 dark:text-gray-200 mb-2" x-text="criterion.name"></p>
                                                             <table class="min-w-full text-sm">
                                                                 <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                                                                 <template x-for="student in students" :key="student.id">
