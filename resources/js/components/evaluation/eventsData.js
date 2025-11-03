@@ -96,8 +96,8 @@ export function eventsData() {
                     this.paper = e.detail.paper;
                     this.members = e.detail.members;
 
-                    this.belongsTo = e.detail.members.some(m => m.belongsTo === true);
-                    this.evaluatedByUser = e.detail.members.some(m => m.evaluatedByUser === true);
+                    this.belongsTo = e.detail.belongsTo === true;
+                    this.evaluatedByUser = e.detail.evaluatedByUser === true;
                     this.userCommitteeId = null;
 
                     const currentUserMember = e.detail.members.find(m => m.belongsTo === true);

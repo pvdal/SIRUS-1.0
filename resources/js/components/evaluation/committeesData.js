@@ -400,8 +400,8 @@ export function committeesData() {
                 this.paper_title = null;
             }
 
-            this.belongsTo = committee.members.some(m => m.belongsTo === true);
-            this.evaluatedByUser = committee.members.some(m => m.evaluatedByUser === true);
+            this.belongsTo = committee.belongsTo === true;
+            this.evaluatedByUser = committee.evaluatedByUser === true;
 
             // Trata os timestamps
             this.created_at = formatDateTime('Criado em', committee.created_at);
@@ -578,13 +578,13 @@ export function committeesData() {
             this.showWarningModal = true;
         },
 
-        openEvaluationForm() {
+        openEvaluationForm(id) {
             // this.eventId é o committee_id
-            if (this.committeeId) {
+            if (this.committeeId || id) {
 
                 // Constrói a URL para a rota que os Gates entendem
                 // Redireciona para rota
-                window.location.href = `/evaluation/${this.committeeId}`;
+                window.location.href = `/evaluation/${this.committeeId || id}`;
 
             } else {
                 window.dispatchEvent(new CustomEvent('banner-message', {

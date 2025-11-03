@@ -76,12 +76,16 @@ class EventController extends Controller
                                     'id' => $m->memberType?->id,
                                     'name' => $m->memberType?->name,
                                 ],
-                                'belongsTo' => $m->user_id === auth()->id(),
-                                'evaluatedByUser' => UserCommittee::where('user_id', auth()->id())
-                                    ->where('committee_id', $event->id)
-                                    ->whereNotNull('evaluated_at')
-                                    ->exists(), // retorna true/false inline
                             ])->values(),
+                        // Indica se o usuário autenticado pertence à comissão
+                        'belongsTo' => $event->members
+                            ->contains(fn($m) => $m->user_id === auth()->id()),
+
+                        // Indica se o usuário autenticado já avaliou
+                        'evaluatedByUser' => UserCommittee::where('user_id', auth()->id())
+                            ->where('committee_id', $event->id)
+                            ->whereNotNull('evaluated_at')
+                            ->exists(),
                     ]
                 ];
             });

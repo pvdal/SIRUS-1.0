@@ -1,4 +1,4 @@
-<x-rubric-preview>
+<x-app-layout>
     <x-slot name="title">
         Avaliação
     </x-slot>
@@ -281,4 +281,4 @@
             </div>
         </div>
     </div>
-</x-rubric-preview>
+</x-app-layout>

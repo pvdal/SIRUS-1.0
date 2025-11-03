@@ -689,11 +689,6 @@ class CommitteeController extends Controller
                         'name' => $m->memberType?->name,
                     ],
                     'state' => (int) $m->user->state,
-                    'belongsTo' => $m->user_id === auth()->id(),
-                    'evaluatedByUser' => UserCommittee::where('user_id', auth()->id())
-                        ->where('committee_id', $committee->id)
-                        ->whereNotNull('evaluated_at')
-                        ->exists(), // retorna true/false inline
                 ])->values() ?? [],
             'coordinator_name' => $committee->coordinator?->user?->name,
             'group_id' => $group?->id,
@@ -719,6 +714,15 @@ class CommitteeController extends Controller
             'state' => (int) $committee->state,
             'created_at' => $committee->created_at,
             'updated_at' => $committee->updated_at,
+            // Indica se o usuário autenticado pertence à comissão
+            'belongsTo' => $committee->members
+                ->contains(fn($m) => $m->user_id === auth()->id()),
+
+            // Indica se o usuário autenticado já avaliou
+            'evaluatedByUser' => UserCommittee::where('user_id', auth()->id())
+                ->where('committee_id', $committee->id)
+                ->whereNotNull('evaluated_at')
+                ->exists(),
         ];
     }
 

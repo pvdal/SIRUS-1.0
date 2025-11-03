@@ -185,10 +185,10 @@
                             </template>
                             <template x-if="!item.state">
                                 <x-management.activate-button type="button" class="min-w-[98px]" x-bind:disabled="isActivating(item.id)"
-                                                              x-on:click="
-                                      warning('confirmação',item.name, item.id, 'ativar');
-                                      $el.blur();
-                                  "
+                                    x-on:click="
+                                        warning('confirmação',item.name, item.id, 'ativar');
+                                        $el.blur();
+                                    "
                                 >
                                     <template x-if="isActivating(item.id)">
                                         <span>Ativando...</span>
@@ -200,13 +200,13 @@
                             </template>
                         @endcan
                         @cannot('manage-events')
-                            <x-button type="button" class="min-w-[90px]"
-                                x-on:click="
-                                    $el.blur();
-                                "
-                            >
-                                Avaliação
-                            </x-button>
+                            <template x-if="item.belongsTo && !item.evaluatedByUser">
+                                <x-secondary-button x-on:click="$el.blur(); openEvaluationForm(item.id);">Avaliar</x-secondary-button>
+                            </template>
+
+                            <template x-if="!item.belongsTo || item.evaluatedByUser">
+                                <x-secondary-button x-on:click="$el.blur(); openEvaluationForm(item.id);">Avaliação</x-secondary-button>
+                            </template>
                         @endcannot
                     </x-slot>
                 </x-card.content>
@@ -220,7 +220,7 @@
                     <x-slot name="header">
                         <span x-text="item.group_id" class="text-sm text-gray-600 dark:text-gray-200 me-3 transition duration-150 ease-in-out"></span>
                         <button class="px-3 my-1 whitespace-nowrap ms-auto bg-primary-orange rounded-md text-white dark:text-gray-200 text-sm"
-                                x-on:click="
+                            x-on:click="
                                 $el.blur();
                                 setCardType(item.id, 'committee');
                             "

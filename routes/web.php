@@ -162,7 +162,7 @@ Route::middleware([
     // Evaluation -> EvaluationController/Evaluation.php
     Route::post('/evaluation/store', [EvaluationController::class, 'store'])->name('evaluations.store');
     Route::get('/evaluation/{committee}', [EvaluationController::class, 'index'])
-        ->middleware(['auth', 'can:view-evaluation,committee'])
+        ->middleware('can:view-evaluation,committee')
         ->name('evaluations.index');
 
     Route::prefix(config('secure.request_prefix')) // todas as rotas dentro desse grupo possuem o prefixo definido no.env
