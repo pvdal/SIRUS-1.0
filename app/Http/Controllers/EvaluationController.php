@@ -104,6 +104,7 @@ class EvaluationController extends Controller
         // 1. Carrega os dados base
         $committee = $userCommittee->committee;
         $data = $this->formatBaseEvaluationData($committee);
+//        dd($data);
 
         // 2. Define o estado de "somente leitura" (usando o Gate)
         $data['isReadOnly'] = Gate::denies('evaluate-paper', $committee);
@@ -135,10 +136,15 @@ class EvaluationController extends Controller
 
     private function formatAxis($axis, $type) // $type é 'in group' ou 'individual'
     {
+        $criteriaCount = $axis->amount > 0 ? $axis->amount : $axis->criteria->count();
+
         return [
             'id'   => $axis->id,
             'name' => $axis->name,
             'type' => $type, // <-- Usa o TIPO que passámos (da rubrica mãe)
+            // Adicionamos '?? 0' para segurança, caso a relação não traga o pivô
+            'weight'   => $axis->pivot->weight ?? 1,
+            'amount'   => $criteriaCount,
             'criteria' => $axis->criteria->map(function ($criterion) {
                 return [
                     'id'   => $criterion->id,
@@ -231,6 +237,8 @@ class EvaluationController extends Controller
                 'nameGroup' => $groupRubric->name,
                 'nameIndividual' => $individualRubric->name,
                 'axes' => $allAxes,
+                'groupRubricWeight' => $groupCommitteeRubric ? $groupCommitteeRubric->weight : 1,
+                'individualRubricWeight' => $individualCommitteeRubric ? $individualCommitteeRubric->weight : 1,
             ],
         ];
     }

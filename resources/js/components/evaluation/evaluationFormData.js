@@ -13,6 +13,12 @@ export function evaluationFormData(initialData) { // <<<< NOVA VERSÃO
         rubric:        initialData.rubric,
         userCommitteeId: initialData.userCommitteeId,
 
+        // --- DADOS PARA CÁLCULO ---
+        totalScore: 0.0,
+        groupRubricScore: 0.0,
+        averageIndividualScore: 0.0,
+        individualStudentScores: {},
+
         // Vai ser usado para quando for apenas realizar leitura na avaliação
         isReadOnly:    initialData.isReadOnly,
 
@@ -27,6 +33,43 @@ export function evaluationFormData(initialData) { // <<<< NOVA VERSÃO
         showWarningModal: false,
         warningType: '',
         warningContent: '',
+
+        init() {
+            // Inicializa o objeto de notas individuais
+            this.students.forEach(student => {
+                this.individualStudentScores[student.id] = 0.0;
+            });
+
+            // Calcula a pontuação inicial (caso esteja abrindo uma avaliação salva)
+            this.calculateScores();
+
+            // --- WATCHERS ---
+            // Observa qualquer mudança nas seleções de grupo e recalcula
+            this.$watch('groupSelections', () => {
+                this.calculateScores();
+            });
+
+            // Observa (profundamente) qualquer mudança nas seleções individuais e recalcula
+            this.$watch('individualSelections', () => {
+                this.calculateScores();
+            }, { deep: true });
+        },
+
+
+        //Função chamando o helper do cálculo
+        calculateScores() {
+            const result = calculateScores(
+                this.rubric,
+                this.students,
+                this.groupSelections,
+                this.individualSelections
+            );
+
+            this.totalScore = result.totalScore;
+            this.groupRubricScore = result.groupRubricScore;
+            this.averageIndividualScore = result.averageIndividualScore;
+            this.individualStudentScores = result.individualStudentScores;
+        },
 
 
         confirmSave() {

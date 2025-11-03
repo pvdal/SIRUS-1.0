@@ -55,4 +55,6 @@ import {evaluationFormData} from "./components/evaluation/evaluationFormData.js"
 window.evaluationFormData = evaluationFormData;
 import {evaluationResultTabs} from "./components/evaluation/evaluationResultTabs.js";
 window.evaluationResultTabs = evaluationResultTabs;
+import {calculateScores} from './helpers/calculeteScores.js';
+window.calculateScores = calculateScores;
 
