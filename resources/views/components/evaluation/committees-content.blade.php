@@ -200,13 +200,19 @@
                             </template>
                         @endcan
                         @cannot('manage-events')
-                            <template x-if="item.belongsTo && !item.evaluatedByUser">
-                                <x-secondary-button x-on:click="$el.blur(); openEvaluationForm(item.id);">Avaliar</x-secondary-button>
-                            </template>
+                            @can('evaluate')
+                                <template x-if="item.belongsTo && !item.evaluatedByUser">
+                                    <x-secondary-button x-on:click="$el.blur(); openEvaluationForm(item.id);">Avaliar</x-secondary-button>
+                                </template>
 
-                            <template x-if="!item.belongsTo || item.evaluatedByUser">
-                                <x-secondary-button x-on:click="$el.blur(); openEvaluationForm(item.id);">Avaliação</x-secondary-button>
-                            </template>
+                                <template x-if="!item.belongsTo || item.evaluatedByUser">
+                                    <x-secondary-button x-on:click="$el.blur(); openEvaluationForm(item.id);">Avaliação</x-secondary-button>
+                                </template>
+                            @else
+                                <template x-if="item.belongsTo">
+                                    <x-secondary-button x-on:click="$el.blur(); openEvaluationForm(item.id);">Avaliação</x-secondary-button>
+                                </template>
+                            @endcan
                         @endcannot
                     </x-slot>
                 </x-card.content>

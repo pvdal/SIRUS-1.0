@@ -4,9 +4,12 @@
     </x-slot>
 
     <x-slot name="header">
-        <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 tracking-tight mb-3 md:mb-0">
-            Avaliação: {{ $evaluationData['paperTitle'] ?? 'Tela de Avaliação' }}
-            <p class="text-sm text-gray-500 dark:text-gray-400 italic">
+        <h2 class="text-2xl font-bold leading-tight tracking-tight max-w-full overflow-hidden mb-3 md:mb-0">
+            <div class="flex flex-wrap gap-1">
+                <p>Avaliação: </p>
+                <span class="line-clamp-2 break-all">{{ $evaluationData['paperTitle'] ?? 'Tela de Avaliação' }}</span>
+            </div>
+            <p class="text-sm text-gray-500 dark:text-gray-400 transition duration-150 ease-in-out italic">
                 Formulário de Avaliação de Trabalho Acadêmico
             </p>
         </h2>
@@ -24,7 +27,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg rounded-lg transition-all">
 
-                <div class="p-6 md:p-8 text-gray-900 dark:text-gray-100"
+                <div class="p-6 md:p-8 text-gray-900 dark:text-gray-100 transition duration-150 ease-in-out"
                      x-data='evaluationFormData(@json($evaluationData))'
                      :class="{ 'evaluation-read-only': isReadOnly }">
 
@@ -36,108 +39,57 @@
                     </template>
 
                     {{-- div para cabeçalho da avaliação--}}
-                    <div class="bg-gray-50 dark:bg-gray-700/30 rounded-lg p-4 mb-6 border border-gray-200 dark:border-gray-600">
-                        <div class="flex flex-wrap md:flex-nowrap items-center justify-between gap-6">
-                            <div class="flex flex-col">
-                                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Avaliador</span>
-                                <p class="font-semibold text-lg text-gray-900 dark:text-gray-100" x-text="evaluatorName"></p>
+                    <div class="bg-gray-50 dark:bg-gray-700/30 rounded-lg p-4 mb-6 border border-gray-200 dark:border-gray-600 transition duration-150 ease-in-ou">
+                        <div class="flex flex-wrap md:flex-nowrap items-start justify-start gap-6">
+                            <div class="flex flex-col max-w-full overflow-hidden">
+                                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 transition uppercase tracking-wide whitespace-nowrap">Avaliador</span>
+                                <p class="font-semibold text-lg md:line-clamp-2" x-text="evaluatorName"></p>
                             </div>
-                            <div class="flex flex-col">
-                                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Grupo</span>
+                            <div class="flex flex-col items-center">
+                                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 transition uppercase tracking-wide whitespace-nowrap">PI/TG</span>
+                                <p class="font-semibold text-lg md:line-clamp-2" x-text="paperProject"></p>
+                            </div>
+                            <div class="flex flex-col max-w-full overflow-hidden">
+                                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 transition uppercase tracking-wide">Grupo</span>
                                 <p class="font-semibold text-lg" x-text="groupName"></p>
                             </div>
-                            <div class="flex flex-col">
-                                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">PI/TG</span>
-                                <p class="font-semibold text-lg" x-text="paperProject"></p>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Trabalho</span>
-                                <p class="font-semibold text-lg" x-text="paperTitle"></p>
+                            <div class="flex flex-col max-w-full overflow-hidden">
+                                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 transition uppercase tracking-wide">Trabalho</span>
+                                <p class="font-semibold text-lg line-clamp-2 break-all" x-text="paperTitle"></p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="mt-10 p-6 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-700">
+                    <div class="mt-10 p-6 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-700 transition duration-150 ease-in-out">
 
-{{--                    rubrica em grupo--}}
-                    <section class="space-y-6 mb-10">
-                        <div class="text-center my-6">
-                            <h1 class="text-xl font-semibold text-gray-800 dark:text-gray-100 border-b-2 border-blue-300 dark:border-blue-700 pb-1 inline-block"
-                                x-text="rubric.nameGroup"></h1>
-                        </div>
-
-                        <template x-for="axis in rubric.axes.filter(a => a.type === 'in group')" :key="axis.id">
-                            <div class="space-y-4">
-                                <div class="flex justify-between items-center">
-                                    <h3 class="text-lg font-medium text-gray-700 dark:text-gray-200 mt-2" x-text="axis.name"></h3>
-                                    <span class="text-xs text-gray-500 dark:text-gray-400">Peso: <span x-text="axis.weight + '%'"></span></span>
-                                </div>
-
-                                <div class="overflow-x-auto">
-                                    <table class="min-w-full text-sm">
-                                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                                        <template x-for="criterion in axis.criteria" :key="criterion.id">
-                                            <tr>
-                                                <td class="py-3 px-3 font-medium text-gray-700 dark:text-gray-200 w-64" x-text="criterion.name"></td>
-
-                                                <template x-for="level in gradeLevels" :key="level.value">
-                                                    <td class="py-3 px-2 text-center cursor-pointer"
-                                                        @click="groupSelections[criterion.id] = level.value"
-                                                        :class="{
-                                                            'bg-blue-100 dark:bg-blue-900/40 border border-blue-400 text-blue-800 dark:text-blue-200 font-semibold rounded-md':
-                                                                groupSelections[criterion.id] == level.value,
-                                                            'hover:bg-blue-50 dark:hover:bg-blue-900/10 rounded-md': groupSelections[criterion.id] != level.value
-                                                        }">
-                                                        <span x-text="criterion.descriptions[level.key]" class="text-xs leading-snug"></span>
-                                                    </td>
-                                                </template>
-                                            </tr>
-                                        </template>
-                                        </tbody>
-                                    </table>
-                                </div>
+    {{--                    rubrica em grupo--}}
+                        <section class="space-y-6 mb-10">
+                            <div class="text-center my-6">
+                                <h1 class="text-xl font-semibold border-b-2 border-blue-300 dark:border-blue-700 transition duration-150 ease-in-out pb-1 inline-block"
+                                    x-text="rubric.nameGroup"></h1>
                             </div>
-                        </template>
-                    </section>
 
-{{--                    rubrica individual--}}
-                    <section class="space-y-6 mb-10">
-                        <div class="text-center my-6">
-                            <h1 class="text-xl font-semibold text-gray-800 dark:text-gray-100 border-b-2 border-orange-300 dark:border-orange-700 pb-1 inline-block"
-                                x-text="rubric.nameIndividual"></h1>
-                        </div>
+                            <template x-for="axis in rubric.axes.filter(a => a.type === 'in group')" :key="axis.id">
+                                <div class="space-y-2 border rounded-lg p-3">
+                                    <div class="flex flex-wrap justify-between items-center">
+                                        <h3 class="text-lg font-medium text-gray-700 dark:text-gray-200 mt-4 mr-4" x-text="axis.name"></h3>
+                                        <span class="text-xs text-gray-500 dark:text-gray-400 mt-4">Peso: <span x-text="axis.weight + '%'"></span></span>
+                                    </div>
 
-                        <template x-for="axis in rubric.axes.filter(a => a.type === 'individual')" :key="axis.id">
-                            <div class="space-y-4">
-                                <div class="flex justify-between items-center">
-                                    <h3 class="text-lg font-medium text-gray-700 dark:text-gray-200 mt-2" x-text="axis.name"></h3>
-                                    <span class="text-xs text-gray-500 dark:text-gray-400">Peso: <span x-text="axis.weight + '%'"></span></span>
-                                </div>
-
-                                <template x-for="criterion in axis.criteria" :key="criterion.id">
-                                    <div class="overflow-x-auto border rounded-lg p-3">
-                                        <p class="font-medium text-gray-800 dark:text-gray-200 mb-2" x-text="criterion.name"></p>
+                                    <div class="overflow-x-auto scrollbar-custom">
                                         <table class="min-w-full text-sm">
-                                            <thead class="text-left text-xs uppercase font-medium text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50">
-                                            <tr>
-                                                <th class="py-3 px-4 w-1/4">Aluno</th>
-                                                <template x-for="level in gradeLevels" :key="level.value">
-                                                    <th class="py-3 px-4 text-center" x-text="level.label"></th>
-                                                </template>
-                                            </tr>
-                                            </thead>
                                             <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                                            <template x-for="student in students" :key="student.id">
-                                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition">
-                                                    <td class="py-4 px-4 font-medium text-gray-700 dark:text-gray-200" x-text="student.name"></td>
-
+                                            <template x-for="criterion in axis.criteria" :key="criterion.id">
+                                                <tr>
+                                                    <td class="min-w-32 p-3 font-medium text-gray-700 dark:text-gray-200 w-64"
+                                                        x-text="criterion.name"></td>
                                                     <template x-for="level in gradeLevels" :key="level.value">
-                                                        <td class="py-4 px-4 text-center cursor-pointer transition-colors duration-200 ease-in-out"
-                                                            @click="individualSelections[student.id] = { ...individualSelections[student.id], [criterion.id]: level.value }"
+                                                        <td class="min-w-32 p-3 text-center cursor-pointer"
+                                                            @click="groupSelections[criterion.id] = level.value"
                                                             :class="{
-                                                                'bg-orange-100 dark:bg-orange-900/50 border-2 border-orange-400 text-orange-800 dark:text-orange-200 font-semibold rounded-md':
-                                                                    individualSelections[student.id] && individualSelections[student.id][criterion.id] == level.value,
-                                                                'hover:bg-orange-50 dark:hover:bg-orange-900/10 rounded-md': !(individualSelections[student.id] && individualSelections[student.id][criterion.id] == level.value)
+                                                                'bg-blue-100 dark:bg-blue-900/40 border border-blue-400 text-blue-800 dark:text-blue-200 font-semibold rounded-md':
+                                                                    groupSelections[criterion.id] == level.value,
+                                                                'hover:bg-blue-50 dark:hover:bg-blue-900/10 rounded-md': groupSelections[criterion.id] != level.value
                                                             }">
                                                             <span x-text="criterion.descriptions[level.key]" class="text-xs leading-snug"></span>
                                                         </td>
@@ -147,16 +99,68 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                </template>
+                                </div>
+                            </template>
+                        </section>
+
+{{--                    rubrica individual--}}
+                        <section class="space-y-6 mb-10">
+                            <div class="text-center my-6">
+                                <h1 class="text-xl font-semibold text-gray-800 dark:text-gray-100 border-b-2 border-orange-300 dark:border-orange-700 pb-1 inline-block"
+                                    x-text="rubric.nameIndividual"></h1>
                             </div>
-                        </template>
-                    </section>
+
+                            <template x-for="axis in rubric.axes.filter(a => a.type === 'individual')" :key="axis.id">
+                                <div class="space-y-4">
+                                    <div class="flex flex-wrap justify-between items-center">
+                                        <h3 class="text-lg font-medium text-gray-700 dark:text-gray-200 mt-4 mr-4" x-text="axis.name"></h3>
+                                        <span class="text-xs text-gray-500 dark:text-gray-400 mt-4">Peso: <span x-text="axis.weight + '%'"></span></span>
+                                    </div>
+
+                                    <template x-for="criterion in axis.criteria" :key="criterion.id">
+                                        <div class="overflow-x-auto scrollbar-custom border rounded-lg p-3">
+                                            <p class="font-medium text-gray-800 dark:text-gray-200 mb-2" x-text="criterion.name"></p>
+                                                <table class="min-w-full text-sm">
+                                                    <thead class="text-left text-xs uppercase font-medium text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50">
+                                                        <tr>
+                                                            <th class="py-3 px-4 w-1/4">Aluno</th>
+                                                            <template x-for="level in gradeLevels" :key="level.value">
+                                                                <th class="py-3 px-4 text-center" x-text="level.label"></th>
+                                                            </template>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                                                    <template x-for="student in students" :key="student.id">
+                                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+                                                            <td class="min-w-32 p-3 font-medium text-gray-700 dark:text-gray-200" x-text="student.name"></td>
+
+                                                            <template x-for="level in gradeLevels" :key="level.value">
+                                                                <td class="min-w-32 p-3 text-center cursor-pointer transition-colors duration-200 ease-in-out"
+                                                                    @click="individualSelections[student.id] = { ...individualSelections[student.id], [criterion.id]: level.value }"
+                                                                    :class="{
+                                                                        'bg-orange-100 dark:bg-orange-900/50 border-2 border-orange-400 text-orange-800 dark:text-orange-200 font-semibold rounded-md':
+                                                                            individualSelections[student.id] && individualSelections[student.id][criterion.id] == level.value,
+                                                                        'hover:bg-orange-50 dark:hover:bg-orange-900/10 rounded-md': !(individualSelections[student.id] && individualSelections[student.id][criterion.id] == level.value)
+                                                                    }">
+                                                                    <span x-text="criterion.descriptions[level.key]" class="text-xs leading-snug"></span>
+                                                                </td>
+                                                            </template>
+                                                        </tr>
+                                                    </template>
+                                                    </tbody>
+                                                </table>
+
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                        </section>
                     </div>
 
 {{--                    resultados--}}
                     <div class="mt-10 p-6 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl  border border-gray-200 dark:border-gray-700 transition-all duration-300">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2">
+                        <div class="flex flex-wrap items-center justify-between mb-4">
+                            <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2 mr-4">
                                 Nota Final (Prévia)
                             </h3>
                             <span class="text-xs font-medium text-gray-500 dark:text-gray-400 italic">Atualizado automaticamente</span>
@@ -192,7 +196,7 @@
                                 Desempenho Individual
                             </h4>
 
-                            <div class="overflow-x-auto">
+                            <div class="overflow-x-auto scrollbar-custom">
                                 <table class="min-w-full text-sm text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
                                     <thead class="bg-gray-100 dark:bg-gray-700/50 text-xs uppercase font-semibold">
                                     <tr>

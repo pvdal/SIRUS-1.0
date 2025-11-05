@@ -4,9 +4,12 @@
     </x-slot>
 
     <x-slot name="header">
-        <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 tracking-tight mb-3 md:mb-0">
-            Resultado da Avaliação: {{ $pageData['paperTitle'] ?? 'Resultados' }}
-            <p class="text-sm text-gray-500 dark:text-gray-400 italic">
+        <h2 class="text-2xl font-bold text-dark leading-tight tracking-tight max-w-full overflow-hidden mb-3 md:mb-0">
+            <div class="flex flex-wrap gap-1">
+                <p>Resultado da Avaliação: </p>
+                <span class="line-clamp-2 break-all">{{ $pageData['paperTitle'] ?? 'Resultados' }}</span>
+            </div>
+            <p class="text-sm text-gray-500 dark:text-gray-400 transition duration-150 ease-in-out italic">
                 Resultado da Avaliação de Trabalho Acadêmico
             </p>
         </h2>
@@ -24,30 +27,29 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg rounded-lg transition-all">
 
-                <div class="p-6 md:p-8 text-gray-900 dark:text-gray-100"
+                <div class="p-6 md:p-8 text-gray-900 dark:text-gray-100 transition duration-150 ease-in-out"
                      x-data='evaluationResultTabs(@json($pageData))'>
 
-                    <div class="bg-gray-50 dark:bg-gray-700/30 rounded-lg p-4 mb-6 border border-gray-200 dark:border-gray-600">
-                        <div class="flex flex-wrap md:flex-nowrap items-center justify-between gap-6">
-                            <div class="flex flex-col">
-                                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Visualizando como:</span>
-                                <p class="font-semibold text-lg text-gray-900 dark:text-gray-100" x-text="evaluatorName"></p>
+                    <div class="bg-gray-50 dark:bg-gray-700/30 rounded-lg p-4 mb-6 border border-gray-200 dark:border-gray-600 transition duration-150 ease-in-out">
+                        <div class="flex flex-wrap md:flex-nowrap items-start justify-start gap-6">
+                            <div class="flex flex-col max-w-full overflow-hidden">
+                                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 transition uppercase tracking-wide whitespace-nowrap">Visualizando como:</span>
+                                <p class="font-semibold text-lg md:line-clamp-2" x-text="evaluatorName"></p>
                             </div>
-                            <div class="flex flex-col">
-                                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Grupo</span>
-                                <p class="font-semibold text-lg" x-text="groupName"></p>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">PI/TG</span>
+                            <div class="flex flex-col items-center">
+                                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 transition uppercase tracking-wide whitespace-nowrap">PI/TG</span>
                                 <p class="font-semibold text-lg" x-text="paperProject"></p>
                             </div>
-                            <div class="flex flex-col">
-                                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Trabalho</span>
-                                <p class="font-semibold text-lg" x-text="paperTitle"></p>
+                            <div class="flex flex-col max-w-full overflow-hidden">
+                                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 transition uppercase tracking-wide">Grupo</span>
+                                <p class="font-semibold text-lg md:line-clamp-2" x-text="groupName"></p>
+                            </div>
+                            <div class="flex flex-col max-w-full overflow-hidden">
+                                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 transition uppercase tracking-wide">Trabalho</span>
+                                <p class="font-semibold text-lg line-clamp-2 break-all" x-text="paperTitle"></p>
                             </div>
                         </div>
                     </div>
-
 
                     <template x-if="evaluations.length === 0">
                         <div class="my-4 p-4 bg-blue-100 border-l-4 border-blue-500 text-blue-700" role="alert">
@@ -57,12 +59,14 @@
                     </template>
 
                     <div x-show="evaluations.length > 0">
-                        <div class="flex space-x-2 border-b-2 border-gray-300 dark:border-gray-700 mb-6">
+                        <div class="flex space-x-2 border-b-2 border-gray-300 dark:border-gray-700 mb-6 transition duration-150 ease-in-out">
                             <template x-for="(evaluation, index) in evaluations" :key="index">
                                 <button
                                     @click="activeTabIndex = index"
-                                    class="py-2 px-4 font-medium border-b-4 transition-colors "
-                                    :class="activeTabIndex === index ? 'border-blue-500 text-blue-500' : 'tab-button-inactive border-transparent text-gray-500 hover:text-gray-700'"
+                                    class="py-2 px-4 font-medium border-b-2 transition-colors "
+                                    :class="activeTabIndex === index
+                                            ? 'border-secondary-blue text-blue-600 dark:text-blue-400'
+                                            : 'tab-button-inactive border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:border-gray-600'"
                                     x-text="evaluation.evaluatorName">
                                 </button>
                             </template>
@@ -73,14 +77,14 @@
                                 <div x-show="activeTabIndex === index" x-transition>
 
                                     <!-- Linha com dados do avaliador -->
-                                    <div class="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 dark:border-gray-700 pb-3 mb-6">
-                                        <div class="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <div class="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 dark:border-gray-700 transition duration-150 ease-in-out pb-3 mb-6">
+                                        <div class="flex items-center gap-2 text-gray-600 dark:text-gray-300 transition duration-150 ease-in-out">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-secondary-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                             </svg>
                                             <p>
                                                 Avaliação de <strong x-text="evaluation.evaluatorName"></strong>
-                                                <span class="text-gray-400 dark:text-gray-500">em</span>
+                                                <span>em</span>
                                                 <span class="italic text-sm" x-text="evaluation.evaluatedAt"></span>
                                             </p>
                                         </div>
@@ -88,39 +92,40 @@
                                         @can('is-admin')
                                             <div class="text-right">
                                                 <span class="text-sm text-gray-500 dark:text-gray-400">Nota Final</span>
-                                                <p class="text-2xl font-bold text-blue-600 dark:text-blue-400"
+                                                <p class="text-2xl font-bold text-secondary-blue dark:text-blue-400"
                                                    x-text="evaluation.totalScore.toFixed(2)">0.00</p>
                                             </div>
                                         @endcan
                                     </div>
 
-                                    <div class="mt-10 p-6 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-700">
+                                    <div class="mt-10 p-6 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-700 transition duration-150 ease-in-out">
 
                                         <!-- Rubrica de Grupo -->
                                         <section class="space-y-6 mb-10">
-                                            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 border-b-2 border-blue-300 dark:border-blue-700 pb-1 inline-block"
+                                            <h2 class="text-xl font-semibold border-b-2 border-blue-300 dark:border-blue-700 transition duration-150 ease-in-out pb-1 inline-block"
                                                 x-text="rubric.nameGroup"></h2>
 
                                             <template x-for="axis in rubric.axes.filter(a => a.type === 'in group')" :key="axis.id">
-                                                <div class="space-y-2">
-                                                    <div class="flex justify-between items-center">
-                                                    <h3 class="text-lg font-medium text-gray-700 dark:text-gray-200 mt-4"
-                                                        x-text="axis.name"></h3>
-                                                    <span class="text-xs text-gray-500 dark:text-gray-400">Peso: <span x-text="axis.weight + '%'"></span></span>
+                                                <div class="space-y-2 border rounded-lg p-3">
+                                                    <div class="flex flex-wrap justify-between items-center">
+                                                        <h3 class="text-lg font-medium text-gray-700 dark:text-gray-200 mt-4 mr-4"
+                                                            x-text="axis.name"></h3>
+                                                        <span class="text-xs text-gray-500 dark:text-gray-400 mt-4">Peso: <span x-text="axis.weight + '%'"></span></span>
                                                     </div>
-                                                    <div class="overflow-x-auto">
+
+                                                    <div class="overflow-x-auto scrollbar-custom">
                                                         <table class="min-w-full text-sm">
                                                             <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                                                             <template x-for="criterion in axis.criteria" :key="criterion.id">
                                                                 <tr>
-                                                                    <td class="py-3 px-3 font-medium text-gray-700 dark:text-gray-200 w-64"
+                                                                    <td class="min-w-32 p-3 font-medium text-gray-700 dark:text-gray-200 w-64"
                                                                         x-text="criterion.name"></td>
                                                                     <template x-for="level in gradeLevels" :key="level.value">
-                                                                        <td class="py-3 px-2 text-center"
+                                                                        <td class="min-w-32 p-3 text-center"
                                                                             :class="{
-                                                            'bg-blue-100 dark:bg-blue-900/40 border border-blue-400 text-blue-800 dark:text-blue-200 font-semibold rounded-md':
-                                                                evaluation.groupSelections[criterion.id] == level.value
-                                                        }">
+                                                                                'bg-blue-100 dark:bg-blue-900/40 border border-blue-400 text-blue-800 dark:text-blue-200 font-semibold rounded-md':
+                                                                                    evaluation.groupSelections[criterion.id] == level.value
+                                                                            }">
                                                                             <span x-text="criterion.descriptions[level.key]" class="text-xs leading-snug"></span>
                                                                         </td>
                                                                     </template>
@@ -140,31 +145,30 @@
 
                                             <template x-for="axis in rubric.axes.filter(a => a.type === 'individual')" :key="axis.id">
                                                 <div class="space-y-2">
-                                                    <div class="flex justify-between items-center">
-                                                        <h3 class="text-lg font-medium text-gray-700 dark:text-gray-200 mt-4"
-                                                            x-text="axis.name"></h3>
-                                                        <span class="text-xs text-gray-500 dark:text-gray-400">Peso: <span x-text="axis.weight + '%'"></span></span>
+                                                    <div class="flex flex-wrap justify-between items-center">
+                                                        <h3 class="text-lg font-medium text-gray-700 dark:text-gray-200 mt-4 mr-4" x-text="axis.name"></h3>
+                                                        <span class="text-xs text-gray-500 dark:text-gray-400 mt-4">Peso: <span x-text="axis.weight + '%'"></span></span>
                                                     </div>
                                                     <template x-for="criterion in axis.criteria" :key="criterion.id">
-                                                        <div class="overflow-x-auto border rounded-lg p-3">
+                                                        <div class="overflow-x-auto scrollbar-custom border rounded-lg p-3">
                                                             <p class="font-medium text-gray-800 dark:text-gray-200 mb-2" x-text="criterion.name"></p>
                                                             <table class="min-w-full text-sm">
                                                                 <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                                                                <template x-for="student in students" :key="student.id">
-                                                                    <tr>
-                                                                        <td class="py-3 px-3 font-medium text-gray-700 dark:text-gray-200 w-48"
-                                                                            x-text="student.name"></td>
-                                                                        <template x-for="level in gradeLevels" :key="level.value">
-                                                                            <td class="py-3 px-2 text-center"
-                                                                                :class="{
-                                                                'bg-orange-100 dark:bg-orange-900/40 border border-orange-400 text-orange-800 dark:text-orange-200 font-semibold rounded-md':
-                                                                    evaluation.individualSelections[student.id] && evaluation.individualSelections[student.id][criterion.id] == level.value
-                                                            }">
-                                                                                <span x-text="criterion.descriptions[level.key]" class="text-xs leading-snug"></span>
-                                                                            </td>
-                                                                        </template>
-                                                                    </tr>
-                                                                </template>
+                                                                    <template x-for="student in students" :key="student.id">
+                                                                        <tr>
+                                                                            <td class="min-w-32 p-3 font-medium text-gray-700 dark:text-gray-200 w-48"
+                                                                                x-text="student.name"></td>
+                                                                            <template x-for="level in gradeLevels" :key="level.value">
+                                                                                <td class="min-w-32  py-3 text-center"
+                                                                                    :class="{
+                                                                                    'bg-orange-100 dark:bg-orange-900/40 border border-orange-400 text-orange-800 dark:text-orange-200 font-semibold rounded-md':
+                                                                                        evaluation.individualSelections[student.id] && evaluation.individualSelections[student.id][criterion.id] == level.value
+                                                                                }">
+                                                                                    <span x-text="criterion.descriptions[level.key]" class="text-xs leading-snug"></span>
+                                                                                </td>
+                                                                            </template>
+                                                                        </tr>
+                                                                    </template>
                                                                 </tbody>
                                                             </table>
                                                         </div>
@@ -228,7 +232,7 @@
                                 </div>
 
                                 <!-- Tabela Consolidada -->
-                                <div class="overflow-x-auto mt-6">
+                                <div class="overflow-x-auto scrollbar-custom mt-6">
                                     <table class="min-w-full text-sm text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
                                         <thead class="bg-gray-100 dark:bg-gray-700/50 text-xs uppercase font-semibold">
                                         <tr>

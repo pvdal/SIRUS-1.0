@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Committee;
+use App\Models\Paper;
 use App\Models\UserCommittee;
 use App\Utils\TokenGenerator;
 use Illuminate\Http\Request;
@@ -79,7 +80,11 @@ class EventController extends Controller
                             ])->values(),
                         // Indica se o usuário autenticado pertence à comissão
                         'belongsTo' => $event->members
-                            ->contains(fn($m) => $m->user_id === auth()->id()),
+                            ->contains(fn($m) => $m->user_id === auth()->id())
+                            ||
+                            $event->paper?->group?->students->contains(
+                                fn($s) => $s->user_id === auth()->id()
+                            ),
 
                         // Indica se o usuário autenticado já avaliou
                         'evaluatedByUser' => UserCommittee::where('user_id', auth()->id())

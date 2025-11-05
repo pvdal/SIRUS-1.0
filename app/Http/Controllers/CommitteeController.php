@@ -716,7 +716,11 @@ class CommitteeController extends Controller
             'updated_at' => $committee->updated_at,
             // Indica se o usuário autenticado pertence à comissão
             'belongsTo' => $committee->members
-                ->contains(fn($m) => $m->user_id === auth()->id()),
+                ->contains(fn($m) => $m->user_id === auth()->id())
+                ||
+                $committee->paper?->group?->students->contains(
+                    fn($s) => $s->user_id === auth()->id()
+                ),
 
             // Indica se o usuário autenticado já avaliou
             'evaluatedByUser' => UserCommittee::where('user_id', auth()->id())

@@ -116,7 +116,7 @@
                         @if(config('appearance.switch_theme'))
                             <button
                                 @click="toggleTheme()"
-                                class="p-2 rounded-lg border bg-gray-200 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200 transition duration-150 ease-in-out">
+                                class="p-2 rounded-lg ms-5 border bg-gray-200 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200 transition duration-150 ease-in-out">
                                 {{-- Logo do tema light --}}
                                 <x-lucide-moon class="h-4 w-4 block dark:hidden transition duration-150 ease-in-out"/>
                                 {{-- Logo do tema dark --}}

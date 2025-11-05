@@ -134,7 +134,7 @@
                     >Fechar</x-danger-button>
                 @else
                     <template x-if="belongsTo">
-                        <x-secondary-button @click="openEvaluationForm()">Avaliação</x-secondary-button>
+                        <x-secondary-button x-on:click="$el.blur(); openEvaluationForm();">Avaliação</x-secondary-button>
                     </template>
                     <x-danger-button
                         x-on:click="
