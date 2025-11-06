@@ -27,7 +27,10 @@ export function committeesData() {
         showingCommittee: false,
         group_id: null,
         groupSelected: false,// Controla a visualização do input de paper
-        paper_id: null,
+        paper_id: {
+            evaluation: null,
+            corrected: false,
+        },
         paper_title: null,
         rubric_id: {
             group: null,
@@ -58,9 +61,13 @@ export function committeesData() {
         professors: [],
         memberTypes: [],
         groups: [],
-        papers: [],
+        papers: {
+            evaluation: [],
+            corrected: [],
+        },
         rubrics: [],
         // Variáveis para visualização dos trabalhos
+        selectedVersion: {},
         showGroupPaper: false,
         paperUrl: '',
         isLoadingPdf: true,
@@ -123,6 +130,9 @@ export function committeesData() {
                 this.committees.forEach(c => {
                     this.cardTypes[c.id] = 'committee';
                 });
+                this.committees.forEach(c => {
+                    this.selectedVersion[c.id] = 'evaluation';
+                });
             });
 
             // Evento de escuta para a busca de alunos para cadastro no grupo
@@ -141,7 +151,8 @@ export function committeesData() {
                 this.showGroupPapers();
                 // Reseta o valor de paper_id caso o usuário efetue um clique diferente de alterar (visualizar)
                 if(!this.showingCommittee) {
-                    this.paper_id = null;
+                    this.paper_id.evaluation = null;
+                    this.paper_id.corrected = null;
                 }
             });
             // Garante que ao modal ser fechado o estado das variáveis de update sejam resetados, isso evita que ao fechar o modal de update o create se comporte como update
@@ -282,13 +293,25 @@ export function committeesData() {
         showGroupPapers() {
             const group = this.groups.find(g => g.id === Number(this.group_id));
             if(group && group.papers) {
-                this.papers = group.papers.map(p => ({
-                    id: p.id,
-                    title: p.title,
-                    file_path: p.file_path,
-                }));
+                this.papers.evaluation = group.papers
+                    .filter(p => p.version === 'evaluation')
+                    .map(p => ({
+                        id: p.id,
+                        title: p.title,
+                        file_path: p.file_path,
+                        version: p.version,
+                    }));
+
+                this.papers.corrected = group.papers
+                    .filter(p => p.version === 'corrected')
+                    .map(p => ({
+                        id: p.id,
+                        title: p.title,
+                        file_path: p.file_path,
+                        version: p.version,
+                    }));
             } else {
-                this.papers = [];
+                this.papers.evaluation = [];
             }
         },
 
@@ -383,16 +406,26 @@ export function committeesData() {
                 this.members = [];
             }
 
-            if (committee.paper) {
-                // Atualiza os papers do grupo selecionado
-                const group = this.groups.find(g => g.id === this.group_id);
-                this.papers = group?.papers || [];
+            if (committee.paper.evaluation) {
 
-                // Agora seta o paper_id
-                this.paper_id = committee.paper?.id || null;
-                this.paper_title = committee.paper?.title || null;
+                // Seta o paper_id
+                this.$nextTick(() => {
+                    this.paper_id.evaluation = committee.paper?.evaluation?.id || null;
+                });
+                this.paper_title = committee.paper?.evaluation?.title || null;
             } else {
-                this.paper_id = null;
+                this.paper_id.evaluation = null;
+                this.paper_title = null;
+            }
+
+            if (committee.paper.corrected) {
+                // Seta o paper_id
+                this.$nextTick(() => {
+                    this.paper_id.corrected = committee.paper?.corrected?.id || null;
+                });
+                this.paper_title = committee.paper?.corrected?.title || null;
+            } else {
+                this.paper_id.corrected = null;
                 this.paper_title = null;
             }
 
@@ -427,7 +460,7 @@ export function committeesData() {
                 url = `/committees/${id}/update`;  // rota para atualizar
                 method = 'put'; // 'post'/'put'/'patch' conforme backend
             }
-            console.log(this.rubrics);
+
             const savedData = await saveData({
                 url: url,
                 method,
@@ -435,7 +468,8 @@ export function committeesData() {
                     name: this.name,
                     members: this.members,
                     group_id: this.group_id,
-                    paper_id: this.paper_id,
+                    paper_id: this.paper_id.evaluation,
+                    corrected_paper_id: this.paper_id.corrected ? Number(this.paper_id.corrected) : null,
                     rubrics: this.rubrics,
                 },
                 contexto: this,
@@ -549,7 +583,8 @@ export function committeesData() {
                     'filteredRubrics',
                     'rubrics',
                     'group_id',
-                    'paper_id',
+                    'paper_id.evaluation',
+                    'paper_id.corrected',
                     'member_type_id',
                 ],
             );

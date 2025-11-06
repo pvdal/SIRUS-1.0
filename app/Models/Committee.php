@@ -19,7 +19,8 @@ class Committee extends Model
         'paper_id',
         'start',
         'end',
-        'state'
+        'state',
+        'corrected_paper_id'
     ];
 
     protected $casts = [
@@ -46,6 +47,11 @@ class Committee extends Model
     public function paper(): BelongsTo
     {
         return $this->belongsTo(Paper::class);
+    }
+
+    public function correctedPaper(): BelongsTo
+    {
+        return $this->belongsTo(Paper::class, 'corrected_paper_id');
     }
 
     // Relacionamento com Rubric

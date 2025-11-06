@@ -108,7 +108,7 @@
 
                     <x-slot name="state">
                         <span
-                            class="text-xs py-1 ms-4 px-3 font-bold rounded-s-lg rounded-e-lg transition duration-150 ease-in-out"
+                            class=" inline-flex text-xs py-1 ms-4 px-3 font-bold rounded-s-lg rounded-e-lg transition duration-150 ease-in-out"
                             :class="item?.state === 1
                             ? 'bg-secondary-blue text-white dark:text-gray-200'
                             : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-200'"

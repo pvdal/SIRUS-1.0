@@ -30,7 +30,8 @@ export default {
                 'secondary-blue': '#4169E1',
                 'strong-blue': '#1a252f',
                 'dark-blue': '#0b1e3f',
-                'soft-blue': 'rgba(59, 93, 130, 0.1)', /* 8% de opacidade */
+                'royal-blue': '#2979FF',
+                'soft-blue': 'rgba(59, 93, 130, 0.1)', /* 10% de opacidade */
                 'primary-orange': '#C75B12',
                 'secondary-orange': '#E07B3C',
                 'danger-orange': '#B3470E',

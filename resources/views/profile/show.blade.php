@@ -33,6 +33,8 @@
                 <div class="mt-10 sm:mt-0">
                     @livewire('profile.logout-other-browser-sessions-form')
                 </div>
+
+                <x-section-border />
             @endif
 
             @if(config('accessibility.daltonism') || config('accessibility.libras'))
@@ -42,7 +44,6 @@
             @endif
 
             @if (Laravel\Jetstream\Jetstream::hasAccountDeletionFeatures())
-                <x-section-border />
 
                 <div class="mt-10 sm:mt-0">
                     @livewire('profile.delete-user-form')

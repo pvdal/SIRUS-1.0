@@ -1,18 +1,20 @@
 <div class="md:grid md:grid-cols-3 md:gap-6">
     <x-section-title>
         <x-slot name="title">Acessibilidade</x-slot>
-        <x-slot name="description">Ferramentas de acessibilidade</x-slot>
+        <x-slot name="description">
+            Ferramentas e recursos voltados à inclusão e melhoria da experiência de uso para todos os perfis de usuários.
+        </x-slot>
     </x-section-title>
 
     <div class="mt-5 md:mt-0 md:col-span-2">
         <div class="flex items-center justify-end gap-4">
             @if(config('accessibility.daltonism'))
                 <!-- Container do filtro -->
-                <div  class="bg-white px-4 py-[14px] rounded-lg border border-gray-200 shadow-md min-w-[216px] z-10">
+                <div  class="bg-white dark:bg-gray-900 px-4 py-[14px] rounded-lg border border-gray-200 shadow-md min-w-[216px] z-10 transition duration-150 ease-in-out">
                     <div class="flex items-center gap-2 mb-2.5">
                         <!-- Ícone Eye do Lucide -->
-                        <x-lucide-eye class="w-[18px] h-[18px] text-gray-600 shrink-0" />
-                        <label for="type-daltonism" class="text-[12px] font-medium text-gray-600 uppercase tracking-[0.5px]">Filtros de daltonismo</label>
+                        <x-lucide-eye class="w-[18px] h-[18px] text-gray-600 dark:text-gray-300 shrink-0 transition duration-150 ease-in-out" />
+                        <label for="type-daltonism" class="text-[12px] font-medium text-gray-600 dark:text-gray-300 uppercase tracking-[0.5px] transition duration-150 ease-in-out">Filtros de daltonismo</label>
                     </div>
 
                     <x-select id="type-daltonism" class="w-full !min-h-[40px] !h-[40px]">
@@ -29,20 +31,21 @@
                 </div>
             @endif
             @if(config('accessibility.libras'))
-                <div id="toggleVlibras" class="flex flex-col justify-center bg-white px-4 py-[14px] rounded-lg border border-gray-200 shadow-md min-w-[216px] z-10">
+                {{-- Placeholder que vai carregar logo no início do carregamento evai ser logo substituído pela div abaixo --}}
+                <div id="toggleVlibras" class="flex flex-col justify-center bg-white dark:bg-gray-900 px-4 py-[14px] rounded-lg border border-gray-200 shadow-md min-w-[216px] z-10 transition duration-150 ease-in-out">
                     <div class="flex items-center gap-2 mb-2.5">
-                        <!-- Ícone Eye do Lucide -->
-                        <x-lucide-hand class="w-[18px] h-[18px] text-gray-600 shrink-0" />
-                        <label for="type-daltonism" class="text-[12px] font-medium text-gray-600 uppercase tracking-[0.5px]">Assistente de libras</label>
+                        <!-- Ícone hand do Lucide -->
+                        <x-lucide-hand class="w-[18px] h-[18px] text-gray-600 dark:text-gray-300 shrink-0 transition duration-150 ease-in-out" />
+                        <label for="type-daltonism" class="text-[12px] font-medium text-gray-600 dark:text-gray-300 uppercase tracking-[0.5px] transition duration-150 ease-in-out">Assistente de libras</label>
                     </div>
                     <x-secondary-button
                         type="button"
                         x-on:click="
-                                        $el.blur();
-                                        vlActive = !vlActive;
-                                        localStorage.setItem('vlibras_enabled', vlActive);
-                                        $dispatch('toggle-vlibras');
-                                    "
+                            $el.blur();
+                            vlActive = !vlActive;
+                            localStorage.setItem('vlibras_enabled', vlActive);
+                            $dispatch('toggle-vlibras');
+                        "
                         class="space-x-2 !text-[0.785rem] min-h-[42px]"
                     >
                         <span id="btnTextLibras"></span>
@@ -55,31 +58,31 @@
                         : 'Ativar Libras';
                 </script>
                 <div x-data="{ vlActive: true }"
-                     x-init="
-                                        vlActive = localStorage.getItem('vlibras_enabled') === 'true';
-                                        document.getElementById('toggleVlibras')?.remove();
-                                    "
-                     class="flex"
-                     x-cloak>
+                    x-init="
+                        vlActive = localStorage.getItem('vlibras_enabled') === 'true';
+                        document.getElementById('toggleVlibras')?.remove();
+                    "
+                    class="flex"
+                    x-cloak>
                     <!-- Botão para ativar/desativar -->
-                    <div  class="flex flex-col justify-center bg-white px-4 py-[14px] rounded-lg border border-gray-200 shadow-md min-w-[216px] z-10">
+                    <div  class="flex flex-col justify-center bg-white dark:bg-gray-900 px-4 py-[14px] rounded-lg border border-gray-200 shadow-md min-w-[216px] z-10 transition duration-150 ease-in-out">
                         <div class="flex items-center gap-2 mb-2.5">
                             <!-- Ícone Eye do Lucide -->
-                            <x-lucide-hand class="w-[18px] h-[18px] text-gray-600 shrink-0" />
-                            <label for="type-daltonism" class="text-[12px] font-medium text-gray-600 uppercase tracking-[0.5px]">Assistente de libras</label>
+                            <x-lucide-hand class="w-[18px] h-[18px] text-gray-600 dark:text-gray-300 shrink-0 transition duration-150 ease-in-out" />
+                            <label for="type-daltonism" class="text-[12px] font-medium text-gray-600 dark:text-gray-300 uppercase tracking-[0.5px] transition duration-150 ease-in-out">Assistente de libras</label>
                         </div>
-                        <x-secondary-button
+                        <x-button
                             type="button"
                             x-on:click="
-                                            $el.blur();
-                                            vlActive = !vlActive;
-                                            localStorage.setItem('vlibras_enabled', vlActive);
-                                            $dispatch('toggle-vlibras');
-                                        "
+                                $el.blur();
+                                vlActive = !vlActive;
+                                localStorage.setItem('vlibras_enabled', vlActive);
+                                $dispatch('toggle-vlibras');
+                            "
                             class="space-x-2 !text-[0.785rem] min-h-[42px]"
                         >
                             <span x-text="vlActive ? 'Desativar Libras' : 'Ativar Libras'"></span>
-                        </x-secondary-button>
+                        </x-button>
                     </div>
                 </div>
             @endif

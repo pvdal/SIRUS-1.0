@@ -127,10 +127,10 @@
                             ></span>
                         @endcan
                         <button class="px-3 my-1 whitespace-nowrap ms-auto bg-secondary-blue rounded-md text-white dark:text-gray-200 text-sm"
-                                x-on:click="
-                            $el.blur();
-                            setCardType(item.id,'group');
-                        "
+                            x-on:click="
+                                $el.blur();
+                                setCardType(item.id,'group');
+                            "
                         >
                             Grupo &raquo;
                         </button>
@@ -150,13 +150,13 @@
                     </x-slot>
                     @can('manage-events')
                         <x-slot name="state">
-                        <span
-                            class="text-xs py-1 ms-4 px-3 font-bold rounded-s-lg rounded-e-lg transition duration-150 ease-in-out"
-                            :class="item?.state === 1
-                            ? 'bg-secondary-blue text-white dark:text-gray-200'
-                            : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-200'"
-                            x-text="item?.state === 1 ? 'Ativo' : 'Inativo'">
-                        </span>
+                            <span
+                                class="inline-flex text-xs py-1 ms-4 px-3 font-bold rounded-s-lg rounded-e-lg transition duration-150 ease-in-out"
+                                :class="item?.state === 1
+                                ? 'bg-secondary-blue text-white dark:text-gray-200'
+                                : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-200'"
+                                x-text="item?.state === 1 ? 'Ativo' : 'Inativo'">
+                            </span>
                         </x-slot>
                     @endcan
 
@@ -250,7 +250,7 @@
                     @can('manage-events')
                         <x-slot name="state">
                             <span
-                                class="text-xs py-1 ms-4 px-3 font-bold rounded-s-lg rounded-e-lg transition duration-150 ease-in-out"
+                                class="inline-flex text-xs py-1 ms-4 px-3 font-bold rounded-s-lg rounded-e-lg transition duration-150 ease-in-out"
                                 :class="item?.group_state === 1
                                 ? 'bg-secondary-blue text-white dark:text-gray-200'
                                 : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-200'"
@@ -260,13 +260,51 @@
                     @endcan
 
                     <x-slot name="paperAction">
-                        <template x-if="item?.paper">
+                        <template x-if="item?.paper?.evaluation && selectedVersion[item.id] === 'evaluation'">
                             <x-card.link-button
-                                x-on:click="showPaper(`${item.paper?.file_path}`)"
+                                x-on:click="showPaper(item.paper.evaluation.file_path)"
                             >
                                 <x-lucide-file-text class="w-4 h-4 text-gray-600 dark:text-gray-200 transition duration-150 ease-in-out flex-shrink-0"/>
-                                <span class="text-sm text-gray-800 dark:text-gray-200 transition duration-150 ease-in-out font-semibold truncate" x-text="item.paper?.title"></span>
+                                <span class="text-sm text-gray-800 dark:text-gray-200 transition duration-150 ease-in-out font-semibold truncate" x-text="item.paper.evaluation.title"></span>
                             </x-card.link-button>
+                        </template>
+
+                        <template x-if="item?.paper?.corrected && selectedVersion[item.id] === 'corrected'">
+                            <x-card.link-button
+                                x-on:click="showPaper(item.paper.corrected.file_path)"
+                            >
+                                <x-lucide-file-text class="w-4 h-4 text-gray-600 dark:text-gray-200 transition duration-150 ease-in-out flex-shrink-0"/>
+                                <span class="text-sm text-gray-800 dark:text-gray-200 transition duration-150 ease-in-out font-semibold truncate" x-text="item.paper.corrected.title"></span>
+                            </x-card.link-button>
+                        </template>
+                    </x-slot>
+
+                    <x-slot name="actions">
+                        {{-- Botões de alternância entre as versões dos trabalhos --}}
+                        <template x-if="item?.paper?.corrected">
+                            <div class="flex flex-wrap gap-2">
+                                <button
+                                    x-on:click="selectedVersion[item.id] = 'evaluation'"
+                                    :class="selectedVersion[item.id] === 'evaluation'
+                                    ? 'bg-royal-blue text-white'
+                                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200'"
+                                    class="text-sm px-3 py-1 rounded-md shadow-md transition"
+                                    title="Trabalho avaliado"
+                                >
+                                    Avaliação
+                                </button>
+
+                                <button
+                                    x-on:click="selectedVersion[item.id] = 'corrected'"
+                                    :class="selectedVersion[item.id] === 'corrected'
+                                    ? 'bg-royal-blue text-white'
+                                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200'"
+                                    class="text-sm px-3 py-1 rounded-md shadow-md transition"
+                                    title="Trabalho corrigido"
+                                >
+                                    Corrigido
+                                </button>
+                            </div>
                         </template>
                     </x-slot>
                 </x-card.content>

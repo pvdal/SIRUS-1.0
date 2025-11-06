@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 // Common
 use App\Models\CommitteeRubric;
+use App\Models\Paper;
 use App\Models\Rubric;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -103,7 +104,7 @@ class CommitteeController extends Controller
 
             $member_types = MemberType::orderBy('name')->get();
 
-            $groups = Group::with('papers:id,title,file_path,group_id')
+            $groups = Group::with('papers:id,title,file_path,group_id,version')
                 ->where('state', 1)
                 ->orderBy('theme')
                 ->get()
@@ -114,18 +115,10 @@ class CommitteeController extends Controller
                         'id' => $p->id,
                         'title' => $p->title,
                         'file_path' => $p->file_path,
+                        'version' => $p->version,
                     ])->values()->all(),
                     'state' => ($g->state ?? 0),
                 ])->values()->all();
-
-            $rubrics = Rubric::where('state', 1)
-                ->orderBy('name')
-                ->get()
-                ->map(fn($rubric) => [
-                    'id' => $rubric->id,
-                    'name' => $rubric->name,
-                    'type' => $rubric->type,
-                ]);
         }
         #endregion
 
@@ -133,7 +126,6 @@ class CommitteeController extends Controller
             'committees' => $committeesData,
             'member_types' => $member_types,
             'groups' => $groups,
-            'rubrics' => $rubrics,
             'academicStaff' => $this->mapAcademicStaff($coordinators, $professors),
             'page' => $committees->currentPage(),
             'totalPages' => $committees->lastPage(),
@@ -414,6 +406,13 @@ class CommitteeController extends Controller
                 'members' => ['Não podem haver usuários duplicados.'],
             ]);
         }
+        // Verificar se a versão é de avaliação
+        $paper = Paper::find($request->paper_id);
+        if (!$paper || $paper->version !== 'evaluation') {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'paper_id' => 'Apenas versões de avaliação são permitidas.',
+            ]);
+        }
         #endregion
 
         $coordinator = auth()->user()->coordinator;
@@ -489,11 +488,38 @@ class CommitteeController extends Controller
             ->whereNotNull('evaluated_at')
             ->first();
 
-        // Se não é membro, não pode avaliar
+        // Se já houve atualização, não pode atualizar
         if ($evaluated) {
+            if($request->corrected_paper_id !== $committee->corrected_paper_id) {
+                $request->validate([
+                    'paper_id' => [
+                        'required',
+                        Rule::exists('papers', 'id')->where(function ($query) use ($request) {
+                            $query->where('group_id', $request->group_id);
+                        }),
+                        "unique:committees,paper_id,{$id},id",
+                    ],
+                    'corrected_paper_id' => [
+                        'nullable',
+                        Rule::exists('papers', 'id')->where(function ($query) use ($request) {
+                            $query->where('group_id', $request->group_id);
+                        }),
+                        "unique:committees,corrected_paper_id,{$id},id",
+                        'different:paper_id',
+                    ],
+                ]);
+                $committee->update([
+                    'corrected_paper_id' => $request->corrected_paper_id,
+                ]);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Banca atualizada com sucesso!',
+                    'data' => $this->mapCommittee($committee),
+                ]);
+            }
             return response()->json([
                 'success' => false,
-                'message' => 'A banca já possui possui avaliações realizadas, não é possível atualizar seus dados!',
+                'message' => 'A banca já possui avaliações realizadas. Só é permitido atualizar o trabalho corrigido.',
             ], 422);
         }
 
@@ -506,6 +532,14 @@ class CommitteeController extends Controller
                     $query->where('group_id', $request->group_id);
                 }),
                 "unique:committees,paper_id,{$id},id",
+            ],
+            'corrected_paper_id' => [
+                'nullable',
+                Rule::exists('papers', 'id')->where(function ($query) use ($request) {
+                    $query->where('group_id', $request->group_id);
+                }),
+                "unique:committees,corrected_paper_id,{$id},id",
+                'different:paper_id',
             ],
             'rubrics' => 'required|array|min:2',
             'rubrics.*.id' => 'required|integer|exists:rubrics,id',
@@ -544,11 +578,28 @@ class CommitteeController extends Controller
                 'members' => ['Não podem haver usuários duplicados.'],
             ]);
         }
+        // Verificar se a versão é de avaliação
+        $evaluationPaper = Paper::find($request->paper_id);
+        if (!$evaluationPaper || $evaluationPaper->version !== 'evaluation') {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'paper_id' => 'Apenas versões de avaliação são permitidas.',
+            ]);
+        }
+        // Verificar se a versão é corrigida
+        if($request->corrected_paper_id) {
+            $correctedPaper= Paper::find($request->corrected_paper_id);
+            if (!$correctedPaper || $correctedPaper->version !== 'corrected') {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'corrected_paper_id' => 'Apenas versões corrigidas são permitidas.',
+                ]);
+            }
+        }
         #endregion
 
         $committee->fill([
             'name' => $request['name'],
             'paper_id' => $request['paper_id'],
+            'corrected_paper_id' => $request['corrected_paper_id'],
         ]);
 
         $existingMembers = $committee->members
@@ -699,11 +750,21 @@ class CommitteeController extends Controller
                     'name' => $s->user->name,
                     'state' => (int) $s->user->state,
                 ])->values() ?? [],
-            'paper' => $committee->paper ? [
-                'id' => $committee->paper->id,
-                'title' => $committee->paper->title,
-                'file_path' => $committee->paper->file_path,
-            ] : null,
+            'paper' => [
+                'evaluation' => $committee->paper ? [
+                    'id' => $committee->paper->id,
+                    'title' => $committee->paper->title,
+                    'file_path' => $committee->paper->file_path,
+                    'version' => $committee->paper->version,
+                ] : null,
+
+                'corrected' => $committee->correctedPaper ? [
+                    'id' => $committee->correctedPaper->id,
+                    'title' => $committee->correctedPaper->title,
+                    'file_path' => $committee->correctedPaper->file_path,
+                    'version' => $committee->correctedPaper->version,
+                ] : null,
+            ],
             'rubrics' => $committee?->rubrics?->map(fn($r) => [
                 'id' => $r->rubric->id,
                 'name' => $r->rubric->name,

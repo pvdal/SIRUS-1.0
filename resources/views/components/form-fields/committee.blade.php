@@ -29,10 +29,10 @@
     </div>
     {{-- Trabalho --}}
     <div x-show="groupSelected" class="mt-4">
-        <x-label for="paper_id" value="Trabalho"/>
-        <x-select id="paper_id" class="w-full mt-1" x-model="paper_id" x-bind:disabled="!groupSelected">
+        <x-label for="paper_id_evaluation" value="Trabalho para avaliação"/>
+        <x-select id="paper_id_evaluation" class="w-full mt-1" x-model="paper_id.evaluation" x-bind:disabled="!groupSelected">
             <option value="">Selecione um artigo</option>
-            <template x-for="paper in papers" :key="paper.id">
+            <template x-for="paper in papers.evaluation" :key="paper.id">
                 <option :value="paper.id" x-text="paper.title ?? '-'"></option>
             </template>
         </x-select>
@@ -40,6 +40,21 @@
             <x-form-fields.field-error x-text="errors.paper_id[0]"/>
         </template>
     </div>
+    {{-- Trabalho --}}
+    <template x-if="edit">
+        <div x-show="groupSelected" class="mt-4">
+            <x-label for="paper_id_corrected" value="Trabalho corrigido (opcional)"/>
+            <x-select id="paper_id_corrected" class="w-full mt-1" x-model="paper_id.corrected" x-bind:disabled="!groupSelected">
+                <option value="">Selecione um artigo</option>
+                <template x-for="paper in papers.corrected" :key="paper.id">
+                    <option :value="paper.id" x-text="paper.title ?? '-'"></option>
+                </template>
+            </x-select>
+            <template x-if="errors.corrected_paper_id">
+                <x-form-fields.field-error x-text="errors.corrected_paper_id[0]"/>
+            </template>
+        </div>
+    </template>
 
     {{-- Rubrica
     <div class="pt-4">

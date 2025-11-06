@@ -26,7 +26,7 @@
             <div class="flex-shrink-0 flex justify-start items-center text-gray-800 dark:text-gray-200 py-4 px-6 max-w-full h-[85px] transition duration-150 ease-in-out">
                 {{ $title }}
             </div>
-            <hr class="border-t mb-2 mx-4 border-gray-300 dark:border-gray-700 transition duration-150 ease-in-out"/>
+            <hr class="border-t mb-2 mx-5 border-gray-300 dark:border-gray-700 transition duration-150 ease-in-out"/>
         @endif
 
         {{-- Lista de eixos --}}
@@ -59,11 +59,10 @@
                 </div>
             </div>
         @endif
-        <hr class="border-t mt-auto border-gray-300 dark:border-gray-700 mx-4 transition duration-150 ease-in-out"/>
         {{-- Ações --}}
 
-        <div class="flex flex-wrap gap-3 items-center justify-between px-5 py-2 flex-shrink-0 min-h-[50px]">
-            <div class="me-auto">
+        <div class="flex flex-wrap mt-auto gap-3 items-center justify-between px-5 py-2 flex-shrink-0 min-h-[50px]">
+            <div class="flex me-auto">
                 @if($state)
                     {{ $state }}
                 @endif

@@ -307,6 +307,7 @@ return [
         'first_name' => 'primeiro nome',
         'gender'     => 'gênero',
         'good'       => 'bom',
+        'corrected_paper_id' => 'trabalho corrigido',
         'course_id'  => 'curso',
         'group_id'   => 'grupo',
         'group_rubric' => 'rubrica em grupo',

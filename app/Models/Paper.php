@@ -39,6 +39,11 @@ class Paper extends Model
         return $this->hasOne(Committee::class);
     }
 
+    public function committeeAsCorrected(): HasOne
+    {
+        return $this->hasOne(Committee::class, 'corrected_paper_id');
+    }
+
     // Relacionamento com curso
     public function course(): BelongsTo
     {
