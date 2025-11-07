@@ -1,4 +1,3 @@
-// export function evaluationFormData() { // <<<< VERSÃO ANTIGA
 export function evaluationFormData(initialData) { // <<<< NOVA VERSÃO
 
     return {
@@ -12,6 +11,15 @@ export function evaluationFormData(initialData) { // <<<< NOVA VERSÃO
         students:      initialData.students,
         rubric:        initialData.rubric,
         userCommitteeId: initialData.userCommitteeId,
+
+        // Variaveis para comentarios
+        showCommentModal: false,
+        currentCommentText: '',
+        currentCommentTarget: {
+            axisType: null, // 'group' ou 'individual'
+            criterionId: null,
+            studentId: null // 'RA001' (apenas para individual)
+        },
 
         // --- DADOS PARA CÁLCULO ---
         totalScore: 0.0,
@@ -83,7 +91,12 @@ export function evaluationFormData(initialData) { // <<<< NOVA VERSÃO
 
                     // 2. Validar critérios 'in group'
                     if (axis.type === 'in group') {
-                        if (!this.groupSelections[criterion.id]) {
+
+                        // *** MUDANÇA AQUI ***
+                        // Em vez de '!this.groupSelections[criterion.id]',
+                        // verificamos se a 'grade' é nula ou indefinida.
+                        if (this.groupSelections[criterion.id]?.grade == null) {
+
                             // Se não houver seleção, adiciona ao array de erros
                             missingCriteria.push(`• ${criterion.name} (Grupo)`);
                         }
@@ -92,7 +105,11 @@ export function evaluationFormData(initialData) { // <<<< NOVA VERSÃO
                     else if (axis.type === 'individual') {
                         // Precisa verificar para cada aluno
                         this.students.forEach(student => {
-                            if (!this.individualSelections[student.id] || !this.individualSelections[student.id][criterion.id]) {
+
+                            // *** MUDANÇA AQUI ***
+                            // Usamos optional chaining (?.) e verificamos se a 'grade' é nula ou indefinida.
+                            if (this.individualSelections[student.id]?.[criterion.id]?.grade == null) {
+
                                 // Se não houver seleção para este aluno, adiciona ao erro
                                 missingCriteria.push(`• ${criterion.name} (Aluno: ${student.name})`);
                             }
@@ -162,7 +179,63 @@ export function evaluationFormData(initialData) { // <<<< NOVA VERSÃO
         clearWarningFields() {
             this.warningType = '';
             this.warningContent = '';
-        }
+        },
+
+        //Funções para os comentários
+        openCommentModal(axisType, criterionId, studentId = null) {
+            this.showCommentModal = true;
+            this.currentCommentTarget = { axisType, criterionId, studentId };
+
+            // Carrega o comentário existente (se houver) para dentro do textarea
+            let existingComment = '';
+            try {
+                if (axisType === 'group') {
+                    existingComment = this.groupSelections[criterionId]?.comment || '';
+                } else {
+                    existingComment = this.individualSelections[studentId]?.[criterionId]?.comment || '';
+                }
+            } catch (e) {
+                console.error("Erro ao carregar comentário:", e);
+            }
+            this.currentCommentText = existingComment;
+
+            if (this.isReadOnly) {
+                this.isCommentReadOnly = true; // cria essa flag
+            } else {
+                this.isCommentReadOnly = false;
+            }
+        },
+
+        saveComment() {
+            const { axisType, criterionId, studentId } = this.currentCommentTarget;
+
+            if (axisType === 'group') {
+                // Garante que o objeto 'groupSelections[criterionId]' exista
+                if (typeof this.groupSelections[criterionId] !== 'object' || this.groupSelections[criterionId] === null) {
+                    this.groupSelections[criterionId] = { grade: this.groupSelections[criterionId] || null };
+                }
+                this.groupSelections[criterionId].comment = this.currentCommentText;
+
+            } else if (axisType === 'individual') {
+                // Garante que os objetos aninhados existam
+                if (!this.individualSelections[studentId]) {
+                    this.individualSelections[studentId] = {};
+                }
+                if (!this.individualSelections[studentId][criterionId]) {
+                    this.individualSelections[studentId][criterionId] = {};
+                }
+                this.individualSelections[studentId][criterionId].comment = this.currentCommentText;
+            }
+
+            // Fecha e limpa o modal
+            this.closeCommentModal();
+        },
+
+        closeCommentModal() {
+            this.showCommentModal = false;
+            this.currentCommentText = '';
+            this.currentCommentTarget = { axisType: null, criterionId: null, studentId: null };
+        },
 
     }
 

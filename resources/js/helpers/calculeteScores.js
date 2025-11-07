@@ -20,7 +20,7 @@ export function calculateScores(rubric, students, groupSelections, individualSel
         const axisAmount = axis.amount;
 
         axis.criteria.forEach(criterion => {
-            const grade = groupSelections?.[criterion.id];
+            const grade = groupSelections?.[criterion.id]?.grade ?? 0;
             if (grade) axisSum += parseFloat(grade);
         });
 
@@ -46,7 +46,7 @@ export function calculateScores(rubric, students, groupSelections, individualSel
             const axisAmount = axis.amount;
 
             axis.criteria.forEach(criterion => {
-                const grade = studentSelections?.[criterion.id];
+                const grade = studentSelections?.[criterion.id]?.grade ?? 0;
                 if (grade) axisSum += parseFloat(grade);
             });
 

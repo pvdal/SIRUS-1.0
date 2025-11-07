@@ -4,6 +4,19 @@ export function evaluationResultTabs(initialData) {
         consolidatedResults: [],
         activeTabIndex:0,
 
+        groupSelections: {},
+        individualSelections: {},
+
+        // Variaveis para comentarios
+        showCommentModal: false,
+        currentCommentText: '',
+        currentCommentTarget: {
+            axisType: null, // 'group' ou 'individual'
+            criterionId: null,
+            studentId: null // 'RA001' (apenas para individual)
+        },
+        isCommentReadOnly: true,
+
         init() {
             // 1. Calcula as notas de cada avaliador
             this.evaluations.forEach(evaluation => {
@@ -82,5 +95,50 @@ export function evaluationResultTabs(initialData) {
 
             this.consolidatedResults = results;
         },
+
+        //Funções para comentários
+        openCommentModal(axisType, criterionId, studentId = null) {
+            // Encontra a avaliação que está ativa no separador (tab)
+            const activeEvaluation = this.evaluations[this.activeTabIndex];
+
+            // Se não encontrar uma avaliação ativa, não faz nada
+            if (!activeEvaluation) {
+                console.error("Não foi possível encontrar uma avaliação ativa.");
+                return;
+            }
+
+            this.showCommentModal = true;
+            this.currentCommentTarget = { axisType, criterionId, studentId };
+
+            // Carrega o comentário existente (se houver) para dentro do textarea
+            let existingComment = '';
+            try {
+                if (axisType === 'group') {
+                    // *** CORREÇÃO AQUI ***
+                    // Procura o comentário dentro da 'activeEvaluation'
+                    existingComment = activeEvaluation.groupSelections?.[criterionId]?.comment ?? '';
+
+                } else {
+                    // *** CORREÇÃO AQUI ***
+                    // Procura o comentário dentro da 'activeEvaluation'
+                    existingComment = activeEvaluation.individualSelections[studentId]?.[criterionId]?.comment || '';
+                }
+            } catch (e) {
+                console.error("Erro ao carregar comentário:", e);
+            }
+
+            this.currentCommentText = existingComment;
+
+            console.log('Comentário carregado:', this.currentCommentText);
+            console.log('Tipo:', axisType);
+
+            // this.isCommentReadOnly = !!this.isReadOnly;
+        },
+
+        closeCommentModal() {
+            this.showCommentModal = false;
+            this.currentCommentText = '';
+            this.currentCommentTarget = { axisType: null, criterionId: null, studentId: null };
+        }
     };
 }

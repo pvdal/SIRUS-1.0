@@ -114,19 +114,28 @@ class EvaluationController extends Controller
         // 4. Formata as AVALIAÇÕES COMPLETAS em um array para as TABS
         $data['evaluations'] = $completedEvaluations->map(function ($eval) {
             // Formata avaliações de GRUPO [criteria_id => grade]
-            $groupSels = $eval->groupEvaluations->pluck('grade', 'criteria_id');
+//            $groupSels = $eval->groupEvaluations->pluck('grade', 'criteria_id');
+            $groupSels = $eval->groupEvaluations->mapWithKeys(function($ge) {
+                return [$ge->criteria_id => ['grade' => (float)$ge->grade, 'comment' => $ge->comment]];
+            });
 
             // Formata avaliações INDIVIDUAIS [ra => [criteria_id => grade]]
             $indivSels = [];
             foreach ($eval->individualEvaluations as $iEval) {
-                $indivSels[$iEval->ra][$iEval->criteria_id] = (float)$iEval->grade; // Converte para número
+//                $indivSels[$iEval->ra][$iEval->criteria_id] = (float)$iEval->grade; // Converte para número
+                $indivSels[$iEval->ra][$iEval->criteria_id] = [
+                    'grade' => (float)$iEval->grade,
+                    'comment' => $iEval->comment,
+                ];
             }
+
+
 
             return [
                 'evaluatorName' => $eval->user->name,
                 'evaluatedAt' => $eval->evaluated_at->format('d/m/Y \à\s H:i'),
-                'groupSelections' => (object)$groupSels,
-                'individualSelections' => (object)$indivSels,
+                'groupSelections' => $groupSels,
+                'individualSelections' => $indivSels,
             ];
         });
 
@@ -156,11 +165,18 @@ class EvaluationController extends Controller
 
         if ($data['isReadOnly']) {
             $data['groupSelections'] = $userCommittee->groupEvaluations
-                ->pluck('grade', 'criteria_id');
+                ->mapWithKeys(fn($e) => [
+                    $e->criteria_id => [
+                        'grade' => (float)$e->grade,
+                        'comment' => $e->comment,
+                    ]
+                ]);
 
             $indivSels = [];
             foreach ($userCommittee->individualEvaluations as $eval) {
-                $indivSels[$eval->ra][$eval->criteria_id] = (float)$eval->grade;
+                $indivSels[$eval->ra][$eval->criteria_id] = [
+                    'grade'=>(float)$eval->grade,
+                    'comment'=>$eval->comment,];
             }
             $data['individualSelections'] = (object)$indivSels;
         }
@@ -272,6 +288,7 @@ class EvaluationController extends Controller
             'paperProject'  => $paper->project,
             'students'      => $students,
             'gradeLevels'   => $gradeLevels,
+            'committeeName' => $committee->name,
             'rubric'        => [
                 'id' => $committee->id,
                 'nameGroup' => $groupRubric->name,
@@ -299,9 +316,12 @@ class EvaluationController extends Controller
         $validator = Validator::make($request->all(), [
             'user_committee_id' => 'required|integer|exists:user_committees,id',
             'group_evaluations' => 'nullable|array',
-            'group_evaluations.*' => 'numeric|in:2,6,8,10', // Garante que as notas são as permitidas
+            'group_evaluations.*.grade' => 'numeric|in:2,6,8,10', // Garante que as notas são as permitidas
+            'group_evaluations.*.comment' => 'nullable|string|max:1000',
+
             'individual_evaluations' => 'nullable|array',
-            'individual_evaluations.*.*' => 'numeric|in:2,6,8,10', // Garante as notas
+            'individual_evaluations.*.*.grade' => 'numeric|in:0,2,6,8,10', // Garante as notas
+            'individual_evaluations.*.*.comment' => 'nullable|string|max:1000',
         ]);
 
         if ($validator->fails()) {
@@ -329,14 +349,13 @@ class EvaluationController extends Controller
 
             // A. Salvar Avaliações em GRUPO
             if (!empty($validatedData['group_evaluations'])) {
-                foreach ($validatedData['group_evaluations'] as $criteria_id => $grade) {
+                foreach ($validatedData['group_evaluations'] as $criteria_id => $selection) {
                     GroupEvaluation::updateOrCreate(
                         [ // Condições para encontrar (se já existir)
                             'user_committee_id' => $userCommitteeId,
                             'criteria_id' => $criteria_id,
-                        ],
-                        [ // Valores para atualizar ou criar
-                            'grade' => $grade
+                            'grade' => $selection['grade'],
+                            'comment' => $selection['comment'] ?? null,
                         ]
                     );
                 }
@@ -345,15 +364,14 @@ class EvaluationController extends Controller
             // B. Salvar Avaliações INDIVIDUAIS
             if (!empty($validatedData['individual_evaluations'])) {
                 foreach ($validatedData['individual_evaluations'] as $student_ra => $criteria) {
-                    foreach ($criteria as $criteria_id => $grade) {
+                    foreach ($criteria as $criteria_id => $selection) {
                         IndividualEvaluation::updateOrCreate(
                             [ // Condições
                                 'user_committee_id' => $userCommitteeId,
                                 'ra' => $student_ra,
                                 'criteria_id' => $criteria_id,
-                            ],
-                            [ // Valores
-                                'grade' => $grade
+                                'grade' => $selection['grade'],
+                                'comment' => $selection['comment']?? null,
                             ]
                         );
                     }
