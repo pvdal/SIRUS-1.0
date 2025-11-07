@@ -38,13 +38,14 @@
             </template>
 
             <template x-if="!isCommentReadOnly">
-                <x-secondary-button @click="closeCommentModal()">Cancelar</x-secondary-button>
-
-                @can('evaluate')
-                    <x-secondary-button @click="saveComment()" class="bg-blue-600 text-white hover:bg-blue-700">
-                        Salvar Comentário
-                    </x-secondary-button>
-                @endcan
+                <div>
+                    @can('evaluate')
+                        <x-secondary-button @click="saveComment()" class="bg-blue-600 text-white hover:bg-blue-700">
+                            Salvar Comentário
+                        </x-secondary-button>
+                    @endcan
+                    <x-danger-button @click="closeCommentModal()">Cancelar</x-danger-button>
+                </div>
             </template>
         </div>
     </div>

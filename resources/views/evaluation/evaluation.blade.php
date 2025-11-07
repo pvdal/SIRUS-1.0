@@ -324,7 +324,38 @@
                         </x-slot>
                     </x-warning-modal>
 
-                    <x-comment-modal/>
+                    {{--<x-comment-modal/>--}}
+
+                    <x-custom-modal x-model="showCommentModal" maxWidth="lg">
+                        <x-slot name="title">
+                            <span x-show="!isCommentReadOnly">Adicionar Comentário</span>
+                            <span x-show="isCommentReadOnly">Ver Comentário</span>
+                        </x-slot>
+                        <x-slot name="content">
+                            <label for="comment_text" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Comentário:</label>
+                            <textarea id="comment_text" x-model="currentCommentText" rows="5"
+                               :readonly="isCommentReadOnly"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+                               :class="{ 'bg-gray-100 dark:bg-gray-700/50': isCommentReadOnly }"
+                            ></textarea>
+                        </x-slot>
+                        <x-slot name="footer">
+                            <template x-if="isCommentReadOnly">
+                                <x-danger-button @click="closeCommentModal()">Fechar</x-danger-button>
+                            </template>
+
+                            <template x-if="!isCommentReadOnly">
+                                <div>
+                                    @can('evaluate')
+                                        <x-secondary-button @click="saveComment()" class="bg-blue-600 text-white hover:bg-blue-700">
+                                            Salvar Comentário
+                                        </x-secondary-button>
+                                    @endcan
+                                    <x-danger-button @click="closeCommentModal()">Cancelar</x-danger-button>
+                                </div>
+                            </template>
+                        </x-slot>
+                    </x-custom-modal>
                     {{--                        FIM MODAL DE AVISO--}}
 
 {{--                    --}}{{-- MODAL COMENTARIOS --}}

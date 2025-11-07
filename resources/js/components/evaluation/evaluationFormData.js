@@ -20,6 +20,7 @@ export function evaluationFormData(initialData) { // <<<< NOVA VERSÃO
             criterionId: null,
             studentId: null // 'RA001' (apenas para individual)
         },
+        isCommentReadOnly: '',
 
         // --- DADOS PARA CÁLCULO ---
         totalScore: 0.0,
@@ -199,11 +200,7 @@ export function evaluationFormData(initialData) { // <<<< NOVA VERSÃO
             }
             this.currentCommentText = existingComment;
 
-            if (this.isReadOnly) {
-                this.isCommentReadOnly = true; // cria essa flag
-            } else {
-                this.isCommentReadOnly = false;
-            }
+            this.isCommentReadOnly = !!this.isReadOnly;
         },
 
         saveComment() {

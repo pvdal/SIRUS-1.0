@@ -24,7 +24,7 @@ export function groupsData() {
             file: null,          // Instância de File do input
             url: null,           // ObjectURL do arquivo
             year: new Date().getFullYear(), // Ano padrão
-            semester: 1,         // Semestre padrão
+            semester: new Date().getMonth() < 6 ? 1 : 2, // Semestre padrão
             project: 1,          // Projeto padrão
             version: 'evaluation', // Versão padrão ('evaluation' ou 'corrected')
             course: '',  // ID do curso selecionado
@@ -116,7 +116,7 @@ export function groupsData() {
                         file: null,
                         url: null,
                         year: new Date().getFullYear(),
-                        semester: 1,
+                        semester: new Date().getMonth() < 6 ? 1 : 2,
                         project: 1,
                         version: 'evaluation',
                         course: null
@@ -311,7 +311,7 @@ export function groupsData() {
                 file: null,
                 url: null,
                 year: new Date().getFullYear(),
-                semester: 1,
+                semester: new Date().getMonth() < 6 ? 1 : 2,
                 project: 1,
                 version: 'evaluation',
                 course: null

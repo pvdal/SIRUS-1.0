@@ -508,6 +508,22 @@ class CommitteeController extends Controller
                         'different:paper_id',
                     ],
                 ]);
+                // Verificar se a versão é de avaliação
+                $evaluationPaper = Paper::find($request->paper_id);
+                if (!$evaluationPaper || $evaluationPaper->version !== 'evaluation') {
+                    throw \Illuminate\Validation\ValidationException::withMessages([
+                        'paper_id' => 'Apenas versões de avaliação são permitidas.',
+                    ]);
+                }
+                // Verificar se a versão é corrigida
+                if($request->corrected_paper_id) {
+                    $correctedPaper= Paper::find($request->corrected_paper_id);
+                    if (!$correctedPaper || $correctedPaper->version !== 'corrected') {
+                        throw \Illuminate\Validation\ValidationException::withMessages([
+                            'corrected_paper_id' => 'Apenas versões corrigidas são permitidas.',
+                        ]);
+                    }
+                }
                 $committee->update([
                     'corrected_paper_id' => $request->corrected_paper_id,
                 ]);

@@ -84,6 +84,19 @@ class RubricController extends Controller
             ]);
         }
 
+        // Busca critérios de todos os eixos informados
+        $allCriteria = \App\Models\Axis::whereIn('id', collect($validatedData['axes'])->pluck('id'))
+            ->with('criteria:id') // assumindo relação Axis->criteria()
+            ->get()
+            ->pluck('criteria.*.id')
+            ->flatten();
+        // Retorna exceção caso hajam eixos com critérios iguais
+        if ($allCriteria->duplicates()->isNotEmpty()) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'axes' => 'Existem critérios repetidos em eixos diferentes.'
+            ]);
+        }
+
         // 2. TRANSAÇÃO: Garante que a operação seja "tudo ou nada".
         try {
             $rubric = DB::transaction(function () use ($validatedData) {
