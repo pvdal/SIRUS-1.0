@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PaperController extends Controller
 {
-    public function showPaper($filepath): StreamedResponse
+    public function showPaper($filepath): \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
     {
         $path = "papers/$filepath";
         $paper = Paper::where('file_path', $path)->first();
@@ -32,10 +32,11 @@ class PaperController extends Controller
         $filename = basename($filepath); // pega só o arquivo, sem pastas
         $displayName = preg_replace('/_[a-f0-9]{10}(\.pdf)$/', '$1', $filename);
 
-        return Storage::disk('public')->response($path, null, [
+        // Retorna resposta com X-Accel-Redirect para Nginx
+        return response('', 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="' . $displayName . '"',
-            'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+            'X-Accel-Redirect' => "/internal_papers/$filepath",
         ]);
     }
 }

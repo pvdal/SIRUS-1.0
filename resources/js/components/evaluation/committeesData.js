@@ -56,6 +56,7 @@ export function committeesData() {
         activatingIds: [],
         inactivatingIds: [],
         committees: [],
+        paperOptions: {},
         newCommittees: [],
         coordinators: [],
         professors: [],

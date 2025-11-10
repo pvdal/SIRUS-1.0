@@ -102,6 +102,47 @@
                             >
                                 <x-lucide-file-text class="w-4 h-4 text-gray-600 dark:text-gray-200 transition duration-150 ease-in-out flex-shrink-0"/>
                                 <span class="text-sm text-gray-800 dark:text-gray-200 transition duration-150 ease-in-out font-semibold truncate" x-text="item.papers[item.papers.length -1]?.title"></span>
+                                <x-slot name="optionsButton">
+                                    <button
+                                        type="button"
+                                        class="flex-shrink-0 flex items-center max-w-full justify-start rounded-md gap-2 px-3 py-2 hover:bg-gray-200 dark:hover:bg-gray-600/30 dark:hover:border-gray-700 transition duration-150 ease-in-out cursor-pointer"
+                                        x-on:click.stop="paperOptions[item.id] = !paperOptions[item.id]"
+                                    >
+                                        <x-lucide-ellipsis-vertical
+                                            class="w-4 h-4 text-gray-600 dark:text-gray-200 flex-shrink-0 ms-auto transition duration-150 ease-in-out"/>
+                                    </button>
+                                </x-slot>
+                                <x-slot name="actions">
+                                    <div x-show="paperOptions[item.id]" class="flex flex-wrap w-full justify-around">
+                                        <button
+                                            type="button"
+                                            class="flex items-center min-w-0 max-w-full w-1/3 rounded-md justify-center gap-2 px-4 py-1 hover:bg-gray-200 dark:hover:bg-gray-600/30 dark:hover:border-gray-700 transition duration-150 ease-in-out cursor-pointer"
+                                            x-on:click="showPaper(`${item.papers[item.papers.length -1]?.file_path}`)"
+                                            title="Visualizar"
+                                        >
+                                            <x-lucide-eye class="w-4 h-4 text-gray-600 dark:text-gray-200 flex-shrink-0 transition duration-150 ease-in-out"/>
+                                            <span class="hidden xs:block text-sm text-gray-800 dark:text-gray-200 transition duration-150 ease-in-out font-medium truncate">Visualizar</span>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="flex items-center min-w-0 max-w-full w-1/3 rounded-md justify-center gap-2 px-4 py-1 hover:bg-gray-200 dark:hover:bg-gray-600/30 dark:hover:border-gray-700 transition duration-150 ease-in-out cursor-pointer"
+                                            x-on:click="window.open(item.papers[item.papers.length -1]?.file_path, '_blank')"
+                                            title="Nova aba"
+                                        >
+                                            <x-lucide-external-link class="w-4 h-4 text-gray-600 dark:text-gray-200 flex-shrink-0 transition duration-150 ease-in-out"/>
+                                            <span class="hidden xs:block text-sm text-gray-800 dark:text-gray-200 transition duration-150 ease-in-out font-medium truncate">Nova aba</span>
+                                        </button>
+                                        <a
+                                            :href="item.papers[item.papers.length -1]?.file_path"
+                                            download
+                                            class="flex items-center min-w-0 max-w-full w-1/3 rounded-md justify-center gap-2 px-4 py-1 hover:bg-gray-200 dark:hover:bg-gray-600/30 dark:hover:border-gray-700 transition duration-150 ease-in-out cursor-pointer"
+                                            title="Baixar"
+                                        >
+                                            <x-lucide-download class="w-4 h-4 text-gray-600 dark:text-gray-200 flex-shrink-0 transition duration-150 ease-in-out"/>
+                                            <span class="hidden xs:block text-sm text-gray-800 dark:text-gray-200 transition duration-150 ease-in-out font-medium truncate">Baixar</span>
+                                        </a>
+                                    </div>
+                                </x-slot>
                             </x-card.link-button>
                         </template>
                     </x-slot>

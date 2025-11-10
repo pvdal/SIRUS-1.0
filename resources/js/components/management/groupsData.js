@@ -32,6 +32,7 @@ export function groupsData() {
         },
         fileObjectUrl: null,
         papers: [], // Guarda todos os trabalhos do grupo
+        paperOptions: {},
         paperExpanded: {}, // Controla a expansão do menu accordion
         dropAll() { // Colapsa todos os menus da array papers
             for (let key in this.paperExpanded) {

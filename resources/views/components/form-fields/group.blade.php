@@ -253,12 +253,36 @@
                                     <div class="flex items-center mt-auto">
                                         <button
                                             class="flex justify-center items-center pr-4 min-w-[127px] whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 rounded-lg
-                                           text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 focus:ring-1 focus:ring-secondary-blue bg-white dark:!bg-gray-700
-                                           focus:border-secondary-blue cursor-pointer mt-auto"
+                                            text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 focus:ring-1 focus:ring-secondary-blue bg-white dark:!bg-gray-700
+                                            focus:border-secondary-blue cursor-pointer mt-auto"
                                             x-on:click="paper.file_path ? showPaper(`${paper.file_path}`) : window.open(paper.url, '_blank')"
                                         >
                                             Visualizar
                                         </button>
+                                    </div>
+
+                                    <div class="flex items-center mt-auto">
+                                        <button
+                                            class="flex justify-center items-center pr-4 min-w-[127px] whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 rounded-lg
+                                            text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 focus:ring-1 focus:ring-secondary-blue bg-white dark:!bg-gray-700
+                                            focus:border-secondary-blue cursor-pointer mt-auto"
+                                            x-on:click="$el.blur(); window.open(paper.file_path, '_blank');"
+                                        >
+                                            Nova aba
+                                        </button>
+                                    </div>
+
+                                    <div class="flex items-center mt-auto">
+                                        <a
+                                            class="flex justify-center items-center pr-4 min-w-[127px] whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 rounded-lg
+                                            text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 focus:ring-1 focus:ring-secondary-blue bg-white dark:!bg-gray-700
+                                            focus:border-secondary-blue cursor-pointer mt-auto"
+                                            x-on:click="$el.blur();"
+                                            :href="paper.file_path"
+                                            download
+                                        >
+                                            Baixar
+                                        </a>
                                     </div>
                                 </div>
 
