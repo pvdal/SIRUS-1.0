@@ -100,6 +100,15 @@ input[type=number] {
     }
 }
 
+/* Oculta a barra de rolagem visualmente */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none; /* IE e Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
 /**********************************
    Formatação de tabelas: moldura
 ***********************************/

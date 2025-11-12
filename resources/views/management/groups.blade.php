@@ -30,9 +30,8 @@
     >
         {{-- Div exibida enquanto os dados não chegam no front --}}
         {{-- Estou chamando fora devido a necessidade de remover o modal da página do DOM para exibir o PDF com scroll --}}
-        <x-feedback.loading/>
         {{-- Grupos cadastrados --}}
-        <template x-if="showGroupCards">
+        <div x-show="showGroupCards">
             <x-main-content>
                 {{-- Menu utilitário das tabelas --}}
                 <template x-if="groups">
@@ -53,6 +52,8 @@
                         :courses="$courses"
                     />
                 </template>
+                {{-- Div exibida enquanto os dados não chegam no front --}}
+                <x-feedback.loading/>
                 {{-- Div exibida caso não haja registros no banco --}}
                 <template x-if="isEmpty && !loading">
                     <x-feedback.empty-state/>
@@ -66,7 +67,7 @@
                     />
                 </template>
             </x-main-content>
-        </template>
+        </div>
         {{-- Trabalhos cadastrados --}}
         <template x-if="showGroupPaper">
             <div class="relative">

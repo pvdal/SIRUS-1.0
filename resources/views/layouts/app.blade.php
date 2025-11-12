@@ -88,8 +88,8 @@
     <body class="font-sans antialiased"
           @if(config('appearance.switch_theme'))
               x-data="themeHandler()"
-          x-bind:class="theme"
-          x-init="init()"
+              x-bind:class="theme"
+              x-init="init()"
           @endif
     >
         @if(config('accessibility.daltonism'))

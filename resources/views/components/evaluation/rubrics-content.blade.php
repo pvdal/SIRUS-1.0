@@ -189,11 +189,11 @@
                     <x-slot name="paperAction">
                         <x-card.link-button
                             x-on:click="
-                        showRubricModel(item.id)
-                    "
+                                showRubricModel(item.id)
+                            "
                         >
                             <x-lucide-file-text class="w-4 h-4 text-gray-600 dark:text-gray-200 transition duration-150 ease-in-out flex-shrink-0"/>
-                            <span class="text-sm text-gray-800 dark:text-gray-200 font-semibold truncate">Ver Modelo</span>
+                            <span class="text-sm text-gray-800 dark:text-gray-200 transition duration-150 ease-in-out font-semibold truncate">Ver Modelo</span>
                         </x-card.link-button>
                     </x-slot>
 
@@ -218,7 +218,7 @@
 
                         <template x-if="item.state">
                             <x-danger-button type="button" class="min-w-[98px]" x-bind:disabled="isInactivating(item.id)"
-                                             x-on:click="warning('confirmação', item.name, item.id, 'inativar');" >
+                                x-on:click="warning('confirmação', item.name, item.id, 'inativar');" >
                                 <template x-if="isInactivating(item.id)">
                                     <span>Inativando...</span>
                                 </template>
@@ -230,10 +230,10 @@
 
                         <template x-if="!item.state">
                             <x-management.activate-button type="button" class="min-w-[98px]" x-bind:disabled="isActivating(item.id)"
-                                                          x-on:click="
-                        warning('confirmação', item.name, item.id, 'ativar');
-                        $el.blur();
-                    "
+                                x-on:click="
+                                    warning('confirmação', item.name, item.id, 'ativar');
+                                    $el.blur();
+                                "
                             >
                                 <template x-if="isActivating(item.id)">
                                     <span>Ativando...</span>
