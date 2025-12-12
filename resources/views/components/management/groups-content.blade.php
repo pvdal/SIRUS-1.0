@@ -1,44 +1,47 @@
 <div>
     {{-- Modal de cadastro --}}
-    <x-custom-modal x-model="showCreateModal" maxWidth="3xl">
-        <x-slot name="title">
-            <template x-if="!edit">
-                <span>Cadastrar novo grupo</span>
-            </template>
-            <template x-if="edit">
-                <span>Atualizar os dados do grupo</span>
-            </template>
-        </x-slot>
+    <template x-if="showGroupCards">
+        <x-custom-modal x-model="showCreateModal" maxWidth="3xl">
+            <x-slot name="title">
+                <template x-if="!edit">
+                    <span>Cadastrar novo grupo</span>
+                </template>
+                <template x-if="edit">
+                    <span>Atualizar os dados do grupo</span>
+                </template>
+            </x-slot>
 
-        <x-slot name="content">
-            {{-- Banner de mensagem --}}
-            <x-custom-banner/>
-            {{-- Formulário --}}
-            <div>
-                <x-form-fields.group :courses="$courses" />
-            </div>
-        </x-slot>
+            <x-slot name="content">
+                {{-- Banner de mensagem --}}
+                <x-custom-banner/>
+                {{-- Formulário --}}
+                <div>
+                    <x-form-fields.group :courses="$courses" />
+                </div>
+            </x-slot>
 
-        <x-slot name="footer">
-            <x-secondary-button type="button" x-bind:disabled="saving"
-                x-on:click="
+            <x-slot name="footer">
+                <x-secondary-button type="button" x-bind:disabled="saving"
+                                    x-on:click="
                     saveGroup();
                     $el.blur();
                 "
-            >
-                <span x-show="!saving">Salvar</span>
-                <span x-show="saving">Salvando...</span>
-            </x-secondary-button>
-            <x-danger-button type="button"
-                x-on:click="
+                >
+                    <span x-show="!saving">Salvar</span>
+                    <span x-show="saving">Salvando...</span>
+                </x-secondary-button>
+                <x-danger-button type="button"
+                                 x-on:click="
                     showCreateModal = false;
                     clearFields('store');
                 "
-            >
-                Fechar
-            </x-danger-button>
-        </x-slot>
-    </x-custom-modal>
+                >
+                    Fechar
+                </x-danger-button>
+            </x-slot>
+        </x-custom-modal>
+    </template>
+
     {{-- Component modal para avisos --}}
     <x-warning-modal x-model="showWarningModal" @close="showWarningModal = false; clearFields('warning');" :maxWidth="'sm'" :warningType="'warningType'">
         <x-slot name="title">

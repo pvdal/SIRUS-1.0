@@ -14,8 +14,7 @@ class Coordinator extends Model
 
     protected $fillable = [
         'user_id',
-        'email',
-        'name',
+        'education'
     ];
 
     protected $casts = [

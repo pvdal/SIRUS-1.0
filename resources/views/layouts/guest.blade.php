@@ -19,6 +19,9 @@
             {{-- script dos filtros de daltonismo --}}
             <script>
                 (() => {
+                    if (!localStorage.getItem('daltonism_enabled')) {
+                        localStorage.setItem('daltonism_enabled', 'true');
+                    }
                     const filters = {
                         normal: 'none',
                         achromatomaly: 'url(#achromatomaly)',
@@ -31,41 +34,60 @@
                         tritanopia: 'url(#tritanopia)',
                     };
 
-                    // Obtém filtro salvo imediatamente
-                    const savedFilter = localStorage.getItem('daltonismFilter') || 'normal';
-
-                    // Se o app ainda não existir, tenta aplicar assim que ele for encontrado
-                    const applyFilter = () => {
+                    const applyFilterToApp = (filter) => {
                         const el = document.getElementById('app');
-                        if (!el) return requestAnimationFrame(applyFilter);
-                        el.style.filter = filters[savedFilter] || 'none';
+                        if (!el) return requestAnimationFrame(() => applyFilterToApp(filter));
+                        el.style.filter = filters[filter] || 'none';
                     };
 
-                    applyFilter();
+                    {{-- 1. Aplicar filtro salvo imediatamente --}}
+                    const savedFilter = localStorage.getItem('daltonismFilter') || 'normal';
+                    applyFilterToApp(savedFilter);
 
-                    // Se o select existir mais tarde, adiciona o listener
+                    {{-- 2. Sincroniza todos os selects de daltonismo --}}
+                    const syncSelects = (filter) => {
+                        document.querySelectorAll('[data-daltonism-select]').forEach(sel => {
+                            sel.value = filter;
+                        });
+                    };
+
+                    {{-- 3. Aguarda load para associar listeners em TODOS os selects --}}
                     window.addEventListener('load', () => {
-                        const select = document.getElementById('type-daltonism');
-                        if (!select) return;
-                        select.value = savedFilter;
-                        select.addEventListener('change', () => {
-                            const selected = select.value;
-                            document.getElementById('app').style.filter = filters[selected] || 'none';
-                            localStorage.setItem('daltonismFilter', selected);
+                        const selects = document.querySelectorAll('[data-daltonism-select]');
+                        if (!selects.length) return;
+
+                        {{-- aplica valor inicial a todos --}}
+                        syncSelects(savedFilter);
+
+                        selects.forEach(select => {
+                            select.addEventListener('change', () => {
+                                const selected = select.value;
+
+                                {{-- aplica no app --}}
+                                applyFilterToApp(selected);
+
+                                {{-- salva --}}
+                                localStorage.setItem('daltonismFilter', selected);
+
+                                {{-- sincroniza os outros selects --}}
+                                syncSelects(selected);
+                            });
                         });
                     });
                 })();
             </script>
         @endif
+
     </head>
     <body>
         @if(config('accessibility.daltonism'))
             <x-accessibility.daltonism-filters/>
             <x-accessibility.daltonism-select/>
         @endif
-        <div id="app" class="font-sans text-gray-900 antialiased">
+
+        <main id="app" class="font-sans text-gray-900 antialiased">
             {{ $slot }}
-        </div>
+        </main>
 
         @livewireScripts
         @stack('scripts')
@@ -82,6 +104,11 @@
                 </div>
                 <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
                 <script>
+                    (() => {
+                        if (!localStorage.getItem('vlibras_enabled')) {
+                            localStorage.setItem('vlibras_enabled', 'true');
+                        }
+                    })();
                     document.addEventListener("DOMContentLoaded", () => {
                         new window.VLibras.Widget('https://vlibras.gov.br/app');
                     });

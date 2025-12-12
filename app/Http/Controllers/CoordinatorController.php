@@ -42,6 +42,7 @@ class CoordinatorController extends Controller
                 'user_id' => $coordinator->user_id,
                 'name' => $coordinator->user->name,
                 'email' => $coordinator->user->email,
+                'education' => $coordinator->education,
                 'state' => (int) $coordinator->user->state,
                 'created_at' => $coordinator->created_at,
                 'updated_at' => $coordinator->updated_at,
@@ -106,6 +107,7 @@ class CoordinatorController extends Controller
                 'user_id' => $coordinator->user_id,
                 'name' => $coordinator->user->name,
                 'email' => $coordinator->user->email,
+                'education' => $coordinator->education,
                 'state' => ($coordinator->user->state ?? 0),
                 'created_at' => $coordinator->created_at,
                 'updated_at' => $coordinator->updated_at,
@@ -131,6 +133,7 @@ class CoordinatorController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email:rfc|unique:users,email',
+            'education' => 'nullable|string|max:255',
         ]);
 
         $user = null;
@@ -152,6 +155,7 @@ class CoordinatorController extends Controller
             // Cria o coordenador vinculado ao usuário
             $coordinator = Coordinator::create([
                 'user_id' => $user->id,
+                'education' => $validated['education'],
             ]);
 
             // Envio da senha para o usuário cadastrado pelo e-mail por fila no banco
@@ -168,6 +172,7 @@ class CoordinatorController extends Controller
                 'user_id' => $coordinator->user_id,
                 'name' => $user->name,
                 'email' => $user->email,
+                'education' => $coordinator->education,
                 'state' => ($user->state ?? 0),
                 'created_at' => $coordinator->created_at,
                 'updated_at' => $coordinator->updated_at,
@@ -186,6 +191,7 @@ class CoordinatorController extends Controller
         $request->validate([
             'name'  => 'required|string|max:255',
             'email' => "required|email:rfc|unique:users,email,{$id},id",
+            'education'  => 'nullable|string|max:255',
         ]);
 
         $coordinator = Coordinator::with(
@@ -203,6 +209,7 @@ class CoordinatorController extends Controller
         $coordinator->user->fill([
             'name' => $request['name'],
             'email' => $request['email'],
+            'education' => $request['education'],
         ]);
 
         // Só salva se houver mudanças
@@ -219,6 +226,7 @@ class CoordinatorController extends Controller
                 'user_id' => $coordinator->user_id,
                 'name' => $coordinator->user->name,
                 'email' => $coordinator->user->email,
+                'education' => $coordinator->education,
                 'state' => (int) $coordinator->user->state,
                 'created_at' => $coordinator->created_at,
                 'updated_at' => $coordinator->updated_at,

@@ -51,10 +51,7 @@ export async function saveData({
             if (contexto[campoLista].length > 10) contexto[campoLista].pop();
         }
 
-
         if (callbackSucesso) callbackSucesso(response.data);
-
-
 
         // Retorna o objeto salvo para uso na view
         return novo;

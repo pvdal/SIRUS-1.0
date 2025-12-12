@@ -9,5 +9,5 @@ return [
     | Controle da funcionalidade de alteração de tema.
     |
     */
-    'switch_theme' => false,
+    'switch_theme' => true,
 ];

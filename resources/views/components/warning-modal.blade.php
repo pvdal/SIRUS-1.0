@@ -37,36 +37,34 @@
     >
         <div>
             <div class="px-8 py-5 xs:px-5">
-                <div class="xs:flex xs:items-start">
-                    <div class="mt-3 text-center xs:mt-0 xs:ms-4 xs:text-start">
-                        @if($title)
-                            <h3 class="text-lg font-medium text-gray-900">
-                                @if($warningType)
-                                    <template x-if="{{ $warningType }} === 'Confirmação'">
-                                        <div class="flex items-center gap-2 text-secondary-orange dark:text-orange-400">
-                                            <div class="bg-secondary-orange rounded-[20px] p-2">
-                                                <x-lucide-alert-triangle class="text-white  w-5 h-5" />
-                                            </div>
-                                            {{ $title }}
+                <div class="mt-3 text-start xs:mt-0 xs:mx-4 ">
+                    @if($title)
+                        <h3 class="text-lg font-medium text-gray-900">
+                            @if($warningType)
+                                <template x-if="{{ $warningType }} === 'Confirmação'">
+                                    <div class="flex items-center gap-2 text-secondary-orange dark:text-orange-400">
+                                        <div class="bg-secondary-orange rounded-[20px] p-2">
+                                            <x-lucide-alert-triangle class="text-white  w-5 h-5" />
                                         </div>
-                                    </template>
-                                    <template x-if="{{ $warningType }} === 'Erro'">
-                                        <div class="flex items-center gap-2 text-red-700">
-                                            <div class="bg-red-700 rounded-[20px] p-2">
-                                                <x-lucide-x-circle class="text-white w-5 h-5" />
-                                            </div>
-                                            {{ $title }}
+                                        {{ $title }}
+                                    </div>
+                                </template>
+                                <template x-if="{{ $warningType }} === 'Erro'">
+                                    <div class="flex items-center gap-2 text-red-700">
+                                        <div class="bg-red-700 rounded-[20px] p-2">
+                                            <x-lucide-x-circle class="text-white w-5 h-5" />
                                         </div>
-                                    </template>
-                                @endif
-                            </h3>
-                        @endif
-                        @if($content)
-                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-200">
-                                {{ $content }}
-                            </div>
-                        @endif
-                    </div>
+                                        {{ $title }}
+                                    </div>
+                                </template>
+                            @endif
+                        </h3>
+                    @endif
+                    @if($content)
+                        <div class="mt-4 text-sm text-gray-600 dark:text-gray-200">
+                            {{ $content }}
+                        </div>
+                    @endif
                 </div>
             </div>
 

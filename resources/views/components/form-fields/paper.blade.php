@@ -1,0 +1,197 @@
+<div>
+    {{-- Botão estilizado --}}
+    <div class="mt-4">
+        <label for="pdfFile"
+               class="cursor-pointer inline-flex items-center px-4 py-2 bg-secondary-blue hover:opacity-90 mt-1
+                text-white text-sm font-medium rounded-md shadow gap-2 transition duration-200 ease-in-out"
+        >
+            <x-lucide-file class="h-4 w-4 text-white"/>
+            Escolher PDF
+        </label>
+
+        {{-- Input real (escondido) --}}
+        <input
+            id="pdfFile"
+            type="file"
+            accept="application/pdf"
+            class="hidden h-0 w-0"
+            x-ref="pdfFile"
+            @change="file.file = $event.target.files[0]"
+        />
+
+        {{-- Arquivo escolhido --}}
+        <template x-if="file.file">
+            <div class="truncate block flex-1 max-w-full">
+                <span class="truncate block flex-1 text-gray-500 mb-1">
+                    <span class="font-medium text-sm text-gray-700 dark:text-gray-300 transition duration-150 ease-in-out">Arquivo selecionado (limite: 5MB):</span>
+                </span>
+                <div class="flex flex-col bg-gray-100 dark:bg-gray-700 hover:bg-gray-100/60 dark:hover:bg-gray-600/50 border border-gray-200 dark:border-gray-900/70 p-2 rounded">
+                    <div class="block xs:flex items-center">
+                    <span class="ms-1 flex flex-row items-center space-x-2 overflow-hidden w-full pe-4">
+                        <x-lucide-file-text class="w-4 h-4 text-gray-600 dark:text-gray-200 flex-shrink-0"/>
+                        <template x-if="file.file && file.url">
+                            <span
+                                class="text-primary-blue dark:text-gray-200 truncate text-ellipsis"
+                                x-text="file.title"
+                                :title="file.title"
+                            ></span>
+                        </template>
+                    </span>
+                        <button
+                            class="flex justify-center items-center pr-4 min-w-[127px] whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 rounded-lg
+                               text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 focus:ring-1 focus:ring-secondary-blue bg-white dark:!bg-gray-700
+                               focus:border-secondary-blue cursor-pointer"
+                            x-on:click="window.open(file.url, '_blank'); $el.blur();"
+                        >
+                            Visualizar
+                        </button>
+                    </div>
+                    <hr class="mt-2"/>
+                    <template x-if="file.file && file.url">
+                        <div class="ms-2 xs:ms-7">
+                        <span class="truncate overflow-hidden w-full flex-1 text-gray-500 dark:text-gray-200">
+                            <span class="block truncate text-ellipsis" x-text="'Tamanho do arquivo: ' + '(' + (file.file.size / (1024 * 1024)).toFixed(2) + ' MB)'"></span>
+                        </span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </template>
+        <template x-if="errors.file">
+            <x-form-fields.field-error x-text="errors.file[0]"/>
+        </template>
+    </div>
+
+    {{-- Título do trabalho --}}
+    <div class="mt-4">
+        <x-label for="title" value="Título do trabalho"/>
+        <x-input id="title" type="text" autocomplete="name" class="w-full mt-1"
+                 placeholder="Título do trabalho" x-model="title"
+                 @keydown.enter="savePaper"/>
+        <template x-if="errors.title">
+            <x-form-fields.field-error x-text="errors.title[0]"/>
+        </template>
+    </div>
+
+    <div class="mt-4">
+        <x-label>Ano</x-label>
+        <x-select x-model="year" class="mt-1 w-full">
+            <option value="">Selecione um ano</option>
+            @php
+                $currentYear = date('Y');
+            @endphp
+            @for($i = $currentYear -1; $i< ($currentYear + 1); $i++)
+                <option value="{{ $i }}">{{ $i }}</option>
+            @endfor
+        </x-select>
+        <template x-if="errors.year">
+            <x-form-fields.field-error x-text="errors.year[0]"/>
+        </template>
+    </div>
+
+    <div class="mt-4">
+        <x-label>Semestre</x-label>
+        <x-select x-model="semester" class="mt-1 w-full">
+            <option value="">Selecione um semestre</option>
+            @for($i = 1; $i<3; $i++)
+                <option value="{{ $i }}">{{ $i }}</option>
+            @endfor
+        </x-select>
+        <template x-if="errors.semester">
+            <x-form-fields.field-error x-text="errors.semester[0]"/>
+        </template>
+    </div>
+
+    <div class="mt-4">
+        <x-label>Versão</x-label>
+        <x-select x-model="version" class="mt-1 w-full">
+            <option value="">Selecione uma versão</option>
+            <option value="evaluation">Avaliação</option>
+            <option value="corrected">Corrigida</option>
+        </x-select>
+        <template x-if="errors.version">
+            <x-form-fields.field-error x-text="errors.version[0]"/>
+        </template>
+    </div>
+    <span x-text="group_id"></span>
+    <span x-text="evaluation_paper_id"></span>
+    <template x-for="paper in evaluation_papers">
+        <span x-text="paper.title" class="block"></span>
+    </template>
+    <template x-if="version === 'corrected' && group_id">
+        <div class="mt-4">
+            <x-label>Versão avaliada</x-label>
+            <x-select x-model="evaluation_paper_id" class="mt-1 w-full">
+                <option value="">Selecione uma versão</option>
+                <template x-for="paper in evaluation_papers">
+                    <option :value="paper.id" x-text="paper.title"></option>
+                </template>
+            </x-select>
+            <template x-if="errors.evaluation_paper_id">
+                <x-form-fields.field-error x-text="errors.evaluation_paper_id[0]"/>
+            </template>
+        </div>
+    </template>
+
+    <div class="mt-4">
+        <x-label>Curso</x-label>
+        <x-select x-model="course_id" class="mt-1 w-full">
+            <option value="">Selecione um curso</option>
+            <template x-for="course in courses">
+                <option :value="course.id" x-text="course.name"></option>
+            </template>
+        </x-select>
+        <template x-if="errors.course_id">
+            <x-form-fields.field-error x-text="errors.course_id[0]"/>
+        </template>
+    </div>
+
+    <div class="mt-4">
+        <x-label>Projeto</x-label>
+        <x-select x-model="project" class="mt-1 w-full">
+            <option value="">Selecione um projeto</option>
+            @for($i = 1; $i<7; $i++)
+                <option value="{{ $i }}">{{ $i }}</option>
+            @endfor
+        </x-select>
+        <template x-if="errors.project">
+            <x-form-fields.field-error x-text="errors.project[0]"/>
+        </template>
+    </div>
+
+    <div class="mt-4">
+        <x-label for="group_id" value="Grupo do trabalho"/>
+        <x-select id="group_id" x-model="group_id" class="mt-1 w-full">
+            <option value="">Selecione um grupo</option>
+            <template x-for="group in groups">
+                <option :value="group.id" x-text="group.theme"></option>
+            </template>
+        </x-select>
+        <template x-if="errors.group_id">
+            <x-form-fields.field-error x-text="errors.group_id[0]"/>
+        </template>
+    </div>
+
+
+    <template x-if="!corrected_version">
+        <div class="mt-4">
+            <template x-if="schedule.start && schedule.end && edit">
+                <div class="flex flex-col xs:flex-row gap-4 items-start justify-center text-gray-700 dark:text-gray-300 transition duration-150 ease-in-out">
+                    <div class="w-full xs:w-1/2">
+                        <span class="block font-medium text-sm">Início da avaliação</span>
+                        <x-input class="font-normal text-sm w-full mt-1" x-model="schedule.start" readonly disabled/>
+                    </div>
+                    <div class="w-full xs:w-1/2">
+                        <span class="block font-medium text-sm">Fim da avaliação</span>
+                        <x-input class="font-normal text-sm w-full mt-1" x-model="schedule.end" readonly disabled/>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </template>
+
+    {{-- Timestamps --}}
+    <template x-if="edit && (created_at || updated_at)">
+        <x-form-fields.timestamps/>
+    </template>
+</div>

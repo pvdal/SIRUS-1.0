@@ -1,4 +1,4 @@
-@props(['align' => 'right', 'width' => '48', 'contentClasses' => 'py-1 bg-white dark:bg-gray-700 dark:border dark:border-gray-900', 'dropdownClasses' => ''])
+@props(['align' => 'right', 'width' => '48', 'contentClasses' => 'py-1 bg-white dark:bg-gray-700 dark:border dark:border-gray-900', 'dropdownClasses' => '', 'direction' => 'down'])
 
 @php
 $alignmentClasses = match ($align) {
@@ -13,6 +13,8 @@ $width = match ($width) {
     '60' => 'w-60',
     default => 'w-48',
 };
+
+$directionClasses = $direction === 'up' ? 'bottom-full mb-2' : 'mt-2';
 @endphp
 
 <div class="relative" x-data="{ open: false }" @click.away="open = false" @close.stop="open = false">
@@ -27,7 +29,7 @@ $width = match ($width) {
             x-transition:leave="transition ease-in duration-75"
             x-transition:leave-start="transform opacity-100 scale-100"
             x-transition:leave-end="transform opacity-0 scale-95"
-            class="absolute z-50 mt-2 {{ $width }} rounded-md shadow-lg {{ $alignmentClasses }} {{ $dropdownClasses }}"
+            class="absolute z-50 {{ $directionClasses }} {{ $width }} rounded-md shadow-lg {{ $alignmentClasses }} {{ $dropdownClasses }}"
             style="display: none;"
             @click="open = false">
         <div class="rounded-md ring-1 ring-black ring-opacity-5 {{ $contentClasses }}">

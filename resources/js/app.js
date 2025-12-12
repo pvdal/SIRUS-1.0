@@ -3,6 +3,11 @@ import './calendar.js';
 //import './accessibility.js';
 
 /**
+ * Accessibility
+ */
+//import {daltonismFilters} from "./components/accessibility/daltonism-filters.js";
+//window.daltonismFilters = daltonismFilters;
+/**
  * Appearance
  */
 import {themeHandler} from "./appearance/themeHandler.js";
@@ -57,4 +62,6 @@ import {evaluationResultTabs} from "./components/evaluation/evaluationResultTabs
 window.evaluationResultTabs = evaluationResultTabs;
 import {calculateScores} from './helpers/calculeteScores.js';
 window.calculateScores = calculateScores;
-
+// Papers
+import {papersData} from "./components/management/papersData.js";
+window.papersData = papersData;

@@ -19,7 +19,7 @@ class PaperService
      * @param array $folders ['year', 'semester', 'version', 'course', 'project']
      * @return Paper
      */
-    public function createPaper(UploadedFile $file, int $groupId, array $folders): Paper
+    public function createPaper(UploadedFile $file, int $groupId, array $folders , ?string $title = null): Paper
     {
         $version = $folders['version'] === 'corrected' ? 'corrigido' : 'avaliacao';
         $foldersPath = [
@@ -42,9 +42,10 @@ class PaperService
         $newFileName = $originalName . '_' . $hash . '.' . $extension;
         $filePath = $file->storeAs($path, $newFileName, 'public');// Salva o arquivo
 
+        $finalTitle = $title ?: $originalName;
         // Cria registro no banco
         return Paper::create([
-            'title' => $originalName,
+            'title' => $finalTitle,
             'file_path' => $filePath,
             'group_id' => $groupId,
             'year' => $folders['year'],
@@ -52,6 +53,7 @@ class PaperService
             'version' => $folders['version'],
             'course_id' => $folders['course_id'],
             'project' => $folders['project'],
+            'state' => 1,
         ]);
     }
 

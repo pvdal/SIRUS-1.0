@@ -160,7 +160,19 @@ class GroupController extends Controller
     // Cadastro de grupos (‘CREATE’)
     public function store(Request $request, PaperService $paperService): JsonResponse
     {
-        $this->extractPapersTitle($request);
+        //$this->extractPapersTitle($request);
+
+        if ($request->papers) {
+            foreach ($request->papers as $i => $paper) {
+                if ($request->hasFile("papers.$i.file")) {
+                    $clearTitle = preg_replace('/\.pdf$/i', '', ($paper['title'] ?? ''));
+
+                    $request->merge([
+                        "papers.$i.title" => $clearTitle,
+                    ]);
+                }
+            }
+        }
 
         $currentYear = date('Y');
 
@@ -220,7 +232,7 @@ class GroupController extends Controller
 
                         $folders = $this->prepareFolders($paper);
 
-                        $paperService->createPaper($request->file("papers.$i.file"), $group->id, $folders);
+                        $paperService->createPaper($request->file("papers.$i.file"), $group->id, $folders, $paper['title']);
                     }
                 }
             }

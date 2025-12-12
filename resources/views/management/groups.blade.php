@@ -29,7 +29,6 @@
         x-init='init(@json($groups), @json($courses), {{ $page }}, {{ $totalPages }})'
     >
         {{-- Div exibida enquanto os dados não chegam no front --}}
-        {{-- Estou chamando fora devido a necessidade de remover o modal da página do DOM para exibir o PDF com scroll --}}
         {{-- Grupos cadastrados --}}
         <div x-show="showGroupCards">
             <x-main-content>

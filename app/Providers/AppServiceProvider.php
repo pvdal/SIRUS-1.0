@@ -55,5 +55,8 @@ class AppServiceProvider extends ServiceProvider
             </script>
             EOT;
         });
+
+        Blade::component('layouts.documentation', 'documentation-layout');
+        Blade::component('user-manual.manual-pages', 'manual-pages');
     }
 }

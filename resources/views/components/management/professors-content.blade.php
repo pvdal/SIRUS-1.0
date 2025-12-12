@@ -81,12 +81,14 @@
                 <x-table.th class="hidden md:table-cell">ID</x-table.th>
                 <x-table.th>Nome</x-table.th>
                 <x-table.th class="hidden sm:table-cell">Email</x-table.th>
+                <x-table.th class="hidden lg:table-cell">Formação</x-table.th>
                 <x-table.th class="hidden sm:table-cell">Estado</x-table.th>
             </x-slot>
             <x-slot name="rows">
                 <x-table.td class="hidden md:table-cell" x-text="item.id"></x-table.td>
                 <x-table.td x-text="item.name"></x-table.td>
                 <x-table.td class="hidden sm:table-cell" x-text="item.email"></x-table.td>
+                <x-table.td class="hidden lg:table-cell" x-text="item.education"></x-table.td>
                 <x-table.td class="hidden sm:table-cell" x-text="item.state ? 'Ativo' : 'Inativo'"></x-table.td>
             </x-slot>
             <x-slot name="actions">

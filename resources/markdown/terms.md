@@ -4,11 +4,14 @@
 
 ## 1. Aceitação dos Termos
 
-Ao acessar e utilizar o Sistema de Avaliação de Simpósios da FATEC Franco da Rocha ("Sistema"), você aceita e concorda em cumprir os termos e condições deste acordo.
+Ao utilizar o Sistema de Rubricas para Gestão Avaliativa do SIMBAJU (SIRUS),
+você declara que leu, compreendeu e concorda plenamente com estes Termos de Uso.
+O acesso e uso contínuo da plataforma constituem sua aceitação integral
+das regras e condições apresentadas neste documento.
 
 ## 2. Descrição do Serviço
 
-O Sistema de Avaliação de Simpósios é uma plataforma educacional desenvolvida para facilitar a organização, submissão e avaliação de trabalhos acadêmicos em eventos científicos da Faculdade de Tecnologia de Franco da Rocha (FATEC Franco da Rocha).
+O SIRUS é uma plataforma educacional desenvolvida para facilitar a organização, submissão e avaliação de trabalhos acadêmicos no Simpósio da Bacia do Juquery (SIMBAJU), que ocorre na Faculdade de Tecnologia de Franco da Rocha (FATEC Franco da Rocha).
 
 ### 2.1 Funcionalidades
 - Cadastro e gerenciamento de usuários (coordenadores, professores e estudantes)

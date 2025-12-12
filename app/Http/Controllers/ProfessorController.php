@@ -43,8 +43,9 @@ class ProfessorController extends Controller
             return [
                 'id' => $professor->id,
                 'user_id' => $professor->user_id,
-                'name' => $user->name ?? '—',
-                'email' => $user->email ?? '—',
+                'name' => $user->name ?? '-',
+                'email' => $user->email ?? '-',
+                'education' => $professor->education ?? '-',
                 'state' => isset($user->state) ? (int) $user->state : 0,
                 'created_at' => $professor->created_at ?? $user->created_at,
                 'updated_at' => $professor->updated_at ?? $user->updated_at,
@@ -107,8 +108,9 @@ class ProfessorController extends Controller
             return [
                 'id'    => $professor->id,
                 'user_id' => $professor->user_id,
-                'name'  => $professor->user->name,
-                'email' => $professor->user->email,
+                'name'  => $professor->user->name ?? '-',
+                'email' => $professor->user->email ?? '-',
+                'education' => $professor->education ?? '-',
                 'state' => ($professor->user->state ?? 0),
                 'created_at' => $professor->created_at ?? $user->created_at,
                 'updated_at' => $professor->updated_at ?? $user->updated_at, // pega o mais recente
@@ -134,6 +136,7 @@ class ProfessorController extends Controller
         $validated = $request->validate([
             'name'  => 'required|string|max:255',
             'email' => 'required|email:rfc|unique:users,email',
+            'education'  => 'nullable|string|max:255',
         ]);
 
         $user = null;
@@ -154,6 +157,7 @@ class ProfessorController extends Controller
             // Cria o professor vinculado ao usuário
             $professor = Professor::create([
                 'user_id' => $user->id,
+                'education' => $validated['education'],
             ]);
 
             // Envio da senha para o usuário cadastrado pelo e-mail por fila no banco
@@ -170,6 +174,7 @@ class ProfessorController extends Controller
                 'user_id' => $professor->user_id,
                 'name'  => $user->name,
                 'email' => $user->email,
+                'education' => $professor->education,
                 'state' => (int) $user->state,
                 'created_at' => $professor->created_at,
                 'updated_at' => $professor->updated_at,
@@ -188,6 +193,7 @@ class ProfessorController extends Controller
         $request->validate([
             'name'  => 'required|string|max:255',
             'email' => "required|email:rfc|unique:users,email,{$id},id",
+            'education'  => 'nullable|string|max:255',
         ]);
 
         $professor = Professor::with(
@@ -212,6 +218,14 @@ class ProfessorController extends Controller
             $professor->touch(); // Atualiza timestamps do professor
         }
 
+        $professor->fill([
+            'education' => $request['education'],
+        ]);
+
+        if($professor->isDirty()) {
+            $professor->save();
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Professor atualizado com sucesso.',
@@ -220,6 +234,7 @@ class ProfessorController extends Controller
                 'user_id' => $professor->user_id,
                 'name'  => $professor->user->name,
                 'email' => $professor->user->email,
+                'education' => $professor->education,
                 'state' => (int) $professor->user->state,
                 'created_at' => $professor->created_at,
                 'updated_at' => $professor->updated_at,

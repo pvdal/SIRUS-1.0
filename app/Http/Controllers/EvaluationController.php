@@ -371,7 +371,7 @@ class EvaluationController extends Controller
                                 'ra' => $student_ra,
                                 'criteria_id' => $criteria_id,
                                 'grade' => $selection['grade'],
-                                'comment' => $selection['comment']?? null,
+                                'comment' => $selection['comment'] ?? null,
                             ]
                         );
                     }
@@ -381,6 +381,13 @@ class EvaluationController extends Controller
             // C. Marcar a avaliação como concluída na tabela 'user_committees'
             $userCommittee->evaluated_at = Carbon::now();
             $userCommittee->save();
+
+            // D. Marcar paper como submetido à avaliação
+            $committee = Committee::with('paper:id,name,submitted_at')->find($userCommittee->id);
+            if($committee && $committee->paper === null) {
+                $committee->paper->submitted_at = Carbon::now();
+                $committee->paper->save();
+            }
 
             DB::commit(); // Sucesso! Confirma as operações no banco.
 

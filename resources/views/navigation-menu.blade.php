@@ -5,8 +5,8 @@
     <!-- Primary Navigation Menu -->
     <div x-show="showNavBar"
          class="max-w-[2100px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
+        <div class="flex justify-between h-16 min-w-0">
+            <div class="flex min-w-0">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center relative me-20">
                     <a href="{{ route('calendar') }}">
@@ -25,15 +25,17 @@
                         />
                     </a>
                 </div>
-
-                <!-- Navigation Links -->
-                <x-nav-options :menuComponent="'nav-link'" :menuClass="'hidden space-x-8 sm:-my-px sm:ms-10 lg:flex'"/>
+                <!-- Container que controla o tamanho do menu -->
+                <div class="flex flex-1 min-w-0 overflow-x-auto overflow-y-hidden">
+                    <!-- Navigation Links -->
+                    <x-nav-options :menuComponent="'nav-link'" :menuClass="'hidden sm:-my-px sm:ms-10 lg:flex min-w-0'"/>
+                </div>
             </div>
 
             <div class="hidden lg:flex sm:items-center sm:ms-6">
                 <!-- Teams Dropdown -->
                 @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
-                    <div class="ms-3 relative">
+                    <div class="ms-3 relative shrink-0">
                         <x-dropdown align="right" width="60">
                             <x-slot name="trigger">
                                 <span class="inline-flex rounded-md">
@@ -129,7 +131,7 @@
                                 @csrf
 
                                 <x-dropdown-link href="{{ route('logout') }}"
-                                         @click.prevent="$root.submit();">
+                                                 @click.prevent="$root.submit();">
                                     {{ __('Log Out') }}
                                 </x-dropdown-link>
                             </form>
@@ -193,7 +195,7 @@
                     @csrf
 
                     <x-responsive-nav-link href="{{ route('logout') }}"
-                                   @click.prevent="$root.submit();">
+                                           @click.prevent="$root.submit();">
                         {{ __('Log Out') }}
                     </x-responsive-nav-link>
                 </form>

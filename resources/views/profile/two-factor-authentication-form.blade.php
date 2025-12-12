@@ -11,7 +11,7 @@
         <h3 class="text-lg font-medium text-gray-900 dark:text-gray-200 transition duration-150 ease-in-out">
             @if ($this->enabled)
                 @if ($showingConfirmation)
-                    {{ __('Finish enabling two factor authentication.') }}
+                    {{ __('Conclua a ativação da autenticação de dois fatores.') }}
                 @else
                     {{ __('You have enabled two factor authentication.') }}
                 @endif
@@ -31,7 +31,7 @@
                 <div class="mt-4 max-w-xl text-sm text-gray-600">
                     <p class="font-semibold">
                         @if ($showingConfirmation)
-                            {{ __('To finish enabling two factor authentication, scan the following QR code using your phone\'s authenticator application or enter the setup key and provide the generated OTP code.') }}
+                            {{ __('Para concluir a ativação da autenticação de dois fatores, digitalize o seguinte código QR usando o aplicativo autenticador do seu telefone ou insira a chave de configuração e forneça o código OTP gerado.') }}
                         @else
                             {{ __('Two factor authentication is now enabled. Scan the following QR code using your phone\'s authenticator application or enter the setup key.') }}
                         @endif
@@ -44,7 +44,7 @@
 
                 <div class="mt-4 max-w-xl text-sm text-gray-600">
                     <p class="font-semibold">
-                        {{ __('Setup Key') }}: {{ decrypt($this->user->two_factor_secret) }}
+                        {{ __('Chave de configuração') }}: {{ decrypt($this->user->two_factor_secret) }}
                     </p>
                 </div>
 

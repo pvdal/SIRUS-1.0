@@ -53,6 +53,13 @@
                 })();
             </script>
         @endif
+        <script>
+            (() => {
+                if (!localStorage.getItem('vlibras_enabled')) {
+                    localStorage.setItem('vlibras_enabled', 'true');
+                }
+            })();
+        </script>
     </head>
     <body class="relative">
         @if(config('accessibility.daltonism'))

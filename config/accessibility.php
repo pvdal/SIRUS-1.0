@@ -9,7 +9,7 @@ return [
     | Controle da funcionalidade de acessibilidade.
     |
     */
-    'libras' => false,
+    'libras' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -19,5 +19,5 @@ return [
     | Controle da funcionalidade de acessibilidade.
     |
     */
-    'daltonism' => false,
+    'daltonism' => true,
 ];

@@ -20,6 +20,16 @@
             <x-form-fields.field-error x-text="errors.email[0]"/>
         </template>
     </div>
+    {{-- Formação do professor --}}
+    <div class="mt-4">
+        <x-label for="education" value="Formação do Professor"/>
+        <x-input id="education" type="text" autocomplete="name" class="w-full mt-1"
+                 placeholder="Formação do professor" x-model="education"
+                 @keydown.enter="saveCoordinator"/>
+        <template x-if="errors.education">
+            <x-form-fields.field-error x-text="errors.education[0]"/>
+        </template>
+    </div>
 
     {{-- Timestamps --}}
     <template x-if="edit && (created_at || updated_at)">

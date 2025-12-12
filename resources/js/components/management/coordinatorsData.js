@@ -17,6 +17,7 @@ export function coordinatorsData() {
 
         name: '',
         email: '',
+        education: '',
         created_at: '',
         updated_at: '',
 
@@ -151,6 +152,7 @@ export function coordinatorsData() {
                 payload: {
                     name: this.name,
                     email: this.email,
+                    education: this.education,
                 },
                 contexto: this,
                 campoLista: update ? null : 'newCoordinators',
@@ -241,6 +243,7 @@ export function coordinatorsData() {
                 [
                     'name',
                     'email',
+                    'education'
                 ],
             );
         },

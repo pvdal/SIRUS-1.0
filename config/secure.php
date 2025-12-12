@@ -33,5 +33,5 @@ return [
     | Define se será exigido o aceite de termos por parte do usuário ou não.
     |
     */
-    'terms_accept' => false,
+    'terms_accept' => true,
 ];

@@ -2,6 +2,7 @@
 // Common
 use App\Http\Controllers\AxisController;
 use App\Http\Controllers\CriteriaController;
+use App\Http\Controllers\ManualController;
 use App\Http\Controllers\RubricController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Legal\LegalController;
@@ -23,12 +24,20 @@ use Laravel\Jetstream\Http\Controllers\Livewire\ApiTokenController;
 
 // Rota para homePage
 Route::get('/', function () {
-    return view('home');
+    return view('home-page');
 })->name('home');
 
 // Rotas para políticas de privacidade e termos de uso
 Route::get('/legal/policy', [LegalController::class, 'showPolicies'])->name('policy.show');
-ROute::get('/legal/terms', [LegalController::class, 'showTerms'])->name('terms.show');
+Route::get('/legal/terms', [LegalController::class, 'showTerms'])->name('terms.show');
+
+//  Rota para as páginas do manual do usuário
+//Route::get('/manual/{page}', [ManualController::class, 'show'])
+//   ->where('page', '[A-Za-z0-9\-]+')
+//    ->name('manual.show');
+
+//  Rota para as páginas do manual do usuário
+Route::get('/manual', [ManualController::class, 'getManual'])->name('manual.show');
 
 // Rotas comuns de login e logout. Isso sobrepõe as rotas laravel padrão, é possível setar elas globalmente em /config/fortify.php
 // OBS: Isso sobrescreve as rotas default do vendor e será mantido de lado por enquanto não é necessário uma tela diferente para
@@ -40,7 +49,7 @@ ROute::get('/legal/terms', [LegalController::class, 'showTerms'])->name('terms.s
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
-    //'verified',
+    'verified',
     'access.level:3',
 ])->group(function () {
     // Retirado do vendor: isso limita a rota à usuários de nível 3
@@ -64,36 +73,15 @@ Route::middleware([
     Route::get('/evaluation/axis', [AxisController::class, 'index'])->name('evaluation.axis-table');
     Route::get('/evaluation/rubric', [RubricController::class, 'index'])->name('evaluation.rubric-table');
 
+    // Papers -> PapersController/Paper.php
+    Route::get('/papers', [PaperController::class, 'index'])->name('papers-content');
+
     // Operações CRUD das tabelas e cards -> API privada
     Route::prefix(config('secure.request_prefix')) // todas as rotas dentro desse grupo possuem o prefixo definido no.env
     ->middleware('secure.ajax') // middleware que traz camadas a mais de seguranças nas requisições ajax
     ->group(function () {
-
-        // Criterion -> CriteriaController/Criterion.php
-        Route::get('/criteria/show', [CriteriaController::class, 'show'])->name('criteria.show');
-        Route::post('/criteria/save', [CriteriaController::class, 'store'])->name('criteria.store');
-        Route::put('/criteria/{id}/update', [CriteriaController::class, 'update'])->name('criteria.update');
-        Route::put('/criteria/{id}/{action}', [CriteriaController::class, 'toggleStatus'])->name('criteria.toggle-status');
-        Route::get('/criteria/search', [CriteriaController::class, 'search'])->name('search-criteria');
-
-        // Axis -> AxisController/Axes.php
-        Route::get('/axis/show', [AxisController::class, 'show'])->name('axis.show');
-        Route::post('/axis/save', [AxisController::class, 'store'])->name('axis.store');
-        Route::put('/axis/{id}/update', [AxisController::class, 'update'])->name('axis.update');
-        Route::put('/axis/{id}/{action}', [AxisController::class, 'toggleStatus'])->name('axis.toggle-status');
-        Route::get('/axis/search', [AxisController::class, 'search'])->name('axis.search-axes');
-
-        // Rubric -> RubricController/Rubric.php
-        Route::get('/rubrics/show', [RubricController::class, 'show'])->name('rubric.show');
-        Route::post('/rubrics/save', [RubricController::class, 'store'])->name('rubric.store');
-        Route::put('/rubrics/{id}/update', [RubricController::class, 'update'])->name('rubric.update');
-        Route::put('/rubrics/{id}/{action}', [RubricController::class, 'toggleStatus'])->name('rubric.toggle-status');
-
-//        Route::get('/axis', [AxisController::class, 'index'])->name('axis.index');
-//        Route::post('/axis', [AxisController::class, 'store'])->name('axis.store');
-//        Route::put('/axis/{axis}', [AxisController::class, 'update'])->name('axis.update');
-//        Route::patch('/axis/{axis}/status', [AxisController::class, 'toggleStatus'])->name('axis.toggleStatus');
-
+        // Calendar -> EventController/Committee.php
+        Route::put('/events/{id}/update', [EventController::class, 'update'])->name('events.update');
 
         // Students -> StudentController/Student.php
         Route::get('/students/show', [StudentController::class, 'show'])->name('students.show');
@@ -133,8 +121,31 @@ Route::middleware([
         Route::put('/committees/{id}/update', [CommitteeController::class, 'update'])->name('committees.update');
         Route::put('/committees/{id}/{action}', [CommitteeController::class, 'toggleStatus'])->name('committees.toggle-status');
 
-        // Calendar -> EventController/Committee.php
-        Route::put('/events/{id}/update', [EventController::class, 'update'])->name('events.update');
+        // Criterion -> CriteriaController/Criterion.php
+        Route::get('/criteria/show', [CriteriaController::class, 'show'])->name('criteria.show');
+        Route::post('/criteria/save', [CriteriaController::class, 'store'])->name('criteria.store');
+        Route::put('/criteria/{id}/update', [CriteriaController::class, 'update'])->name('criteria.update');
+        Route::put('/criteria/{id}/{action}', [CriteriaController::class, 'toggleStatus'])->name('criteria.toggle-status');
+        Route::get('/criteria/search', [CriteriaController::class, 'search'])->name('search-criteria');
+
+        // Axis -> AxisController/Axes.php
+        Route::get('/axis/show', [AxisController::class, 'show'])->name('axis.show');
+        Route::post('/axis/save', [AxisController::class, 'store'])->name('axis.store');
+        Route::put('/axis/{id}/update', [AxisController::class, 'update'])->name('axis.update');
+        Route::put('/axis/{id}/{action}', [AxisController::class, 'toggleStatus'])->name('axis.toggle-status');
+        Route::get('/axis/search', [AxisController::class, 'search'])->name('axis.search-axes');
+
+        // Rubric -> RubricController/Rubric.php
+        Route::get('/rubrics/show', [RubricController::class, 'show'])->name('rubric.show');
+        Route::post('/rubrics/save', [RubricController::class, 'store'])->name('rubric.store');
+        Route::put('/rubrics/{id}/update', [RubricController::class, 'update'])->name('rubric.update');
+        Route::put('/rubrics/{id}/{action}', [RubricController::class, 'toggleStatus'])->name('rubric.toggle-status');
+
+        // Paper -> PaperController/Paper.php
+        Route::get('/papers/show', [PaperController::class, 'show'])->name('paper.show');
+        Route::post('/papers/save', [PaperController::class, 'store'])->name('paper.store');
+        Route::put('/papers/{id}/update', [PaperController::class, 'update'])->name('paper.update');
+        Route::put('/papers/{id}/{action}', [PaperController::class, 'toggleStatus'])->name('paper.toggle-status');
     });
 });
 
@@ -142,7 +153,7 @@ Route::middleware([
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
-    //'verified',
+    'verified',
 ])->group(function () {
     /*Route::get('/dashboard', function () {
         return view('dashboard');

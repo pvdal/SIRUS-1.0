@@ -24,6 +24,7 @@ export default {
                 'xs': '480px',  // breakpoint xs a partir de 480px
                 'xxs': '330px', // breakpoint xxs a partir de 330px
                 'xlg': '1380px', // breakpoint xlg a partir de 1380px
+                '3xl': '1780px',
             },
             colors: {
                 'primary-blue': '#1E3A5F',

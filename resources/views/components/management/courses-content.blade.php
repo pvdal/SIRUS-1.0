@@ -95,10 +95,10 @@
                 <div class="flex flex-wrap gap-2 items-center justify-center">
                     <template x-if="item.state">
                         <x-button type="button" class="min-w-[98px]"
-                                  x-on:click="
-                                    showCourse(item.id);
-                                    $el.blur();
-                                "
+                            x-on:click="
+                                showCourse(item.id);
+                                $el.blur();
+                            "
                         >
                             Alterar
                         </x-button>
@@ -106,10 +106,10 @@
 
                     <template x-if="item.state">
                         <x-danger-button type="button" class="min-w-[98px]" x-bind:disabled="isInactivating(item.id)"
-                                         x-on:click="
-                                    warning('confirmação', item.name, item.id, 'inativar');
-                                    $el.blur();
-                                "
+                            x-on:click="
+                                warning('confirmação', item.name, item.id, 'inativar');
+                                $el.blur();
+                            "
                         >
                             <template x-if="isInactivating(item.id)">
                                 <span>Inativando...</span>
@@ -121,10 +121,10 @@
                     </template>
                     <template x-if="!item.state">
                         <x-management.activate-button type="button" class="min-w-[98px]" x-bind:disabled="isActivating(item.id)"
-                                                      x-on:click="
-                                    warning('confirmação', item.name, item.id, 'ativar');
-                                    $el.blur();
-                                "
+                            x-on:click="
+                                warning('confirmação', item.name, item.id, 'ativar');
+                                $el.blur();
+                            "
                         >
                             <template x-if="isActivating(item.id)">
                                 <span>Ativando...</span>

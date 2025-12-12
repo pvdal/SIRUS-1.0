@@ -24,6 +24,7 @@ class Paper extends Model
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'submitted_at' => 'datetime',
     ];
 
     #region Relacionamentos
