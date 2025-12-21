@@ -75,6 +75,16 @@
                  readonly disabled/>
     </div>
 
+    <x-form-fields.selected-list
+        :title="'Membros do grupo'"
+        :list="'groupMembers'"
+        :key="'ra'"
+    >
+    <span>
+        <span x-text="item.name ?? 'Sem nome'"></span>
+    </span>
+    </x-form-fields.selected-list>
+
     <div class="mt-4">
         <x-label for="paper" value="Título do trabalho"/>
         <x-input id="name" type="text" class="w-full mt-1"
@@ -84,8 +94,8 @@
 
     {{-- Membros da banca --}}
     <x-form-fields.selected-list
-        :title="'Membros da banca:'"
-        :list="'members'"
+        :title="'Membros da banca'"
+        :list="'committeeMembers'"
         :key="'user_id'"
     >
         <span>

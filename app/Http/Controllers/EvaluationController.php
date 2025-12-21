@@ -52,8 +52,8 @@ class EvaluationController extends Controller
         else if ($user->access_level === 1 || $user->isAdmin())
         {
             if (Gate::allows('evaluate-paper', $committee)) {
-                if($response = $this->validateCommitteeSchedule($committee)) {
-                    return $response;
+                if($this->validateCommitteeSchedule($committee)) {
+                    return $this->showResultsView($committee);
                 }
                 return $this->showEvaluatorView($userCommittee);
 

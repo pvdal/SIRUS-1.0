@@ -78,8 +78,28 @@
             </script>
         @endif
 
+        @if(config('appearance.switch_theme'))
+            <script>
+                {{-- Inicializa o tema --}}
+                (() => {
+                    const savedTheme = localStorage.getItem('theme');
+                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                })();
+            </script>
+        @endif
     </head>
-    <body>
+    <body class="font-sans antialiased"
+          @if(config('appearance.switch_theme'))
+              x-data="themeHandler()"
+          x-bind:class="theme"
+          x-init="init()"
+        @endif
+    >
         @if(config('accessibility.daltonism'))
             <x-accessibility.daltonism-filters/>
             <x-accessibility.daltonism-select/>

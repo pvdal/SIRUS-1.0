@@ -1,46 +1,59 @@
 <x-guest-layout>
-    <nav x-data="{ open:false }" id="navigation" class="bg-white border-b border-gray-100">
+    <x-slot name="title">
+        Início
+    </x-slot>
+
+    <nav x-data="{ open:false }" id="navigation" class="bg-white border-b border-gray-100 dark:bg-gray-900 dark:border-gray-700 transition duration-150 ease-in-out">
         @php
             $links = [
                 ['label' => 'Início', 'href' => route('home'), 'route' => 'home'],
-                ['label' => 'Manual', 'href' => route('manual.show','introduction'), 'route' => 'manual.show'],
+                ['label' => 'Manual', 'href' => route('manual.show','#introduction'), 'route' => 'manual.show'],
                 ['label' => 'Termos', 'href' => route('terms.show'), 'route' => 'terms.show'],
                 ['label' => 'Privacidade', 'href' => route('policy.show'), 'route' => 'policy.show']
             ];
         @endphp
-        <div class="flex items-center mx-auto max-w-[2100px] h-16 px-4 sm:px-6 lg:px-8">
-            <a href="{{ route('home') }}">
-                <x-application-logo
-                    size="40"
-                    class="flex-shrink-0 transform transition-all"
-                />
-            </a>
+        {{-- Menu primário --}}
+        <div class="flex items-center mx-auto max-w-[1800px] h-16 px-4 sm:px-6 lg:px-8">
+            {{-- Logotipo --}}
+            <div class="shrink-0 flex items-center relative me-20 h-16">
+                <a href="{{ route('home') }}">
+                    <!-- Logo claro -->
+                    <x-application-logo
+                        size="40"
+                        class="absolute mt-3 inset-0 transform transition-all duration-300 ease-in-out
+                            opacity-100 scale-100 dark:opacity-0 dark:scale-100"
+                    />
 
-            <div class="hidden md:flex items-center w-full min-h-full max-w-[2100px]">
+                    <!-- Logo escuro -->
+                    <x-authentication-card-logo
+                        size="40"
+                        class="absolute mt-3 inset-0 transform transition-all duration-300 ease-in-out
+                            opacity-0 scale-100 dark:opacity-100 dark:scale-100"
+                    />
+                </a>
+            </div>
+            {{-- Options --}}
+            <div class="hidden md:flex items-center w-full min-h-full max-w-[1800px]">
                 <ul class="mx-4 lg:ms-10 inline-flex items-center overflow-x-auto no-scrollbar gap-5 lg:gap-7 h-16">
                     @foreach($links as $link)
-                        <li class="h-full flex items-center">
-                            <a href="{{ $link['href'] }}"
-                                class="h-full pt-1 px-1 inline-flex items-center border-b
-                                {{ request()->routeIs($link['route'])
-                                ? 'border-secondary-blue text-gray-900'
-                                : 'text-gray-500 hover:text-gray-900 border-transparent hover:border-gray-300' }}
-                                text-sm lg:text-base whitespace-nowrap">
-                                {{ $link['label'] }}
-                            </a>
+                        <li class="h-full">
+                            <x-nav-link href="{{ $link['href'] }}" class="h-full !text-base !border-b" :active="request()->routeIs($link['route'])">
+                                {{ $link['label'] }}</x-nav-link>
                         </li>
                     @endforeach
                 </ul>
 
                 <div class="hidden ms-auto md:flex">
-                    <a class="text-white inline-flex items-center gap-3 px-4 py-2
-                        bg-secondary-blue border border-transparent rounded-lg font-semibold text-xs
-                        uppercase tracking-widest hover:opacity-90 shadow-[0_2px_5px_rgba(0,0,0,0.28)]
+                    <a
+                        rel="noreferrer noopener"
+                        class="text-white inline-flex items-center gap-3 px-4 py-2 bg-gradient-to-b from-secondary-blue to-blue-600
+                        dark:from-primary-blue dark:to-blue-900 rounded-lg font-semibold text-xs
+                        uppercase tracking-widest hover:opacity-90 shadow-[0_2px_5px_rgba(0,0,0,0.28)] dark:focus:ring-offset-gray-900
                         focus:opacity-90 active:strong-blue focus:outline-none focus:ring-2 whitespace-nowrap
                         focus:ring-secondary-blue focus:ring-offset-2 disabled:opacity-50
                         transition ease-in-out duration-150"
-                        href="@auth /calendar @else /login @endauth">
-
+                        href="@auth /calendar @else /login @endauth"
+                    >
                         <span class="inline-flex items-center gap-2">
                             <x-lucide-log-in class="flex-shrink-0 h-4 w-4 transition-all"/>
                             @auth
@@ -52,6 +65,7 @@
                     </a>
                 </div>
             </div>
+            {{-- Ícone para colapsar menu --}}
             <div class="-me-2 flex items-center ms-auto md:hidden">
                 <button @click="open = ! open"
                     class="inline-flex items-center justify-center p-2 rounded-md
@@ -67,27 +81,30 @@
                 </button>
             </div>
         </div>
+        {{-- Menu mobile --}}
         <div class="hidden md:hidden flex-col w-full py-5 pt-2" :class="{'block': open, 'hidden': ! open}">
             <ul class="flex flex-col items-start justify-start gap-2 pb-5 no-scrollbar">
                 @foreach($links as $link)
                     <li class="w-full">
-                        <a href="{{ $link['href'] }}"
-                            class="block w-full text-sm lg:text-base font-medium text-gray-700 hover:text-secondary-blue whitespace-nowrap
-                            hover:bg-soft-blue px-5 py-2 border-l-4 border-transparent hover:border-secondary-blue text-start"
-                        >{{ $link['label'] }}</a>
+                        <x-responsive-nav-link href="{{ $link['href'] }}" class="pl-5" :active="request()->routeIs($link['route'])">
+                            {{ $link['label'] }}</x-responsive-nav-link>
                     </li>
                 @endforeach
             </ul>
-            <hr class="mx-5 mb-4">
+            <hr class="mx-5 mb-4 border-gray-200 dark:border-gray-700">
             <div class="flex w-full px-5">
-                <a class="text-white inline-flex items-center gap-3 px-4 py-2 justify-center w-full
-                bg-secondary-blue border border-transparent rounded-lg font-semibold text-xs lg:text-sm
-                 uppercase tracking-widest hover:opacity-90 shadow-[0_2px_5px_rgba(0,0,0,0.28)]
-                focus:opacity-90 active:strong-blue focus:outline-none focus:ring-2 whitespace-nowrap
-                focus:ring-secondary-blue focus:ring-offset-2 disabled:opacity-50
-                transition ease-in-out duration-150"
-                href="@auth /calendar @else /login @endauth">
-
+                <a
+                    rel="noreferrer noopener"
+                    class="text-white inline-flex items-center gap-3 px-4 py-2 justify-center w-full
+                    bg-gradient-to-b from-secondary-blue to-blue-600
+                    dark:from-primary-blue dark:to-blue-900
+                    rounded-lg font-semibold text-xs lg:text-sm
+                    uppercase tracking-widest hover:opacity-90 shadow-[0_2px_5px_rgba(0,0,0,0.28)]
+                    focus:opacity-90 active:strong-blue focus:outline-none focus:ring-2 whitespace-nowrap
+                    focus:ring-secondary-blue focus:ring-offset-2 disabled:opacity-50
+                    transition ease-in-out duration-150"
+                    href="@auth /calendar @else /login @endauth"
+                >
                 <span class="inline-flex items-center gap-2">
                     @auth
                         <x-lucide-log-in class="flex-shrink-0 h-4 w-4 transition-all"/>
@@ -102,78 +119,101 @@
         </div>
     </nav>
     {{-- Sessão inicial --}}
-    <section id="hero" class="flex justify-center items-center py-6 lg:py-10 xl:py-16 bg-white">
-        <div class="grid items-center justify-center lg:grid-cols-10 xl:min-h-[800px] max-w-[2200px] px-5 sm:px-10 py-16 mb-2 2xl:px-16 2xl:pt-20 lg:pb-20 xl:pb-28">
-            <div class="flex flex-col gap-5 h-full lg:col-span-6 lg:pe-20 pb-10 lg:pb-0">
-                <div class="mb-4 md:text-left">
-                    <span class="rounded-full px-5 py-1 text-blue-500 bg-blue-100 font-medium text-sm xs:text-base lg:text-lg xl:text-xl whitespace-nowrap">Sistema de gestão do SIMBAJU</span>
+    <section id="hero" class="flex justify-center items-center sm:py-6 lg:py-10 xl:py-16 bg-white dark:bg-gray-900 transition duration-150 ease-in-out">
+        <div class="grid items-center justify-center lg:grid-cols-10 xl:min-h-[800px] max-w-[1850px] px-2 xs:px-5 sm:px-10 py-16 mb-2 2xl:px-16 2xl:pt-20 lg:pb-20 xl:pb-28">
+            {{-- Logo para telas < 1024px --}}
+            <div class="lg:hidden flex flex-col items-center justify-center lg:col-span-4 w-full lg:max-h-[70%] max-h-full xl:max-h-[80%] 2xl:max-h-[90%] 3xl:max-h-full mx-auto shadow-[2px_2px_5px_rgba(0,0,0,0.40)]
+                rounded-xl py-10 md:py-20 px-10 h-full bg-gradient-to-b from-secondary-blue to-blue-700 dark:from-primary-blue dark:to-blue-950 border border-gray-500 dark:border-slate-900">
+                <x-authentication-card-logo class="w-[152px] h-[80px] md:w-[190px] md:h-[100px] xl:w-[228px] lg:h-[120px] 2xl:w-[266px] xl:h-[140px]"/>
+                <h1 class="text-white mt-3 mb-0 text-[2.5rem] md:text-[3rem] lg:text-[3.5rem] xlg::text-[4.5rem] font-bold leading-tight">
+                    SIRUS
+                </h1>
+                <p class="text-white text-sm sm:text-base md:text-xl font-medium opacity-80 mb-0 text-center">
+                    Sistema de Rubricas para Gestão Avaliativa do SIMBAJU
+                </p>
+            </div>
+            {{-- Conteúdo principal --}}
+            <div class="pt-10 md:pt-16 lg:pt-0 flex flex-col gap-5 h-full lg:col-span-6 lg:pe-16 xl:pe-20 lg:pb-0">
+                <div class="mb-4 mx-auto sm:m-0">
+                    <span class="rounded-full px-5 py-1 font-medium text-sm xs:text-base lg:text-lg xl:text-xl whitespace-nowrap
+                        bg-blue-100 text-blue-500 dark:bg-blue-900/40 dark:text-blue-300 transition duration-150 ease-in-out">
+                        Sistema de gestão do SIMBAJU
+                    </span>
                 </div>
-                <div class="md:text-left">
-                    <h2 class="text-[2.5rem] xs:text-5xl sm:text-6xl md:text-[4rem] lg:text-[5rem] xl:text-[5.5rem] 3xl:text-[6.5rem] leading-[1.2] font-extrabold mb-8 text-gray-900">
+                <div class="mb-4">
+                    <h2 class="text-[3rem] xs:text-6xl sm:text-7xl md:text-[5rem] xl:text-[5.5rem] 3xl:text-[7rem] leading-[1.2] font-extrabold mb-8 text-gray-900 dark:text-gray-100
+                        transition duration-150 ease-in-out">
                         Simplificando a gestão avaliativa
                     </h2>
-                    <p class="text-lg sm:text-xl lg:text-2xl 3xl:text-3xl leading-[1.5] opacity-80 mb-4">
+                    <p class="text-lg xs:text-xl md:text-2xl 3xl:text-3xl leading-[1.5] opacity-80 mb-4 text-gray-700 dark:text-gray-200
+                        transition duration-150 ease-in-out">
                         Uma plataforma intuitiva para gerenciar, aplicar e analisar avaliações acadêmicas com eficiência e padronização.
                     </p>
                 </div>
-                <div class="flex flex-col sm:flex-row gap-2 w-full mt-auto mb-8">
+                {{-- Botões de ação --}}
+                <div class="flex flex-col sm:flex-row gap-2 w-full lg:mt-auto mb-8">
+                    {{-- Botão para entrar no sistema --}}
                     <a
-                        class="text-white inline-flex items-center px-4 lg:px-5 py-3
-                        bg-gradient-to-b from-secondary-blue to-blue-600 border border-transparent rounded-lg
-                        font-semibold text-xs sm:text-sm lg:text-base xl:text-lg 2xl:text-2xl uppercase tracking-widest
+                        rel="noreferrer noopener"
+                        class="text-white inline-flex items-center px-4 lg:px-5 py-3 justify-center sm:justify-start
+                        bg-gradient-to-b from-secondary-blue to-blue-600 rounded-lg
+                        dark:from-primary-blue dark:to-blue-900 dark:focus:ring-offset-gray-800
+                        font-semibold text-sm xl:text-lg 2xl:text-xl uppercase tracking-widest
                         hover:opacity-90 shadow-[0_2px_5px_rgba(0,0,0,0.28)] overflow-hidden
-                        focus:opacity-90 active:strong-blue focus:outline-none focus:ring-2 max-w-[240px] sm:max-w-fit
+                        focus:opacity-90 active:strong-blue focus:outline-none focus:ring-2 sm:max-w-fit
                         focus:ring-secondary-blue focus:ring-offset-2 disabled:opacity-50 w-full
-                        self-start transition ease-in-out duration-150"
+                        self-center sm:self-start transition ease-in-out duration-150"
                         href="@auth /calendar @else /login @endauth"
                     >
-
                         <span class="inline-flex items-center gap-2 text-left">
                             @auth
-                                <x-lucide-calendar-days class="flex-shrink-0 h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 transition-all"/>
+                                <x-lucide-calendar-days class="flex-shrink-0 h-5 w-5 lg:h-6 lg:w-6 transition-all"/>
                                 Agenda SIMBAJU
                             @else
-                                <x-lucide-log-in class="flex-shrink-0 h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 transition-all"/>
+                                <x-lucide-log-in class="flex-shrink-0 h-5 w-5 lg:h-6 lg:w-6 transition-all"/>
                                 Fazer Login
                             @endauth
                         </span>
                     </a>
-
+                    {{-- Botão para abrir manual do usuário --}}
                     <a
-                        class="text-gray-900 hover:text-white inline-flex items-center gap-2 px-4 lg:px-5 py-3
+                        rel="noreferrer noopener"
+                        class="text-gray-900 hover:text-white inline-flex items-center justify-center sm:justify-start gap-2 px-4 lg:px-5 py-3
                         bg-transparent-blue border border-gray-900 hover:bg-gradient-to-b w-full
-                        hover:from-secondary-blue hover:to-blue-600 rounded-lg font-semibold text-xs sm:text-sm lg:text-base xl:text-lg 2xl:text-2xl
-                        uppercase tracking-widest hover:opacity-90 hover:border-transparent
+                        hover:from-secondary-blue hover:to-blue-600 rounded-lg font-semibold text-sm xl:text-lg 2xl:text-xl
+                        dark:text-gray-100 dark:border-gray-100 dark:hover:border-slate-900 dark:hover:from-primary-blue dark:hover:to-dark-blue
+                        uppercase tracking-widest hover:opacity-90 hover:border-transparent dark:focus:ring-offset-gray-800
                         focus:opacity-90 active:strong-blue focus:outline-none focus:ring-2
                         focus:ring-secondary-blue focus:ring-offset-2 disabled:opacity-50
-                        self-start hover:shadow-[0_2px_5px_rgba(0,0,0,0.28)] overflow-hidden max-w-[240px] sm:max-w-fit
-                        transition-colors duration-150"
-                        href="{{ route('manual.show','introduction') }}"
+                        self-center sm:self-start hover:shadow-[0_2px_5px_rgba(0,0,0,0.28)] overflow-hidden sm:max-w-fit
+                        transition duration-150 ease-in-out"
+                        href="{{ route('manual.show','#introduction') }}"
                     >
-                        <x-lucide-book-text class="flex-shrink-0 h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 transition-all"/>
+                        <x-lucide-book-text class="flex-shrink-0 h-5 w-5 lg:h-6 lg:w-6 transition-all"/>
                         <span class="block text-left">
                             Manual do usuário
                         </span>
                     </a>
                 </div>
-
-                <div class="grid grid-cols-2 xs:grid-cols-3 md:grid-cols-4 gap-8 w-full">
+                {{-- Descrição concisa de algumas características do sistema --}}
+                <div class="hidden sm:grid grid-cols-2 xs:grid-cols-3 md:grid-cols-4 gap-8 w-full">
                     <div class="flex flex-col">
-                        <span class="text-gray-900 font-bold text-base lg:text-lg xl:text-xl">Rápido</span>
-                        <span class="text-gray-500 font-medium text-sm lg:text-base xl:text-lg">Interface interativa</span>
+                        <span class="text-gray-900 dark:text-gray-100 font-bold text-base lg:text-lg xl:text-xl">Rápido</span>
+                        <span class="text-gray-500 dark:text-gray-400 font-medium text-sm lg:text-base xl:text-lg">Interface interativa</span>
                     </div>
                     <div class="flex flex-col">
-                        <span class="text-gray-900 font-bold text-base lg:text-lg xl:text-xl">Eficiente</span>
-                        <span class="text-gray-500 font-medium text-sm lg:text-base xl:text-lg">Tudo automatizado</span>
+                        <span class="text-gray-900 dark:text-gray-100 font-bold text-base lg:text-lg xl:text-xl">Eficiente</span>
+                        <span class="text-gray-500 dark:text-gray-400 font-medium text-sm lg:text-base xl:text-lg">Tudo automatizado</span>
                     </div>
                     <div class="flex flex-col">
-                        <span class="text-gray-900 font-bold text-base lg:text-lg xl:text-xl">Centralizado</span>
-                        <span class="text-gray-500 font-medium text-sm lg:text-base xl:text-lg">Informações consolidadas</span>
+                        <span class="text-gray-900 dark:text-gray-100 font-bold text-base lg:text-lg xl:text-xl">Centralizado</span>
+                        <span class="text-gray-500 dark:text-gray-400 font-medium text-sm lg:text-base xl:text-lg">Informações consolidadas</span>
                     </div>
                 </div>
             </div>
+            {{-- Logo para telas > 1024px --}}
             <div class="hidden lg:flex flex-col items-center justify-center lg:col-span-4 w-full lg:max-h-[70%] max-h-full xl:max-h-[80%] 2xl:max-h-[90%] 3xl:max-h-full mx-auto shadow-[2px_2px_5px_rgba(0,0,0,0.40)]
-                rounded-xl py-20 px-10 h-full bg-gradient-to-b from-secondary-blue to-blue-700 border border-gray-500">
+                rounded-xl py-20 px-10 h-full bg-gradient-to-b from-secondary-blue to-blue-700 dark:from-primary-blue dark:to-blue-950 border border-gray-500 dark:border-slate-900">
                 <x-authentication-card-logo class="w-[190px] h-[100px] xl:w-[228px] lg:h-[120px] 2xl:w-[266px] xl:h-[140px]"/>
                 <h1 class="text-white mt-3 mb-0 text-[3.5rem] xlg::text-[4.5rem] font-bold leading-tight">
                     SIRUS
@@ -185,17 +225,20 @@
         </div>
     </section>
     {{-- Funcionalidades --}}
-    <section id="features" class="bg-gray-50 py-16">
-        <div class="p-5 xs:p-16 sm:p-10 xl:p-10 2xl:p-16 max-w-[2200px] mx-auto">
+    <section id="features" class="bg-gray-50 dark:bg-gray-900 opacity-[0.98] transition duration-150 ease-in-out py-16">
+        <div class="p-5 xs:p-16 sm:p-10 xl:p-10 2xl:p-16 max-w-[1800px] mx-auto">
             {{-- Cabeçalho --}}
             <div class="flex w-full flex-col gap-5 justify-center items-center mb-16">
-                <span class="bg-blue-100 rounded-full px-5 py-1 text-blue-500 font-medium text-base lg:text-xl 2xl:text-2xl whitespace-nowrap">
+                <span class="rounded-full px-5 py-1 font-medium text-base lg:text-xl 2xl:text-2xl whitespace-nowrap
+                    bg-blue-100 text-blue-500 dark:bg-blue-900/40 dark:text-blue-300 transition duration-150 ease-in-out">
                     O que oferecemos
                 </span>
-                <h2 class="text-gray-900 leading-[1.2] font-extrabold text-3xl sm:text-4xl md:text-5xl xl:text-7xl ">
+                <h2 class="text-center text-gray-900 leading-[1.2] font-extrabold text-3xl sm:text-4xl md:text-5xl xl:text-7xl
+                    dark:text-gray-100 transition duration-150 ease-in-out">
                     Funcionalidades principais
                 </h2>
-                <p class="text-gray-500 text-lg sm:text-xl xl:text-2xl font-normal">
+                <p class="text-center px-10 xs:px-0 text-gray-500 text-base xs:text-lg sm:text-xl xl:text-2xl font-normal
+                    dark:text-gray-200 transition duration-150 ease-in-out">
                     Descubra os principais recursos que o SIRUS oferece
                 </p>
             </div>
@@ -217,12 +260,13 @@
                     ] as $feature)
 
                     <!-- Feature Card {{ $loop->index + 1 }} -->
-                    <div class="bg-white border border-gray-200 hover:border-secondary-blue rounded-3xl p-8 shadow-[0_2px_5px_rgba(0,0,0,0.28)] transition duration-300 ease-in-out">
+                    <div class="bg-white border border-gray-200 hover:border-secondary-blue rounded-3xl p-8 shadow-[0_2px_5px_rgba(0,0,0,0.28)]
+                        dark:bg-slate-800 dark:border-slate-900 dark:hover:border-secondary-blue transition duration-150 ease-in-out">
                         <div class="bg-secondary-blue p-3 w-12 h-12 lg:w-16 lg:h-16 flex items-center justify-center rounded-xl mb-4">
                             <x-dynamic-component :component="'lucide-' . $feature['icon']" class="text-white w-5 h-5 lg:w-6 lg:h-6"/>
                         </div>
-                        <h4 class="text-gray-900 font-semibold text-lg lg:text-xl 2xl:text-2xl mb-3">{{ $feature['title'] }}</h4>
-                        <p class="text-gray-500 text-sm lg:text-base 2xl:text-xl 2xl:leading-8">
+                        <h4 class="text-gray-900 font-semibold text-lg lg:text-xl 2xl:text-2xl mb-3 dark:text-gray-100 transition duration-300 ease-in-out">{{ $feature['title'] }}</h4>
+                        <p class="text-gray-500 text-sm lg:text-base 2xl:text-xl 2xl:leading-8 dark:text-gray-300 transition duration-300 ease-in-out">
                             {{ $feature['text'] }}
                         </p>
                     </div>
@@ -238,12 +282,13 @@
                 filter: url(#blur-bg);
             "
         >
-            <div class="h-24 md:h-28 lg:h-32 bg-white"></div>
+            <div class="h-24 md:h-28 lg:h-32 bg-white dark:bg-gray-900 transition duration-150 ease-in-out"></div>
             <div class="relative w-full md:py-40 md:px-10">
                 {{-- Overlay --}}
                 <div class="absolute inset-0 bg-black/40"></div>
                 {{-- Card principal --}}
-                <div class="relative grid grid-cols-1 xl:grid-cols-2 bg-white max-w-[1700px] border border-gray-200 md:border-none mx-auto md:rounded-2xl shadow-[0_2px_5px_rgba(0,0,0,0.28)] overflow-hidden">
+                <div class="relative grid grid-cols-1 xl:grid-cols-2 bg-white max-w-[1700px] border border-gray-200 md:border-none mx-auto md:rounded-2xl shadow-[0_2px_5px_rgba(0,0,0,0.28)] overflow-hidden
+                    dark:bg-slate-800 dark:border-slate-900 dark:hover:border-secondary-blue transition duration-150 ease-in-out">
                     {{-- Left side (image) --}}
                     <div class="hidden xl:block relative h-full min-h-[480px] bg-black">
                         <img
@@ -258,12 +303,14 @@
                     <div class="pt-16 px-10 pb-10 lg:px-14 lg:pb-14 space-y-10">
                         <!-- O que é o SIMBAJU -->
                         <div class="space-y-4">
-                            <h3 class="text-lg lg:text-xl 2xl:text-2xl font-bold text-gray-900 flex items-center gap-3">
-                                <x-lucide-book-open class="w-8 h-8 text-primary-blue flex-shrink-0" />
+                            <h3 class="text-lg lg:text-xl 2xl:text-2xl font-bold text-gray-900 flex items-center gap-3
+                                dark:text-gray-100 transition duration-150 ease-in-out">
+                                <x-lucide-book-open class="w-8 h-8 text-primary-blue flex-shrink-0 dark:text-secondary-blue transition duration-150 ease-in-out" />
                                 O que é o SIMBAJU?
                             </h3>
 
-                            <p class="text-gray-600 leading-relaxed text-sm lg:text-base 2xl:text-lg">
+                            <p class="text-gray-600 leading-relaxed text-sm lg:text-base 2xl:text-lg
+                                dark:text-gray-400 transition duration-150 ease-in-out">
                                 O Simpósio da Bacia do Juquery (SIMBAJU) é um evento acadêmico-científico
                                 realizado semestralmente na Faculdade de Tecnologia de Franco da Rocha, no
                                 estado de São Paulo.
@@ -276,8 +323,10 @@
 
                         <!-- Por que participar -->
                         <div class="space-y-4">
-                            <h3 class="text-lg lg:text-xl 2xl:text-2xl font-bold text-gray-900 flex items-center gap-1">
-                                <x-lucide-lightbulb class="w-8 h-8 block leading-none text-primary-blue text-lg lg:text-xl 2xl:text-2xl flex-shrink-0" />
+                            <h3 class="text-lg lg:text-xl 2xl:text-2xl font-bold text-gray-900 flex items-center gap-1
+                                dark:text-gray-100 transition duration-150 ease-in-out">
+                                <x-lucide-lightbulb class="w-8 h-8 block leading-none text-primary-blue text-lg lg:text-xl 2xl:text-2xl flex-shrink-0
+                                    dark:text-secondary-blue transition duration-150 ease-in-out" />
                                 Por que participar?
                             </h3>
 
@@ -289,22 +338,28 @@
                                     'Receber feedback de professores'
                                 ] as $item)
                                     <div class="ms-[0.45rem] flex items-center gap-3">
-                                        <x-lucide-check-circle-2 class="w-5 h-5 text-primary-blue flex-shrink-0" />
-                                        <span class="text-gray-700 text-sm lg:text-base 2xl:text-lg">{{ $item }}</span>
+                                        <x-lucide-check-circle-2 class="w-5 h-5 text-primary-blue flex-shrink-0
+                                            dark:text-secondary-blue transition duration-150 ease-in-out" />
+                                        <span class="text-gray-700 text-sm lg:text-base 2xl:text-lg
+                                            dark:text-gray-400 transition duration-150 ease-in-out">{{ $item }}</span>
                                     </div>
                                 @endforeach
                             </div>
                         </div>
 
                         <!-- Comunidade -->
-                        <div class="pt-4 border-t border-gray-200">
+                        <div class="pt-4 border-t border-gray-200
+                            dark:border-gray-700 transition duration-150 ease-in-out">
                             <div class="flex items-start gap-4">
-                                <x-lucide-users class="w-6 h-6 text-primary-blue mt-1 flex-shrink-0" />
+                                <x-lucide-users class="w-6 h-6 text-primary-blue mt-1 flex-shrink-0
+                                    dark:text-secondary-blue transition duration-150 ease-in-out" />
                                 <div>
-                                    <h4 class="text-lg lg:text-xl 2xl:text-2xl font-bold text-gray-900 mb-1">
+                                    <h4 class="text-lg lg:text-xl 2xl:text-2xl font-bold text-gray-900 mb-1
+                                        dark:text-gray-100 transition duration-150 ease-in-out">
                                         Comunidade Acadêmica
                                     </h4>
-                                    <p class="text-gray-600 text-sm lg:text-base 2xl:text-lg">
+                                    <p class="text-gray-600 text-sm lg:text-base 2xl:text-lg
+                                        dark:text-gray-400 transition duration-150 ease-in-out">
                                         Todos os alunos podem participar independentemente do curso ou semestre.
                                     </p>
                                 </div>
@@ -313,26 +368,63 @@
                     </div>
                 </div>
             </div>
-            <div class="h-24 md:h-28 lg:h-32 bg-white"></div>
+            <div class="h-24 md:h-28 lg:h-32 bg-white dark:bg-gray-900 transition duration-150 ease-in-out"></div>
         </div>
     </section>
     {{-- Rodapé --}}
-    <footer class="bg-white text-white border-t border-gray-200 mx-10">
-        <div class="max-w-[2200px] mx-auto px-4 py-6 sm:px-6 lg:px-8">
-            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div class="flex flex-col items-center">
-                    <!-- Copyright -->
-                    <p class=" text-sm lg:text-base text-gray-500 text-center">
-                        &copy; 2025. Todos os direitos reservados.
-                    </p>
-                </div>
+    <footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 px-10 transation duration-150 ease-in-out">
+        <div class="max-w-[1800px] mx-auto px-4 py-6 sm:px-6 lg:px-8">
+            <div class="flex flex-col justify-center gap-4 sm:flex-row sm:items-center sm:justify-between">
 
-                <!-- Links -->
-                <div class="flex flex-col sm:flex-row items-center gap-1 sm:gap-4">
-                    <a target="_blank" href="{{ route('policy.show') }}" class="text-gray-500 hover:text-gray-600 text-sm 2xl:text-base">Política de Privacidade</a>
-                    <a target="_blank"  href="{{ route('terms.show') }}" class="text-gray-500 hover:text-gray-600 text-sm 2xl:text-base">Termos de Uso</a>
-                    {{-- <a href="#" class="text-gray-400 hover:text-white text-sm">Suporte</a> --}}
+                <!-- Copyright -->
+                <p class="text-sm lg:text-base text-gray-500 dark:text-gray-400 text-center sm:text-left">
+                    &copy; 2025. Todos os direitos reservados.
+                </p>
+
+                <!-- Links + Tema -->
+                <div class="flex flex-col  sm:flex-row items-center gap-3 sm:gap-4 sm:me-auto">
+                    <a target="_blank"
+                       href="{{ route('policy.show') }}"
+                       class="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 text-sm 2xl:text-base transition duration-150 ease-in-out">
+                        Política de Privacidade
+                    </a>
+
+                    <a target="_blank"
+                       href="{{ route('terms.show') }}"
+                       class="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 text-sm 2xl:text-base transition duration-150 ease-in-out">
+                        Termos de Uso
+                    </a>
                 </div>
+                @if(config('appearance.switch_theme'))
+                    <button
+                        @click="toggleTheme()"
+                        class="mx-auto sm:mx-0 relative flex items-center gap-2 px-3 py-1.5 rounded-lg
+                            border border-gray-300 dark:border-gray-600
+                            text-gray-500 dark:text-gray-300
+                            hover:bg-gray-100 dark:hover:bg-gray-800
+                            transition duration-150 ease-in-out"
+                            aria-label="Alternar tema"
+                        >
+                            <!-- Slot fixo do ícone -->
+                            <span class="relative w-4 h-4">
+                                <!-- Moon -->
+                                <x-lucide-moon
+                                    class="absolute inset-0 h-4 w-4
+                                           transition-all duration-300 ease-in-out
+                                           opacity-100 scale-100 rotate-0
+                                           dark:opacity-0 dark:scale-75 dark:-rotate-90"
+                                />
+                                <!-- Sun -->
+                                <x-lucide-sun
+                                    class="absolute inset-0 h-4 w-4
+                                           transition-all duration-300 ease-in-out
+                                           opacity-0 scale-75 rotate-90
+                                           dark:opacity-100 dark:scale-100 dark:rotate-0"
+                                />
+                            </span>
+                        <span class="text-sm hidden sm:inline">Tema</span>
+                    </button>
+                @endif
             </div>
         </div>
     </footer>

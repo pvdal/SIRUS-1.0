@@ -37,8 +37,6 @@
         {{-- seções da página e links do menu lateral --}}
         const sections = document.querySelectorAll('.chapter');
         const links = document.querySelectorAll('.chapter-link');
-        {{-- Iniciando o estado atual do scroll vertical --}}
-        let lastScrollY = window.scrollY;
         {{-- função que adiciona destaque visual a um link do menu de navageção --}}
         function highlight(id) {
             {{-- O 'id ' aqui deve ser sempre uma das pages:'indtroduction','access'... --}}

@@ -38,7 +38,9 @@
             @endif
 
             @if(config('accessibility.daltonism') || config('accessibility.libras'))
-                @livewire('profile.manage-accessibility')
+                <div class="mt-10 sm:mt-0">
+                    @livewire('profile.manage-accessibility')
+                </div>
 
                 <x-section-border />
             @endif

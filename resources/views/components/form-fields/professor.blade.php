@@ -22,7 +22,7 @@
     </div>
     {{-- Formação do professor --}}
     <div class="mt-4">
-        <x-label for="education" value="Formação do Professor"/>
+        <x-label for="education" value="Formação do Professor (opcional)"/>
         <x-input id="education" type="text" autocomplete="name" class="w-full mt-1"
                  placeholder="Formação do professor" x-model="education"
                  @keydown.enter="saveCoordinator"/>

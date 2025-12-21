@@ -38,7 +38,7 @@ class EventController extends Controller
     public function show(): JsonResponse
     {
         $events = Committee::with([
-            'paper.group',
+            'paper.group.students.user:id,name',
             'members' => function ($query) {
                 $query->whereHas('user', function ($q) {
                     $q->where('state', 1);
@@ -68,7 +68,7 @@ class EventController extends Controller
                     'extendedProps' => [
                         'group' => $group->theme,
                         'paper' => $event->paper?->title,
-                        'members' => $event->members
+                        'committeeMembers' => $event->members
                             ->map(fn($m) => [
                                 'user_committee_id' => $m->id,
                                 'user_id' => $m->user_id,
@@ -77,6 +77,11 @@ class EventController extends Controller
                                     'id' => $m->memberType?->id,
                                     'name' => $m->memberType?->name,
                                 ],
+                            ])->values(),
+                        'groupMembers' => $group->students
+                            ->map(fn($m) => [
+                                'ra' => $m->ra,
+                                'name' => $m->user->name,
                             ])->values(),
                         // Indica se o usuário autenticado pertence à comissão
                         'belongsTo' => $event->members

@@ -1,241 +1,37 @@
-<x-documentation-layout>
-    <x-slot name="title">
-        <div class="flex items-center">
-            <h1 class="me-auto">Manual de Usuário</h1>
-            <button
-                x-on:click="settings = !settings"
-                class="hover:bg-gray-200 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md p-2">
-                <x-lucide-settings-2 class="h-4 w-4"/>
-            </button>
-        </div>
-    </x-slot>
+<div>
+    {{-- Configuração do texto --}}
+    @php
+        $textSettings = "
+            'text-base': fontSize === 1,
+            'text-lg': fontSize === 2,
+            'text-xl': fontSize === 3,
 
-    <x-slot name="options">
-        <x-manual-pages/>
-    </x-slot>
+            'leading-normal': leadingHeight === 1,
+            'leading-relaxed': leadingHeight === 2,
+            'leading-loose': leadingHeight === 3,
+            '[line-height:2.2]': leadingHeight === 4,
 
-    <x-slot name="settings">
-        <div x-cloak x-show="settings" class="relative flex flex-col border-t border-gray-200 dark:border-gray-700 lg:max-h-[calc(100vh-10rem)] overflow-hidden">
-            <div class="shadow-sm dark:shadow-md p-3 pt-4">
-                <h1 class="text-gray-900 dark:text-gray-100 font-bold">Preferências de leitura</h1>
-            </div>
-            <div class="flex-1 min-h-0 overflow-y-auto p-2 space-y-5 scrollbar-custom">
-                <div class="hidden xl:block bg-gray-100 dark:bg-gray-800 p-4 rounded-lg space-y-4">
-                    <div class="flex items-center justify-between gap-2">
-                        <div>
-                            <h4 class="font-semibold text-gray-900 dark:text-white">Navegação do capítulo</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Mantenha o controle de navegação interna sempre visível</p>
-                        </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" value="" class="sr-only peer" x-model="stickyNav">
-                            <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-slate-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-blue-600"></div>
-                        </label>
-                    </div>
-                    <hr class="border-gray-300 dark:border-gray-700">
-                    <div class="flex items-center justify-between gap-2">
-                        <div>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Exibir controle de navegação</p>
-                        </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" value="" class="sr-only peer" x-model="showChapterNav">
-                            <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-slate-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-blue-600"></div>
-                        </label>
-                    </div>
-                </div>
-                <div class="block bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
-                    <div class="space-y-1">
-                        <h4 class="font-semibold text-gray-900 dark:text-white">
-                            Tamanho da fonte
-                        </h4>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">
-                            Ajuste o conforto da leitura do conteúdo
-                        </p>
-                        <div class="flex flex-col">
-                            <div class="mt-3 grid grid-cols-3 self-start rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400">
-                                <button
-                                    x-on:click="fontSize = 1"
-                                    :class="fontSize === 1 ? 'bg-blue-600 text-gray-100' : 'bg-transparent hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-slate-600'"
-                                    class="px-3 py-1.5 text-sm font-medium rounded-s-lg">
-                                    A
-                                </button>
-                                <button
-                                    x-on:click="fontSize = 2"
-                                    :class="fontSize === 2 ? 'bg-blue-600 text-gray-100' : 'bg-transparent hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-slate-600'"
-                                    class="px-3 py-1.5 text-sm font-medium">
-                                    A+
-                                </button>
-                                <button
-                                    x-on:click="fontSize = 3"
-                                    :class="fontSize === 3 ? 'bg-blue-600 text-gray-100' : 'bg-transparent hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-slate-600'"
-                                    class="px-3 py-1.5 text-sm font-medium rounded-e-lg">
-                                    A++
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="block bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
-                    <div class="space-y-1">
-                        <h4 class="font-semibold text-gray-900 dark:text-white">
-                            Espaçamento entre linhas
-                        </h4>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">
-                            Ajuste a densidade do texto
-                        </p>
+            'tracking-normal': letterSpacing === 1,
+            'tracking-wide': letterSpacing === 2,
+            'tracking-wider': letterSpacing === 3,
+            'tracking-widest': letterSpacing === 4,
 
-                        <div class="mt-3 space-y-1">
-                            <input
-                                type="range"
-                                min="1"
-                                max="4"
-                                step="1"
-                                class="w-full range-custom"
-                                x-model.number="leadingHeight"
-                            >
-
-                            <div class="flex justify-between px-[0.3rem] text-xs text-gray-500 dark:text-gray-400">
-                                <div class="flex flex-col items-center">
-                                    <span class="bg-gray-500 h-1 w-px mb-1"></span>
-                                    <span>1</span>
-                                </div>
-                                <div class="flex flex-col items-center">
-                                    <span class="bg-gray-500 h-1 w-px mb-1"></span>
-                                    <span>2</span>
-                                </div>
-                                <div class="flex flex-col items-center">
-                                    <span class="bg-gray-500 h-1 w-px mb-1"></span>
-                                    <span>3</span>
-                                </div>
-                                <div class="flex flex-col items-center">
-                                    <span class="bg-gray-500 h-1 w-px mb-1"></span>
-                                    <span>4</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="block bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
-                    <div class="space-y-1">
-                        <h4 class="font-semibold text-gray-900 dark:text-white">
-                            Espaçamento entre Letras
-                        </h4>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">
-                            Melhora a legibilidade de cada palavra
-                        </p>
-
-                        <div class="mt-3 space-y-1">
-                            <input
-                                type="range"
-                                min="1"
-                                max="4"
-                                step="1"
-                                class="w-full range-custom"
-                                x-model.number="letterSpacing"
-                            >
-
-                            <div class="flex justify-between px-[0.3rem] text-xs text-gray-500 dark:text-gray-400">
-                                <div class="flex flex-col items-center">
-                                    <span class="bg-gray-500 h-1 w-px mb-1"></span>
-                                    <span>1</span>
-                                </div>
-                                <div class="flex flex-col items-center">
-                                    <span class="bg-gray-500 h-1 w-px mb-1"></span>
-                                    <span>2</span>
-                                </div>
-                                <div class="flex flex-col items-center">
-                                    <span class="bg-gray-500 h-1 w-px mb-1"></span>
-                                    <span>3</span>
-                                </div>
-                                <div class="flex flex-col items-center">
-                                    <span class="bg-gray-500 h-1 w-px mb-1"></span>
-                                    <span>4</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="block bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
-                    <div class="space-y-1">
-                        <h4 class="font-semibold text-gray-900 dark:text-white">
-                            Espaçamento entre palavras
-                        </h4>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">
-                            Facilita a separação visual entre termos
-                        </p>
-
-                        <div class="mt-3 space-y-1">
-                            <input
-                                type="range"
-                                min="1"
-                                max="4"
-                                step="1"
-                                class="w-full range-custom"
-                                x-model.number="wordSpacing"
-                            >
-
-                            <div class="flex justify-between px-[0.3rem] text-xs text-gray-500 dark:text-gray-400">
-                                <div class="flex flex-col items-center">
-                                    <span class="bg-gray-500 h-1 w-px mb-1"></span>
-                                    <span>1</span>
-                                </div>
-                                <div class="flex flex-col items-center">
-                                    <span class="bg-gray-500 h-1 w-px mb-1"></span>
-                                    <span>2</span>
-                                </div>
-                                <div class="flex flex-col items-center">
-                                    <span class="bg-gray-500 h-1 w-px mb-1"></span>
-                                    <span>3</span>
-                                </div>
-                                <div class="flex flex-col items-center">
-                                    <span class="bg-gray-500 h-1 w-px mb-1"></span>
-                                    <span>4</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </x-slot>
-
-    <style>
-        article.chapter h2,
-        article.chapter h3,
-        article.chapter h4 {
-            scroll-margin-top: 4.5rem;
-        }
-    </style>
-
+            '[word-spacing:0]': wordSpacing === 1,
+            '[word-spacing:0.05em]': wordSpacing === 2,
+            '[word-spacing:0.1em]': wordSpacing === 3,
+            '[word-spacing:0.2em]': wordSpacing === 4,
+        "
+    @endphp
+    {{-- Capítulos do manual --}}
     <div class="space-y-2">
         {{-- Seção 1 --}}
-        <article id="introduction" class="chapter flex leading-relaxed bg-white shadow-sm md:rounded-md border border-white px-8 py-12 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-300 lg:scroll-mt-[4rem]">
-            <div class="max-w-4xl w-full xl:pe-24"
-                :class="{
-                    'text-base': fontSize === 1,
-                    'text-lg': fontSize === 2,
-                    'text-xl': fontSize === 3,
-
-                    'leading-normal': leadingHeight === 1,
-                    'leading-relaxed': leadingHeight === 2,
-                    'leading-loose': leadingHeight === 3,
-                    '[line-height:2.2]': leadingHeight === 4,
-
-                    'tracking-normal': letterSpacing === 1,
-                    'tracking-wide': letterSpacing === 2,
-                    'tracking-wider': letterSpacing === 3,
-                    'tracking-widest': letterSpacing === 4,
-
-                    '[word-spacing:0]': wordSpacing === 1,
-                    '[word-spacing:0.5em]': wordSpacing === 2,
-                    '[word-spacing:0.1em]': wordSpacing === 3,
-                    '[word-spacing:0.2em]': wordSpacing === 4,
-                }"
-            >
+        <article id="introduction" class="chapter flex bg-white shadow-sm md:rounded-md border border-white px-8 py-12 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-300 lg:scroll-mt-[4rem]">
+            <div class="max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
                 {{-- Capítulo 1 --}}
-                <h1 id="cap-1" class="text-3xl font-bold mb-14 text-gray-900 dark:text-gray-100">1. Introdução</h1>
+                <h1 class="text-3xl font-bold mb-14 text-gray-900 dark:text-gray-100">1. Introdução</h1>
 
                 {{-- Capítulo 1.1 --}}
-                <h2 id="cap-1.1" class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">1.1 Sobre o Sistema</h2>
+                <h2 id="cap-1.1" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">1.1 Sobre o Sistema</h2>
                 <p class="mb-4">
                     O <strong>SIRUS (Sistema de Rubricas para Gestão Avaliativa do SIMBAJU)</strong>
                     é uma plataforma web desenvolvida com o propósito de otimizar e padronizar o processo
@@ -244,7 +40,8 @@
                     de desempenho e a uniformização das rubricas utilizadas pelas bancas, proporcionando maior
                     clareza, objetividade e confiabilidade ao processo avaliativo, tanto para avaliadores quanto para alunos.
                 </p>
-                <h3 class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Objetivos Principais</h3>
+
+                <h3 id="cap-1.1-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Objetivos Principais</h3>
                 <ul class="list-disc pl-6 space-y-1 mb-10">
                     <li>Centralizar o gerenciamento das avaliações acadêmicas em uma única plataforma</li>
                     <li>Padronizar critérios, rubricas e métodos de atribuição de notas</li>
@@ -254,7 +51,7 @@
                 </ul>
 
                 {{-- Capítulo 1.2 --}}
-                <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">1.2 Público-Alvo</h2>
+                <h2 id="cap-1.2" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">1.2 Público-Alvo</h2>
                 <p class="mb-2">
                     O sistema foi projetado para os seguintes usuários
                 </p>
@@ -265,7 +62,7 @@
                 </ul>
 
                 {{-- Capítulo 1.3 --}}
-                <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">1.3 Sobre o SIMBAJU</h2>
+                <h2 id="cap-1.3" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">1.3 Sobre o SIMBAJU</h2>
                 <p class="mb-10">
                     O <strong>SIMBAJU (Simpósio da Bacia do Juquery)</strong> é um evento acadêmico-científico realizado semestralmente
                     na Faculdade de Tecnologia de Franco da Rocha, no estado de São Paulo. A instituição de ensino superior
@@ -281,84 +78,175 @@
                 </p>
 
                 {{-- Capítulo 1.4 --}}
-                <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">1.4 Sobre este Manual do Usuário</h2>
-                <h3 class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Finalidade do Manual</h3>
+                <h2 id="cap-1.4" class="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">1.4 Sobre este Manual do Usuário</h2>
+
+                <h3 id="cap-1.4-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Finalidade do Manual</h3>
                 <p class="mb-4">
                     Este manual do usuário tem como objetivo orientar os usuários do sistema SIRUS na utilização correta
                     e eficiente de suas funcionalidades. O documento apresenta, de forma clara e organizada, as principais
                     operações disponíveis na plataforma, considerando os diferentes perfis de acesso existentes.
                 </p>
-                <h3 class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Conteúdo Abordado</h3>
+
+                <h3 id="cap-1.4-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Conteúdo Abordado</h3>
                 <p class="mb-4">
                     Ao longo do manual, são descritos os procedimentos necessários para navegação no sistema, realização
                     de cadastros, acompanhamento das bancas avaliativas, visualização de trabalhos e registro ou consulta
                     das avaliações, conforme as permissões de cada tipo de usuário.
                 </p>
-                <h3 class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Público e Objetivo de Uso</h3>
-                <p class="">
+
+                <h3 id="cap-1.4-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Público e Objetivo de Uso</h3>
+                <p class="mb-8">
                     O conteúdo foi elaborado com foco na usabilidade e na compreensão prática do sistema, servindo como
                     material de apoio tanto para novos usuários quanto para aqueles que já utilizam a plataforma,
                     contribuindo para a padronização dos processos e para o uso adequado das funcionalidades disponibilizadas.
                 </p>
+
+                {{-- Capítulo 1.4.1 --}}
+                <h2 id="cap-1.4.1" class="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">1.4.1 Navegação</h2>
+
+                <h3 id="cap-1.4.1-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Navegação do manual</h3>
+                <p class="mb-2">
+                    O Manual do Usuário possui um menu de navegação que se adapta conforme o tamanho da tela do
+                    dispositivo utilizado. Em tela maiores é visível na lateral esquerda da página, em telas menores,
+                    é visível logo no início, antes de qualquer capítulo. Seu objetivo é possibilitar acesso rápido aos
+                    capítulos deste manual.
+                </p>
+                <p class="mb-4">
+                    No topo desse menu é exibido o título <strong>"Manual do Usuário"</strong>, acompanhado
+                    de um ícone de configurações.
+                    Abaixo do título, encontra-se a lista de capítulos do manual. O capítulo atualmente
+                    selecionado permanece destacado, permitindo ao usuário identificar facilmente
+                    sua posição no conteúdo.
+                </p>
+
+                <h3 id="cap-1.4.1-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Navegação do capítulo</h3>
+                <p class="mb-4">
+                    A navegação interna entre seções dos capítulos é disponibilizada apenas em telas com largura a partir
+                    de <strong>1280 pixels</strong>. Nessa resolução, o controle de sua exibição e layout encontra-se
+                    disponível no painel de preferências.
+                </p>
+
+                <h3 id="cap-1.4.1-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Voltar ao topo</h3>
+                <p class="mb-8">
+                    Para facilitar a navegação, especialmente em dispositivos móveis onde não há um
+                    menu lateral fixo, o manual disponibiliza um botão de retorno ao topo da página.
+                </p>
+
+                {{-- Capítulo 1.4.2 --}}
+                <h2 id="cap-1.4.2" class="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">1.4.2 Preferências de leitura</h2>
+                <p class="mb-4">
+                    Ao clicar no ícone de configurações localizado no topo do menu lateral, é exibido
+                    o painel <strong>"Preferências de leitura"</strong>. Esse painel permite personalizar
+                    a forma como o conteúdo do manual é apresentado, de acordo com as preferências
+                    individuais de leitura.
+                </p>
+
+                <h3 id="cap-1.4.2-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Restaurar configurações</h3>
+                <p class="mb-4">
+                    No cabeçalho do painel de preferências, está disponível o botão <strong>Restaurar</strong>,
+                    que permite redefinir todas as configurações de leitura para os valores padrão.
+                </p>
+
+                <h3 id="cap-1.4.2-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Opções disponíveis</h3>
+                <ul class="list-disc pl-6 space-y-2 mb-4">
+                    <li>
+                        <strong>Navegação do capítulo:</strong> permite exibir ou ocultar o controle de navegação
+                        interna entre seções do capítulo.
+                    </li>
+                    <li>
+                        <strong>Tamanho da fonte:</strong> possibilita ajustar o tamanho do texto
+                        (<em>A</em>, <em>A+</em> ou <em>A++</em>) para maior conforto visual.
+                    </li>
+                    <li>
+                        <strong>Espaçamento entre linhas:</strong> ajusta a densidade vertical do texto,
+                        com níveis progressivos.
+                    </li>
+                    <li>
+                        <strong>Espaçamento entre letras:</strong> melhora a legibilidade das palavras
+                        ao aumentar o espaço entre caracteres.
+                    </li>
+                    <li>
+                        <strong>Espaçamento entre palavras:</strong> facilita a separação visual entre termos,
+                        tornando a leitura mais confortável.
+                    </li>
+                </ul>
+                <p>
+                    Essas configurações afetam exclusivamente a visualização do manual.
+                </p>
             </div>
-            <aside class="hidden xl:block text-sm px-5 min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky top-[86px] self-start': stickyNav, '!hidden': !showChapterNav }">
+            <aside class="chapter-aside hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
                 <h2 class="font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-4">
                     Neste capítulo
                 </h2>
-                <nav class="leading-relaxed space-y-2 text-gray-600 dark:text-gray-400">
-                    <a href="#cap-1.1" class="grid grid-cols-[auto_1fr] gap-x-1 cursor-pointer">
+                <nav class="leading-relaxed text-gray-700 dark:text-gray-300 overflow-y-auto max-h-[calc(100vh-86px-2.5rem)] scrollbar-custom">
+                    <a href="#cap-1.1" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
                         <span class="font-semibold">1.1</span>
                         <span>Sobre o sistema</span>
                     </a>
-
-                    <div class="grid grid-cols-[auto_1fr] gap-x-1 pl-4">
+                    <a href="#cap-1.1-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
                         <span>Objetivos Principais</span>
-                    </div>
+                    </a>
 
-                    <div class="grid grid-cols-[auto_1fr] gap-x-1">
+                    <a href="#cap-1.2" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
                         <span class="font-semibold">1.2</span>
                         <span>Público-Alvo</span>
-                    </div>
-                    <div class="grid grid-cols-[auto_1fr] gap-x-1">
+                    </a>
+
+                    <a href="#cap-1.3" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
                         <span class="font-semibold">1.3</span>
                         <span>Sobre o SIMBAJU</span>
-                    </div>
-                    <div class="grid grid-cols-[auto_1fr] gap-x-1">
+                    </a>
+
+                    <a href="#cap-1.4" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
                         <span class="font-semibold">1.4</span>
                         <span>Sobre este Manual do Usuário</span>
-                    </div>
-
-                    <div class="grid grid-cols-[auto_1fr] gap-x-1 pl-4">
+                    </a>
+                    <a href="#cap-1.4-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
                         <span>Finalidade do Manual</span>
-                    </div>
-                    <div class="grid grid-cols-[auto_1fr] gap-x-1 pl-4">
+                    </a>
+                    <a href="#cap-1.4-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
                         <span>Conteúdo Abordado</span>
-                    </div>
-                    <div class="grid grid-cols-[auto_1fr] gap-x-1 pl-4">
+                    </a>
+                    <a href="#cap-1.4-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
                         <span>Público e Objetivo de Uso</span>
-                    </div>
+                    </a>
+
+                    <a href="#cap-1.4.1" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
+                        <span class="font-semibold">1.4.1</span>
+                        <span>Navegação</span>
+                    </a>
+                    <a href="#cap-1.4.1-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
+                        <span>Navegação do manual</span>
+                    </a>
+                    <a href="#cap-1.4.1-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
+                        <span>Navegação do capítulo</span>
+                    </a>
+                    <a href="#cap-1.4.1-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
+                        <span>Voltar ao topo</span>
+                    </a>
+
+                    <a href="#cap-1.4.2" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
+                        <span class="font-semibold">1.4.1</span>
+                        <span>Preferências de leitura</span>
+                    </a>
+                    <a href="#cap-1.4.2-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
+                        <span>Restaurar configurações</span>
+                    </a>
+                    <a href="#cap-1.4.2-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
+                        <span>Opções disponíveis</span>
+                    </a>
                 </nav>
             </aside>
         </article>
 
         {{-- Seção 2 --}}
-        <article id="access" class="chapter flex leading-relaxed bg-white shadow-sm md:rounded-md border border-white px-8 py-12 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-300 lg:scroll-mt-[4rem]">
-            <div class="max-w-4xl w-full xl:pe-24"
-                 :class="{
-                    'text-base': fontSize === 1,
-                    'text-lg': fontSize === 2,
-                    'text-xl': fontSize === 3,
-
-                    'leading-normal': leadingHeight === 1,
-                    'leading-relaxed': leadingHeight === 2,
-                    'leading-loose': leadingHeight === 3
-                }"
-            >
+        <article id="access" class="chapter flex bg-white shadow-sm md:rounded-md border border-white px-8 py-12 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-300 lg:scroll-mt-[4rem]">
+            <div class="max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
                 {{-- Capítulo 2 --}}
                 <h1 class="text-3xl font-bold mb-14 text-gray-900 dark:text-gray-100">2. Acesso ao Sistema</h1>
 
                 {{-- Capítulo 2.1 --}}
-                <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">2.1 Requisitos de acesso</h2>
+                <h2 id="cap-2.1" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">2.1 Requisitos de acesso</h2>
                 <ul class="list-disc pl-6 space-y-1 mb-4">
                     <li>Navegador web atualizado (Chrome, Firefox, Edge ou equivalente)</li>
                     <li>Conexão ativa com a internet</li>
@@ -370,7 +258,7 @@
                 </p>
 
                 {{-- Capítulo 2.2 --}}
-                <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">2.2 Página Inicial</h2>
+                <h2 id="cap-2.2" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">2.2 Página Inicial</h2>
                 <p class="mb-2">
                     Ao acessar o <strong>SIRUS</strong>, o usuário é direcionado à Página Inicial do sistema.
                     No topo da tela encontra-se o menu de navegação principal, que disponibiliza os seguintes
@@ -383,24 +271,27 @@
                     <li><strong>Privacidade:</strong> Acesso às Políticas de Privacidade</li>
                     <li><strong>Login:</strong> Direciona para a tela de autenticação do sistema</li>
                 </ul>
-                <h3 class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Boas-vindas</h3>
+
+                <h3 id="cap-2.2-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Boas-vindas</h3>
                 <p class="mb-4">
                     Abaixo do menu de navegação, é exibida uma seção de boas-vindas contendo uma breve descrição
                     do sistema, além dos botões <strong>Fazer Login</strong> e <strong>Manual do Usuário</strong>.
                 </p>
-                <h3 class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Navegação</h3>
+                <h3 id="cap-2.2-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Navegação</h3>
                 <p class="mb-4">
                     O botão de login direciona o usuário para a tela de autenticação, enquanto o botão do manual
                     permite o acesso direto a este documento.
                     Caso o usuário já esteja autenticado, o texto dos botões relacionados ao login é ajustado
                     automaticamente, refletindo o estado atual da sessão.
                 </p>
-                <h3 class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Conteúdo complementar</h3>
+
+                <h3 id="cap-2.2-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Conteúdo complementar</h3>
                 <p class="mb-4">
                     A Página Inicial também apresenta uma seção dedicada às principais funcionalidades do sistema
                     e outra com informações institucionais sobre o evento <strong>SIMBAJU</strong>.
                 </p>
-                <h3 class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Rodapé</h3>
+
+                <h3 id="cap-2.2-d" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Rodapé</h3>
                 <p class="mb-10">
                     No rodapé da página, estão disponíveis um texto institucional do sistema, links para os
                     Termos de Uso e Políticas de Privacidade, além de um botão com ícone de sol/lua que permite
@@ -408,7 +299,7 @@
                 </p>
 
                 {{-- Capítulo 2.3 --}}
-                <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">2.3 Autenticação de Usuário</h2>
+                <h2 id="cap-2.3" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">2.3 Autenticação de Usuário</h2>
                 <p class="mb-2">
                     Na tela de login, você deverá
                 </p>
@@ -421,17 +312,20 @@
                     Caso as credenciais informadas estejam incorretas ou a conta não esteja validada,
                     o sistema exibirá uma mensagem informativa indicando o motivo da falha no acesso.
                 </p>
-                <h3 class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Visibilidade da senha</h3>
+
+                <h3 id="cap-2.3-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Visibilidade da senha</h3>
                 <p class="mb-4">
                     Você pode optar por manter a <strong>senha oculta</strong> enquanto digita ou
                     <strong>visualizá-la</strong> ao clicar no ícone de olho localizado à direita do campo de senha.
                 </p>
-                <h3 class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Manter conectado</h3>
+
+                <h3 id="cap-2.3-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Manter conectado</h3>
                 <p class="mb-4">
                     Ao selecionar a opção <strong>Manter conectado</strong>, não será necessário realizar
                     o login novamente nesse navegador, a menos que os dados de navegação sejam limpos.
                 </p>
-                <h3 class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Autenticação de dois fatores (2FA)</h3>
+
+                <h3 id="cap-2.3-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Autenticação de dois fatores (2FA)</h3>
                 <p class="mb-4">
                     Caso a <strong>autenticação de dois fatores (2FA)</strong> esteja ativada, após informar
                     o e-mail e a senha na tela de login, você também deverá inserir o código gerado pelo
@@ -453,7 +347,7 @@
                 </div>
 
                 {{-- Capítulo 2.4 --}}
-                <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">2.4 Primeiro Acesso</h2>
+                <h2 id="cap-2.4" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">2.4 Primeiro Acesso</h2>
                 <p class="mb-2">
                     No primeiro acesso ao SIRUS, será necessário validar seu e-mail. Siga os passos:
                 </p>
@@ -465,77 +359,141 @@
                     <li>Aceitar os <strong>Termos de Uso</strong> e <strong>Políticas de Privacidade</strong></li>
                     <li>Acessar o SIRUS com acesso completo</li>
                 </ol>
-                <p class="">
+                <p class="mb-10">
                     O link de validação possui validade de <strong>24 horas</strong>. Após esse período, será necessário
                     solicitar um novo link ao realizar o login novamente.
                 </p>
+
+                {{-- Capítulo 2.5 --}}
+                <h2 id="cap-2.5" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">
+                    2.5 Interface Principal do Sistema
+                </h2>
+                <p class="mb-4">
+                    Após a autenticação, o usuário é direcionado à interface principal do SIRUS.
+                    Essa interface é composta por um <strong>menu superior fixo</strong>, presente em todas
+                    as páginas internas do sistema, responsável por centralizar a navegação entre
+                    as funcionalidades disponíveis.
+                </p>
+
+                <h3 id="cap-2.5-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Navegação disponível</h3>
+                <p class="mb-2">
+                    No canto esquerdo do menu encontra-se o <strong>logotipo do sistema</strong>,
+                    que permite retornar à Página Inicial a qualquer momento.
+                </p>
+                <p class="mb-2">
+                    Seguindo da esquerda para a direita, o menu disponibiliza acesso às áreas do sistema,
+                    conforme o perfil do usuário
+                </p>
+                <ul class="list-disc pl-6 space-y-1 mb-4">
+                    <li><strong>Agenda</strong></li>
+                    <li><strong>Usuários</strong></li>
+                    <li><strong>Cursos</strong></li>
+                    <li><strong>Grupos</strong></li>
+                    <li><strong>Bancas</strong></li>
+                    <li><strong>Rubricas</strong></li>
+                    <li><strong>Trabalhos</strong></li>
+                </ul>
+                <p class="mb-4">
+                    Para usuários com perfil de <strong>professor</strong> ou <strong>aluno</strong>,
+                    o menu é simplificado, exibindo apenas os acessos à <strong>Agenda</strong> e às
+                    <strong>Bancas</strong>.
+                </p>
+
+                <h3 id="cap-2.5-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Acesso ao perfil</h3>
+                <p class="mb-4">
+                    No canto superior direito do menu é exibido o <strong>acesso ao perfil do usuário</strong>.
+                    Caso não exista uma imagem de perfil cadastrada, o sistema exibe automaticamente
+                    a <strong>letra inicial do nome do usuário</strong>.
+                </p>
+
+                <h3 id="cap-2.5-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Cabeçalho da página</h3>
+                <p class="mb-4">
+                    Abaixo do menu superior, o sistema apresenta um <strong>cabeçalho da página</strong>,
+                    responsável por identificar de forma sucinta o conteúdo exibido, por meio de títulos
+                    como <em>"Bancas agendadas"</em> ou <em>"Alunos cadastrados"</em>.
+                </p>
+
+                <h3 id="cap-2.5-d" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Escopo e disponibilidade das funcionalidades</h3>
+                <p>
+                    A disponibilidade de menus e funcionalidades varia conforme o perfil de acesso
+                    do usuário. A descrição detalhada de cada área e seus respectivos fluxos é
+                    apresentada nos capítulos específicos deste manual.
+                </p>
             </div>
-            <aside class="hidden xl:block text-sm px-5 min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky top-[86px] self-start': stickyNav, '!hidden': !showChapterNav }">
+            <aside class="chapter-aside hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
                 <h2 class="font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-4">
                     Neste capítulo
                 </h2>
-                <nav class="leading-relaxed space-y-2 text-gray-600 dark:text-gray-400">
-                    <div class="grid grid-cols-[auto_1fr] gap-x-1">
+                <nav class="leading-relaxed text-gray-700 dark:text-gray-300 overflow-y-auto max-h-[calc(100vh-86px-2.5rem)] scrollbar-custom">
+                    <a href="#cap-2.1" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
                         <span class="font-semibold">2.1</span>
                         <span>Requisitos de acesso</span>
-                    </div>
-                    <div class="grid grid-cols-[auto_1fr] gap-x-1">
+                    </a>
+
+                    <a href="#cap-2.2" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
                         <span class="font-semibold">2.2</span>
                         <span>Página Inicial</span>
-                    </div>
-                    <div class="grid grid-cols-[auto_1fr] gap-x-1 pl-4">
+                    </a>
+                    <a href="#cap-2.2-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
                         <span>Boas-vindas</span>
-                    </div>
-                    <div class="grid grid-cols-[auto_1fr] gap-x-1 pl-4">
+                    </a>
+                    <a href="#cap-2.2-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
                         <span>Navegação</span>
-                    </div>
-                    <div class="grid grid-cols-[auto_1fr] gap-x-1 pl-4">
+                    </a>
+                    <a href="#cap-2.2-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
                         <span>Conteúdo complementar</span>
-                    </div>
-                    <div class="grid grid-cols-[auto_1fr] gap-x-1 pl-4">
+                    </a>
+                    <a href="#cap-2.2-d" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
                         <span>Rodapé</span>
-                    </div>
+                    </a>
 
-                    <div class="grid grid-cols-[auto_1fr] gap-x-1">
+                    <a href="#cap-2.3" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
                         <span class="font-semibold">2.3</span>
                         <span>Autenticação de Usuário</span>
-                    </div>
-                    <div class="grid grid-cols-[auto_1fr] gap-x-1 pl-4">
+                    </a>
+                    <a href="#cap-2.3-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
                         <span>Visibilidade da senha</span>
-                    </div>
-                    <div class="grid grid-cols-[auto_1fr] gap-x-1 pl-4">
+                    </a>
+                    <a href="#cap-2.3-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
                         <span>Manter conectado</span>
-                    </div>
-                    <div class="grid grid-cols-[auto_1fr] gap-x-1 pl-4">
+                    </a>
+                    <a href="#cap-2.3-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
                         <span>Autenticação de dois fatores (2FA)</span>
-                    </div>
+                    </a>
 
-                    <div class="grid grid-cols-[auto_1fr] gap-x-1">
+                    <a href="#cap-2.4" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
                         <span class="font-semibold">2.4</span>
                         <span>Primeiro Acesso</span>
-                    </div>
+                    </a>
+
+                    <a href="#cap-2.5" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
+                        <span class="font-semibold">2.5</span>
+                        <span>Interface Principal do Sistema</span>
+                    </a>
+                    <a href="#cap-2.5-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
+                        <span>Navegação disponível</span>
+                    </a>
+                    <a href="#cap-2.5-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
+                        <span>Acesso ao perfil</span>
+                    </a>
+                    <a href="#cap-2.5-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
+                        <span>Cabeçalho da página</span>
+                    </a>
+                    <a href="#cap-2.5-d" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
+                        <span>Escopo e disponibilidade das funcionalidades</span>
+                    </a>
                 </nav>
             </aside>
         </article>
 
         {{-- Seção 3 --}}
-        <article id="security" class="chapter flex leading-relaxed bg-white shadow-sm md:rounded-md border border-white px-8 py-12 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-300 lg:scroll-mt-[4rem]">
-            <div class="max-w-4xl w-full xl:pe-24"
-                 :class="{
-                    'text-base': fontSize === 1,
-                    'text-lg': fontSize === 2,
-                    'text-xl': fontSize === 3,
-
-                    'leading-normal': leadingHeight === 1,
-                    'leading-relaxed': leadingHeight === 2,
-                    'leading-loose': leadingHeight === 3
-                }"
-            >
+        <article id="security" class="chapter flex bg-white shadow-sm md:rounded-md border border-white px-8 py-12 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-300 lg:scroll-mt-[4rem]">
+            <div class="max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
                 {{-- Capítulo 3 --}}
                 <h1 class="text-3xl font-bold mb-14 text-gray-900 dark:text-gray-100">3. Segurança</h1>
 
                 {{-- Capítulo 3.1 --}}
-                <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">3.1 Recuperação de Senha</h2>
+                <h2 id="cap-3.1" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">3.1 Recuperação de Senha</h2>
                 <p class="mb-2">
                     Caso tenha esquecido sua senha, siga o procedimento abaixo para recuperá-la.
                 </p>
@@ -573,17 +531,19 @@
                 </div>
 
                 {{-- Capítulo 3.2 --}}
-                <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">3.2 Autenticação de Dois Fatores (2FA)</h2>
-                <p class="mb-2">
+                <h2 id="cap-3.2" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">3.2 Autenticação de Dois Fatores (2FA)</h2>
+                <p class="mb-4">
                     A autenticação de dois fatores fornece segurança adicional à sua conta. Ao ativar, você precisará de um código além da sua senha para acessar o sistema.
                 </p>
-                <h3 class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Benefícios</h3>
+
+                <h3 id="cap-3.2-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Benefícios</h3>
                 <ul class="list-disc pl-6 space-y-1 mb-4">
                     <li>Proteção contra roubo de senha</li>
                     <li>Acesso seguro mesmo se dados forem vazados</li>
                     <li>Rastreamento de atividades suspeitas</li>
                 </ul>
-                <h3 class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Como Funciona</h3>
+
+                <h3 id="cap-3.2-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Como Funciona</h3>
                 <ul class="list-disc pl-6 space-y-1 mb-4">
                     <li>Código gerado por aplicativo autenticador (ex: Microsoft Authenticator, Google Authenticator)</li>
                     <li>Código válido por cerca de 30 segundos, renovando a cada período</li>
@@ -593,7 +553,8 @@
                         Cada código pode ser utilizado apenas uma vez.
                     </li>
                 </ul>
-                <h3 class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Configurando 2FA</h3>
+
+                <h3 id="cap-3.2-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Configurando 2FA</h3>
                 <ol class="list-decimal pl-6 space-y-1 mb-10">
                     <li><strong>Acesse Configurações de Segurança:</strong> Vá para seu Perfil → Autenticação de Dois Fatores</li>
                     <li><strong>Inicie o processo:</strong> Clique em "Habilitar"</li>
@@ -603,7 +564,7 @@
                 </ol>
 
                 {{-- Capítulo 3.3 --}}
-                <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">3.3 Gerenciamento de Sessões e Dispositivos</h2>
+                <h2 id="cap-3.3" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">3.3 Gerenciamento de Sessões e Dispositivos</h2>
                 <p class="mb-4">
                     Monitore e controle os dispositivos e sessões ativas em sua conta, conhecendo o endereço IP, sistema operacional e navegador
                 </p>
@@ -624,6 +585,8 @@
                         </div>
                     </div>
                 </div>
+
+                <h3 id="cap-3.3-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Sessão inativa</h3>
                 <p class="mb-4">
                     Por motivos de segurança, sessões inativas são encerradas automaticamente após
                     duas horas. Essa medida reduz o risco de acesso não autorizado,
@@ -642,7 +605,7 @@
                 </div>
 
                 {{-- Capítulo 3.4 --}}
-                <h2 class="text-xl font-semibold mb-2">3.4 Tentativas de Acesso</h2>
+                <h2 id="cap-3.4" class="text-2xl font-semibold mb-2">3.4 Tentativas de Acesso</h2>
                 <p class="mb-10">
                     Para proteger as contas contra tentativas de acesso indevidas, o sistema aplica
                     um limite de tentativas consecutivas de login. Caso esse limite de
@@ -653,7 +616,7 @@
                 </p>
 
                 {{-- Capítulo 3.5 --}}
-                <h2 class="text-xl font-semibold mb-2">3.5 Boas Práticas de Segurança</h2>
+                <h2 id="cap-3.5" class="text-2xl font-semibold mb-2">3.5 Boas Práticas de Segurança</h2>
                 <ul class="list-disc pl-6 space-y-1">
                     <li>Não compartilhe suas credenciais com terceiros</li>
                     <li>Utilize senhas fortes e exclusivas</li>
@@ -662,71 +625,65 @@
                     <li>Verifique regularmente os dispositivos conectados à sua conta</li>
                 </ul>
             </div>
-            <aside class="hidden xl:block text-sm px-5 min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky top-[86px] self-start': stickyNav, '!hidden': !showChapterNav }">
+            <aside class="chapter-aside hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
                 <h2 class="font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-4">
                     Neste capítulo
                 </h2>
-                <div class="leading-relaxed space-y-2 text-gray-600 dark:text-gray-400">
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2">
+                <nav class="leading-relaxed text-gray-700 dark:text-gray-300 overflow-y-auto max-h-[calc(100vh-86px-2.5rem)] scrollbar-custom">
+                    <a href="#cap-3.1" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
                         <span class="font-medium">3.1</span>
                         <span>Recuperação de Senha</span>
-                    </div>
+                    </a>
 
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2">
+                    <a href="#cap-3.2" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
                         <span class="font-medium">3.2</span>
                         <span>Autenticação de Dois Fatores (2FA)</span>
-                    </div>
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2 pl-4">
+                    </a>
+                    <a href="#cap-3.2-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
                         <span>Benefícios</span>
-                    </div>
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2 pl-4">
+                    </a>
+                    <a href="#cap-3.2-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
                         <span>Como funciona</span>
-                    </div>
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2 pl-4">
+                    </a>
+                    <a href="#cap-3.2-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
                         <span>Configurando 2FA</span>
-                    </div>
+                    </a>
 
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2">
+                    <a href="#cap-3.3" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
                         <span class="font-medium">3.3</span>
                         <span>Gerenciamento de Sessões e Dispositivos</span>
-                    </div>
+                    </a>
+                    <a href="#cap-3.3-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
+                        <span>Sessão inativa</span>
+                    </a>
 
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2">
+                    <a href="#cap-3.4" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
                         <span class="font-medium">3.4</span>
                         <span>Tentativas de acesso</span>
-                    </div>
+                    </a>
 
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2">
+                    <a href="#cap-3.5"  class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
                         <span class="font-medium">3.5</span>
                         <span>Boas práticas de segurança</span>
-                    </div>
-                </div>
+                    </a>
+                </nav>
             </aside>
         </article>
 
         {{-- Seção 4 --}}
-        <article id="schedule" class="chapter flex leading-relaxed bg-white shadow-sm md:rounded-md border border-white px-8 py-12 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-300 lg:scroll-mt-[4rem]">
-            <div class="max-w-4xl w-full xl:pe-24"
-                 :class="{
-                    'text-base': fontSize === 1,
-                    'text-lg': fontSize === 2,
-                    'text-xl': fontSize === 3,
-
-                    'leading-normal': leadingHeight === 1,
-                    'leading-relaxed': leadingHeight === 2,
-                    'leading-loose': leadingHeight === 3
-                }"
-            >
+        <article id="schedule" class="chapter flex bg-white shadow-sm md:rounded-md border border-white px-8 py-12 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-300 lg:scroll-mt-[4rem]">
+            <div class="max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
                 {{-- Capítulo 4 --}}
-                <h1 class="text-3xl mb-14 font-bold">4. Agenda de Avaliações</h1>
+                <h1 class="text-3xl font-bold mb-14 text-gray-900 dark:text-gray-100">4. Agenda de Avaliações</h1>
 
                 {{-- Capítulo 4.1 --}}
-                <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.1 Visão Geral da Agenda</h2>
+                <h2 id="cap-4.1" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.1 Visão Geral da Agenda</h2>
                 <p class="mb-4">
                     A <strong>Agenda de Avaliações</strong> é a primeira tela exibida ao usuário após o login no sistema.
                     Ela centraliza o agendamento e a visualização das bancas avaliativas do evento SIMABJU.
                 </p>
-                <h3 class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Exibição</h3>
+
+                <h3 id="cap-4.1.1" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Exibição</h3>
                 <p class="mb-2">
                     A agenda é apresentada na forma de um calendário interativo, baseado em visualização temporal,
                     permitindo ao usuário acompanhar facilmente as bancas programadas durante o evento.
@@ -744,20 +701,18 @@
                 </p>
 
                 {{-- Capítulo 4.2 --}}
-                <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">
+                <h2 id="cap-4.2" class="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
                     4.2 Interação com o Calendário
                 </h2>
-                <h3 class="font-semibold mb-2 text-gray-900 dark:text-gray-100">
-                    Alternância de visualização
-                </h3>
+
+                <h3 id="cap-4.2.1" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Alternância de visualização</h3>
                 <p class="mb-4">
                     No canto superior esquerdo do calendário, estão disponíveis botões que permitem ao usuário
                     alternar o modo de visualização da agenda <strong>(mensal, semanal, diária)</strong>,
                     conforme a necessidade de análise ou planejamento.
                 </p>
-                <h3 class="font-semibold mb-2 text-gray-900 dark:text-gray-100">
-                    Navegação por datas
-                </h3>
+
+                <h3 id="cap-4.2.2" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Navegação por datas</h3>
                 <p class="mb-2">
                     No canto superior direito do calendário, estão disponíveis controles de navegação
                     que auxiliam na localização das datas desejadas.
@@ -771,7 +726,8 @@
                         de acordo com o modo de visualização selecionado (mensal, semanal ou diário)
                     </li>
                 </ul>
-                <h3 class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Seleção de datas e horários</h3>
+
+                <h3 id="cap-4.2.3" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Seleção de datas e horários</h3>
                 <p class="mb-2">
                     Ao clicar em uma <strong>célula do calendário</strong> (dia ou horário), o sistema
                     responde de acordo com o contexto.
@@ -786,7 +742,7 @@
                 </ul>
 
                 {{-- Capítulo 4.3 --}}
-                <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.3 Agendamento de Nova Banca</h2>
+                <h2 id="cap-4.3" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.3 Agendamento de Nova Banca</h2>
                 <p class="mb-2">
                     A criação de novos agendamentos é uma funcionalidade <strong>exclusiva do coordenador</strong>.
                     Ao clicar em um horário disponível no calendário, é aberto um <strong>modal de agendamento</strong>, onde o coordenador deve
@@ -816,12 +772,13 @@
                 </p>
 
                 {{-- Capítulo 4.4 --}}
-                <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.4 Visualização de Bancas Agendadas</h2>
+                <h2 id="cap-4.4" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.4 Visualização de Bancas Agendadas</h2>
                 <p class="mb-4">
                     Ao clicar em uma banca já agendada, o sistema abre um modal de visualização, exibindo as mesmas
                     informações do agendamento.
                 </p>
-                <h3 class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Modo visualização</h3>
+
+                <h3 id="cap-4.4.1" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Modo visualização</h3>
                 <ul class="list-disc pl-6 space-y-1 mb-4">
                     <li>Não é possível alterar os dados</li>
                     <li>O modal apresenta botões de ação de acordo com o perfil do usuário e o estado da banca</li>
@@ -831,7 +788,7 @@
                 </p>
 
                 {{-- Capítulo 4.5 --}}
-                <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.5 Edição e Cancelamento de Agendamentos</h2>
+                <h2 id="cap-4.5" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.5 Edição e Cancelamento de Agendamentos</h2>
                 <p class="mb-2">
                     O coordenador pode <strong>editar</strong> ou <strong>cancelar</strong> um agendamento existente,
                     desde que <strong>nenhuma avaliação tenha sido submetida</strong> para aquela banca. No modal de
@@ -851,7 +808,7 @@
                 </p>
 
                 {{-- Capítulo 4.6 --}}
-                <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.6 Controle de Acesso e Permissões</h2>
+                <h2 id="cap-4.6" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.6 Controle de Acesso e Permissões</h2>
                 <p class="mb-2">
                     O comportamento da agenda varia conforme o perfil do usuário
                 </p>
@@ -883,205 +840,256 @@
                 </div>
 
                 {{-- Capítulo 4.7 --}}
-                <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.7 Considerações Importantes</h2>
+                <h2 id="cap-4.7" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.7 Considerações Importantes</h2>
                 <ul class="list-disc pl-6 space-y-1 mb-4">
                     <li>A agenda é o ponto central de organização das avaliações do evento</li>
                     <li>Todas as ações são registradas e controladas conforme permissões</li>
                     <li>A edição de horários é restrita para evitar inconsistências após o início das avaliações</li>
                 </ul>
-                <p class="">
+                <p>
                     Os detalhes sobre o <strong>processo de avaliação</strong>, preenchimento de fichas e visualização
                     de notas são abordados em um capítulo específico deste manual.
                 </p>
             </div>
-            <aside class="hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky top-[86px] self-start': stickyNav, '!hidden': !showChapterNav }">
-                <h2 class="font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 px-5 mb-4">
+            <aside class="chapter-aside hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
+                <h2 class="font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-4">
                     Neste capítulo
                 </h2>
-                <nav class="leading-relaxed space-y-2 px-5 text-gray-600 dark:text-gray-400 overflow-y-auto max-h-[calc(100vh-86px-2.5rem)] scrollbar-custom">
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2">
+                <nav class="leading-relaxed text-gray-700 dark:text-gray-300 overflow-y-auto max-h-[calc(100vh-86px-2.5rem)] scrollbar-custom">
+                    <a href="#cap-4.1" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
                         <span class="font-medium">4.1</span>
                         <span>Visão Geral da Agenda</span>
-                    </div>
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2 pl-4">
+                    </a>
+                    <a href="#cap-4.1.1" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
                         <span>Exibição</span>
-                    </div>
+                    </a>
 
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2">
+                    <a href="#cap-4.2" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
                         <span class="font-medium">4.2</span>
                         <span>Interação com o Calendário</span>
-                    </div>
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2 pl-4">
+                    </a>
+                    <a href="#cap-4.2.1" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
                         <span>Alternância de visualização</span>
-                    </div>
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2 pl-4">
+                    </a>
+                    <a href="#cap-4.2.2" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
                         <span>Navegação por datas</span>
-                    </div>
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2 pl-4">
+                    </a>
+                    <a href="#cap-4.2.3" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
                         <span>Seleção de datas e horários</span>
-                    </div>
+                    </a>
 
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2">
+                    <a href="#cap-4.3" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
                         <span class="font-medium">4.3</span>
                         <span>Agendamento de Nova Banca</span>
-                    </div>
+                    </a>
 
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2">
+                    <a href="#cap-4.4" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
                         <span class="font-medium">4.4</span>
                         <span>Visualização de Bancas Agendadas</span>
-                    </div>
-
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2 pl-4">
+                    </a>
+                    <a href="#cap-4.4.1" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
                         <span>Modo visualização</span>
-                    </div>
+                    </a>
 
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2">
+                    <a href="#cap-4.5" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
                         <span class="font-medium">4.5</span>
                         <span>Edição e Cancelamento de Agendamentos</span>
-                    </div>
+                    </a>
 
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2">
+                    <a href="#cap-4.6" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
                         <span class="font-medium">4.6</span>
                         <span>Controle de Acesso e Permissões</span>
-                    </div>
+                    </a>
 
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2">
+                    <a href="#cap-4.7" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
                         <span class="font-medium">4.7</span>
                         <span>Considerações Importantes</span>
-                    </div>
+                    </a>
                 </nav>
             </aside>
         </article>
 
         {{-- Seção 5 --}}
         <article id="users" class="chapter flex leading-relaxed bg-white shadow-sm md:rounded-md border border-white px-8 py-12 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-300 lg:scroll-mt-[4rem]">
-            <div class="max-w-4xl w-full xl:pe-24"
-                 :class="{
-                    'text-base': fontSize === 1,
-                    'text-lg': fontSize === 2,
-                    'text-xl': fontSize === 3,
+            <div class="max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
+                {{-- Capítulo 5 --}}
+                <h1 class="text-3xl mb-14 font-bold text-gray-900 dark:text-gray-100">5. Gerenciamento de Usuários</h1>
 
-                    'leading-normal': leadingHeight === 1,
-                    'leading-relaxed': leadingHeight === 2,
-                    'leading-loose': leadingHeight === 3
-                }"
-            >
-                <h1 class="text-3xl mb-14 font-bold">5. Gerenciamento de Usuários</h1>
-
-                <h1 class="text-xl font-bold mb-4">Cadastro de Alunos</h1>
-                <p class="leading-relaxed mb-2 text-gray-800 dark:text-gray-300">
-                    <strong>Visualizando a Lista de Alunos:</strong>
-                </p>
-                <p class="leading-relaxed mb-4 text-gray-800 dark:text-gray-300">
-                    A tela "Alunos Cadastrados" exibe uma tabela com colunas de RA, Nome, E-mail, Grupo, Curso, Estado e Ações.
-                </p>
-                <p class="leading-relaxed mb-2 text-gray-800 dark:text-gray-300">
-                    <strong>Filtros Disponíveis:</strong>
-                </p>
-                <ul class="list-disc pl-6 space-y-2 mb-4 text-gray-800 dark:text-gray-300">
-                    <li>Busca por Nome - Digite o nome do aluno</li>
-                    <li>Filtro por Curso - Selecione um curso específico</li>
-                    <li>Filtro por Grupo - Visualize alunos de um grupo</li>
-                    <li>Filtro por Período - Escolha o período/semestre</li>
-                    <li>Filtro por Estado - Mostrar ativos ou inativos</li>
-                </ul>
-                <p class="leading-relaxed mb-2 text-gray-800 dark:text-gray-300">
-                    <strong>Cadastrando um Novo Aluno:</strong>
-                </p>
-                <ol class="list-decimal pl-6 space-y-2 mb-4 text-gray-800 dark:text-gray-300">
-                    <li>Clique no botão "CADASTRAR"</li>
-                    <li>Preencha o modal com RA, Nome, E-mail, Grupo e Curso</li>
-                    <li>Clique em "SALVAR" para confirmar ou "FECHAR" para cancelar</li>
-                </ol>
-                <p class="leading-relaxed mb-2 text-gray-800 dark:text-gray-300">
-                    <strong>Alterando ou Inativando Alunos:</strong>
-                </p>
-                <ul class="list-disc pl-6 space-y-2 mb-8 text-gray-800 dark:text-gray-300">
-                    <li>Use o botão "ALTERAR" para editar informações</li>
-                    <li>Use o botão "INATIVAR" para desativar o acesso (não deleta dados)</li>
-                </ul>
-
-                <h1 class="text-xl font-bold mb-4">Cadastro de Professores</h1>
-                <p class="leading-relaxed mb-4 text-gray-800 dark:text-gray-300">
-                    A tela <strong>"Professores Cadastrados"</strong> funciona de forma similar ao cadastro de alunos.
-                </p>
-                <h2 class="font-semibold mb-2">Funcionalidades:</h2>
-                <ul class="list-disc pl-6 mb-4 space-y-2 text-gray-800 dark:text-gray-300">
-                    <li>Visualizar tabela com Nome, E-mail, Departamento, Estado</li>
-                    <li>Buscar professores por nome</li>
-                    <li>ALTERAR - Editar informações do professor</li>
-                    <li>INATIVAR - Desativar acesso do professor</li>
-                    <li>ATIVAR - Reativar professores inativos</li>
-                </ul>
-                <p class="leading-relaxed mb-8 text-gray-800 dark:text-gray-300">
-                    <strong>Processo de cadastro:</strong> CADASTRAR → Preencher modal → SALVAR
+                {{-- Capítulo 5.1 --}}
+                <h2 id="cap-5.1" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">5.1 Acesso à página</h2>
+                <p class="mb-10">
+                    A página de <strong>Gerenciamento de Usuários</strong> é acessada por meio do menu superior do sistema,
+                    selecionando a opção <strong>Usuários</strong>. Logo abaixo do cabeçalho principal, é exibida uma
+                    <strong>subnavegação</strong> que permite alternar entre os diferentes tipos de usuários do sistema.
                 </p>
 
-                <h1 class="text-xl font-bold mb-4">Cadastro de Coordenadores</h1>
-                <p class="leading-relaxed mb-4 text-gray-800 dark:text-gray-300">
-                    A tela <strong>"Coordenadores Cadastrados"</strong> gerencia os coordenadores do sistema.
+                {{-- Capítulo 5.2 --}}
+                <h2 id="cap-5.2" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">5.2 Subnavegação entre tipos de usuários</h2>
+                <p class="mb-2">
+                    A subnavegação apresenta três abas
                 </p>
-                <h2 class="font-semibold mb-2">Funcionalidades:</h2>
-                <ul class="list-disc pl-6 mb-4 space-y-2 text-gray-800 dark:text-gray-300">
-                    <li>Listar coordenadores com nome e e-mail</li>
-                    <li>Filtrar e buscar coordenadores</li>
-                    <li>ALTERAR - Editar dados do coordenador</li>
-                    <li>INATIVAR - Controlar acesso ao sistema</li>
+                <ul class="list-disc pl-6 space-y-1 mb-4">
+                    <li><strong>Alunos</strong></li>
+                    <li><strong>Professores</strong></li>
+                    <li><strong>Coordenadores</strong></li>
                 </ul>
+                <p class="mb-10">
+                    Por padrão, a aba <strong>Alunos</strong> é exibida inicialmente. A alternância entre abas atualiza
+                    dinamicamente a tabela, os filtros e o formulário de cadastro, de acordo com o perfil selecionado.
+                </p>
+
+                {{-- Capítulo 5.3 --}}
+                <h2 id="cap-5.3" class="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">5.3 Barra de ações e filtros</h2>
+                <p class="mb-2">
+                    Abaixo da subnavegação, encontra-se uma barra de ações organizada em layout flexível (<em>flex-wrap</em>),
+                    que se adapta a diferentes resoluções de tela.
+                </p>
+                <ul class="list-disc pl-6 space-y-1 mb-4">
+                    <li><strong>Botão Cadastrar:</strong> abre um modal para criação de um novo usuário</li>
+                    <li><strong>Campo de busca:</strong> permite pesquisa direta na tabela</li>
+                    <li><strong>Filtros:</strong> refinam os resultados exibidos</li>
+                    <li><strong>Limpar filtros:</strong> restaura a visualização padrão</li>
+                </ul>
+                <p class="mb-10">
+                    Dependendo do tamanho da tela, os botões e filtros podem ser organizados em mais de uma linha,
+                    mantendo a usabilidade da interface.
+                </p>
+
+                {{-- Capítulo 5.4 --}}
+                <h2 id="cap-5.4" class="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">5.4 Gerenciamento de Alunos</h2>
+
+                <h3 id="cap-5.4.1" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Cadastro</h3>
+                <p class="mb-2">
+                    Ao clicar em <strong>Cadastrar</strong>, é aberto um modal contendo os seguintes campos:
+                </p>
+                <ul class="list-disc pl-6 space-y-1 mb-4">
+                    <li><strong>RA:</strong> número obrigatório de 13 dígitos</li>
+                    <li><strong>Nome</strong></li>
+                    <li><strong>E-mail</strong></li>
+                    <li><strong>Grupo</strong> (opcional)</li>
+                    <li><strong>Curso</strong> (opcional)</li>
+                </ul>
+                <p class="mb-4">
+                    Os campos de Grupo e Curso são apresentados como seletores, enquanto os demais utilizam campos de texto.
+                    O salvamento é realizado pelo botão <strong>Salvar</strong>, localizado no canto inferior direito do modal,
+                    com a opção <strong>Voltar</strong> ao lado para cancelamento.
+                </p>
+
+                <h3 id="cap-5.4.2" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Busca, filtros e listagem</h3>
+                <p class="mb-2">
+                    A tabela de alunos exibe até <strong>30 registros por página</strong>, contendo as colunas:
+                </p>
+                <ul class="list-disc pl-6 space-y-1 mb-4">
+                    <li>RA</li>
+                    <li>Nome</li>
+                    <li>E-mail</li>
+                    <li>Grupo</li>
+                    <li>Curso</li>
+                    <li>Estado</li>
+                    <li>Ações</li>
+                </ul>
+                <p class="mb-2">
+                    O campo de busca permite localizar alunos por <strong>RA, nome ou e-mail</strong>. Os filtros disponíveis são:
+                </p>
+                <ul class="list-disc pl-6 space-y-1 mb-4">
+                    <li>Curso</li>
+                    <li>Grupo</li>
+                    <li>Estado (ativo ou inativo)</li>
+                    <li>Período de cadastro (hoje, últimos 7 dias, últimos 30 dias)</li>
+                </ul>
+
+                <h3 id="cap-5.4.3" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Edição, inativação e paginação</h3>
+                <p class="mb-2">
+                    A ação <strong>Alterar</strong> abre um modal com os dados do aluno para edição.
+                    A ação <strong>Inativar</strong> exibe um modal de confirmação, no qual a operação
+                    pode ser confirmada, cancelada pelo botão Voltar, clique externo ou tecla ESC.
+                </p>
+                <p class="mb-10">
+                    A navegação entre páginas é feita por um sistema de paginação que permite avançar ou retroceder
+                    por meio de setas laterais ou selecionar páginas numeradas, exibindo até cinco números por vez.
+                </p>
+
+                {{-- Capítulo 5.5 --}}
+                <h2 id="cap-5.5" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">5.5 Gerenciamento de Professores e Coordenadores</h2>
+                <p class="mb-4">
+                    O gerenciamento de <strong>Professores</strong> e <strong>Coordenadores</strong> segue o mesmo padrão
+                    de funcionamento da tela de alunos, com diferenças nos campos e filtros.
+                </p>
+
+                <h3 id="cap-5.5.1" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Campos de cadastro</h3>
+                <ul class="list-disc pl-6 space-y-1 mb-4">
+                    <li>Nome</li>
+                    <li>E-mail</li>
+                </ul>
+
+                <h3 id="cap-5.5.2" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Filtros disponíveis</h3>
+                <ul class="list-disc pl-6 space-y-1 mb-4">
+                    <li>Estado (ativo ou inativo)</li>
+                    <li>Período de cadastro</li>
+                </ul>
+
                 <div class="bg-blue-50/60 dark:bg-blue-900/10 border border-blue-400/60 dark:border-blue-500/50 rounded-lg p-4 text-blue-800 dark:text-blue-300">
                     <p class="font-semibold">
                         Permissões
                     </p>
                     <p class="text-sm leading-relaxed text-gray-800 dark:text-gray-300">
-                        Coordenadores têm acesso a funcionalidades administrativas como gerenciar cursos, grupos, bancas e rubricas.
+                        Coordenadores possuem acesso a funcionalidades administrativas adicionais, como gerenciamento
+                        de cursos, grupos, bancas e rubricas.
                     </p>
                 </div>
             </div>
-            <div class="hidden xl:block text-sm px-5 min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky top-[86px] self-start': stickyNav, '!hidden': !showChapterNav }">
+            <aside class="chapter-aside hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
                 <h2 class="font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-4">
                     Neste capítulo
                 </h2>
-                <div class="leading-relaxed space-y-2 text-gray-600 dark:text-gray-400">
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2">
-                        <span class="font-medium">1.1</span>
-                        <span>Sobre o sistema</span>
-                    </div>
+                <nav class="leading-relaxed text-gray-800 dark:text-gray-300 overflow-y-auto max-h-[calc(100vh-86px-2.5rem)] scrollbar-custom">
+                    <a href="#cap-5.1" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
+                        <span class="font-medium">5.1</span>
+                        <span>Acesso à página</span>
+                    </a>
 
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2 pl-4">
-                        <span>Objetivos Principais</span>
-                    </div>
+                    <a href="#cap-5.2" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
+                        <span class="font-medium">5.2</span>
+                        <span>Subnavegação entre tipos de usuários</span>
+                    </a>
 
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2">
-                        <span class="font-medium">1.2</span>
-                        <span>Público-Alvo</span>
-                    </div>
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2">
-                        <span class="font-medium">1.3</span>
-                        <span>Sobre o SIMBAJU</span>
-                    </div>
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2">
-                        <span class="font-medium">1.4</span>
-                        <span>Sobre este Manual do Usuário</span>
-                    </div>
+                    <a href="#cap-5.3" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
+                        <span class="font-medium">5.3</span>
+                        <span>Barra de ações e filtros</span>
+                    </a>
 
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2 pl-4">
-                        <span>Finalidade do Manual</span>
-                    </div>
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2 pl-4">
-                        <span>Conteúdo Abordado</span>
-                    </div>
-                    <div class="grid grid-cols-[auto_1fr] gap-x-2 pl-4">
-                        <span>Público e Objetivo de Uso</span>
-                    </div>
-                </div>
-            </div>
+                    <a href="#cap-5.4" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
+                        <span class="font-medium">5.4</span>
+                        <span>Gerenciamento de Alunos</span>
+                    </a>
+                    <a href="#cap-5.4.1" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
+                        <span>Cadastro</span>
+                    </a>
+                    <a href="#cap-5.4.2" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
+                        <span>Busca, filtros e listagem</span>
+                    </a>
+                    <a href="#cap-5.4.3" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-600 dark:text-gray-400">
+                        <span>Edição, inativação e paginação</span>
+                    </a>
+
+                    <a href="#cap-5.5" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
+                        <span class="font-medium">5.5</span>
+                        <span>Gerenciamento de Professores e Coordenadores</span>
+                    </a>
+                    <a href="#cap-5.5.1" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
+                        <span>Campos de cadastro</span>
+                    </a>
+                    <a href="#cap-5.5.2" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
+                        <span>Filtros disponíveis</span>
+                    </a>
+                </nav>
+            </aside>
         </article>
 
         {{-- Seção 6 --}}
         <article id="institutional" class="chapter flex leading-relaxed bg-white shadow-sm md:rounded-md border border-white px-8 py-12 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-300 lg:scroll-mt-[4rem]">
-            <div class="max-w-4xl w-full xl:pe-24">
+            <div class="max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
                 <h1 class="text-3xl mb-8 font-bold">6. Configurações Institucionais</h1>
-                <hr class="border-gray-200 dark:border-gray-700 mb-10">
 
                 <h1 class="text-xl font-bold mb-4">Gerenciamento de Cursos</h1>
                 <p class="leading-relaxed mb-2 text-gray-800 dark:text-gray-300">
@@ -1146,11 +1154,11 @@
                     <li>ATIVAR - Reativar grupos inativos</li>
                 </ul>
             </div>
-            <div class="hidden xl:block text-sm px-5 min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky top-[86px] self-start': stickyNav, '!hidden': !showChapterNav }">
+            <aside class="chapter-aside hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
                 <h2 class="font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-4">
                     Neste capítulo
                 </h2>
-                <div class="leading-relaxed space-y-2 text-gray-600 dark:text-gray-400">
+                <nav class="leading-relaxed space-y-2 text-gray-600 dark:text-gray-400">
                     <div class="grid grid-cols-[auto_1fr] gap-x-2">
                         <span class="font-medium">1.1</span>
                         <span>Sobre o sistema</span>
@@ -1182,15 +1190,14 @@
                     <div class="grid grid-cols-[auto_1fr] gap-x-2 pl-4">
                         <span>Público e Objetivo de Uso</span>
                     </div>
-                </div>
-            </div>
+                </nav>
+            </aside>
         </article>
 
         {{-- Seção 7 --}}
         <article id="rubrics" class="chapter flex leading-relaxed bg-white shadow-sm md:rounded-md border border-white px-8 py-12 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-300 lg:scroll-mt-[4rem]">
-            <div class="max-w-4xl w-full xl:pe-24">
+            <div class="max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
                 <h1 class="text-3xl mb-8 font-bold">7. Critérios e Rubricas</h1>
-                <hr class="border-gray-200 dark:border-gray-700 mb-10">
 
                 <h2 class="text-xl font-semibold mb-4">Conceitos Fundamentais</h2>
                 <div class="space-y-1 mb-8 text-gray-800 dark:text-gray-300">
@@ -1230,11 +1237,11 @@
                     <li>Gerenciar eixos ativos e inativos</li>
                 </ul>
             </div>
-            <div class="hidden xl:block text-sm px-5 min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky top-[86px] self-start': stickyNav, '!hidden': !showChapterNav }">
+            <aside class="chapter-aside hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
                 <h2 class="font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-4">
                     Neste capítulo
                 </h2>
-                <div class="leading-relaxed space-y-2 text-gray-600 dark:text-gray-400">
+                <nav class="leading-relaxed space-y-2 text-gray-600 dark:text-gray-400">
                     <div class="grid grid-cols-[auto_1fr] gap-x-2">
                         <span class="font-medium">1.1</span>
                         <span>Sobre o sistema</span>
@@ -1266,15 +1273,14 @@
                     <div class="grid grid-cols-[auto_1fr] gap-x-2 pl-4">
                         <span>Público e Objetivo de Uso</span>
                     </div>
-                </div>
-            </div>
+                </nav>
+            </aside>
         </article>
 
         {{-- Seção 8 --}}
         <article id="evaluation" class="chapter flex leading-relaxed bg-white shadow-sm md:rounded-md border border-white px-8 py-12 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-300 lg:scroll-mt-[4rem]">
-            <div class="max-w-4xl w-full xl:pe-24">
+            <div class="max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
                 <h1 class="text-3xl mb-8 font-bold">8. Processo de avaliação</h1>
-                <hr class="border-gray-200 dark:border-gray-700 mb-10">
 
                 <h2 class="text-xl font-semibold mb-2">Avaliação de Grupo</h2>
                 <p class="leading-relaxed mb-2 text-gray-800 dark:text-gray-300">
@@ -1336,11 +1342,11 @@
                     </p>
                 </div>
             </div>
-            <div class="hidden xl:block text-sm px-5 min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky top-[86px] self-start': stickyNav, '!hidden': !showChapterNav }">
+            <aside class="chapter-aside hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
                 <h2 class="font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-4">
                     Neste capítulo
                 </h2>
-                <div class="leading-relaxed space-y-2 text-gray-600 dark:text-gray-400">
+                <nav class="leading-relaxed space-y-2 text-gray-600 dark:text-gray-400">
                     <div class="grid grid-cols-[auto_1fr] gap-x-2">
                         <span class="font-medium">1.1</span>
                         <span>Sobre o sistema</span>
@@ -1372,8 +1378,8 @@
                     <div class="grid grid-cols-[auto_1fr] gap-x-2 pl-4">
                         <span>Público e Objetivo de Uso</span>
                     </div>
-                </div>
-            </div>
+                </nav>
+            </aside>
         </article>
 
         {{-- Seção 9 --}}
@@ -1409,7 +1415,7 @@
                     <li>Selecione Uma Imagem: Escolha uma foto do seu computador (JPG, PNG - máx. 5MB)</li>
                     <li>Corte e Confirme: Ajuste o corte da imagem conforme necessário e salve</li>
                 </ol>
-                <div class="mt-6 mb-8 bg-slate-50 dark:bg-slate-800/80 border border-amber-700 dark:border-amber-400/80 rounded-lg p-4 text-amber-800 dark:text-amber-300">
+                <div class="mb-10 bg-blue-50/60 dark:bg-blue-900/10 border border-blue-400/60 dark:border-blue-500/50 rounded-lg p-4 text-blue-800 dark:text-blue-300">
                     <p class="font-semibold">
                         Requisitos da Foto
                     </p>
@@ -1809,29 +1815,87 @@
             </div>
         </article>
     </div>
+    {{-- Atribui scroll margin a todos os títulos, e estilização de navegação interna --}}
+    <style>
+        article.chapter h2,
+        article.chapter h3,
+        article.chapter h4 {
+            scroll-margin-top: 4.5rem;
+        }
 
-    {{-- Botão de voltar ao topo --}}
-    <button id="backToTop" type="button" title="Voltar ao topo"
-        class="hidden fixed right-2 bottom-2 bg-white border border-gray-200 shadow opacity-50 hover:opacity-100 rounded-full p-4">
-        <x-lucide-chevron-up class="text-gray-700 w-4 h-4"/>
-    </button>
+        .chapter-aside h2,
+        .chapter-aside nav a {
+            padding: 0 1.25rem; /* 20px */
+            border-left: transparent solid 2px;
+        }
+        .chapter-aside nav a:hover {
+            border-left: #6b7280 solid 2px;
+        }
+        .chapter-aside nav a.active {
+            padding: 0 1.25rem; /* 20px */
+            border-left: #4169E1 solid 2px;
+        }
+    </style>
+    {{-- Padroniza estruturas do menu aside dos capitulos --}}
+    <style>
+        .hidden-chapter-aside {
+            display: none !important;
+        }
+        .sticky-chapter-aside {
+            position: sticky;
+            top: 86px;
+            align-self: start;
+        }
+    </style>
+    {{-- Controla paginação interna dos capítulos --}}
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const backToTop = document.getElementById('backToTop');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > window.innerHeight * 0.6) {
-                    backToTop.classList.remove('hidden');
-                } else {
-                    backToTop.classList.add('hidden');
-                }
-            });
+        window.addEventListener("load", () => {
+            const sections = [...document.querySelectorAll('[id^="cap-"]')];
+            const links = document.querySelectorAll('.sub-chapter-link');
 
-            backToTop.addEventListener('click', () => {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
+            let lockScroll = false;
+
+            function highlight(id) {
+                links.forEach(link => {
+                    link.classList.toggle(
+                        'active',
+                        link.getAttribute('href') === `#${id}`
+                    );
+                });
+            }
+
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    if (lockScroll) return;
+
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            highlight(entry.target.id);
+                        }
+                    });
+                },
+                {
+                    root: null,
+                    // cria uma "linha" a 150px do topo
+                    rootMargin: '-25% 0px -75% 0px',
+                    threshold: 0
+                }
+            );
+
+            sections.forEach(section => observer.observe(section));
+
+            links.forEach(link => {
+                link.addEventListener('click', () => {
+                    const id = link.getAttribute('href').replace('#', '');
+
+                    lockScroll = true;
+                    highlight(id);
+
+                    setTimeout(() => {
+                        lockScroll = false;
+                    }, 120);
                 });
             });
         });
     </script>
-</x-documentation-layout>
+</div>

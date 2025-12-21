@@ -37,7 +37,8 @@ Route::get('/legal/terms', [LegalController::class, 'showTerms'])->name('terms.s
 //    ->name('manual.show');
 
 //  Rota para as páginas do manual do usuário
-Route::get('/manual', [ManualController::class, 'getManual'])->name('manual.show');
+Route::get('/manual', [ManualController::class, 'show'])
+    ->middleware('auth:sanctum')->name('manual.show');
 
 // Rotas comuns de login e logout. Isso sobrepõe as rotas laravel padrão, é possível setar elas globalmente em /config/fortify.php
 // OBS: Isso sobrescreve as rotas default do vendor e será mantido de lado por enquanto não é necessário uma tela diferente para

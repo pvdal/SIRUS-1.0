@@ -14,7 +14,8 @@ export function eventsData() {
         eventTitle: '',
         group: '',
         paper: '',
-        members: [],
+        committeeMembers: [],
+        groupMembers: [],
         timeStart: '',
         timeEnd: '',
         dateStart: '',
@@ -67,7 +68,8 @@ export function eventsData() {
                 this.eventTitle = '';
                 this.group = '';
                 this.paper = '';
-                this.members = [];
+                this.committeeMembers = [];
+                this.groupMembers = [];
                 if(value) {
                     this.fillCommitteeFields(value);
                 }
@@ -94,13 +96,16 @@ export function eventsData() {
                     this.eventTitle = e.detail.title;
                     this.group = e.detail.group;
                     this.paper = e.detail.paper;
-                    this.members = e.detail.members;
+                    this.committeeMembers = e.detail.committeeMembers;
+                    this.groupMembers = e.detail.groupMembers;
+                    console.log(this.committeeMembers);
+                    console.log(this.groupMembers);
 
                     this.belongsTo = e.detail.belongsTo === true;
                     this.evaluatedByUser = e.detail.evaluatedByUser === true;
 
                     /*
-                    const currentUserMember = e.detail.members.find(m => m.belongsTo === true);
+                    const currentUserMember = e.detail.committeeMembers.find(m => m.belongsTo === true);
                     //console.log("caiu aqui",currentUserMember);
 
                     this.userCommitteeId = null;
@@ -162,7 +167,8 @@ export function eventsData() {
                     this.eventTitle = committee.title;
                     this.group = committee.group;
                     this.paper = committee.paper;
-                    this.members = committee.members;
+                    this.committeeMembers = committee.committeeMembers;
+                    this.groupMembers = committee.groupMembers;
                 });
             }
         },
@@ -265,7 +271,8 @@ export function eventsData() {
                 'eventTitle',
                 'group',
                 'paper',
-                'members',
+                'committeeMembers',
+                'groupMembers',
                 'timeStart',
                 'timeEnd',
                 'dateStart',

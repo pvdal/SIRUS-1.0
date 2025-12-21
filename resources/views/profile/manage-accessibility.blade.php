@@ -15,7 +15,7 @@
                     x-init="
                         daltonism_enabled = localStorage.getItem('daltonism_enabled') === 'true'
                     "
-                    class="flex flex-col flex-1 bg-white dark:bg-gray-900 px-4 py-5 sm:p-6 rounded-lg border border-gray-200 dark:border-gray-950 shadow-md z-10 transition duration-150 ease-in-out"
+                    class="flex flex-col flex-1 bg-white dark:bg-gray-900 px-4 py-5 sm:p-6 sm:rounded-lg border border-gray-200 dark:border-gray-950 shadow-md z-10 transition duration-150 ease-in-out"
                 >
                     <div class="inline-flex items-center gap-2 mb-4">
                         <div class="flex items-center justify-center bg-gradient-to-tr from-blue-600 to-blue-500 rounded-lg p-2 w-10 h-10">
@@ -31,7 +31,12 @@
                             O daltonismo é uma condição visual que altera a forma como as cores são percebidas.
                             Para tornar a navegação mais confortável, oferecemos filtros de simulação que ajudam a ajustar
                             a visualização conforme cada tipo de daltonismo.
-                            <a href="/manual/accessibility" class="text-secondary-blue dark:text-blue-400 font-medium hover:underline transition ease-in-out duration-150">Ler mais.</a>
+                            <a
+                                rel="noreferrer noopener"
+                                href="/manual?#accessibility"
+                                class="text-secondary-blue dark:text-blue-400 font-medium hover:underline
+                                    transition ease-in-out duration-150"
+                            >Ler mais.</a>
                         </p>
                     </div>
 
@@ -79,7 +84,7 @@
                     x-init="
                         vlibras_enabled = localStorage.getItem('vlibras_enabled') === 'true';
                     "
-                    class="flex-1 bg-white dark:bg-gray-900 px-4 py-5 sm:p-6 rounded-lg border border-gray-200 dark:border-gray-950 shadow-md z-10 transition duration-150 ease-in-out"
+                    class="flex-1 bg-white dark:bg-gray-900 px-4 py-5 sm:p-6 sm:rounded-lg border border-gray-200 dark:border-gray-950 shadow-md z-10 transition duration-150 ease-in-out"
                 >
                     <div class="flex items-center gap-2 mb-4">
                         <div class="flex items-center justify-center bg-gradient-to-tr from-blue-600 to-blue-500 rounded-lg p-2 w-10 h-10">
@@ -95,7 +100,12 @@
                             Libras (Língua Brasileira de Sinais) é a língua natural da comunidade surda.
                             Nosso sistema disponibiliza o VLibras, que traduz textos, elementos da interface
                             e partes do conteúdo multimídia para Libras por meio de um avatar animado.
-                            <a href="/manual/accessibility" class="text-secondary-blue dark:text-blue-400 font-medium hover:underline transition duration-150 ease-in-out">Ler mais.</a>
+                            <a
+                                rel="noreferrer noopener"
+                                href="/manual?#accessibility"
+                                class="text-secondary-blue dark:text-blue-400 font-medium hover:underline
+                                transition duration-150 ease-in-out"
+                            >Ler mais.</a>
                         </p>
                     </div>
 

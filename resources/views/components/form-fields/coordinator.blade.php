@@ -21,7 +21,7 @@
     </div>
     {{-- Formação do coordenador --}}
     <div class="mt-4">
-        <x-label for="education" value="Formação do Coordenador"/>
+        <x-label for="education" value="Formação do Coordenador (opcional)"/>
         <x-input id="education" type="text" autocomplete="name" class="w-full mt-1"
                  placeholder="Formação do coordenador" x-model="education"
                  @keydown.enter="saveCoordinator"/>

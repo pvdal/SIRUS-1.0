@@ -138,11 +138,30 @@
                         @if(config('appearance.switch_theme'))
                             <button
                                 @click="toggleTheme()"
-                                class="p-2 rounded-lg ms-5 border bg-gray-200 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200 transition duration-150 ease-in-out">
-                                {{-- Logo do tema light --}}
-                                <x-lucide-moon class="h-4 w-4 block dark:hidden transition duration-150 ease-in-out"/>
-                                {{-- Logo do tema dark --}}
-                                <x-lucide-sun class="h-4 w-4 hidden dark:block transition duration-150 ease-in-out"/>
+                                class="ms-auto sm:mx-0 relative flex items-center gap-2 p-2 rounded-lg
+                                border border-gray-300 dark:border-gray-600
+                                text-gray-500 dark:text-gray-300
+                                hover:bg-gray-100 dark:hover:bg-gray-800
+                                transition duration-150 ease-in-out"
+                                aria-label="Alternar tema"
+                            >
+                                <!-- Slot fixo do ícone -->
+                                <span class="relative w-4 h-4">
+                                    <!-- Moon -->
+                                    <x-lucide-moon
+                                        class="absolute inset-0 h-4 w-4
+                                               transition-all duration-300 ease-in-out
+                                               opacity-100 scale-100 rotate-0
+                                               dark:opacity-0 dark:scale-75 dark:-rotate-90"
+                                    />
+                                        <!-- Sun -->
+                                    <x-lucide-sun
+                                        class="absolute inset-0 h-4 w-4
+                                               transition-all duration-300 ease-in-out
+                                               opacity-0 scale-75 rotate-90
+                                               dark:opacity-100 dark:scale-100 dark:rotate-0"
+                                    />
+                                </span>
                             </button>
                         @endif
                     </div>

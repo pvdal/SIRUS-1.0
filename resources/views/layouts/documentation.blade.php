@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <nav x-data="{ open:false }" id="navigation" class="bg-white dark:bg-red-600 border-b border-gray-100 md:border-none md:shadow md:sticky top-0 z-40">
+    <nav x-data="{ open:false }" id="navigation" class="bg-white dark:bg-gray-900 border-b border-white dark:border-slate-900 md:border-none md:shadow-sm md:dark:shadow-md lg:sticky top-0 z-40">
         @php
             $links = [
                 ['label' => 'Início', 'href' => route('home'), 'route' => 'home'],
@@ -8,38 +8,48 @@
                 ['label' => 'Privacidade', 'href' => route('policy.show'), 'route' => 'policy.show']
             ];
         @endphp
-        <div class="flex items-center mx-auto max-w-[2100px] h-16 px-4 sm:px-6 lg:px-8">
-            <a href="{{ route('home') }}">
-                <x-application-logo
-                    size="40"
-                    class="flex-shrink-0 transform transition-all"
-                />
-            </a>
+        <div class="flex items-center mx-auto max-w-[1800px] h-16 px-4 sm:px-6 lg:px-8">
+            <div class="shrink-0 flex items-center relative me-20 h-16">
+                <a href="{{ route('home') }}">
+                    <!-- Logo claro -->
+                    <x-application-logo
+                        size="40"
+                        class="absolute mt-3 inset-0 transform transition-all duration-300 ease-in-out
+                            opacity-100 scale-100 dark:opacity-0 dark:scale-100"
+                    />
 
-            <div class="hidden md:flex items-center w-full min-h-full max-w-[2100px]">
+                    <!-- Logo escuro -->
+                    <x-authentication-card-logo
+                        size="40"
+                        class="absolute mt-3 inset-0 transform transition-all duration-300 ease-in-out
+                            opacity-0 scale-100 dark:opacity-100 dark:scale-100"
+                    />
+                </a>
+            </div>
+
+            <div class="hidden md:flex items-center w-full min-h-full max-w-[1800px]">
                 <ul class="mx-4 lg:ms-10 inline-flex items-center overflow-x-auto no-scrollbar gap-5 lg:gap-7 h-16">
                     @foreach($links as $link)
-                        <li class="h-full flex items-center">
-                            <a href="{{ $link['href'] }}" class="h-full pt-1 px-1 inline-flex items-center border-b
-                                {{ request()->routeIs($link['route'])
-                                ? 'border-secondary-blue text-gray-900'
-                                : 'text-gray-500 hover:text-gray-900 border-transparent hover:border-gray-300' }}
-                                text-sm lg:text-base whitespace-nowrap">
-                                {{ $link['label'] }}
-                            </a>
+                        <li class="h-full">
+                            <x-nav-link href="{{ $link['href'] }}" class="h-full !text-base !border-b" :active="request()->routeIs($link['route'])">
+                                {{ $link['label'] }}</x-nav-link>
                         </li>
                     @endforeach
                 </ul>
 
                 <div class="hidden ms-auto md:flex">
-                    <a class="text-white inline-flex items-center gap-3 px-4 py-2
-                        bg-secondary-blue border border-transparent rounded-lg font-semibold text-xs
+                    <a
+                        rel="noreferrer noopener"
+                        class="text-white inline-flex items-center gap-3 px-4 py-2
+                        bg-gradient-to-b from-secondary-blue to-blue-600
+                        dark:from-primary-blue dark:to-blue-900
+                        bg-secondary-blue rounded-lg font-semibold text-xs
                         uppercase tracking-widest hover:opacity-90 shadow-[0_2px_5px_rgba(0,0,0,0.28)]
                         focus:opacity-90 active:strong-blue focus:outline-none focus:ring-2 whitespace-nowrap
                         focus:ring-secondary-blue focus:ring-offset-2 disabled:opacity-50
                         transition ease-in-out duration-150"
-                        href="@auth /calendar @else /login @endauth">
-
+                        href="@auth /calendar @else /login @endauth"
+                    >
                         <span class="inline-flex items-center gap-2">
                             <x-lucide-log-in class="flex-shrink-0 h-4 w-4 transition-all"/>
                             @auth
@@ -70,23 +80,25 @@
             <ul class="flex flex-col items-start justify-start gap-2 pb-5 no-scrollbar">
                 @foreach($links as $link)
                     <li class="w-full">
-                        <a href="{{ $link['href'] }}"
-                            class="block w-full text-sm lg:text-base font-medium text-gray-700 hover:text-secondary-blue whitespace-nowrap
-                            hover:bg-soft-blue px-5 py-2 border-l-4 border-transparent hover:border-secondary-blue text-start"
-                        >{{ $link['label'] }}</a>
+                        <x-responsive-nav-link href="{{ $link['href'] }}" class="pl-5" :active="request()->routeIs($link['route'])">
+                            {{ $link['label'] }}</x-responsive-nav-link>
                     </li>
                 @endforeach
             </ul>
             <hr class="mx-5 mb-4">
             <div class="flex w-full px-5">
-                <a class="text-white inline-flex items-center gap-3 px-4 py-2 justify-center w-full
-                bg-secondary-blue border border-transparent rounded-lg font-semibold text-xs lg:text-sm
-                 uppercase tracking-widest hover:opacity-90 shadow-[0_2px_5px_rgba(0,0,0,0.28)]
-                focus:opacity-90 active:strong-blue focus:outline-none focus:ring-2 whitespace-nowrap
-                focus:ring-secondary-blue focus:ring-offset-2 disabled:opacity-50
-                transition ease-in-out duration-150"
-                href="@auth /calendar @else /login @endauth">
-
+                <a
+                    rel="noreferrer noopener"
+                    class="text-white inline-flex items-center gap-3 px-4 py-2 justify-center w-full
+                    bg-gradient-to-b from-secondary-blue to-blue-600
+                    dark:from-primary-blue dark:to-blue-900
+                    rounded-lg font-semibold text-xs lg:text-sm
+                    uppercase tracking-widest hover:opacity-90 shadow-[0_2px_5px_rgba(0,0,0,0.28)]
+                    focus:opacity-90 active:strong-blue focus:outline-none focus:ring-2 whitespace-nowrap
+                    focus:ring-secondary-blue focus:ring-offset-2 disabled:opacity-50
+                    transition ease-in-out duration-150"
+                    href="@auth /calendar @else /login @endauth"
+                >
                 <span class="inline-flex items-center gap-2">
                     @auth
                         <x-lucide-log-in class="flex-shrink-0 h-4 w-4 transition-all"/>
@@ -101,54 +113,45 @@
         </div>
     </nav>
     {{-- Sessão principal --}}
-    <div class="flex flex-col min-h-screen">
-        <div class="flex flex-1 flex-col w-full bg-gradient-to-br from-gray-50 to-gray-100 text-gray-900">
+    <div x-data="{ stickyNav: false, showChapterNav: true, settings:false, fontSize: 1, leadingHeight: 2, letterSpacing: 1, wordSpacing: 1 }" class="flex flex-col min-h-screen">
+        <div class="flex flex-1 flex-col w-full bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-800 text-gray-900">
             {{-- Container principal --}}
             @if(isset($options))
-                <div class="flex flex-1 flex-col w-full max-w-[2100px] min-h-full  mx-auto px-6 m-2 gap-8 lg:flex-row">
+                <div class="flex flex-1 flex-col w-full max-w-[1800px] min-h-full  mx-auto md:px-2 gap-2 lg:flex-row"> {{-- m-2 --}}
                     {{-- Menu lateral --}}
                     <aside class="w-full lg:w-1/4">
-                        <div class="flex flex-col bg-white shadow rounded-xl
-                            lg:h-[calc(100vh-80px)]
-                            sticky top-[72px] py-6
+                        <div class="flex flex-col bg-white dark:bg-gray-900 shadow {{-- rounded-xl --}}
+                            lg:h-[calc(100vh-64px)]
+                            sticky top-[64px] pb-2 pt-5
                             overflow-hidden
-                            border border-gray-200">
-                            <h2 class="text-lg font-semibold text-gray-700 mb-4 px-4">Manual de Usuário</h2>
-                            <hr class="border-gray-100 mx-2">
+                            border border-white
+                            dark:border-gray-900
+                            rounded-b-md lg:rounded-none">
+                            <div class="flex items-center mb-4 px-4 text-gray-700 dark:text-gray-100">
+                                <h1 class="text-lg font-semibold me-auto">Manual de Usuário</h1>
+                                <button
+                                    x-on:click="settings = !settings"
+                                    class="hover:bg-gray-200 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md p-2">
+                                    <x-lucide-settings-2 class="h-4 w-4"/>
+                                </button>
+                            </div>
+                            <hr class="border-gray-100 dark:border-gray-700 mx-2">
                             <nav class="flex-1 space-y-1 overflow-y-auto scrollbar-custom
                                 px-4 py-2 lg:h-[calc('100vh-80px-48px-34px)]">
                                 {{ $options }}
                             </nav>
+                            @if(isset($settings))
+                                {{ $settings }}
+                            @endif
                         </div>
                     </aside>
 
-
-                    <div class="w-full lg:w-3/4 space-y-8">
+                    <div class="w-full lg:w-3/4">
                         {{-- Conteúdo principal --}}
-                        <main class="space-y-8">
+                        <main>
                             {{ $slot }}
                         </main>
-                        {{-- Rodapé --}}
-                        <footer class="bg-transparent text-white border-t border-gray-200">
-                            <div class="max-w-[2100px] mx-auto px-4 py-6 sm:px-6 lg:px-8">
-                                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-center">
-                                    <div class="flex flex-col items-center">
-                                        <div class="space-y-1 text-gray-800">
-                                            <p class="text-base text-center">
-                                                Manual do Usuário
-                                            </p>
-                                            <!-- Copyright -->
-                                            <p class="text-sm text-center">
-                                                &copy; <strong>SIRUS –</strong> Sistema de Rubricas para Gestão avaliativa do SIMBAJU
-                                            </p>
-                                            <p class="text-xs text-center">
-                                                Versão 1.0 | 2025
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </footer>
+
                     </div>
                 </div>
             @endif

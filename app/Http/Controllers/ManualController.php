@@ -8,6 +8,7 @@ use Illuminate\View\View;
 
 class ManualController extends Controller
 {
+    /*
     public function show(string $page): View
     {
         $view = "user-manual.$page";
@@ -18,9 +19,9 @@ class ManualController extends Controller
 
         return view("$view");
     }
-
-    public function getManual(): View
+    */
+    public function show(): View
     {
-        return view("user-manual.content");
+        return view("user-manual.user-manual");
     }
 }

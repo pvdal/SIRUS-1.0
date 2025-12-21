@@ -4,7 +4,7 @@
             <x-authentication-card-logo size="60"/>
         </x-slot>
 
-        <div class="mb-4 text-sm text-gray-600 text-justify">
+        <div class="mb-4 text-sm text-gray-600 dark:text-gray-200 text-justify">
             {{ __('Antes de continuar, por favor verifique seu endereço de e-mail. Para isso, clique no botão "Enviar o e-mail de verificação" abaixo, assim, enviaremos um e-mail com o link de verificação. Caso já tenha solicitado, mas não tenha recebido o e-mail, você pode reenviá-lo.') }}
         </div>
 
@@ -29,7 +29,7 @@
                 <form method="POST" action="{{ route('logout') }}" class="inline">
                     @csrf
 
-                    <button type="submit" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-blue">
+                    <button type="submit" class="underline text-sm text-gray-600 dark:text-gray-300 dark:hover:text-gray-100 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-blue">
                         {{ __('Log Out') }}
                     </button>
                 </form>

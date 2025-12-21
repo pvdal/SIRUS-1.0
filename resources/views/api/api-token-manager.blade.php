@@ -26,7 +26,7 @@
                         @foreach (Laravel\Jetstream\Jetstream::$permissions as $permission)
                             <label class="flex items-center">
                                 <x-checkbox wire:model="createApiTokenForm.permissions" :value="$permission"/>
-                                <span class="ms-2 text-sm text-gray-600">{{ $permission }}</span>
+                                <span class="ms-2 text-sm text-gray-600 dark:text-gray-300">{{ $permission }}</span>
                             </label>
                         @endforeach
                     </div>

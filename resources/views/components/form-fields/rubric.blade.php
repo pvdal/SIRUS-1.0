@@ -4,14 +4,14 @@
         <div class="flex items-center gap-x-6">
             <div class="flex items-center">
                 <input id="individual" type="radio" value="2" x-model="rubric.type"
-                       class="h-4 w-4 text-secondary-blue focus:ring-secondary-blue border-gray-300">
+                       class="h-4 w-4 dark:accent-gray-700 checked:accent-secondary-blue text-secondary-blue focus:ring-secondary-blue dark:focus:ring-offset-gray-800 border-gray-300">
                 <label for="individual" class="ml-2 block text-sm font-medium text-gray-700 dark:text-gray-200 cursor-pointer">
                     Individual
                 </label>
             </div>
             <div class="flex items-center">
                 <input id="in group" type="radio" value="1" x-model="rubric.type"
-                       class="h-4 w-4 text-secondary-blue focus:ring-secondary-blue border-gray-300">
+                       class="h-4 w-4 dark:accent-gray-700 checked:accent-secondary-blue text-secondary-blue focus:ring-secondary-blue dark:focus:ring-offset-gray-800 border-gray-300">
                 <label for="in group" class="ml-2 block text-sm font-medium text-gray-700 dark:text-gray-200 cursor-pointer">
                     Em Grupo
                 </label>
