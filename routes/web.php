@@ -144,6 +144,7 @@ Route::middleware([
 
         // Paper -> PaperController/Paper.php
         Route::get('/papers/show', [PaperController::class, 'show'])->name('paper.show');
+        Route::get('/papers/years', [PaperController::class, 'years'])->name('paper.years');
         Route::post('/papers/save', [PaperController::class, 'store'])->name('paper.store');
         Route::put('/papers/{id}/update', [PaperController::class, 'update'])->name('paper.update');
         Route::put('/papers/{id}/{action}', [PaperController::class, 'toggleStatus'])->name('paper.toggle-status');
@@ -172,13 +173,16 @@ Route::middleware([
     Route::get('/committees', [CommitteeController::class, 'index'])->name('committees-table');
 
     // Evaluation -> EvaluationController/Evaluation.php
-    Route::post('/evaluation/store', [EvaluationController::class, 'store'])->name('evaluations.store');
+    //Route::post('/evaluation/store', [EvaluationController::class, 'store'])->name('evaluations.store');
     Route::get('/evaluation/{committee}', [EvaluationController::class, 'index'])
         ->name('evaluations.index');
 
     Route::prefix(config('secure.request_prefix')) // todas as rotas dentro desse grupo possuem o prefixo definido no.env
     ->middleware('secure.ajax') // middleware que traz camadas a mais de seguranças nas requisições ajax
     ->group(function () {
+        // Evaluation -> EvaluationController/Evaluation.php
+        Route::post('/evaluation/store', [EvaluationController::class, 'store'])->name('evaluations.store');
+
         // Calendar -> EventController/Committee.php
         Route::get('/events/show', [EventController::class, 'show'])->name('events.show');
 

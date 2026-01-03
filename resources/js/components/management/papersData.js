@@ -16,14 +16,29 @@ export function papersData(){
             name: '',
             drop: false,
         },
+        groupFilter: {
+            value: '',
+            name: '',
+            drop: false,
+        },
+        versionFilter: {
+            value: '',
+            name: '',
+            drop: false,
+        },
 
+        file_path: '',
         title: '',
+        newPaperTitle: '',
         year: new Date().getFullYear(), // Ano padrão
         semester: new Date().getMonth() < 6 ? 1 : 2, // Semestre padrão
         version: 'evaluation', // Versão padrão ('evaluation' ou 'corrected')
         course_id: '',
         group_id: '',
-        evaluation_paper_id: null,
+        evaluation_paper_id: '',
+        corrected_paper_id: '',
+        _tempEvaluationPaperId: null,
+        _tempCorrectedPaperId: null,
         project: '',
         submitted_at: '',
         corrected_version: false,
@@ -37,11 +52,6 @@ export function papersData(){
             title: '',           // Nome do arquivo
             file: null,          // Instância de File do input
             url: null,           // ObjectURL do arquivo
-            year: new Date().getFullYear(), // Ano padrão
-            semester: new Date().getMonth() < 6 ? 1 : 2, // Semestre padrão
-            project: 1,          // Projeto padrão
-            version: 'evaluation', // Versão padrão ('evaluation' ou 'corrected')
-            course: '',  // ID do curso selecionado
         },
 
         errors: {},
@@ -58,8 +68,8 @@ export function papersData(){
         inactivatingIds: [],
         papers: [],
         newPapers: [],
-        folders: {},
         evaluation_papers: [],
+        corrected_papers: [],
 
         courses: [],
         groups: [],
@@ -97,6 +107,9 @@ export function papersData(){
 
         initialized: false,
 
+        foldersByYear: {},
+        loadingYears: [],
+
         init(papers,courses,groups,page,totalPages,totalItems) {
             this.papers = papers;
             this.courses = courses;
@@ -107,14 +120,6 @@ export function papersData(){
             this.totalPapers = totalItems;
 
             this.empty.data =  !Array.isArray(papers) || papers.length === 0;
-
-            this.$watch('papers',() => {
-                this.prepareFolders(this.papers);
-                if(!this.initialized) {
-                    this.goRoot();
-                    this.initialized = true;
-                }
-            });
 
             this.$watch('showCreateModal', (value) => {
                 if(!value) {
@@ -137,7 +142,7 @@ export function papersData(){
             // Observador reativo que garante que ao ser adicionado um arquivo no modal de update, a url seja alterada para a url do novo arquivo
             this.$watch('file.file', (newFile) => {
                 this.file.title = newFile?.name ?? null;
-                this.title = newFile?.name?.replace(/\.pdf$/i,'') ?? null;
+                this.newPaperTitle = newFile?.name?.replace(/\.pdf$/i,'') ?? null;
                 this.file.url = newFile ? URL.createObjectURL(newFile) : null;
             });
 
@@ -145,13 +150,140 @@ export function papersData(){
                 if(value) {
                     this.showGroupPapers(parseInt(value));
                 } else {
-                    this.evaluation_paper_id = null;
+                    this.evaluation_paper_id = '';
+                    this.corrected_paper_id = '';
+                    this._tempEvaluationPaperId = '';
+                    this._tempCorrectedPaperId = '';
                     this.evaluation_papers = [];
+                    this.corrected_papers = [];
                 }
             })
+
+            this.$watch('version', (value, oldValue) => {
+                if (value === oldValue) return;
+
+                // Sempre limpa o campo ativo
+                this.evaluation_paper_id = '';
+                this.corrected_paper_id = '';
+
+                // Só restaura se estiver editando
+                if (!this.edit) return;
+
+                if(value === 'evaluation') {
+                    this.corrected_paper_id = this._tempCorrectedPaperId;
+                }
+                if(value === 'corrected') {
+                    this.evaluation_paper_id = this._tempEvaluationPaperId;
+                }
+            });
+        },
+
+        async loadYears(reload = false) {
+            if (this.initialized && !reload) return;
+
+            this.goRoot();
+
+            this.loading = true;
+
+            const requestPrefix =
+                document.querySelector('meta[name="request-prefix"]')?.content || '';
+
+            try {
+                const { data: years } = await axios.get(`${requestPrefix}/papers/years`);
+
+                const yearsSet = new Set(years);
+
+                Object.keys(this.foldersByYear).forEach(year => {
+                    if(!yearsSet.has(Number(year))) {
+                        delete this.foldersByYear[year];
+                    }
+                });
+
+                years.forEach(year => {
+                    if (!this.foldersByYear[year]) {
+                        this.foldersByYear[year] = {
+                            loaded: false,
+                            papers: [],
+                            folders: null,
+                        };
+                    }
+                });
+            } catch (e) {
+                console.error('Erro ao carregar anos', e);
+            }
+
+            this.loading = false;
+
+            if (!this.initialized) {
+                this.initialized = true;
+            }
+        },
+
+        openYear(year) {
+            if(!this.foldersByYear[year].loaded) {
+                this.loadYear(year);
+            }
+            this.navigateTo('year',year);
+        },
+
+        get folders() {
+            const result = {};
+            Object.entries(this.foldersByYear).forEach(([year, data]) => {
+                result[year] = data.loaded && data.folders
+                    ? data.folders[year] ?? data.folders
+                    : {};
+            });
+
+            return result;
+        },
+
+        get loadedPapers() {
+            return Object.values(this.foldersByYear)
+                .filter(year => year.loaded)
+                .reduce((total, year) => total + year.papers.length, 0);
+        },
+
+        isLoadingYear(year) {
+            return this.loadingYears.includes(year);
+        },
+
+        async loadYear(year) {
+            if (this.foldersByYear[year]?.loaded) return;
+            if (this.loadingYears.includes(year)) return;
+            this.loading = true;
+
+            this.loadingYears.push(year);
+
+            try {
+                const requestPrefix =
+                    document.querySelector('meta[name="request-prefix"]')?.content || '';
+
+                const response = await axios.get(
+                    `${requestPrefix}/papers/show`,
+                    { params: { year } }
+                );
+
+                const papers = Array.isArray(response.data?.data)
+                    ? response.data.data
+                    : Array.isArray(response.data)
+                        ? response.data
+                        : [];
+
+                this.foldersByYear[year] = {
+                    loaded: true,
+                    papers,
+                    folders: this.prepareFolders(papers),
+                };
+
+            } finally {
+                this.loadingYears = this.loadingYears.filter(y => y !== year);
+                this.loading = false;
+            }
         },
 
         prepareFolders(papers) {
+            const folders = {};
+
             papers.forEach(paper => {
                 const year = paper.year ?? 'Sem ano';
                 const semester = paper.semester ?? "Sem semestre";
@@ -159,18 +291,18 @@ export function papersData(){
                 const course = paper.course_name ?? "Sem curso";
                 const project = paper.project ?? "Sem projeto";
 
-                if (!this.folders[year]) this.folders[year] = {};
-                if (!this.folders[year][semester]) this.folders[year][semester] = {};
-                if (!this.folders[year][semester][version]) this.folders[year][semester][version] = {};
-                if (!this.folders[year][semester][version][course]) this.folders[year][semester][version][course] = {};
-                if (!this.folders[year][semester][version][course][project]) this.folders[year][semester][version][course][project] = [];
+                folders[year] ??= {};
+                folders[year][semester] ??= {};
+                folders[year][semester][version] ??= {};
+                folders[year][semester][version][course] ??= {};
+                folders[year][semester][version][course][project] ??= [];
 
-                const arr = this.folders[year][semester][version][course][project];
+                const arr = folders[year][semester][version][course][project];
                 if (!arr.some(p => p.id === paper.id)) {
                     arr.push(paper);
                 }
             });
-            this.folders = this.sortFolders(this.folders);
+            return this.sortFolders(folders);
         },
 
         sortFolders(obj) {
@@ -278,7 +410,7 @@ export function papersData(){
             paperViewer(this, url);
         },
 
-        loadPapers(page = 1) {
+        async loadPapers(page = 1) {
             this.loading = true;
             this.empty.result = false;
             this.empty.data = false;
@@ -288,6 +420,38 @@ export function papersData(){
 
             this.errors = {};
             this.newPapers = [];
+
+            try {
+                const params = {
+                    page,
+                    search: this.searchTerm,
+                    status: this.statusFilter.value,
+                    period: this.registerPeriod.value,
+                    group: this.groupFilter.value,
+                    version: this.versionFilter.value,
+                };
+                const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
+                const response = await axios.get(`/${requestPrefix}/papers/show`, {params});
+
+                this.papers = response.data.data;
+                this.page = response.data.page;
+                this.totalPages = response.data.totalPages;
+
+                this.empty.result = !this.papers.length;
+
+            } catch (error){
+                if(error.response){
+                    this.errors.load = error.response.data.message || 'Erro ao carregar os dados.';
+                } else if (error.request){
+                    this.errors.load = 'Não foi possível conectar ao servidor.';
+                } else {
+                    this.errors.load = 'Erro inesperado: ' + error.message;
+                }
+            } finally {
+                this.loading = false;
+                // volta o cursor ao normal
+                document.body.style.cursor = 'default';
+            }
         },
 
         editPaper(id) {
@@ -304,6 +468,7 @@ export function papersData(){
                 return;
             }
 
+            this.file_path = paper.file_path;
             this.title = paper.title;
             this.year = paper.year;
             this.semester = paper.semester;
@@ -312,9 +477,21 @@ export function papersData(){
             this.group_id = paper.group_id;
             this.project = paper.project;
             this.submitted_at = paper?.submitted_at;
-            this.schedule.start = paper?.scheduleDate?.start;
-            this.schedule.end = paper?.scheduleDate?.end;
+            this.schedule.start = paper?.scheduleDate?.start || '';
+            this.schedule.end = paper?.scheduleDate?.end || '';
             this.corrected_version = paper.version === 'corrected';
+            this.$nextTick(() => {
+                if (this.version === 'corrected') {
+                    this.evaluation_paper_id = paper.evaluation_paper_id;
+                    this._tempEvaluationPaperId = this.evaluation_paper_id;
+                    this.corrected_paper_id = '';
+                }
+                if (this.version === 'evaluation') {
+                    this.evaluation_paper_id = '';
+                    this.corrected_paper_id = paper.corrected_paper_id;
+                    this._tempCorrectedPaperId = this.corrected_paper_id;
+                }
+            });
             this.created_at = paper.created_at;
             this.updated_at = paper.updated_at;
 
@@ -327,14 +504,21 @@ export function papersData(){
 
             this.edit = true;
             this.showCreateModal = true;
-
         },
 
         showGroupPapers(id) {
+            this.evaluation_paper_id = '';
+            this.corrected_paper_id = '';
             this.evaluation_papers = [];
+            this.corrected_papers = [];
             this.papers.forEach(paper => {
-                if (paper.group_id === id) {
-                    this.evaluation_papers.push(paper);
+                if (paper.group_id === id && paper.id !== this.paperId) {
+                    if(paper.version === 'evaluation') {
+                        this.evaluation_papers.push(paper);
+                    }
+                    if(paper.version === 'corrected') {
+                        this.corrected_papers.push(paper);
+                    }
                 }
             })
         },
@@ -344,7 +528,11 @@ export function papersData(){
             const formData = new FormData();
 
             formData.append('paperId', this.paperId);
-            formData.append('title', this.title ?? null);
+            if (this.file.file) {
+                formData.append('title', this.newPaperTitle ?? null);
+            } else {
+                formData.append('title', this.title ?? null);
+            }
             if (this.file.file instanceof File) {
                 formData.append('file', this.file.file);
             }
@@ -354,6 +542,10 @@ export function papersData(){
             formData.append('course_id', this.course_id ?? '');
             formData.append('group_id', this.group_id ?? '');
             formData.append('project', this.project ?? '');
+            formData.append('evaluation_paper_id', this.evaluation_paper_id ?? '');
+            if (update) {
+                formData.append('corrected_paper_id', this.corrected_paper_id ?? '');
+            }
 
             let url = '/papers/save';
             let method = 'post';
@@ -374,28 +566,80 @@ export function papersData(){
                 clearFields: !update,
             });
 
-            if (savedData && Object.keys(savedData).length > 0) {
+            if (savedData.updated && Object.keys(savedData.updated).length > 0) {
                 this.empty.data = false;
                 this.empty.result = false;
             }
 
-            if(update && savedData) {
+            if(update && savedData.updated) {
+                const oldPaper = this.papers.find(p => p.id === savedData.updated.id) || this.newPapers.find(p => p.id === savedData.updated.id);
+
                 // Trata os timestamps
-                this.created_at = formatDateTime('Criado em', savedData.created_at);
-                this.updated_at = formatDateTime('Atualizado em', savedData.updated_at, savedData.created_at);
+                this.created_at = formatDateTime('Criado em', savedData.updated.created_at);
+                this.updated_at = formatDateTime('Atualizado em', savedData.updated.updated_at, savedData.updated.created_at);
 
                 this.papers = this.papers.map(paper =>
-                    paper.id === savedData.id ? savedData : paper
+                    paper.id === savedData.updated.id ? savedData.updated : paper
                 );
 
                 this.newPapers = this.newPapers.map(paper =>
-                    paper.id === savedData.id? savedData : paper
+                    paper.id === savedData.updated.id? savedData.updated : paper
                 );
+
+                this.syncPaper(oldPaper, savedData.updated);
+
+                this.file_path = savedData.updated.file_path;
+
+                savedData.touched.forEach(touched => {
+                    const oldTouched = this.papers.find(p => p.id === touched.id) || this.newPapers.find(p => p.id === touched.id);
+
+                    this.papers = this.papers.map(p =>
+                        p.id === touched.id ? touched : p
+                    );
+
+                    this.syncPaper(oldTouched, touched);
+                });
+                if (this.file.file) {
+                    this.file.file = null;
+                    this.$refs.pdfFile.value = '';
+                }
             }
+
             if(!update && savedData) {
                 this.prepareFolders(this.newPapers);
             }
         },
+
+        syncPaper(oldPaper, newPaper) {
+
+            const affectedYears = new Set();
+
+            if (oldPaper?.year) affectedYears.add(oldPaper.year);
+            if (newPaper?.year) affectedYears.add(newPaper.year);
+
+            if (oldPaper?.year !== newPaper?.year) {
+                this.loadYears(true);
+            }
+
+            affectedYears.forEach(year => {
+                const yearData = this.foldersByYear[year];
+                if (!yearData || !yearData.loaded) return;
+
+                // remove qualquer versão antiga
+                yearData.papers = yearData.papers.filter(
+                    p => p.id !== newPaper.id
+                );
+
+                // reinsere se for o ano correto
+                if (year === newPaper.year) {
+                    yearData.papers.push(newPaper);
+                }
+
+                // reconstrói somente esse ano
+                yearData.folders = this.prepareFolders(yearData.papers);
+            });
+        },
+
 
         isInactivating(id) {
             return this.inactivatingIds.includes(id);
@@ -447,8 +691,12 @@ export function papersData(){
                     }
                 }
 
+                const touchedPaper = this.papers.find(p => p.id === targetId) || this.newPapers.find(p => p.id === targetId);
+
                 this.papers.forEach(updateState);
                 this.newPapers.forEach(updateState);
+
+                this.syncPaper(touchedPaper,touchedPaper);
             } catch (error) {
                 console.error('Erro ao alterar status: ', error);
                 const msg = error.response?.data?.message || 'Erro inesperado.'
@@ -479,11 +727,17 @@ export function papersData(){
                     'corrected_version',
                     'schedule.start',
                     'schedule.end',
-                    'corrected_version',
+                    'evaluation_paper_id',
+                    'corrected_paper_id',
+                    '_tempEvaluationPaperId',
+                    '_tempCorrectedPaperId',
+                    'file_path'
                 ],
+                [
+                    'groupFilter',
+                    'versionFilter'
+                ]
             );
-            this.schedule.start = '';
-            this.schedule.end = '';
             // limpa buffer
             this.file = {
                 title: '',

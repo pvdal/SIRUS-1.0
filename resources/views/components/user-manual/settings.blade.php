@@ -8,7 +8,7 @@
             flex items-center gap-1 rounded-md px-3 py-1"
             title="Restaurar configurações padrão"
             x-on:click="
-                stickyNav = false;
+                stickyNav = true;
                 showChapterNav = true;
 
                 fontSize = 1;

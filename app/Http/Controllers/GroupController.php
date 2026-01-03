@@ -195,7 +195,7 @@ class GroupController extends Controller
                 }
             ],
             'papers.*.file' => 'required_with:papers|file|mimes:pdf|max:5120',
-            'papers.*.year' => "required_with:papers|integer|digits:4|between:" . ($currentYear - 1) . "," . ($currentYear),
+            'papers.*.year' => "required_with:papers|integer|digits:4|between:" . 2024 . "," . ($currentYear),
             'papers.*.semester' => 'required_with:papers|integer|in:1,2',
             'papers.*.version' => 'required_with:papers|string|in:evaluation,corrected',
             'papers.*.course' => 'required_with:papers|integer|exists:courses,id',
@@ -259,7 +259,17 @@ class GroupController extends Controller
             ],422);
         }
 
-        $this->extractPapersTitle($request);
+        if ($request->papers) {
+            foreach ($request->papers as $i => $paper) {
+                if ($request->hasFile("papers.$i.file")) {
+                    $clearTitle = preg_replace('/\.pdf$/i', '', ($paper['title'] ?? ''));
+
+                    $request->merge([
+                        "papers.$i.title" => $clearTitle,
+                    ]);
+                }
+            }
+        }
 
         $currentYear = date('Y');
         //Log::info($request->all());
@@ -319,7 +329,7 @@ class GroupController extends Controller
                 'mimes:pdf',
                 'max:5120'
             ],
-            'papers.*.year' => "required_with:papers|integer|digits:4|between:" . ($currentYear - 1) . "," . ($currentYear),
+            'papers.*.year' => "required_with:papers|integer|digits:4|between:" . 2024 . "," . ($currentYear),
             'papers.*.semester' => 'required_with:papers|integer|in:1,2',
             'papers.*.version' => 'required_with:papers|string|in:evaluation,corrected',
             'papers.*.course' => 'required_with:papers|integer|exists:courses,id',
@@ -396,11 +406,32 @@ class GroupController extends Controller
                     if ($request->hasFile("papers.$i.file")) {
                         $folders = $this->prepareFolders($paper);
 
-                        $paperService->createPaper($request->file("papers.$i.file"), $group->id, $folders);
+                        $paperService->createPaper($request->file("papers.$i.file"), $group->id, $folders, $paper['title']);
 
                         $group->touch();
                     } else {
                         $paperToUpdate = Paper::find($paper['id']);
+                        // Validações extras
+                        if($paperToUpdate->version != $paper['version']) {
+                            throw \Illuminate\Validation\ValidationException::withMessages([
+                                "papers.$i.version" => ['Não é permitido alterar a versão de um trabalho por este formulário. Use a aba "Trabalhos".']
+                            ]);
+                        }
+                        $paperToUpdate->fill([
+                            'title' => $paper['title'],
+                            'year' => $paper['year'],
+                            'semester' => $paper['semester'],
+                            'project' => $paper['project'],
+                            'version' => $paper['version'],
+                            'course_id' => $paper['course'],
+                        ]);
+                        if($paperToUpdate->submitted_at && $paperToUpdate->isDirty()) {
+                            throw \Illuminate\Validation\ValidationException::withMessages([
+                                "papers.$i.file" => ['Este trabalho já foi submetido à banca.
+                Apenas a associação com a versão corrigida pode ser modificada.']
+                            ]);
+                        }
+
                         if (!$paperToUpdate || $paperToUpdate->group_id != $group->id || $paperToUpdate->group_id == null) {
                             // Paper não existe ou está inativo
                             Log::warning("Paper ID {$paper['id']} inválido ou removido");

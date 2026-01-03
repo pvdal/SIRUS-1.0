@@ -117,14 +117,14 @@
             <x-accessibility.daltonism-filters/>
             <x-accessibility.daltonism-select/>
         @endif
-        {{-- Feedback messages: success, fail...--}}
-        <x-banner />
-        {{-- Impede que o usuário tenha acesso ao sistema caso não aceite os termos de uso e políticas de privacidade juntamente com o middleware 'terms-accepted' --}}
-        @if(config('secure.terms_accept'))
-            @livewire('legal.terms-accept')
-        @endif
 
-        <div id="app" class="min-h-screen bg-gray-100 dark:bg-gray-700 transition duration-150 ease-in-out">
+        <div id="app" class="min-h-screen bg-gray-100 dark:bg-gray-800 transition duration-150 ease-in-out">
+            {{-- Feedback messages: success, fail...--}}
+            <x-banner />
+            {{-- Impede que o usuário tenha acesso ao sistema caso não aceite os termos de uso e políticas de privacidade juntamente com o middleware 'terms-accepted' --}}
+            @if(config('secure.terms_accept'))
+                @livewire('legal.terms-accept')
+            @endif
             <!-- Navigation menu -->
             @if(!request()->routeIs('evaluations.store', 'evaluations.index'))
                 @livewire('navigation-menu')
@@ -132,7 +132,7 @@
 
             <!-- Page Heading -->
             @if (isset($header))
-                <header class="bg-white shadow dark:bg-gray-900 transition duration-150 ease-in-out">
+                <header class="bg-white shadow-sm dark:shadow-md dark:bg-gray-900 transition duration-150 ease-in-out">
                     <div class="flex flex-row max-w-[2100px] mx-auto px-4 py-6 sm:px-6 lg:px-8 justify-between items-center text-gray-800 dark:text-gray-100 transition duration-150 ease-in-out">
                         {{ $header }}
                         @if(config('appearance.switch_theme'))

@@ -65,7 +65,6 @@ class RubricController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        Log::info($request);
         // 1. VALIDAÇÃO: O "filtro de segurança" que garante que os dados estão corretos.
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
@@ -85,15 +84,18 @@ class RubricController extends Controller
         }
 
         // Busca critérios de todos os eixos informados
-        $allCriteria = \App\Models\Axis::whereIn('id', collect($validatedData['axes'])->pluck('id'))
+        $allCriteria = Axis::whereIn('id', collect($validatedData['axes'])->pluck('id'))
             ->with('criteria:id') // assumindo relação Axis->criteria()
             ->get()
             ->pluck('criteria.*.id')
             ->flatten();
+
+        $duplicated = $allCriteria->duplicates()->first();
+
         // Retorna exceção caso hajam eixos com critérios iguais
         if ($allCriteria->duplicates()->isNotEmpty()) {
             throw \Illuminate\Validation\ValidationException::withMessages([
-                'axes' => 'Existem critérios repetidos em eixos diferentes.'
+                "axes.$duplicated.id" => 'Não é possível cadastrar eixos com critérios iguais em uma rubrica.'
             ]);
         }
 
@@ -217,14 +219,6 @@ class RubricController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, String $id): JsonResponse
@@ -261,6 +255,21 @@ class RubricController extends Controller
         if ($totalWeight !== 100) {
             throw \Illuminate\Validation\ValidationException::withMessages([
                 'axes' => ['A soma dos pesos dos eixos deve ser exatamente 100%.'],
+            ]);
+        }
+        // Busca critérios de todos os eixos informados
+        $allCriteria = Axis::whereIn('id', collect($validatedData['axes'])->pluck('id'))
+            ->with('criteria:id') // assumindo relação Axis->criteria()
+            ->get()
+            ->pluck('criteria.*.id')
+            ->flatten();
+
+        $duplicated = $allCriteria->duplicates()->first();
+
+        // Retorna exceção caso hajam eixos com critérios iguais
+        if ($allCriteria->duplicates()->isNotEmpty()) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                "axes.$duplicated.id" => 'Não é possível cadastrar eixos com critérios iguais em uma rubrica.'
             ]);
         }
 

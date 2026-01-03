@@ -67,7 +67,7 @@ class PaperService
      * @param string $paperTitle
      * @return Paper
      */
-    public function updatePaper(Paper $paper,Group $group, array $folders, string $paperTitle): Paper
+    public function updatePaper(Paper $paper,Group $group, array $folders, string $paperTitle, ?UploadedFile $newFile = null): Paper
     {
         $paper->fill([
             'title' => $paperTitle,
@@ -79,6 +79,7 @@ class PaperService
         }
 
         $version = $folders['version'] === 'corrected' ? 'corrigido' : 'avaliacao';
+
         $foldersPath = [
             $folders['year'],
             'semestre_'.$folders['semester'],
@@ -86,6 +87,37 @@ class PaperService
             StringResolve::normalizeFolderName($folders['course_name']),
             'projeto_integrador_'.$folders['project'],
         ];
+
+        // No caso de novo arquivo
+        if($newFile) {
+            $path = 'papers/' . implode('/', $foldersPath);
+            Storage::disk('public')->makeDirectory($path);
+
+            $extension = $newFile->getClientOriginalExtension();
+            $hash = substr(hash('sha256', $paperTitle . time()), 0, 10);
+
+            $newFileName = $paperTitle . '_' . $hash . '.' . $extension;
+            $newPath = $newFile->storeAs($path, $newFileName, 'public');
+
+            // Remove o arquivo antigo
+            if ($paper->file_path && Storage::disk('public')->exists($paper->file_path)) {
+                Storage::disk('public')->delete($paper->file_path);
+            }
+
+            $paper->update([
+                'file_path'  => $newPath,
+                'group_id'   => $group->id,
+                'year'       => $folders['year'],
+                'semester'   => $folders['semester'],
+                'version'    => $folders['version'],
+                'course_id'  => $folders['course_id'],
+                'project'    => $folders['project'],
+            ]);
+
+            $group->touch();
+
+            return $paper->refresh();
+        }
 
         // Pasta nova
         $newDir = 'papers/' . implode('/', $foldersPath);
@@ -107,7 +139,9 @@ class PaperService
             Storage::disk('public')->makeDirectory($newDir);
 
             // Move fisicamente
-            Storage::disk('public')->move($paper->file_path, $newPath);
+            if (Storage::disk('public')->exists($paper->file_path)) {
+                Storage::disk('public')->move($paper->file_path, $newPath);
+            }
 
             // Atualiza no banco
             $paper->update([

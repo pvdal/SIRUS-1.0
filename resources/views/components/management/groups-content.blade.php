@@ -80,7 +80,9 @@
             :item-key="'id'"
         >
             <x-card.layout>
-                <x-card.content :members-count="'students'">
+                <x-card.content
+                    :listMeta="['count' => 'students', 'icon' => 'users', 'sinTitle' => 'Aluno', 'pluTitle' => 'Alunos']"
+                >
                     <x-slot name="header">
                         <span x-text="item.id" class="text-sm text-gray-600 dark:text-gray-100 transition duration-150 ease-in-out"></span>
                     </x-slot>
@@ -89,7 +91,7 @@
                         <h3 class="text-lg font-semibold line-clamp-2 leading-snug " x-text="item.theme"></h3>
                     </x-slot>
 
-                    <x-slot name="members">
+                    <x-slot name="list">
                         <template x-for="student in item.students" :key="student.ra">
                             <li
                                 x-text="student.name"

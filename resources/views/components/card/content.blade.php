@@ -1,12 +1,21 @@
 @props([
     'header' => null,
     'title' => null,
-    'members' => null,
-    'membersCount' => null,
+    'list' => null,
+    'listMeta' => [],
     'paperAction' => null,
     'actions' => null,
     'state' => null
 ])
+@php
+    $listMeta = array_merge([
+        'count' => null,
+        'icon' => null,
+        'sinTitle' => 'Item',
+        'pluTitle' => 'Itens'
+    ],is_array($listMeta) ? $listMeta : []);
+@endphp
+
 <div {{ $attributes->merge(['class' => 'flex flex-col flex-1 overflow-hidden h-full']) }}>
     {{-- Header --}}
     @if($header)
@@ -30,12 +39,16 @@
         @endif
 
         {{-- Lista de membros --}}
-        @if($members)
-            @if($membersCount)
+        @if($list)
+            @if($listMeta['count'])
                 <div class="flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300 font-medium px-6 pb-2 flex-shrink-0 transition duration-150 ease-in-out">
-                    <x-lucide-users class="w-4 h-4 text-gray-500 dark:text-gray-400 transition duration-150 ease-in-out" />
+                    @if(isset($listMeta['icon']))
+                        <x-dynamic-component :component="'lucide-' . $listMeta['icon']" class="w-4 h-4 text-gray-500 dark:text-gray-400 transition duration-150 ease-in-out" />
+                    @endif
                     <span
-                        x-text="`${item.{{ $membersCount }}.length} ${item.{{ $membersCount }}.length === 1 ? 'Membro' : 'Membros'}`">
+                        x-text=" item['{{ $listMeta['count'] }}'].length === 1
+                        ? '1 {{ $listMeta['sinTitle'] }}'
+                        : `${item['{{ $listMeta['count'] }}'].length} {{ $listMeta['pluTitle'] }}`">
                     </span>
                 </div>
             @endif
@@ -43,7 +56,7 @@
             {{-- Scroll interno da lista --}}
             <div class="flex-1 dark:bg-gray-600/30  overflow-y-auto scrollbar-custom border border-gray-200 dark:border-gray-700 px-6 mx-5 rounded-md max-h-[140px] transition duration-150 ease-in-out">
                 <ul class="space-y-1 text-gray-600 dark:text-gray-300 text-sm py-1 transition duration-150 ease-in-out">
-                    {{ $members }}
+                    {{ $list }}
                 </ul>
             </div>
         @endif

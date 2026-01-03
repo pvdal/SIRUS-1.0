@@ -33,49 +33,6 @@
         <div x-show="showGroupCards">
             {{-- Conteúdo principal --}}
             <x-main-content>
-                {{--
-                <nav class="bg-white rounded-lg border-b border-gray-100 dark:bg-gray-900 dark:border-gray-700 transition duration-150 ease-in-out">
-                    <!-- Menu padrão (desktop e acima de 300px) -->
-                    <div class="max-w-[2100px] mx-auto hidden xxs:block border-b border-gray-100 dark:border-gray-700 transition duration-150 ease-in-out">
-                        <div class="flex justify-between h-16 w-full">
-                            <div class="flex">
-                                <div class="hidden space-x-8 sm:-my-px xxs:ms-5 xs:ms-10 xxs:flex">
-                                    <button
-                                        type="button"
-                                        x-on:click="
-                                    $el.blur();
-                                    showDirectories = false;
-                                "
-                                        class="inline-flex items-center px-1 pt-1 text-gray-500 border-b-2 border-transparent p-0 m-0 text-sm font-medium leading-5 transition duration-150 ease-in-out"
-                                        :class="{
-                                        'border-secondary-blue text-gray-900 dark:text-gray-200 focus:outline-none': showDirectories === false,
-                                        'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-500 dark:hover:text-gray-200 dark:hover:border-gray-600': showDirectories === true
-                                    }"
-                                    >
-                                        Tabela
-                                    </button>
-                                </div>
-                                <div class="hidden space-x-8 sm:-my-px xxs:ms-5 xs:ms-10 xxs:flex">
-                                    <button
-                                        type="button"
-                                        x-on:click="
-                                    $el.blur();
-                                    showDirectories = true;
-                                "
-                                        class="inline-flex items-center px-1 pt-1 text-gray-500 border-b-2 border-transparent p-0 m-0 text-sm font-medium leading-5 transition duration-150 ease-in-out"
-                                        :class="{
-                                        'border-secondary-blue text-gray-900 dark:text-gray-200 focus:outline-none': showDirectories === true,
-                                        'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-500 dark:hover:text-gray-200 dark:hover:border-gray-600': showDirectories === false,
-                                    }"
-                                    >
-                                        Explorador
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-                --}}
                 {{-- Seleção de visualização --}}
                 <template x-if="papers && papers.length > 0">
                     <div class="flex items-center max-w-full gap-4 px-2 pt-2">
@@ -109,6 +66,7 @@
                                     x-on:click="
                                         $el.blur();
                                         showDirectories = true;
+                                        loadYears();
                                     "
                                 >
                                     <x-lucide-folder
@@ -125,7 +83,7 @@
                             <div class="flex gap-5 me-4">
                             <span
                                 class="font-medium text-sm text-gray-700 dark:text-gray-300 transition duration-150 ease-in-out"
-                                x-text="'Exibindo: ' + papers.length"
+                                x-text="'Carregados: ' + loadedPapers"
                             ></span>
                                 <span
                                     class="font-medium text-sm text-gray-700 dark:text-gray-300 transition duration-150 ease-in-out"
@@ -147,7 +105,85 @@
                         :register-period="'registerPeriod'"
                         :load-function="'loadPapers()'"
                         :class="'md:justify-start'"
-                    />
+                    >
+                        {{-- Filtros adicionais --}}
+                        <x-slot name="filters">
+                            {{-- Filtro por grupo --}}
+                            <div id="groupFilter" class="relative block max-w-[170px] md:max-w-[200px] w-full me-1 xs:me-2">
+                                <button @click="groupFilter.drop = !groupFilter.drop"
+                                        class="flex justify-between items-center pr-4 min-w-[170px] max-w-[200px] w-full whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 dark:border-gray-400 rounded-lg
+                                           text-left px-4 py-2.5 xs:me-2 mb-2 text-sm text-gray-700 dark:text-gray-100 focus:ring-1 focus:ring-secondary-blue
+                                           focus:border-secondary-blue cursor-pointer transition"
+                                        x-bind:disabled="loading"
+                                        :title="groupFilter.name || 'Selecione um grupo'">
+                                    <span class="truncate" x-text="groupFilter.name || 'Selecione um grupo'"></span>
+                                    <x-lucide-chevron-down class="w-4 h-4 text-gray-700 dark:text-gray-100 flex-shrink-0 ms-auto transition"/>
+                                </button>
+
+                                <ul x-show="groupFilter.drop"
+                                    @click.outside="groupFilter.drop = false"
+                                    class="absolute min-w-[170px] md:max-w-[200px] w-full border bg-white dark:bg-gray-700 dark:border-gray-900 mt-1 rounded-lg max-h-60 overflow-auto z-50 scrollbar-custom py-5 px-1 transition duration-150 ease-in-out">
+                                    <hr />
+                                    <template x-if="groups.length == 0">
+                                        <li class="px-4 py-1 text-sm text-gray-700 dark:text-gray-100 break-words rounded-sm transition duration-150 ease-in-out">
+                                            Não há grupos cadastrados ainda!
+                                        </li>
+                                    </template>
+
+                                    <li @click="groupFilter.value = ''; groupFilter.name = 'Todos os grupos'; groupFilter.drop = false; loadPapers()"
+                                        class="px-4 py-1 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 break-words cursor-pointer rounded-sm transition duration-150 ease-in-out"
+                                        x-show="groups.length > 0"
+                                    >
+                                        Todos os grupos
+                                    </li>
+                                    <template x-for="group in groups" :key="group.id">
+                                        <li @click="groupFilter.value = group.id; groupFilter.name = group.theme; groupFilter.drop = false; loadPapers()"
+                                            class="px-4 py-1 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 break-words cursor-pointer rounded-sm transition duration-150 ease-in-out"
+                                            x-text="group.theme">
+                                        </li>
+                                    </template>
+                                    <hr />
+                                </ul>
+                            </div>
+
+                            {{-- Filtro por versão --}}
+                            <div id="versionFilter" class="relative block max-w-[170px] md:max-w-[200px] w-full me-1 xs:me-2">
+                                <button @click="versionFilter.drop = !versionFilter.drop"
+                                        class="flex justify-between items-center pr-4 min-w-[170px] max-w-[200px] w-full whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 dark:border-gray-400 rounded-lg
+                                           text-left px-4 py-2.5 xs:me-2 mb-2 text-sm text-gray-700 dark:text-gray-100 focus:ring-1 focus:ring-secondary-blue
+                                           focus:border-secondary-blue cursor-pointer transition"
+                                        x-bind:disabled="loading"
+                                        :title="versionFilter.name || 'Selecione uma versão'">
+                                    <span class="truncate" x-text="versionFilter.name || 'Selecione uma versão'"></span>
+                                    <x-lucide-chevron-down class="w-4 h-4 text-gray-700 dark:text-gray-100 flex-shrink-0 ms-auto transition"/>
+                                </button>
+
+                                <ul x-show="versionFilter.drop"
+                                    @click.outside="versionFilter.drop = false"
+                                    class="absolute min-w-[170px] md:max-w-[200px] w-full border bg-white dark:bg-gray-700 dark:border-gray-900 mt-1 rounded-lg max-h-60 overflow-auto z-50 scrollbar-custom py-5 px-1 transition duration-150 ease-in-out">
+                                    <hr />
+                                    <li @click="versionFilter.value = ''; versionFilter.name = 'Todos as versões'; versionFilter.drop = false; loadPapers()"
+                                        class="px-4 py-1 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 break-words cursor-pointer rounded-sm transition duration-150 ease-in-out"
+                                    >
+                                        Todos as versões
+                                    </li>
+
+                                    <li @click="versionFilter.value = 'evaluation'; versionFilter.name = 'Apenas avaliações'; versionFilter.drop = false; loadPapers()"
+                                        class="px-4 py-1 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 break-words cursor-pointer rounded-sm transition duration-150 ease-in-out"
+                                    >
+                                        Apenas avaliações
+                                    </li>
+
+                                    <li @click="versionFilter.value = 'corrected'; versionFilter.name = 'Apenas corrigidos'; versionFilter.drop = false; loadPapers()"
+                                        class="px-4 py-1 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 break-words cursor-pointer rounded-sm transition duration-150 ease-in-out"
+                                    >
+                                        Apenas corrigidos
+                                    </li>
+                                    <hr />
+                                </ul>
+                            </div>
+                        </x-slot>
+                    </x-actions-table-bar>
                 </template>
 
                 {{-- Componente com o conteúdo que o alpine vai manipular --}}

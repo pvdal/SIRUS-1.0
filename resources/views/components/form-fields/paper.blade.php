@@ -6,7 +6,7 @@
                 text-white text-sm font-medium rounded-md shadow gap-2 transition duration-200 ease-in-out"
         >
             <x-lucide-file class="h-4 w-4 text-white"/>
-            Escolher PDF
+            <span x-text="edit ? 'Alterar PDF' : 'Escolher PDF'"></span>
         </label>
 
         {{-- Input real (escondido) --}}
@@ -21,26 +21,26 @@
 
         {{-- Arquivo escolhido --}}
         <template x-if="file.file">
-            <div class="truncate block flex-1 max-w-full">
+            <div class="mt-4 truncate block flex-1 max-w-full">
                 <span class="truncate block flex-1 text-gray-500 mb-1">
                     <span class="font-medium text-sm text-gray-700 dark:text-gray-300 transition duration-150 ease-in-out">Arquivo selecionado (limite: 5MB):</span>
                 </span>
-                <div class="flex flex-col bg-gray-100 dark:bg-gray-700 hover:bg-gray-100/60 dark:hover:bg-gray-600/50 border border-gray-200 dark:border-gray-900/70 p-2 rounded">
+                <div class="flex flex-col bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-900/70 p-2 rounded">
                     <div class="block xs:flex items-center">
-                    <span class="ms-1 flex flex-row items-center space-x-2 overflow-hidden w-full pe-4">
-                        <x-lucide-file-text class="w-4 h-4 text-gray-600 dark:text-gray-200 flex-shrink-0"/>
-                        <template x-if="file.file && file.url">
-                            <span
-                                class="text-primary-blue dark:text-gray-200 truncate text-ellipsis"
-                                x-text="file.title"
-                                :title="file.title"
-                            ></span>
-                        </template>
-                    </span>
+                        <span class="ms-1 flex flex-row items-center space-x-2 overflow-hidden w-full pe-4">
+                            <x-lucide-file-text class="w-4 h-4 text-gray-600 dark:text-gray-200 flex-shrink-0"/>
+                            <template x-if="file.file && file.url">
+                                <span
+                                    class="text-primary-blue dark:text-gray-200 truncate text-ellipsis"
+                                    x-text="file.title"
+                                    :title="file.title"
+                                ></span>
+                            </template>
+                        </span>
                         <button
                             class="flex justify-center items-center pr-4 min-w-[127px] whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 rounded-lg
-                               text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 focus:ring-1 focus:ring-secondary-blue bg-white dark:!bg-gray-700
-                               focus:border-secondary-blue cursor-pointer"
+                               text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 bg-white dark:!bg-gray-700
+                               cursor-pointer"
                             x-on:click="window.open(file.url, '_blank'); $el.blur();"
                         >
                             Visualizar
@@ -62,16 +62,64 @@
         </template>
     </div>
 
+    {{-- Arquivo salvo --}}
+    <template x-if="edit && file_path">
+        <div class="mt-4 truncate block flex-1 max-w-full">
+            <span class="truncate block flex-1 text-gray-500 mb-1">
+                <span class="font-medium text-sm text-gray-700 dark:text-gray-300 transition duration-150 ease-in-out">Arquivo salvo</span>
+            </span>
+            <div class="flex flex-col bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-900/70 p-2 rounded">
+                <div class="flex flex-wrap items-center gap-2">
+                    <span class="ms-1 flex flex-row items-center space-x-2 overflow-hidden me-auto pe-4 py-2">
+                        <x-lucide-file-text class="w-4 h-4 text-gray-600 dark:text-gray-200 flex-shrink-0"/>
+                        <template x-if="title && file_path">
+                            <span
+                                class="text-primary-blue dark:text-gray-200 truncate text-ellipsis"
+                                x-text="title"
+                                :title="title"
+                            ></span>
+                        </template>
+                    </span>
+                    <button
+                        class="flex justify-center items-center pr-4 min-w-[127px] whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 rounded-lg
+                               text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 bg-white dark:!bg-gray-700
+                               cursor-pointer"
+                        x-on:click="showPaper(file_path); $el.blur();"
+                    >
+                        Visualizar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    {{-- Título do novo trabalho --}}
+    <template x-if="file.file">
+        <div class="mt-4">
+            <x-label for="title" value="Título do novo trabalho"/>
+            <x-input id="title" type="text" autocomplete="name" class="w-full mt-1"
+                     placeholder="Título do novo trabalho" x-model="newPaperTitle"
+                     @keydown.enter="savePaper"
+                     x-bind:disabled="!file.file && !edit"/>
+            <template x-if="errors.title">
+                <x-form-fields.field-error x-text="errors.title[0]"/>
+            </template>
+        </div>
+    </template>
+
     {{-- Título do trabalho --}}
-    <div class="mt-4">
-        <x-label for="title" value="Título do trabalho"/>
-        <x-input id="title" type="text" autocomplete="name" class="w-full mt-1"
-                 placeholder="Título do trabalho" x-model="title"
-                 @keydown.enter="savePaper"/>
-        <template x-if="errors.title">
-            <x-form-fields.field-error x-text="errors.title[0]"/>
-        </template>
-    </div>
+    <template x-if="!file.file">
+        <div class="mt-4">
+            <x-label for="title" value="Título do trabalho"/>
+            <x-input id="title" type="text" autocomplete="name" class="w-full mt-1"
+                     placeholder="Título do trabalho" x-model="title"
+                     @keydown.enter="savePaper"
+                     x-bind:disabled="!file.file && !edit"/>
+            <template x-if="errors.title">
+                <x-form-fields.field-error x-text="errors.title[0]"/>
+            </template>
+        </div>
+    </template>
 
     <div class="mt-4">
         <x-label>Ano</x-label>
@@ -80,7 +128,7 @@
             @php
                 $currentYear = date('Y');
             @endphp
-            @for($i = $currentYear -1; $i< ($currentYear + 1); $i++)
+            @for($i = 2024; $i< ($currentYear + 1); $i++)
                 <option value="{{ $i }}">{{ $i }}</option>
             @endfor
         </x-select>
@@ -113,15 +161,11 @@
             <x-form-fields.field-error x-text="errors.version[0]"/>
         </template>
     </div>
-    <span x-text="group_id"></span>
-    <span x-text="evaluation_paper_id"></span>
-    <template x-for="paper in evaluation_papers">
-        <span x-text="paper.title" class="block"></span>
-    </template>
-    <template x-if="version === 'corrected' && group_id">
+
+    <template x-if="version === 'corrected'">
         <div class="mt-4">
-            <x-label>Versão avaliada</x-label>
-            <x-select x-model="evaluation_paper_id" class="mt-1 w-full">
+            <x-label>Versão avaliada (opcional)</x-label>
+            <x-select x-model.number="evaluation_paper_id" class="mt-1 w-full" x-bind:disabled="version !== 'corrected'">
                 <option value="">Selecione uma versão</option>
                 <template x-for="paper in evaluation_papers">
                     <option :value="paper.id" x-text="paper.title"></option>
@@ -129,6 +173,21 @@
             </x-select>
             <template x-if="errors.evaluation_paper_id">
                 <x-form-fields.field-error x-text="errors.evaluation_paper_id[0]"/>
+            </template>
+        </div>
+    </template>
+
+    <template x-if="version === 'evaluation' && submitted_at">
+        <div class="mt-4">
+            <x-label>Versão Corrigida (opcional)</x-label>
+            <x-select x-model.number="corrected_paper_id" class="mt-1 w-full" x-bind:disabled="version !== 'evaluation'">
+                <option value="">Selecione uma versão</option>
+                <template x-for="paper in corrected_papers">
+                    <option :value="paper.id" x-text="paper.title"></option>
+                </template>
+            </x-select>
+            <template x-if="errors.corrected_paper_id">
+                <x-form-fields.field-error x-text="errors.corrected_paper_id[0]"/>
             </template>
         </div>
     </template>

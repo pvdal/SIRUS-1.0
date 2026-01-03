@@ -1,4 +1,4 @@
-<nav x-data="{ open:false }" id="navigation" class="bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-700 lg:border-none md:shadow-sm md:dark:shadow-md lg:sticky top-0 z-40">
+<nav x-data="{ open:false }" id="navigation" class="relative bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-700 lg:border-none md:shadow-sm md:dark:shadow-md lg:sticky top-0 z-40">
     @php
         $links = [
             ['label' => 'Início', 'href' => route('home'), 'route' => 'home'],
@@ -7,7 +7,7 @@
             ['label' => 'Privacidade', 'href' => route('policy.show'), 'route' => 'policy.show']
         ];
     @endphp
-    <div class="flex items-center mx-auto max-w-[1800px] h-16 px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center mx-auto max-w-[1850px] h-16 px-4 sm:px-6 lg:px-8">
         <div class="shrink-0 flex items-center relative me-20 h-16">
             <a href="{{ route('home') }}">
                 <!-- Logo claro -->
@@ -25,7 +25,7 @@
             </a>
         </div>
 
-        <div class="hidden md:flex items-center w-full min-h-full max-w-[1800px]">
+        <div class="hidden md:flex items-center w-full min-h-full max-w-[1850px]">
             <ul class="mx-4 lg:ms-10 inline-flex items-center overflow-x-auto no-scrollbar gap-5 lg:gap-7 h-16">
                 @foreach($links as $link)
                     <li class="h-full">

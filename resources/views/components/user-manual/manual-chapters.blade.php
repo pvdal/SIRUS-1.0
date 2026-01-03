@@ -23,7 +23,7 @@
 @endforeach
 --}}
 @foreach($links as $link)
-    <a href="#{{ $link['page'] }}" class="chapter-link flex justify-between items-center px-3 py-2 rounded-lg border border-transparent hover:bg-gray-100 text-gray-700
+    <a href="#{{ $link['page'] }}" class="chapter-link flex justify-between items-center px-3 py-2 rounded-lg border border-transparent hover:bg-slate-100 text-gray-700
         dark:text-gray-200 transition duration-150 ease-in-out"
         data-target="{{ $link['page'] }}"
     >

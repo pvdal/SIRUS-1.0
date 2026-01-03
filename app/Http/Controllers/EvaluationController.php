@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Illuminate\View\View;
@@ -289,6 +290,8 @@ class EvaluationController extends Controller
             'students'      => $students,
             'gradeLevels'   => $gradeLevels,
             'committeeName' => $committee->name,
+            'committeeStart' => $committee->start ?? null,
+            'committeeEnd'   => $committee->end ?? null,
             'rubric'        => [
                 'id' => $committee->id,
                 'nameGroup' => $groupRubric->name,
@@ -315,11 +318,11 @@ class EvaluationController extends Controller
         // 1. --- VALIDAÇÃO DOS DADOS ---
         $validator = Validator::make($request->all(), [
             'user_committee_id' => 'required|integer|exists:user_committees,id',
-            'group_evaluations' => 'nullable|array',
+            'group_evaluations' => 'required|array',
             'group_evaluations.*.grade' => 'numeric|in:2,6,8,10', // Garante que as notas são as permitidas
             'group_evaluations.*.comment' => 'nullable|string|max:1000',
 
-            'individual_evaluations' => 'nullable|array',
+            'individual_evaluations' => 'required|array',
             'individual_evaluations.*.*.grade' => 'numeric|in:0,2,6,8,10', // Garante as notas
             'individual_evaluations.*.*.comment' => 'nullable|string|max:1000',
         ]);
@@ -382,20 +385,30 @@ class EvaluationController extends Controller
             $userCommittee->evaluated_at = Carbon::now();
             $userCommittee->save();
 
-            // D. Marcar paper como submetido à avaliação
-            $committee = Committee::with('paper:id,name,submitted_at')->find($userCommittee->id);
-            if($committee && $committee->paper === null) {
-                $committee->paper->submitted_at = Carbon::now();
-                $committee->paper->save();
+            $committee = Committee::with('paper:id,title,submitted_at')
+                ->find($userCommittee->committee_id);
+
+            $paper = $committee?->paper;
+
+            if ($paper && $paper->submitted_at === null) {
+                $paper->submitted_at = now();
+                $paper->save();
             }
 
             DB::commit(); // Sucesso! Confirma as operações no banco.
 
             return response()->json(['success' => 'Avaliação salva com sucesso!']);
 
-        } catch (\Exception $e) {
-            DB::rollBack(); // Algo deu errado, desfaz tudo.
-            return response()->json(['error' => 'Ocorreu um erro ao salvar a avaliação.', 'message' => $e->getMessage()], 500);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+
+            Log::error('Erro ao salvar avaliação', [
+                'exception' => $e,
+            ]);
+
+            return response()->json([
+                'error' => 'Ocorreu um erro ao salvar a avaliação.',
+            ], 500);
         }
     }
 

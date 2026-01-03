@@ -46,7 +46,7 @@ class Committee extends Model
     // Relacionamento com ‘Paper’
     public function paper(): BelongsTo
     {
-        return $this->belongsTo(Paper::class);
+        return $this->belongsTo(Paper::class, 'paper_id');
     }
 
     public function correctedPaper(): BelongsTo

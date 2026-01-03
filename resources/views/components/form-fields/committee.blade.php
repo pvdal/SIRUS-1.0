@@ -27,7 +27,7 @@
             <x-form-fields.field-error x-text="errors.group_id[0]"/>
         </template>
     </div>
-    {{-- Trabalho --}}
+    {{-- Trabalho de avaliação --}}
     <div x-show="groupSelected" class="mt-4">
         <x-label for="paper_id_evaluation" value="Trabalho para avaliação"/>
         <x-select id="paper_id_evaluation" class="w-full mt-1" x-model="paper_id.evaluation" x-bind:disabled="!groupSelected">
@@ -40,8 +40,8 @@
             <x-form-fields.field-error x-text="errors.paper_id[0]"/>
         </template>
     </div>
-    {{-- Trabalho --}}
-    <template x-if="edit">
+    {{-- Trabalho corrigido --}}
+    <template x-if="edit && submittedPaper">
         <div x-show="groupSelected" class="mt-4">
             <x-label for="paper_id_corrected" value="Trabalho corrigido (opcional)"/>
             <x-select id="paper_id_corrected" class="w-full mt-1" x-model="paper_id.corrected" x-bind:disabled="!groupSelected">

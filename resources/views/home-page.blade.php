@@ -13,7 +13,7 @@
             ];
         @endphp
         {{-- Menu primário --}}
-        <div class="flex items-center mx-auto max-w-[1800px] h-16 px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center mx-auto max-w-[1850px] h-16 px-4 sm:px-6 lg:px-8">
             {{-- Logotipo --}}
             <div class="shrink-0 flex items-center relative me-20 h-16">
                 <a href="{{ route('home') }}">
@@ -33,7 +33,7 @@
                 </a>
             </div>
             {{-- Options --}}
-            <div class="hidden md:flex items-center w-full min-h-full max-w-[1800px]">
+            <div class="hidden md:flex items-center w-full min-h-full max-w-[1850px]">
                 <ul class="mx-4 lg:ms-10 inline-flex items-center overflow-x-auto no-scrollbar gap-5 lg:gap-7 h-16">
                     @foreach($links as $link)
                         <li class="h-full">
@@ -120,7 +120,7 @@
     </nav>
     {{-- Sessão inicial --}}
     <section id="hero" class="flex justify-center items-center sm:py-6 lg:py-10 xl:py-16 bg-white dark:bg-gray-900 transition duration-150 ease-in-out">
-        <div class="grid items-center justify-center lg:grid-cols-10 xl:min-h-[800px] max-w-[1850px] px-2 xs:px-5 sm:px-10 py-16 mb-2 2xl:px-16 2xl:pt-20 lg:pb-20 xl:pb-28">
+        <div class="grid items-center justify-center lg:grid-cols-10 xl:min-h-[750px] xlg:min-h-[800px] max-w-[1900px] xs:px-5 sm:px-10 py-16 mb-2 2xl:px-16 2xl:pt-20 lg:pb-20 xl:pb-28">
             {{-- Logo para telas < 1024px --}}
             <div class="lg:hidden flex flex-col items-center justify-center lg:col-span-4 w-full lg:max-h-[70%] max-h-full xl:max-h-[80%] 2xl:max-h-[90%] 3xl:max-h-full mx-auto shadow-[2px_2px_5px_rgba(0,0,0,0.40)]
                 rounded-xl py-10 md:py-20 px-10 h-full bg-gradient-to-b from-secondary-blue to-blue-700 dark:from-primary-blue dark:to-blue-950 border border-gray-500 dark:border-slate-900">
@@ -140,8 +140,8 @@
                         Sistema de gestão do SIMBAJU
                     </span>
                 </div>
-                <div class="mb-4">
-                    <h2 class="text-[3rem] xs:text-6xl sm:text-7xl md:text-[5rem] xl:text-[5.5rem] 3xl:text-[7rem] leading-[1.2] font-extrabold mb-8 text-gray-900 dark:text-gray-100
+                <div class="mb-4 px-4 xs:px-0">
+                    <h2 class="text-[2.8rem] xs:text-6xl sm:text-7xl md:text-[5rem] xl:text-[5.5rem] 3xl:text-[7rem] leading-[1.2] font-extrabold mb-8 text-gray-900 dark:text-gray-100
                         transition duration-150 ease-in-out">
                         Simplificando a gestão avaliativa
                     </h2>
@@ -151,7 +151,7 @@
                     </p>
                 </div>
                 {{-- Botões de ação --}}
-                <div class="flex flex-col sm:flex-row gap-2 w-full lg:mt-auto mb-8">
+                <div class="flex flex-col sm:flex-row gap-2 w-full lg:mt-auto mb-8 px-1 xs:px-0">
                     {{-- Botão para entrar no sistema --}}
                     <a
                         rel="noreferrer noopener"
@@ -226,7 +226,7 @@
     </section>
     {{-- Funcionalidades --}}
     <section id="features" class="bg-gray-50 dark:bg-gray-900 opacity-[0.98] transition duration-150 ease-in-out py-16">
-        <div class="p-5 xs:p-16 sm:p-10 xl:p-10 2xl:p-16 max-w-[1800px] mx-auto">
+        <div class="p-5 xs:p-16 sm:p-10 xl:p-10 2xl:p-16 max-w-[1900px] mx-auto">
             {{-- Cabeçalho --}}
             <div class="flex w-full flex-col gap-5 justify-center items-center mb-16">
                 <span class="rounded-full px-5 py-1 font-medium text-base lg:text-xl 2xl:text-2xl whitespace-nowrap
@@ -373,7 +373,7 @@
     </section>
     {{-- Rodapé --}}
     <footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 px-10 transation duration-150 ease-in-out">
-        <div class="max-w-[1800px] mx-auto px-4 py-6 sm:px-6 lg:px-8">
+        <div class="max-w-[1900px] mx-auto px-4 py-6 sm:px-6 lg:px-8">
             <div class="flex flex-col justify-center gap-4 sm:flex-row sm:items-center sm:justify-between">
 
                 <!-- Copyright -->
@@ -385,13 +385,13 @@
                 <div class="flex flex-col  sm:flex-row items-center gap-3 sm:gap-4 sm:me-auto">
                     <a target="_blank"
                        href="{{ route('policy.show') }}"
-                       class="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 text-sm 2xl:text-base transition duration-150 ease-in-out">
+                       class="underline text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 text-sm 2xl:text-base transition duration-150 ease-in-out">
                         Política de Privacidade
                     </a>
 
                     <a target="_blank"
                        href="{{ route('terms.show') }}"
-                       class="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 text-sm 2xl:text-base transition duration-150 ease-in-out">
+                       class="underline text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 text-sm 2xl:text-base transition duration-150 ease-in-out">
                         Termos de Uso
                     </a>
                 </div>

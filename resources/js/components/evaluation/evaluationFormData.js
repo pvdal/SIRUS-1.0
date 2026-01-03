@@ -12,6 +12,7 @@ export function evaluationFormData(initialData) { // <<<< NOVA VERSÃO
         rubric:        initialData.rubric,
         userCommitteeId: initialData.userCommitteeId,
 
+
         // Variaveis para comentarios
         showCommentModal: false,
         currentCommentText: '',
@@ -42,6 +43,7 @@ export function evaluationFormData(initialData) { // <<<< NOVA VERSÃO
         showWarningModal: false,
         warningType: '',
         warningContent: '',
+        finished: false,
 
         init() {
             // Inicializa o objeto de notas individuais
@@ -99,7 +101,7 @@ export function evaluationFormData(initialData) { // <<<< NOVA VERSÃO
                         if (this.groupSelections[criterion.id]?.grade == null) {
 
                             // Se não houver seleção, adiciona ao array de erros
-                            missingCriteria.push(`• ${criterion.name} (Grupo)`);
+                            missingCriteria.push(`${criterion.name} (Grupo)`);
                         }
                     }
                     // 3. Validar critérios 'individual'
@@ -112,24 +114,28 @@ export function evaluationFormData(initialData) { // <<<< NOVA VERSÃO
                             if (this.individualSelections[student.id]?.[criterion.id]?.grade == null) {
 
                                 // Se não houver seleção para este aluno, adiciona ao erro
-                                missingCriteria.push(`• ${criterion.name} (Aluno: ${student.name})`);
+                                missingCriteria.push(`${criterion.name} (Aluno: ${student.name})`);
                             }
                         });
                     }
                 });
             });
             if (missingCriteria.length > 0) {
+                this.finished = false;
                 // ERRO: Existem critérios faltando.
-                this.warningType = 'Erro';
+                this.warningType = 'Confirmação';
 
-                let errorHtml = 'Por favor, preencha todos os campos obrigatórios:<br><ul class="list-disc list-inside text-left">';
-                errorHtml += missingCriteria.map(name => `<li>${name}</li>`).join('');
-                errorHtml += '</ul>';
+                this.warningContent = `
+                <p class="mb-2">Por favor, preencha todos os campos obrigatórios:</p>
+                <ul class="list-disc pl-6 space-y-2">
+                    ${missingCriteria.map(name => `<li>${name}</li>`).join('')}
+                </ul>
+                `;
 
-                this.warningContent = errorHtml;
                 this.showWarningModal = true;
 
             } else {
+                this.finished = true;
                 // modal de CONFIRMAÇÃO.
                 this.warningType = 'Confirmação';
                 this.warningContent = 'Tem certeza de que deseja enviar esta avaliação? Após o envio, ela não poderá mais ser editada.';
@@ -153,11 +159,11 @@ export function evaluationFormData(initialData) { // <<<< NOVA VERSÃO
                 user_committee_id: this.userCommitteeId,
                 group_evaluations: this.groupSelections,
                 individual_evaluations: this.individualSelections,
-                _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             };
 
             // 2. Envia os dados para o Controller
-            axios.post('/evaluation/store', payload)
+            const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
+            axios.post(`/${requestPrefix}/evaluation/store`, payload)
                 .then(response => {
                     window.dispatchEvent(new CustomEvent('banner-message', {
                         detail: {
@@ -169,8 +175,25 @@ export function evaluationFormData(initialData) { // <<<< NOVA VERSÃO
                     window.location.reload();
                 })
                 .catch(error => {
+                    const status = error.response?.status;
                     console.error('Erro ao salvar:', error.response);
-                    alert('Ocorreu um erro ao salvar.');
+
+                    if (status === 422) {
+                        window.dispatchEvent(new CustomEvent('banner-message', {
+                            detail: {
+                                style: 'warning',
+                                message: 'Verifique os dados informados!',
+                            }
+                        }));
+                    } else {
+                        window.dispatchEvent(new CustomEvent('banner-message', {
+                            detail: {
+                                style: 'danger',
+                                message: 'Ocorreu um erro inesperado ao salvar!',
+                            }
+                        }));
+                    }
+
                     // Se der erro, para de salvar para o usuário poder tentar de novo
                     this.saving = false;
                 });

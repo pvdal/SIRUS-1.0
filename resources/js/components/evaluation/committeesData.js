@@ -31,6 +31,7 @@ export function committeesData() {
             evaluation: null,
             corrected: false,
         },
+        submittedPaper: false,
         paper_title: null,
         rubric_id: {
             group: null,
@@ -413,6 +414,8 @@ export function committeesData() {
                 this.$nextTick(() => {
                     this.paper_id.evaluation = committee.paper?.evaluation?.id || null;
                 });
+                this.submittedPaper = committee.paper.evaluation.submitted ?? false;
+
                 this.paper_title = committee.paper?.evaluation?.title || null;
             } else {
                 this.paper_id.evaluation = null;
@@ -586,6 +589,7 @@ export function committeesData() {
                     'group_id',
                     'paper_id.evaluation',
                     'paper_id.corrected',
+                    'submittedPaper',
                     'member_type_id',
                 ],
             );

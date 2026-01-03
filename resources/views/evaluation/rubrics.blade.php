@@ -19,7 +19,7 @@
         >
             {{-- Botão "Voltar" que aparece na visão do modelo --}}
             <div x-show="showModelView" x-cloak>
-                <x-button x-on:click="$dispatch('toggle-rubric-cards'); $dispatch('toggle-nav-bar', true);">
+                <x-button x-on:click="$dispatch('toggle-rubric-cards');">
                     <x-lucide-arrow-left class="w-4 h-4 mr-2"/>
                     Visualizar Rubricas
                 </x-button>

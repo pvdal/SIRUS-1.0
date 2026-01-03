@@ -273,6 +273,12 @@ return [
             'numeric' => 'O peso das rubricas deve ser um número.',
             'min' => 'O peso de cada rubrica deve ser pelo menos :min',
         ],
+
+        'evaluation_paper_id.prohibited_unless' =>
+            'O campo :attribute só pode ser enviado quando a versão for corrigida.',
+
+        'corrected_paper_id.prohibited_unless' =>
+            'O campo :attribute só pode ser enviado quando a versão for avaliação.'
     ],
 
     /*
@@ -300,15 +306,16 @@ return [
         'date_start'     => 'data de inicio',
         'date_end'       => 'data de fim',
         'day'            => 'dia',
+        'education'      => 'formação',
         'email'          => 'e-mail',
-        'education'      => 'Formação',
+        'evaluation_paper_id' => 'versão avaliada',
         'excellent'      => 'excelente',
         'excerpt'        => 'resumo',
         'file'           => 'arquivo',
         'first_name'     => 'primeiro nome',
         'gender'         => 'gênero',
         'good'           => 'bom',
-        'corrected_paper_id' => 'trabalho corrigido',
+        'corrected_paper_id' => 'versão corrigida',
         'course_id'      => 'curso',
         'group_id'       => 'grupo',
         'group_rubric'   => 'rubrica em grupo',

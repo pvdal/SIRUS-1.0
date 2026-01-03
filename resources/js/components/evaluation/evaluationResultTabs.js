@@ -16,6 +16,7 @@ export function evaluationResultTabs(initialData) {
             studentId: null // 'RA001' (apenas para individual)
         },
         isCommentReadOnly: true,
+        showHelp: false,
 
         init() {
             // 1. Calcula as notas de cada avaliador

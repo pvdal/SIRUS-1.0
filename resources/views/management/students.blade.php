@@ -34,7 +34,7 @@
                             {{-- Filtro por curso --}}
                             <div id="courseFilter" class="relative block max-w-[170px] md:max-w-[200px] w-full me-1 xs:me-2">
                                 <button @click="courseFilter.drop = !courseFilter.drop"
-                                        class="flex justify-between items-center pr-4 min-w-[170px] max-w-[200px] w-full whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 rounded-lg
+                                        class="flex justify-between items-center pr-4 min-w-[170px] max-w-[200px] w-full whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 dark:border-gray-400 rounded-lg
                                            text-left px-4 py-2.5 xs:me-2 mb-2 text-sm text-gray-700 dark:text-gray-100 focus:ring-1 focus:ring-secondary-blue
                                            focus:border-secondary-blue cursor-pointer transition"
                                         x-bind:disabled="loading"
@@ -72,7 +72,7 @@
                             {{-- Filtro por grupo --}}
                             <div id="groupFilter" class="relative block max-w-[170px] md:max-w-[200px] w-full me-1 xs:me-2">
                                 <button @click="groupFilter.drop = !groupFilter.drop"
-                                        class="flex justify-between items-center pr-4 min-w-[170px] max-w-[200px] w-full whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 rounded-lg
+                                        class="flex justify-between items-center pr-4 min-w-[170px] max-w-[200px] w-full whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 dark:border-gray-400 rounded-lg
                                            text-left px-4 py-2.5 xs:me-2 mb-2 text-sm text-gray-700 dark:text-gray-100 focus:ring-1 focus:ring-secondary-blue
                                            focus:border-secondary-blue cursor-pointer transition"
                                         x-bind:disabled="loading"

@@ -51,7 +51,7 @@
                     lg:h-[calc(100vh-64px)] sticky top-[64px]
                     pb-10 lg:pb-2 pt-5 overflow-hidden
                     border border-white dark:border-gray-900
-                    rounded-b-md lg:rounded-none">
+                    rounded-b-md lg:rounded-sm">
                     <div class="flex items-center mb-4 px-4 text-gray-800 dark:text-gray-100">
                         <h1 class="text-lg font-semibold me-auto">Manual do Usuário</h1>
                         <button

@@ -585,13 +585,11 @@ export function rubricsData() {
             const rubricToShow = this.rubrics.find(r => r.id === rubricId) || this.newRubrics.find(r => r.id === rubricId);
 
             if (rubricToShow) {
-                console.log(rubricToShow);
                 this.rubricForModelView = rubricToShow;
                 this.showRubricCards = false;
                 this.showModel = true;
                 // A lógica de troca de visibilidade agora é controlada pelos eventos
                 this.$dispatch('toggle-rubric-model', true);
-                this.$dispatch('toggle-nav-bar', false);
                 // console.log('Dados para o modelo:', this.rubricForModelView);
                 // console.log('JSON:', JSON.stringify(this.rubricForModelView, null, 2));
 

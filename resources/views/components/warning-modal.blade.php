@@ -37,9 +37,9 @@
     >
         <div>
             <div class="px-8 py-5 xs:px-5">
-                <div class="mt-3 text-start xs:mt-0 xs:mx-4 ">
+                <div class="mt-3 text-start xs:mx-4 ">
                     @if($title)
-                        <h3 class="text-lg font-medium text-gray-900">
+                        <h3 class="text-lg xl:text-xl font-medium text-gray-900">
                             @if($warningType)
                                 <template x-if="{{ $warningType }} === 'Confirmação'">
                                     <div class="flex items-center gap-2 text-secondary-orange dark:text-orange-400">

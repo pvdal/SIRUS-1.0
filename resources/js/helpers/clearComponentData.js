@@ -18,8 +18,8 @@ export function clearComponentData(context, type, formFields = [], addFilters = 
             if('statusFilter' in context) context.statusFilter = {};
             if ('registerPeriod' in context) context.registerPeriod = {};
             addFilters.forEach(filter => {
-                if (filter in context) context[filter] = {};
-            })
+                resetAddFilters (context, filter);
+            });
             break;
         case 'warning':
             context.warningType = '';
@@ -31,4 +31,29 @@ export function clearComponentData(context, type, formFields = [], addFilters = 
             context.clearFields('warning')
             break;
     }
+}
+
+function resetAddFilters(context, key) {
+    if (!(key in context)) return;
+
+    const value = context[key];
+
+    if (Array.isArray(value)) {
+        context[key] = [];
+        return;
+    }
+
+    if (typeof value === 'boolean') {
+        context[key] = false;
+        return;
+    }
+
+    if (typeof value === 'object' && value !== null) {
+        Object.keys(value).forEach(key => {
+            value[key] = '';
+        });
+        return;
+    }
+
+    context[key] = '';
 }

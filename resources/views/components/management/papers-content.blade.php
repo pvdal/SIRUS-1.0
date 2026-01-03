@@ -37,7 +37,7 @@
                                 </div>
                             </template>
                             <template x-if="corrected_version">
-                                <div class="inline-flex gap-1 items-center justify-center text-green-600">
+                                <div class="inline-flex gap-1 items-center justify-center text-green-600 dark:text-green-500">
                                     <x-lucide-check class="w-4 h-4"/>
                                     <span class="font-normal text-sm" x-text="'Versão corrigida'"></span>
                                 </div>
@@ -121,15 +121,17 @@
                     <x-table.th class="hidden md:table-cell">ID</x-table.th>
                     <x-table.th>Nome</x-table.th>
                     <x-table.th class="hidden md:table-cell">Grupo</x-table.th>
+                    <x-table.th class="hidden xl:table-cell">Projeto</x-table.th>
                     <x-table.th class="hidden lg:table-cell">Avaliação</x-table.th>
-                    <x-table.th class="hidden lg:table-cell">Status</x-table.th>
+                    <x-table.th class="hidden xl:table-cell">Status</x-table.th>
                 </x-slot>
                 <x-slot name="rows">
                     <x-table.td class="hidden md:table-cell" x-text="item.id"></x-table.td>
                     <x-table.td class="break-all" x-text="item.title"></x-table.td>
                     <x-table.td class="hidden md:table-cell" x-text="item.group_theme"></x-table.td>
-                    <x-table.td class="hidden lg:table-cell" x-text="item.version === 'corrected' ? 'Corrigido' : (item.submitted_at ?? 'Não avaliado')"></x-table.td>
-                    <x-table.td class="hidden lg:table-cell" x-text="item.state == 1 ? 'Ativo' : 'Inativo'"></x-table.td>
+                    <x-table.td class="hidden xl:table-cell" x-text="item.project"></x-table.td>
+                    <x-table.td class="hidden lg:table-cell" x-text="item.version === 'corrected' ? '' : (item.submitted_at ?? 'Não avaliado')"></x-table.td>
+                    <x-table.td class="hidden xl:table-cell" x-text="item.state == 1 ? 'Ativo' : 'Inativo'"></x-table.td>
                 </x-slot>
                 <x-slot name="actions">
                     <div class="flex flex-wrap gap-2 items-center justify-center">
@@ -202,31 +204,48 @@
                         </div>
                     </template>
                 </div>
+                <x-feedback.loading/>
 
                 {{-- Explorador de arquivos --}}
                 <div class="flex flex-col mt-8 justify-center md:grid md:grid-cols-2 lg:grid-cols-3 xlg:grid-cols-4 gap-4 items-center transition-all duration-150 ease-in-out">
                     {{-- Mostra os anos salvos --}}
                     <template x-for="year in (folders ? Object.keys(folders) : [])" :key="year">
-                        <button
-                            x-show="currentLevel === 'root'"
-                            type="button"
-                            class="flex flex-col p-2 rounded-md gap-x-2 justify-center items-start shadow-sm border border-gray-300
-                            hover:cursor-pointer hover:bg-soft-blue hover:shadow-md
-                            w-full xs:w-[400px] md:w-auto max-w-full"
-                            x-on:click="navigateTo('year',year)"
-                        >
-                            <div class="inline-flex items-center gap-2">
-                                <x-lucide-folder class="flex-shrink-0 h-6 w-6 text-secondary-blue" stroke-width="1.5"/>
-                                <span x-text="year" class="font-medium text-lg text-gray-900 dark:text-gray-100 transition duration-150 ease-in-out"></span>
-                            </div>
-                            <div class="ms-8">
-                                <span
-                                    x-text="Object.keys(folders[year]).length +
-                                        (Object.keys(folders[year]).length > 1 ? ' itens' : ' item')"
-                                    class="text-sm text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out">
-                                </span>
-                            </div>
-                        </button>
+                        <div x-show="currentLevel === 'root'" class="relative w-auto">
+                            <button
+                                type="button"
+                                class="flex flex-col p-2 rounded-md gap-x-2 justify-center items-start shadow-sm border border-gray-300 dark:border-gray-400
+                                hover:cursor-pointer hover:bg-soft-blue bg-white dark:bg-gray-800 transition duration-150 ease-in-out
+                                w-full xs:w-[400px] md:w-full max-w-full"
+                                x-on:click="openYear(year)"
+                            >
+                                <div class="inline-flex items-center gap-2">
+                                    <x-lucide-folder class="flex-shrink-0 h-6 w-6 text-secondary-blue" stroke-width="1.5"/>
+                                    <span x-text="year" class="font-medium text-lg text-gray-800 dark:text-gray-100 transition duration-150 ease-in-out"></span>
+                                </div>
+                                <div class="ms-8"
+                                    :class="foldersByYear[year]?.loaded === false ? 'py-3' : ''">
+                                    <template x-if="isLoadingYear(year)">
+                                        <span
+                                            x-text="'Carregando...'"
+                                            class="text-sm text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out">
+                                        </span>
+                                    </template>
+
+                                    <template x-if="foldersByYear[year]?.loaded === true">
+                                        <span
+                                            x-text="Object.keys(folders[year]).length +
+                                            (Object.keys(folders[year]).length > 1 ? ' itens' : ' item')"
+                                            class="text-sm text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out">
+                                        </span>
+                                    </template>
+                                </div>
+                            </button>
+                            <button
+                                class="absolute top-[23%] right-4 p-3 rounded-full text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 transition"
+                            >
+                                <x-lucide-download class="w-4 h-4"/>
+                            </button>
+                        </div>
                     </template>
 
                     {{-- Mostra os semestres salvos --}}
@@ -234,14 +253,14 @@
                         <button
                             x-show="currentLevel === 'year'"
                             type="button"
-                            class="flex flex-col p-2 rounded-md gap-x-2 justify-center items-start shadow-sm border border-gray-300
-                                hover:cursor-pointer hover:bg-soft-blue hover:shadow-md
+                            class="flex flex-col p-2 rounded-md gap-x-2 justify-center items-start shadow-sm border border-gray-300 dark:border-gray-400
+                                hover:cursor-pointer hover:bg-soft-blue bg-white dark:bg-gray-800 transition duration-150 ease-in-out
                                 w-full xs:w-[400px] md:w-auto max-w-full"
                             x-on:click="navigateTo('semester',semester)"
                         >
                             <div class="inline-flex items-center gap-2">
                                 <x-lucide-folder class="flex-shrink-0 h-6 w-6 text-secondary-blue" stroke-width="1.5"/>
-                                <span x-text="'Semestre ' + semester" class="font-medium text-lg text-gray-900 dark:text-gray-100 transition duration-150 ease-in-out"></span>
+                                <span x-text="'Semestre ' + semester" class="font-medium text-lg text-gray-800 dark:text-gray-100 transition duration-150 ease-in-out"></span>
                             </div>
                             <div class="ms-8">
                         <span
@@ -263,15 +282,15 @@
                         <button
                             x-show="currentLevel === 'semester'"
                             type="button"
-                            class="flex flex-col p-2 rounded-md gap-x-2 justify-center items-start shadow-sm border border-gray-300
-                                hover:cursor-pointer hover:bg-soft-blue hover:shadow-md
+                            class="flex flex-col p-2 rounded-md gap-x-2 justify-center items-start shadow-sm border border-gray-300 dark:border-gray-400
+                                hover:cursor-pointer hover:bg-soft-blue bg-white dark:bg-gray-800 transition duration-150 ease-in-out
                                 w-full xs:w-[400px] md:w-auto max-w-full"
                             x-on:click="navigateTo('version', version)"
                         >
                             <div class="inline-flex items-center gap-2">
                                 <x-lucide-folder class="flex-shrink-0 h-6 w-6 text-secondary-blue" stroke-width="1.5"/>
                                 <span x-text="version === 'evaluation' ? 'Avaliação' : (version === 'corrected' ? 'Corrigido' : 'sem nome')"
-                                      class="font-medium text-lg text-gray-900 dark:text-gray-100 transition duration-150 ease-in-out"></span>
+                                      class="font-medium text-lg text-gray-800 dark:text-gray-100 transition duration-150 ease-in-out"></span>
                             </div>
                             <div class="ms-8">
                         <span
@@ -293,14 +312,14 @@
                         <button
                             x-show="currentLevel === 'version'"
                             type="button"
-                            class="flex flex-col p-2 rounded-md gap-x-2 justify-center items-start shadow-sm border border-gray-300
-                        hover:cursor-pointer hover:bg-soft-blue hover:shadow-md
-                        w-full xs:w-[400px] md:w-auto max-w-full"
+                            class="flex flex-col p-2 rounded-md gap-x-2 justify-center items-start shadow-sm border border-gray-300 dark:border-gray-400
+                                hover:cursor-pointer hover:bg-soft-blue bg-white dark:bg-gray-800 transition duration-150 ease-in-out
+                                w-full xs:w-[400px] md:w-auto max-w-full"
                             x-on:click="navigateTo('course',course)"
                         >
                             <div class="inline-flex items-center gap-2 max-w-full overflow-hidden">
                                 <x-lucide-folder class="flex-shrink-0 h-6 w-6 text-secondary-blue" stroke-width="1.5"/>
-                                <span x-text="course" class="font-medium text-lg truncate text-gray-900 dark:text-gray-100 transition duration-150 ease-in-out"></span>
+                                <span x-text="course" class="font-medium text-lg truncate text-gray-800 dark:text-gray-100 transition duration-150 ease-in-out"></span>
                             </div>
                             <div class="ms-8">
                         <span
@@ -322,14 +341,14 @@
                         <button
                             x-show="currentLevel === 'course'"
                             type="button"
-                            class="flex flex-col p-2 rounded-md gap-x-2 justify-center items-start shadow-sm border border-gray-300
-                        hover:cursor-pointer hover:bg-soft-blue hover:shadow-md
-                        w-full xs:w-[400px] md:w-auto max-w-full"
+                            class="flex flex-col p-2 rounded-md gap-x-2 justify-center items-start shadow-sm border border-gray-300 dark:border-gray-400
+                                hover:cursor-pointer hover:bg-soft-blue bg-white dark:bg-gray-800 transition duration-150 ease-in-out
+                                w-full xs:w-[400px] md:w-auto max-w-full"
                             x-on:click="navigateTo('project',project)"
                         >
                             <div class="inline-flex items-center gap-2 max-w-full overflow-hidden">
                                 <x-lucide-folder class="flex-shrink-0 h-6 w-6 text-secondary-blue" stroke-width="1.5"/>
-                                <span x-text="'Projeto Integrador ' + project" class="font-medium text-lg truncate text-gray-900 dark:text-gray-100 transition duration-150 ease-in-out"></span>
+                                <span x-text="'Projeto Integrador ' + project" class="font-medium text-lg truncate text-gray-800 dark:text-gray-100 transition duration-150 ease-in-out"></span>
                             </div>
                             <div class="ms-8">
                                 <span
@@ -344,7 +363,7 @@
                     {{-- Mostra os trabalhos salvos --}}
                     <div class="grid col-span-full gap-2">
                         <template x-if="currentLevel === 'project'">
-                            <div class="w-full border border-gray-200 rounded-md">
+                            <div class="w-full bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-md transition ease-in-out">
                                 <div class="grid grid-cols-12 me-10 rounded-md p-2 transition duration-150 ease-in-out">
                                     <span class="font-semibold text-left text-gray-700 dark:text-gray-300 transition col-span-12 md:col-span-6 lg:col-span-5 px-4 flex items-center justify-start gap-2">Nome</span>
                                     <span class="font-semibold text-left text-gray-700 dark:text-gray-300 transition col-span-3 px-4 hidden md:flex md:col-span-6 lg:col-span-3 items-center justify-start">Grupo</span>
@@ -358,25 +377,26 @@
                             x-for="paper in (folders[selected.year]?.[selected.semester]?.[selected.version]?.[selected.course]?.[selected.project] ?? [])"
                             :key="paper.id"
                         >
-                            <div class="inline-flex border rounded-md p-2 border-gray-200 dark:border-gray-700 transition duration-150 ease-in-out">
+                            <div class="inline-flex bg-white dark:bg-gray-800 hover:bg-gray-100/40 dark:hover:bg-gray-800/75
+                                border rounded-md p-2 border-gray-200 dark:border-gray-700 transition duration-150 ease-in-out">
                                 <div class="grid grid-cols-12 w-full">
                                     <!-- Colunas do card -->
                                     <div class="col-span-12 md:col-span-6 lg:col-span-5 px-4 flex items-center justify-start gap-2 overflow-hidden">
-                                        <x-lucide-file-text class="w-6 h-6 text-gray-600 dark:text-gray-200 flex-shrink-0 transition duration-150 ease-in-out"/>
+                                        <x-lucide-file-text class="w-6 h-6 text-gray-600 dark:text-gray-300 flex-shrink-0 transition duration-150 ease-in-out"/>
                                         <span x-text="paper.title"
-                                              class="font-medium text-left text-lg text-gray-900 dark:text-gray-200 line-clamp-2 break-all
+                                              class="font-medium text-left text-lg text-gray-800 dark:text-gray-300 line-clamp-2 break-all
                                               transition duration-150 ease-in-out"></span>
                                     </div>
 
                                     <!-- Outras colunas -->
                                     <div class="hidden md:flex md:col-span-6 lg:col-span-3 px-4 items-center justify-start">
-                                        <span class="text-gray-900 dark:text-gray-200 text-left line-clamp-2 transition duration-150 ease-in-out" x-text="paper.group_theme"></span>
+                                        <span class="text-gray-900 dark:text-gray-300 text-left line-clamp-2 transition duration-150 ease-in-out" x-text="paper.group_theme"></span>
                                     </div>
                                     <div class="hidden lg:flex lg:col-span-2 px-4  items-center justify-start">
-                                        <span class="text-gray-900 dark:text-gray-200 text-left line-clamp-2 transition duration-150 ease-in-out" x-text="paper.version === 'corrected' ? 'Corrigido' : (paper.submitted_at ?? 'Não avaliado')"></span>
+                                        <span class="text-gray-900 dark:text-gray-300 text-left line-clamp-2 transition duration-150 ease-in-out" x-text="paper.version === 'corrected' ? 'Corrigido' : (paper.submitted_at ?? 'Não avaliado')"></span>
                                     </div>
                                     <div class="hidden lg:flex lg:col-span-2 px-4  items-center justify-start" >
-                                        <span class="text-gray-900 dark:text-gray-200 text-left line-clamp-2 transition duration-150 ease-in-out">
+                                        <span class="text-gray-900 dark:text-gray-300 text-left line-clamp-2 transition duration-150 ease-in-out">
                                             <template x-if="paper.state">
                                                 <template x-if="isInactivating(paper.id)">
                                                     <span>Inativando...</span>
@@ -402,7 +422,7 @@
                                                 type="button"
                                                 class="flex items-center justify-center rounded-md p-2 hover:bg-gray-200 dark:hover:bg-gray-600/30 transition duration-150 ease-in-out"
                                             >
-                                                <x-lucide-ellipsis-vertical class="w-6 h-6 text-gray-600 dark:text-gray-200 transition duration-150 ease-in-out"/>
+                                                <x-lucide-ellipsis-vertical class="w-6 h-6 text-gray-600 dark:text-gray-300 transition duration-150 ease-in-out"/>
                                             </button>
                                         </x-slot>
 
@@ -413,7 +433,7 @@
 
                                                 <button
                                                     type="button"
-                                                    class="flex items-center w-full rounded-sm px-4 py-2 gap-2 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 transition"
+                                                    class="flex items-center w-full rounded-sm px-4 py-2 gap-2 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-300 transition"
                                                     x-on:click="showPaper(paper.file_path)"
                                                 >
                                                     <x-lucide-eye class="w-4 h-4 transition"/> Visualizar
@@ -421,7 +441,7 @@
 
                                                 <button
                                                     type="button"
-                                                    class="flex items-center w-full rounded-sm px-4 py-2 gap-2 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 transition"
+                                                    class="flex items-center w-full rounded-sm px-4 py-2 gap-2 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-300 transition"
                                                     x-on:click="window.open(paper.file_path, '_blank')"
                                                 >
                                                     <x-lucide-external-link class="w-4 h-4 transition"/> Nova aba
@@ -430,14 +450,14 @@
                                                 <a
                                                     :href="paper.file_path"
                                                     download
-                                                    class="flex items-center w-full rounded-sm px-4 py-2 gap-2 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 transition"
+                                                    class="flex items-center w-full rounded-sm px-4 py-2 gap-2 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-300 transition"
                                                 >
                                                     <x-lucide-download class="w-4 h-4 transition"/> Baixar
                                                 </a>
 
                                                 <button
                                                     type="button"
-                                                    class="flex items-center w-full rounded-sm px-4 py-2 gap-2 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 transition"
+                                                    class="flex items-center w-full rounded-sm px-4 py-2 gap-2 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-300 transition"
                                                     x-on:click="editPaper(paper.id)"
                                                 >
                                                     <x-lucide-repeat class="w-4 h-4 transition"/> Alterar
@@ -445,7 +465,7 @@
 
                                                 <button
                                                     type="button"
-                                                    class="flex items-center w-full rounded-sm px-4 py-2 gap-2 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 transition"
+                                                    class="flex items-center w-full rounded-sm px-4 py-2 gap-2 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-300 transition"
                                                     x-on:click="
                                                         $el.blur();
                                                         warning('confirmação', paper.title, paper.id, paper.state ? 'inativar' : 'ativar');

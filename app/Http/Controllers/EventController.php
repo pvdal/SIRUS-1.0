@@ -122,7 +122,7 @@ class EventController extends Controller
             ], 422);
         }
         // Log::info($request);
-        $event = Committee::find($id);
+        $event = Committee::with('paper')->find($id);
 
         if (!$event) {
             return response()->json([
@@ -141,9 +141,7 @@ class EventController extends Controller
         }
 
         // Verifica se já houve avaliação
-        $evaluated = UserCommittee::where('committee_id', $id)
-            ->whereNotNull('evaluated_at')
-            ->first();
+        $evaluated = $event->paper->submitted_at ?? null;
 
         // Se não é membro, não pode avaliar
         if ($evaluated) {
@@ -225,14 +223,20 @@ class EventController extends Controller
                     'title' => $event->name,
                     'group' => $group->theme,
                     'paper' => $event->paper?->title,
-                    'members' => $event->members
+                    'committeeMembers' => $event->members
                         ->map(fn($m) => [
+                            'user_committee_id' => $m->id,
                             'user_id' => $m->user_id,
                             'name' => $m->user->name,
                             'member_type' => [
                                 'id' => $m->memberType?->id,
                                 'name' => $m->memberType?->name,
                             ],
+                        ])->values(),
+                    'groupMembers' => $group->students
+                        ->map(fn($m) => [
+                            'ra' => $m->ra,
+                            'name' => $m->user->name,
                         ])->values(),
                 ];
             })->values()->toArray();

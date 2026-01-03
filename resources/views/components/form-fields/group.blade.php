@@ -62,8 +62,8 @@
                         {{-- Conteúdo expandido --}}
                         <div class="flex flex-wrap justify-center md:justify-start gap-5 px-6 py-4 md:px-14 pb-2 bg-gray-50 dark:bg-gray-600/50">
                             <div>
-                                <x-label>Ano</x-label>
-                                <x-select x-model="file.year" class="mt-1 w-32 dark:!bg-gray-700">
+                                <x-label class="mb-1">Ano</x-label>
+                                <x-select x-model="file.year" class="w-32 dark:!bg-gray-700">
                                     @php
                                         $currentYear = date('Y');
                                     @endphp
@@ -74,8 +74,8 @@
                             </div>
 
                             <div>
-                                <x-label>Semestre</x-label>
-                                <x-select x-model="file.semester" class="mt-1 w-32 dark:!bg-gray-700">
+                                <x-label class="mb-1">Semestre</x-label>
+                                <x-select x-model="file.semester" class="w-32 dark:!bg-gray-700">
                                     @for($i = 1; $i<3; $i++)
                                         <option value="{{ $i }}">{{ $i }}</option>
                                     @endfor
@@ -83,8 +83,8 @@
                             </div>
 
                             <div>
-                                <x-label>Projeto</x-label>
-                                <x-select x-model="file.project" class="mt-1 w-32 dark:!bg-gray-700">
+                                <x-label class="mb-1">Projeto</x-label>
+                                <x-select x-model="file.project" class="w-32 dark:!bg-gray-700">
                                     @for($i = 1; $i<7; $i++)
                                         <option value="{{ $i }}">{{ $i }}</option>
                                     @endfor
@@ -92,16 +92,16 @@
                             </div>
 
                             <div>
-                                <x-label>Versão</x-label>
-                                <x-select x-model="file.version" class="mt-1 w-32 dark:!bg-gray-700">
+                                <x-label class="mb-1">Versão</x-label>
+                                <x-select x-model="file.version" class="w-32 dark:!bg-gray-700">
                                     <option value="evaluation">Avaliação</option>
                                     <option value="corrected">Corrigida</option>
                                 </x-select>
                             </div>
 
                             <div>
-                                <x-label>Curso</x-label>
-                                <x-select x-model="file.course" class="mt-1 w-32 dark:!bg-gray-700 sm:w-[277px] md:w-[425px]">
+                                <x-label class="mb-1">Curso</x-label>
+                                <x-select x-model="file.course" class="w-32 dark:!bg-gray-700 sm:w-[277px] md:w-[425px]">
                                     <option value="">Selecione um curso</option>
                                     @foreach($courses as $course)
                                         <option value="{{ $course['id'] }}">{{ $course['name'] ?? '-' }}</option>
@@ -124,7 +124,7 @@
                         </div>
 
                         <template x-if="file.file && file.url">
-                            <div class="ms-2">
+                            <div class="ms-2 mt-2">
                                 <span class="truncate block flex-1 text-gray-500 dark:text-gray-200">
                                     <span class="flex" x-text="'Tamanho do arquivo: ' + '(' + (file.file.size / (1024 * 1024)).toFixed(2) + ' MB)'"></span>
                                 </span>
@@ -206,17 +206,17 @@
                                     </div>
 
                                     <div>
-                                        <x-label>Ano</x-label>
-                                        <x-select x-model="paper.year" x-ref="yearSelect" class="mt-1 w-32 dark:!bg-gray-700">
-                                            @for($i = $currentYear -1; $i< ($currentYear + 1); $i++)
+                                        <x-label class="mb-1">Ano</x-label>
+                                        <x-select x-model="paper.year" x-ref="yearSelect" class="w-32 dark:!bg-gray-700">
+                                            @for($i = 2024; $i< ($currentYear + 1); $i++)
                                                 <option value="{{ $i }}">{{ $i }}</option>
                                             @endfor
                                         </x-select>
                                     </div>
 
                                     <div>
-                                        <x-label>Semestre</x-label>
-                                        <x-select x-model="paper.semester" class="mt-1 w-32 dark:!bg-gray-700">
+                                        <x-label class="mb-1">Semestre</x-label>
+                                        <x-select x-model="paper.semester" class="w-32 dark:!bg-gray-700">
                                             @for($i = 1; $i<3; $i++)
                                                 <option value="{{ $i }}">{{ $i }}</option>
                                             @endfor
@@ -224,8 +224,8 @@
                                     </div>
 
                                     <div>
-                                        <x-label>Projeto</x-label>
-                                        <x-select x-model="paper.project" class="mt-1 w-32 dark:!bg-gray-700">
+                                        <x-label class="mb-1">Projeto</x-label>
+                                        <x-select x-model="paper.project" class="w-32 dark:!bg-gray-700">
                                             @for($i = 1; $i<7; $i++)
                                                 <option value="{{ $i }}">{{ $i }}</option>
                                             @endfor
@@ -233,16 +233,16 @@
                                     </div>
 
                                     <div>
-                                        <x-label>Versão</x-label>
-                                        <x-select x-model="paper.version" class="mt-1 w-32 dark:!bg-gray-700">
+                                        <x-label class="mb-1">Versão</x-label>
+                                        <x-select x-model="paper.version" class="w-32 dark:!bg-gray-700">
                                             <option value="evaluation">Avaliação</option>
                                             <option value="corrected">Corrigida</option>
                                         </x-select>
                                     </div>
 
                                     <div>
-                                        <x-label>Curso</x-label>
-                                        <x-select x-model="paper.course" class="mt-1 w-32 dark:!bg-gray-700 sm:w-[277px] md:w-[425px]">
+                                        <x-label class="mb-1">Curso</x-label>
+                                        <x-select x-model="paper.course" class="w-32 dark:!bg-gray-700 sm:w-[277px] md:w-[425px]">
                                             <option value="">Selecione um curso</option>
                                             @foreach($courses as $course)
                                                 <option value="{{ $course['id'] }}" title="{{ $course['name'] }}">{{ $course['name'] ?? '-' }}</option>

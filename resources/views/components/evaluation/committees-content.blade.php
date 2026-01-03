@@ -113,9 +113,8 @@
         >
             <x-card.layout>
                 <x-card.content
-                    id="committee"
                     x-show="getCardType(item.id) === 'committee'"
-                    :members-count="'members'"
+                    :listMeta="['count' => 'members', 'icon' => 'users', 'title' => 'Membros', 'sinTitle' => 'Membro', 'pluTitle' => 'Membros']"
                 >
                     <x-slot name="header">
                         <span x-text="item.id" class="text-sm text-gray-600 dark:text-gray-300 me-3 transition duration-150 ease-in-out"></span>
@@ -140,7 +139,7 @@
                         <h3 class="text-lg font-semibold line-clamp-2 leading-snug" x-text="item.name"></h3>
                     </x-slot>
 
-                    <x-slot name="members">
+                    <x-slot name="list">
                         <template x-for="member in item.members" :key="member.user_id">
                             <li
                                 x-text="`${member.name}: ${member.member_type.name}`"
@@ -219,9 +218,8 @@
 
                 {{-- Card dos grupos --}}
                 <x-card.content
-                    id="group"
                     x-show="getCardType(item.id) === 'group'"
-                    :members-count="'members'"
+                    :listMeta="['count' => 'members', 'icon' => 'users', 'title' => 'Membros']"
                 >
                     <x-slot name="header">
                         <span x-text="item.group_id" class="text-sm text-gray-600 dark:text-gray-200 me-3 transition duration-150 ease-in-out"></span>
@@ -239,7 +237,7 @@
                         <h3 class="text-lg font-semibold line-clamp-2 leading-snug" x-text="item.group_theme"></h3>
                     </x-slot>
 
-                    <x-slot name="members">
+                    <x-slot name="list">
                         <template x-for="student in item.students" :key="student.ra">
                             <li
                                 x-text="student.name"

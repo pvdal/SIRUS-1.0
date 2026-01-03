@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
         $this->call(MemberTypesTableSeeder::class);
 
         $user = User::factory()->create([
-            'name' => 'Pedro Lima',
+            'name' => 'Administrador',
             'email' => 'root@root.com',
             'access_level' => 3,
             'state' => true,

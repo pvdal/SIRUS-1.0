@@ -154,8 +154,8 @@
                 AGENDA DE AVALIAÇÃO DO SIMBAJU
             </h1>
         </div>
-        <div class="flex justify-center">
-            <div id="calendar" class="p-4 w-full max-w-4xl bg-white text-black dark:bg-gray-800 dark:text-gray-300 transition duration-150 ease-in-out">
+        <div class="flex justify-center bg-white dark:bg-gray-800">
+            <div id="calendar" class="p-4 w-full max-w-4xl bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-300 transition duration-150 ease-in-out">
                 {{-- conteúdo do calendário --}}
             </div>
         </div>

@@ -55,12 +55,12 @@
     @isset($statusFilter)
         <div id="statusFilter" class="relative block {{ $minWidth }} max-w-[170px] md:max-w-[200px] w-full me-1 xs:me-2">
             <button @click="statusFilter.drop = !statusFilter.drop"
-                    class="flex justify-between items-center pr-4 min-w-[170px] max-w-[200px] w-full whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 rounded-lg
+                    class="flex justify-between items-center pr-4 min-w-[170px] max-w-[200px] w-full whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 dark:border-gray-400 rounded-lg
                            text-left px-4 py-2.5 xs:me-2 mb-2 text-sm text-gray-700 dark:text-gray-200 focus:ring-3 focus:ring-secondary-blue
                            focus:border-secondary-blue cursor-pointer transition duration-150 ease-in-out"
                     x-bind:disabled="loading"
-                    :title="statusFilter.name || 'Selecione em estado'">
-                <span class="truncate" x-text="statusFilter.name || 'Selecione em estado'"></span>
+                    :title="statusFilter.name || 'Selecione um estado'">
+                <span class="truncate" x-text="statusFilter.name || 'Selecione um estado'"></span>
                 <x-lucide-chevron-down class="w-4 h-4 text-gray-700 dark:text-gray-200 flex-shrink-0 ms-auto transition duration-150 ease-in-out" />
             </button>
 
@@ -88,7 +88,7 @@
     @isset($registerPeriod)
         <div id="registerPeriod" class="relative block {{ $minWidth }} max-w-[170px] md:max-w-[200px] w-full me-1 xs:me-2">
             <button @click="registerPeriod.drop = !registerPeriod.drop"
-                    class="flex justify-between items-center pr-4 min-w-[170px] max-w-[200px] w-full whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 rounded-lg
+                    class="flex justify-between items-center pr-4 min-w-[170px] max-w-[200px] w-full whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 dark:border-gray-400 rounded-lg
                            text-left px-4 py-2.5 xs:me-2 mb-2 text-sm text-gray-700 dark:text-gray-200 focus:ring-3 focus:ring-secondary-blue
                            focus:border-secondary-blue cursor-pointer transition duration-150 ease-in-out"
                     x-bind:disabled="loading"
@@ -131,7 +131,7 @@
                 {!! $clearButton !!}
                 {{ $loadFunction }}
             "
-            class="appearance-none border border-gray-300 rounded-lg me-1 {{ $minWidth }} px-6 py-2.5 mb-2 xs:me-2 text-sm text-gray-700 dark:text-gray-200 focus:ring-3 focus:ring-secondary-blue focus:border-secondary-blue cursor-pointer inline-flex items-center justify-between gap-2 transition duration-150 ease-in-out"
+            class="appearance-none border border-gray-300 dark:border-gray-400 rounded-lg me-1 {{ $minWidth }} px-6 py-2.5 mb-2 xs:me-2 text-sm text-gray-700 dark:text-gray-200 focus:ring-3 focus:ring-secondary-blue focus:border-secondary-blue cursor-pointer inline-flex items-center justify-between gap-2 transition duration-150 ease-in-out"
             :title="'Limpar filtros'"
         >
             {{ $clearAction['label'] ?? 'Limpar filtros' }}

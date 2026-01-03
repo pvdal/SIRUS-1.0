@@ -25,7 +25,7 @@
     {{-- Capítulos do manual --}}
     <div class="space-y-2">
         {{-- Seção 1 --}}
-        <article id="introduction" class="chapter flex bg-white shadow-sm md:rounded-md border border-white px-8 py-12 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-300 lg:scroll-mt-[4rem]">
+        <article id="introduction" class="chapter flex bg-white shadow md:rounded-sm border border-white px-8 py-20 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-400 lg:scroll-mt-[4rem]">
             <div class="max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
                 {{-- Capítulo 1 --}}
                 <h1 class="text-3xl font-bold mb-14 text-gray-900 dark:text-gray-100">1. Introdução</h1>
@@ -240,7 +240,7 @@
         </article>
 
         {{-- Seção 2 --}}
-        <article id="access" class="chapter flex bg-white shadow-sm md:rounded-md border border-white px-8 py-12 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-300 lg:scroll-mt-[4rem]">
+        <article id="access" class="chapter flex bg-white shadow md:rounded-sm border border-white px-8 py-20 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-400 lg:scroll-mt-[4rem]">
             <div class="max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
                 {{-- Capítulo 2 --}}
                 <h1 class="text-3xl font-bold mb-14 text-gray-900 dark:text-gray-100">2. Acesso ao Sistema</h1>
@@ -487,7 +487,7 @@
         </article>
 
         {{-- Seção 3 --}}
-        <article id="security" class="chapter flex bg-white shadow-sm md:rounded-md border border-white px-8 py-12 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-300 lg:scroll-mt-[4rem]">
+        <article id="security" class="chapter flex bg-white shadow md:rounded-sm border border-white px-8 py-20 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-400 lg:scroll-mt-[4rem]">
             <div class="max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
                 {{-- Capítulo 3 --}}
                 <h1 class="text-3xl font-bold mb-14 text-gray-900 dark:text-gray-100">3. Segurança</h1>
@@ -671,7 +671,7 @@
         </article>
 
         {{-- Seção 4 --}}
-        <article id="schedule" class="chapter flex bg-white shadow-sm md:rounded-md border border-white px-8 py-12 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-300 lg:scroll-mt-[4rem]">
+        <article id="schedule" class="chapter flex bg-white shadow md:rounded-sm border border-white px-8 py-20 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-400 lg:scroll-mt-[4rem]">
             <div class="max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
                 {{-- Capítulo 4 --}}
                 <h1 class="text-3xl font-bold mb-14 text-gray-900 dark:text-gray-100">4. Agenda de Avaliações</h1>
@@ -910,7 +910,7 @@
         </article>
 
         {{-- Seção 5 --}}
-        <article id="users" class="chapter flex leading-relaxed bg-white shadow-sm md:rounded-md border border-white px-8 py-12 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-300 lg:scroll-mt-[4rem]">
+        <article id="users" class="chapter flex bg-white shadow md:rounded-sm border border-white px-8 py-20 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-400 lg:scroll-mt-[4rem]">
             <div class="max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
                 {{-- Capítulo 5 --}}
                 <h1 class="text-3xl mb-14 font-bold text-gray-900 dark:text-gray-100">5. Gerenciamento de Usuários</h1>
@@ -1087,7 +1087,7 @@
         </article>
 
         {{-- Seção 6 --}}
-        <article id="institutional" class="chapter flex leading-relaxed bg-white shadow-sm md:rounded-md border border-white px-8 py-12 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-300 lg:scroll-mt-[4rem]">
+        <article id="institutional" class="chapter flex bg-white shadow md:rounded-sm border border-white px-8 py-20 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-400 lg:scroll-mt-[4rem]">
             <div class="max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
                 <h1 class="text-3xl mb-8 font-bold">6. Configurações Institucionais</h1>
 
@@ -1195,7 +1195,7 @@
         </article>
 
         {{-- Seção 7 --}}
-        <article id="rubrics" class="chapter flex leading-relaxed bg-white shadow-sm md:rounded-md border border-white px-8 py-12 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-300 lg:scroll-mt-[4rem]">
+        <article id="rubrics" class="chapter flex bg-white shadow md:rounded-sm border border-white px-8 py-20 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-400 lg:scroll-mt-[4rem]">
             <div class="max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
                 <h1 class="text-3xl mb-8 font-bold">7. Critérios e Rubricas</h1>
 
@@ -1278,7 +1278,7 @@
         </article>
 
         {{-- Seção 8 --}}
-        <article id="evaluation" class="chapter flex leading-relaxed bg-white shadow-sm md:rounded-md border border-white px-8 py-12 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-300 lg:scroll-mt-[4rem]">
+        <article id="evaluation" class="chapter flex bg-white shadow md:rounded-sm border border-white px-8 py-20 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-400 lg:scroll-mt-[4rem]">
             <div class="max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
                 <h1 class="text-3xl mb-8 font-bold">8. Processo de avaliação</h1>
 
@@ -1383,7 +1383,7 @@
         </article>
 
         {{-- Seção 9 --}}
-        <article id="profile" class="chapter flex leading-relaxed bg-white shadow-sm md:rounded-md border border-white px-8 py-12 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-300 lg:scroll-mt-[4rem]">
+        <article id="profile" class="chapter flex bg-white shadow md:rounded-sm border border-white px-8 py-20 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-400 lg:scroll-mt-[4rem]">
             <div class="max-w-4xl w-full xl:pe-24">
                 <h1 class="text-3xl mb-8 font-bold">9. Perfil</h1>
                 <hr class="border-gray-200 dark:border-gray-700 mb-10">
@@ -1510,7 +1510,7 @@
         </article>
 
         {{-- Seção 10 --}}
-        <article id="accessibility" class="chapter flex leading-relaxed bg-white shadow-sm md:rounded-md border border-white px-8 py-12 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-300 lg:scroll-mt-[4rem]">
+        <article id="accessibility" class="chapter flex bg-white shadow md:rounded-sm border border-white px-8 py-20 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-400 lg:scroll-mt-[4rem]">
             <div class="max-w-4xl w-full xl:pe-24">
                 <h1 class="text-3xl mb-8 font-bold">10. Acessibilidade</h1>
                 <hr class="border-gray-200 dark:border-gray-700 mb-10">
@@ -1666,7 +1666,7 @@
         </article>
 
         {{-- Seção 11 --}}
-        <article id="support" class="chapter flex leading-relaxed bg-white shadow-sm md:rounded-md border border-white px-8 py-12 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-300 lg:scroll-mt-[4rem]">
+        <article id="support" class="chapter flex bg-white shadow md:rounded-sm border border-white px-8 py-20 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-400 lg:scroll-mt-[4rem]">
             <div class="max-w-4xl w-full xl:pe-24">
                 <h1 class="text-3xl mb-8 font-bold">11. Suporte</h1>
                 <hr class="border-gray-200 dark:border-gray-700 mb-10">

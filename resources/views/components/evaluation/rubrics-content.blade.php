@@ -167,7 +167,10 @@
             :item-key="'id'"
         >
             <x-card.layout>
-                <x-card.content-rubric :axes-count="'axes'">
+                <x-card.content
+                    id="rubric"
+                    :listMeta="['count' => 'axes', 'icon' => 'clipboard-list', 'sinTitle' => 'Eixo', 'pluTitle' => 'Eixos']"
+                >
                     {{-- ID / Cabeçalho --}}
                     <x-slot name="header">
                         <span x-text="item.id" class="text-sm text-gray-600 dark:text-gray-100 transition duration-150 ease-in-out"></span>
@@ -179,7 +182,7 @@
                     </x-slot>
 
                     {{-- Lista dos Eixos da Rubrica --}}
-                    <x-slot name="axes">
+                    <x-slot name="list">
                         <template x-for="axis in item.axes" :key="axis.id">
                             <li x-text="axis.name"></li>
                         </template>
@@ -244,7 +247,7 @@
                             </x-management.activate-button>
                         </template>
                     </x-slot>
-                </x-card.content-rubric>
+                </x-card.content>
             </x-card.layout>
         </x-card.grid>
     </div>

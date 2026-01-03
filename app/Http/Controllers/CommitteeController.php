@@ -476,7 +476,7 @@ class CommitteeController extends Controller
         }
 
         // Busca a banca existente
-        $committee = Committee::find($id);
+        $committee = Committee::with('paper')->find($id);
 
         if(!$committee) {
             return response()->json([
@@ -484,21 +484,12 @@ class CommitteeController extends Controller
             ], 422);
         }
 
-        $evaluated = UserCommittee::where('committee_id', $id)
-            ->whereNotNull('evaluated_at')
-            ->first();
+        $evaluated = $committee->paper->submitted_at ?? null;
 
         // Se já houve atualização, não pode atualizar
         if ($evaluated) {
             if($request->corrected_paper_id !== $committee->corrected_paper_id) {
                 $request->validate([
-                    'paper_id' => [
-                        'required',
-                        Rule::exists('papers', 'id')->where(function ($query) use ($request) {
-                            $query->where('group_id', $request->group_id);
-                        }),
-                        "unique:committees,paper_id,{$id},id",
-                    ],
                     'corrected_paper_id' => [
                         'nullable',
                         Rule::exists('papers', 'id')->where(function ($query) use ($request) {
@@ -524,9 +515,12 @@ class CommitteeController extends Controller
                         ]);
                     }
                 }
-                $committee->update([
-                    'corrected_paper_id' => $request->corrected_paper_id,
-                ]);
+                if ($evaluationPaper && $evaluationPaper->submitted_at) {
+                    $committee->update([
+                        'corrected_paper_id' => $request->corrected_paper_id,
+                    ]);
+                }
+
                 return response()->json([
                     'success' => true,
                     'message' => 'Banca atualizada com sucesso!',
@@ -535,7 +529,7 @@ class CommitteeController extends Controller
             }
             return response()->json([
                 'success' => false,
-                'message' => 'A banca já possui avaliações realizadas. Só é permitido atualizar o trabalho corrigido.',
+                'message' => 'A banca já realizou esta avaliação. Só é permitido atualizar o trabalho corrigido.',
             ], 422);
         }
 
@@ -772,6 +766,7 @@ class CommitteeController extends Controller
                     'title' => $committee->paper->title,
                     'file_path' => $committee->paper->file_path,
                     'version' => $committee->paper->version,
+                    'submitted' => $committee->paper->submitted_at !== null,
                 ] : null,
 
                 'corrected' => $committee->correctedPaper ? [

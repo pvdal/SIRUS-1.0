@@ -128,6 +128,9 @@
                              com um contêiner --}}
                         <x-form-fields.field-error x-text="errors['axes.' + index + '.weight']?.[0]"/>
                     </template>
+                    <template x-if="axes.length > 0 && errors && errors['axes.' + index + '.id']">
+                        <x-form-fields.field-error x-text="errors['axes.' + index + '.id']?.[0]"/>
+                    </template>
                 </div>
             </template>
         </ul>

@@ -123,6 +123,17 @@ input[type=number] {
     border-radius: inherit;
     pointer-events: none;
     box-shadow: inset 0 0 0 1px #d1d5db;
+    transition: ease-in-out;
+    transition-duration: 0.150s;
+}
+.dark .rounded-table-wrapper .overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    box-shadow: inset 0 0 0 1px #6b7280;
+    transition: ease-in-out;
+    transition-duration: 0.150s;
 }
 
 /***************************
@@ -152,7 +163,7 @@ select::-ms-expand {
 .dark input:-webkit-autofill:hover,
 .dark input:-webkit-autofill:focus,
 .dark input:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 100px #fff59d inset !important; /* amarelo mais claro */
+    -webkit-box-shadow: 0 0 0 100px #fff176 inset !important; /* amarelo mais claro */
     -webkit-text-fill-color: #111827 !important; /* texto escuro */
     caret-color: #111827 !important;                           /* cursor */
     border-color: #374151 !important;                          /* gray-700 */
