@@ -593,4 +593,12 @@ class PaperController extends Controller
             'corrected_paper_id' => $committee->corrected_paper_id ?? null,
         ];
     }
+
+    public function download(int $year, int $semester, PaperService $service)
+    {
+        return response()->streamDownload(
+            fn () => $service->streamYearZip($year,$semester),
+            "trabalhos_{$year}_0{$semester}.zip"
+        );
+    }
 }

@@ -178,6 +178,30 @@ export function papersData(){
             });
         },
 
+        get loadedPapers() {
+            return Object.values(this.foldersByYear)
+                .filter(year => year.loaded)
+                .reduce((total, year) => total + year.papers.length, 0);
+        },
+
+        get folders() {
+            const result = {};
+            Object.entries(this.foldersByYear).forEach(([year, data]) => {
+                result[year] = data.loaded && data.folders
+                    ? data.folders[year] ?? data.folders
+                    : {};
+            });
+
+            return result;
+        },
+
+        openYear(year) {
+            if(!this.foldersByYear[year].loaded) {
+                this.loadYear(year);
+            }
+            this.navigateTo('year',year);
+        },
+
         async loadYears(reload = false) {
             if (this.initialized && !reload) return;
 
@@ -217,30 +241,6 @@ export function papersData(){
             if (!this.initialized) {
                 this.initialized = true;
             }
-        },
-
-        openYear(year) {
-            if(!this.foldersByYear[year].loaded) {
-                this.loadYear(year);
-            }
-            this.navigateTo('year',year);
-        },
-
-        get folders() {
-            const result = {};
-            Object.entries(this.foldersByYear).forEach(([year, data]) => {
-                result[year] = data.loaded && data.folders
-                    ? data.folders[year] ?? data.folders
-                    : {};
-            });
-
-            return result;
-        },
-
-        get loadedPapers() {
-            return Object.values(this.foldersByYear)
-                .filter(year => year.loaded)
-                .reduce((total, year) => total + year.papers.length, 0);
         },
 
         isLoadingYear(year) {
@@ -404,10 +404,35 @@ export function papersData(){
 
         },
 
-        showPaper(url) {
-            // Remove overflow-hidden pra aplicar o auto e permitir scroll na página de visualização do paper
-            document.body.classList.remove("overflow-hidden");
-            paperViewer(this, url);
+        async downloadFolder (year,semester) {
+            this.loading = true;
+
+            document.body.style.cursor = 'wait';
+
+            try {
+                window.dispatchEvent(new CustomEvent('banner-message', {
+                    detail: {
+                        style: 'info',
+                        message: 'Preparando download...'
+                    }
+                }));
+
+                const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
+
+                window.location.href = `/${requestPrefix}/papers/download/${year}/${semester}`;
+            } catch (error) {
+                console.error('Erro ao baixar o diretório', error);
+                const msg = error.response?.data?.message || 'Erro inesperado.';
+                window.dispatchEvent(new CustomEvent('banner-message', {
+                    detail: {
+                        style: 'danger',
+                        message: msg,
+                    }
+                }));
+            } finally {
+                this.loading = false;
+                document.body.style.cursor = 'default';
+            }
         },
 
         async loadPapers(page = 1) {
@@ -506,23 +531,6 @@ export function papersData(){
             this.showCreateModal = true;
         },
 
-        showGroupPapers(id) {
-            this.evaluation_paper_id = '';
-            this.corrected_paper_id = '';
-            this.evaluation_papers = [];
-            this.corrected_papers = [];
-            this.papers.forEach(paper => {
-                if (paper.group_id === id && paper.id !== this.paperId) {
-                    if(paper.version === 'evaluation') {
-                        this.evaluation_papers.push(paper);
-                    }
-                    if(paper.version === 'corrected') {
-                        this.corrected_papers.push(paper);
-                    }
-                }
-            })
-        },
-
         async savePaper() {
             let update = this.edit;
             const formData = new FormData();
@@ -610,36 +618,6 @@ export function papersData(){
             }
         },
 
-        syncPaper(oldPaper, newPaper) {
-
-            const affectedYears = new Set();
-
-            if (oldPaper?.year) affectedYears.add(oldPaper.year);
-            if (newPaper?.year) affectedYears.add(newPaper.year);
-
-            if (oldPaper?.year !== newPaper?.year) {
-                this.loadYears(true);
-            }
-
-            affectedYears.forEach(year => {
-                const yearData = this.foldersByYear[year];
-                if (!yearData || !yearData.loaded) return;
-
-                // remove qualquer versão antiga
-                yearData.papers = yearData.papers.filter(
-                    p => p.id !== newPaper.id
-                );
-
-                // reinsere se for o ano correto
-                if (year === newPaper.year) {
-                    yearData.papers.push(newPaper);
-                }
-
-                // reconstrói somente esse ano
-                yearData.folders = this.prepareFolders(yearData.papers);
-            });
-        },
-
 
         isInactivating(id) {
             return this.inactivatingIds.includes(id);
@@ -711,6 +689,59 @@ export function papersData(){
                 this.activatingIds = this.activatingIds.filter(item => item !== targetId);
             }
             this.action = 'inactivate';
+        },
+
+        showPaper(url) {
+            // Remove overflow-hidden pra aplicar o auto e permitir scroll na página de visualização do paper
+            document.body.classList.remove("overflow-hidden");
+            paperViewer(this, url);
+        },
+
+        showGroupPapers(id) {
+            this.evaluation_paper_id = '';
+            this.corrected_paper_id = '';
+            this.evaluation_papers = [];
+            this.corrected_papers = [];
+            this.papers.forEach(paper => {
+                if (paper.group_id === id && paper.id !== this.paperId) {
+                    if(paper.version === 'evaluation') {
+                        this.evaluation_papers.push(paper);
+                    }
+                    if(paper.version === 'corrected') {
+                        this.corrected_papers.push(paper);
+                    }
+                }
+            })
+        },
+
+        syncPaper(oldPaper, newPaper) {
+
+            const affectedYears = new Set();
+
+            if (oldPaper?.year) affectedYears.add(oldPaper.year);
+            if (newPaper?.year) affectedYears.add(newPaper.year);
+
+            if (oldPaper?.year !== newPaper?.year) {
+                this.loadYears(true);
+            }
+
+            affectedYears.forEach(year => {
+                const yearData = this.foldersByYear[year];
+                if (!yearData || !yearData.loaded) return;
+
+                // remove qualquer versão antiga
+                yearData.papers = yearData.papers.filter(
+                    p => p.id !== newPaper.id
+                );
+
+                // reinsere se for o ano correto
+                if (year === newPaper.year) {
+                    yearData.papers.push(newPaper);
+                }
+
+                // reconstrói somente esse ano
+                yearData.folders = this.prepareFolders(yearData.papers);
+            });
         },
 
         clearFields(type) {

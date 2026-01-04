@@ -77,6 +77,11 @@ Route::middleware([
     // Papers -> PapersController/Paper.php
     Route::get('/papers', [PaperController::class, 'index'])->name('papers-content');
 
+    Route::prefix(config('secure.request_prefix'))
+        ->group(function () {
+            Route::get('/papers/download/{year}/{semester}', [PaperController::class, 'download'])->name('paper.download');
+        });
+
     // Operações CRUD das tabelas e cards -> API privada
     Route::prefix(config('secure.request_prefix')) // todas as rotas dentro desse grupo possuem o prefixo definido no.env
     ->middleware('secure.ajax') // middleware que traz camadas a mais de seguranças nas requisições ajax

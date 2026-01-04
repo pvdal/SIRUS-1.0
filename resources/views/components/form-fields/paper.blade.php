@@ -162,7 +162,7 @@
         </template>
     </div>
 
-    <template x-if="version === 'corrected'">
+    <template x-if="version === 'corrected' && group_id">
         <div class="mt-4">
             <x-label>Versão avaliada (opcional)</x-label>
             <x-select x-model.number="evaluation_paper_id" class="mt-1 w-full" x-bind:disabled="version !== 'corrected'">

@@ -8,6 +8,8 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Paper;
+use ZipArchive;
+use ZipStream\ZipStream;
 
 class PaperService
 {
@@ -158,5 +160,32 @@ class PaperService
         }
 
         return $paper;
+    }
+
+    public function streamYearZip(int $year, int $semester): void
+    {
+        $zip = new ZipStream(
+            sendHttpHeaders: false,
+            outputName: "trabalhos_{$year}_0{$semester}.zip" // Laravel cuida disso
+        );
+
+        $papers = Paper::where('year', $year)
+            ->where('semester', $semester)
+            ->cursor();
+
+        foreach ($papers as $paper) {
+            if (
+                $paper->file_path &&
+                Storage::disk('public')->exists($paper->file_path)
+            ) {
+                // mantém TODA a estrutura de diretórios
+                $zip->addFileFromPath(
+                    preg_replace("#^papers/{$year}/#", '', $paper->file_path),
+                    Storage::disk('public')->path($paper->file_path)
+                );
+            }
+        }
+
+        $zip->finish();
     }
 }

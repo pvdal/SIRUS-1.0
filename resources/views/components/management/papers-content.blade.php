@@ -241,7 +241,8 @@
                                 </div>
                             </button>
                             <button
-                                class="absolute top-[23%] right-4 p-3 rounded-full text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 transition"
+                                x-on:click="downloadFolder(year)"
+                                class="absolute hidden top-[23%] right-4 p-3 rounded-full text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 transition"
                             >
                                 <x-lucide-download class="w-4 h-4"/>
                             </button>
@@ -250,26 +251,34 @@
 
                     {{-- Mostra os semestres salvos --}}
                     <template x-for="semester in (folders[selected.year] ? Object.keys(folders[selected.year]) : [])" :key="semester">
-                        <button
-                            x-show="currentLevel === 'year'"
-                            type="button"
-                            class="flex flex-col p-2 rounded-md gap-x-2 justify-center items-start shadow-sm border border-gray-300 dark:border-gray-400
+                        <div x-show="currentLevel === 'year'" class="relative w-auto">
+                            <button
+                                type="button"
+                                class="flex flex-col p-2 rounded-md gap-x-2 justify-center items-start shadow-sm border border-gray-300 dark:border-gray-400
                                 hover:cursor-pointer hover:bg-soft-blue bg-white dark:bg-gray-800 transition duration-150 ease-in-out
-                                w-full xs:w-[400px] md:w-auto max-w-full"
-                            x-on:click="navigateTo('semester',semester)"
-                        >
-                            <div class="inline-flex items-center gap-2">
-                                <x-lucide-folder class="flex-shrink-0 h-6 w-6 text-secondary-blue" stroke-width="1.5"/>
-                                <span x-text="'Semestre ' + semester" class="font-medium text-lg text-gray-800 dark:text-gray-100 transition duration-150 ease-in-out"></span>
-                            </div>
-                            <div class="ms-8">
-                        <span
-                            x-text="Object.keys(folders[selected.year][semester]).length +
-                                (Object.keys(folders[selected.year][semester]).length > 1 ? ' itens' : ' item')"
-                            class="text-sm text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out">
-                        </span>
-                            </div>
-                        </button>
+                                w-full xs:w-[400px] md:w-full max-w-full"
+                                x-on:click="navigateTo('semester',semester)"
+                            >
+                                <div class="inline-flex items-center gap-2">
+                                    <x-lucide-folder class="flex-shrink-0 h-6 w-6 text-secondary-blue" stroke-width="1.5"/>
+                                    <span x-text="'Semestre ' + semester" class="font-medium text-lg text-gray-800 dark:text-gray-100 transition duration-150 ease-in-out"></span>
+                                </div>
+                                <div class="ms-8">
+                                <span
+                                    x-text="Object.keys(folders[selected.year][semester]).length +
+                                        (Object.keys(folders[selected.year][semester]).length > 1 ? ' itens' : ' item')"
+                                    class="text-sm text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out">
+                                </span>
+                                </div>
+                            </button>
+                            <button
+                                x-on:click="downloadFolder(selected.year,semester)"
+                                class="absolute top-[23%] right-4 p-3 rounded-full text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 transition"
+                            >
+                                <x-lucide-download class="w-4 h-4"/>
+                            </button>
+                        </div>
+
                     </template>
 
                     {{-- Mostra as versões salvas --}}
