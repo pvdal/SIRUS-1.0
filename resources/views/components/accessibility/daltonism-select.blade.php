@@ -71,7 +71,8 @@
     @endphp
     <div
         x-show="showDaltonismIcon"
-        class="fixed z-50"
+        class="fixed"
+        style="z-index: 60;"
         :class="[
             positionsButton[position],
             vlibrasEnabled && position.startsWith('bottom-') ? ' -translate-y-[140%]' : ''
@@ -143,7 +144,7 @@
                 <label for="type-daltonism" class="text-[10px] md:text-xs font-medium text-gray-600 dark:text-gray-100 uppercase tracking-[0.5px]">Filtros de daltonismo</label>
             </div>
 
-            <x-select data-daltonism-select class="w-full text-sm xlg:text-base">
+            <x-select id="type-daltonism" data-daltonism-select class="w-full text-sm xlg:text-base">
                 <option value="normal">Padrão</option>
                 <option value="achromatomaly">Acromatomalia</option>
                 <option value="achromatopsia">Acromatopsia</option>

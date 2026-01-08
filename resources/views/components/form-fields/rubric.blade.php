@@ -1,6 +1,6 @@
 <div>
     <div>
-        <x-label value="Tipo de Avaliação" class="mb-2 font-semibold" />
+        <h2 class="mb-2 font-semibold text-sm text-gray-700 dark:text-gray-300 transition">Tipo de Avaliação</h2>
         <div class="flex items-center gap-x-6">
             <div class="flex items-center">
                 <input id="individual" type="radio" value="2" x-model="rubric.type"
@@ -10,9 +10,9 @@
                 </label>
             </div>
             <div class="flex items-center">
-                <input id="in group" type="radio" value="1" x-model="rubric.type"
+                <input id="in-group" type="radio" value="1" x-model="rubric.type"
                        class="h-4 w-4 dark:accent-gray-700 checked:accent-secondary-blue text-secondary-blue focus:ring-secondary-blue dark:focus:ring-offset-gray-800 border-gray-300">
-                <label for="in group" class="ml-2 block text-sm font-medium text-gray-700 dark:text-gray-200 cursor-pointer">
+                <label for="in-group" class="ml-2 block text-sm font-medium text-gray-700 dark:text-gray-200 cursor-pointer">
                     Em Grupo
                 </label>
             </div>
@@ -27,7 +27,7 @@
         <x-label for="name" value="Nome da Rubrica" />
         <x-input id="name" type="text" class="w-full mt-1"
                  placeholder="Ex: Rubrica de Avaliação do Projeto Integrador"
-                 x-model="rubric.name"
+                 x-model="rubric.name" autocomplete="none"
                  @keydown.enter="saveRubric" />
         <template x-if="errors.name">
             <x-form-fields.field-error x-text="errors.name[0]"/>
@@ -37,7 +37,7 @@
 
     {{-- Campo de busca para os Eixos --}}
     <div class="pt-4">
-        <x-label value="Adicionar Eixos à Rubrica"/>
+        <x-label for="searchAxis" value="Adicionar Eixos à Rubrica"/>
         <x-input id="searchAxis" type="search"
                  x-model="searchAxis"
                  placeholder="Buscar eixo por nome..."

@@ -87,7 +87,7 @@
 
     {{-- Campo de busca para os Rubricas --}}
     <div class="pt-4">
-        <x-label value="Rubricas"/>
+        <x-label for="searchRubrics" value="Rubricas"/>
         <x-input id="searchRubrics" type="search"
                  x-model="searchRubric"
                  placeholder="Buscar Rubrica..."

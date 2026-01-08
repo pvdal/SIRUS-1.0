@@ -12,21 +12,21 @@
         <x-slot name="form">
             <!-- Token Name -->
             <div class="col-span-6 sm:col-span-4">
-                <x-label for="name" value="{{ __('Token Name') }}" />
-                <x-input id="name" type="text" class="mt-1 block w-full" wire:model="createApiTokenForm.name" autofocus />
+                <x-label for="token-name" value="{{ __('Token Name') }}" />
+                <x-input id="token-name" type="text" class="mt-1 block w-full" wire:model="createApiTokenForm.name" autofocus />
                 <x-input-error for="name" class="mt-2" />
             </div>
 
             <!-- Token Permissions -->
             @if (Laravel\Jetstream\Jetstream::hasPermissions())
                 <div class="col-span-6">
-                    <x-label for="permissions" value="{{ __('Permissions') }}" />
+                    <p class="mb-2 font-medium text-sm text-gray-700 dark:text-gray-300 transition">Permissões</p>
 
                     <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
                         @foreach (Laravel\Jetstream\Jetstream::$permissions as $permission)
                             <label class="flex items-center">
-                                <x-checkbox wire:model="createApiTokenForm.permissions" :value="$permission"/>
-                                <span class="ms-2 text-sm text-gray-600 dark:text-gray-300">{{ $permission }}</span>
+                                <x-checkbox id="permission-{{ $loop->iteration }}" wire:model="createApiTokenForm.permissions" :value="$permission"/>
+                                <span class="ms-2 text-sm text-gray-600 dark:text-gray-300 transition ease-in-out duration-150">{{ $permission }}</span>
                             </label>
                         @endforeach
                     </div>
@@ -64,7 +64,7 @@
                     <div class="space-y-6">
                         @foreach ($this->user->tokens->sortBy('name') as $token)
                             <div class="flex items-center justify-between">
-                                <div class="break-all">
+                                <div class="break-all text-gray-900 dark:text-gray-300 transition ease-in-out duration-150">
                                     {{ $token->name }}
                                 </div>
 
@@ -81,7 +81,7 @@
                                         </button>
                                     @endif
 
-                                    <button class="cursor-pointer ms-6 text-sm text-red-500" wire:click="confirmApiTokenDeletion({{ $token->id }})">
+                                    <button class="cursor-pointer ms-6 text-sm text-red-500 dark:text-red-400" wire:click="confirmApiTokenDeletion({{ $token->id }})">
                                         {{ __('Delete') }}
                                     </button>
                                 </div>
@@ -94,17 +94,17 @@
     @endif
 
     <!-- Token Value Modal -->
-    <x-dialog-modal wire:model.live="displayingToken">
+    <x-dialog-modal maxWidth="lg" wire:model.live="displayingToken">
         <x-slot name="title">
             {{ __('API Token') }}
         </x-slot>
 
         <x-slot name="content">
-            <div>
+            <p class="text-gray-600 dark:text-gray-400">
                 {{ __('Please copy your new API token. For your security, it won\'t be shown again.') }}
-            </div>
+            </p>
 
-            <x-input x-ref="plaintextToken" type="text" readonly :value="$plainTextToken"
+            <x-input id="new-api-token" x-ref="plaintextToken" type="text" readonly :value="$plainTextToken"
                 class="mt-4 bg-gray-100 px-4 py-2 rounded font-mono text-sm text-gray-500 w-full break-all"
                 autofocus autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
                 @showing-token-modal.window="setTimeout(() => $refs.plaintextToken.select(), 250)"
@@ -119,7 +119,7 @@
     </x-dialog-modal>
 
     <!-- API Token Permissions Modal -->
-    <x-dialog-modal wire:model.live="managingApiTokenPermissions">
+    <x-dialog-modal maxWidth="lg" wire:model.live="managingApiTokenPermissions">
         <x-slot name="title">
             {{ __('API Token Permissions') }}
         </x-slot>
@@ -128,26 +128,28 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 @foreach (Laravel\Jetstream\Jetstream::$permissions as $permission)
                     <label class="flex items-center">
-                        <x-checkbox wire:model="updateApiTokenForm.permissions" :value="$permission"/>
-                        <span class="ms-2 text-sm text-gray-600">{{ $permission }}</span>
+                        <x-checkbox id="token-permission-{{ $loop->iteration }}" wire:model="updateApiTokenForm.permissions" :value="$permission"/>
+                        <span class="ms-2 text-sm text-gray-600 dark:text-gray-300">{{ $permission }}</span>
                     </label>
                 @endforeach
             </div>
         </x-slot>
 
         <x-slot name="footer">
-            <x-secondary-button wire:click="$set('managingApiTokenPermissions', false)" wire:loading.attr="disabled">
-                {{ __('Cancel') }}
-            </x-secondary-button>
+            <div class="flex gap-3">
+                <x-secondary-button wire:click="updateApiToken" wire:loading.attr="disabled">
+                    {{ __('Save') }}
+                </x-secondary-button>
 
-            <x-button class="ms-3" wire:click="updateApiToken" wire:loading.attr="disabled">
-                {{ __('Save') }}
-            </x-button>
+                <x-danger-button wire:click="$set('managingApiTokenPermissions', false)" wire:loading.attr="disabled">
+                    {{ __('Voltar') }}
+                </x-danger-button>
+            </div>
         </x-slot>
     </x-dialog-modal>
 
     <!-- Delete Token Confirmation Modal -->
-    <x-confirmation-modal wire:model.live="confirmingApiTokenDeletion">
+    <x-confirmation-modal maxWidth="lg" wire:model.live="confirmingApiTokenDeletion">
         <x-slot name="title">
             {{ __('Delete API Token') }}
         </x-slot>
@@ -157,13 +159,15 @@
         </x-slot>
 
         <x-slot name="footer">
-            <x-secondary-button wire:click="$toggle('confirmingApiTokenDeletion')" wire:loading.attr="disabled">
-                {{ __('Cancel') }}
-            </x-secondary-button>
+            <div class="flex gap-3">
+                <x-danger-button wire:click="deleteApiToken" wire:loading.attr="disabled">
+                    {{ __('Delete') }}
+                </x-danger-button>
 
-            <x-danger-button class="ms-3" wire:click="deleteApiToken" wire:loading.attr="disabled">
-                {{ __('Delete') }}
-            </x-danger-button>
+                <x-secondary-button wire:click="$toggle('confirmingApiTokenDeletion')" wire:loading.attr="disabled">
+                    {{ __('Cancel') }}
+                </x-secondary-button>
+            </div>
         </x-slot>
     </x-confirmation-modal>
 </div>

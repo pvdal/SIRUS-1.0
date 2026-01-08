@@ -42,17 +42,17 @@
                         <h3 class="text-lg xl:text-xl font-medium text-gray-900">
                             @if($warningType)
                                 <template x-if="{{ $warningType }} === 'Confirmação'">
-                                    <div class="flex items-center gap-2 text-secondary-orange dark:text-orange-400">
-                                        <div class="bg-secondary-orange rounded-[20px] p-2">
-                                            <x-lucide-alert-triangle class="text-white  w-5 h-5" />
+                                    <div class="flex items-center gap-4 text-gray-800 dark:text-gray-200">
+                                        <div class="bg-secondary-orange rounded-full p-2">
+                                            <x-lucide-alert-triangle class="text-white w-6 h-6" />
                                         </div>
                                         {{ $title }}
                                     </div>
                                 </template>
                                 <template x-if="{{ $warningType }} === 'Erro'">
-                                    <div class="flex items-center gap-2 text-red-700">
-                                        <div class="bg-red-700 rounded-[20px] p-2">
-                                            <x-lucide-x-circle class="text-white w-5 h-5" />
+                                    <div class="flex items-center gap-4 text-red-700">
+                                        <div class="bg-red-700 rounded-full p-2">
+                                            <x-lucide-x-circle class="text-white w-6 h-6" />
                                         </div>
                                         {{ $title }}
                                     </div>
@@ -61,7 +61,7 @@
                         </h3>
                     @endif
                     @if($content)
-                        <div class="mt-4 text-sm text-gray-600 dark:text-gray-200">
+                        <div class="mt-4 text-sm text-gray-600 dark:text-gray-400">
                             {{ $content }}
                         </div>
                     @endif

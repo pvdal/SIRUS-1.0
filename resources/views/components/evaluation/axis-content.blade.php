@@ -31,7 +31,7 @@
     </x-custom-modal>
 
     {{-- Avisos --}}
-    <x-warning-modal x-model="showWarningModal" @close="showWarningModal = false; clearFields('warning');" :maxWidth="'sm'" :warningType="'warningType'">
+    <x-warning-modal x-model="showWarningModal" @close="showWarningModal = false; clearFields('warning');" :maxWidth="'lg'" :warningType="'warningType'">
         <x-slot name="title">
             <template x-if="warningType">
                 <span x-text="warningType" class="font-semibold"></span>

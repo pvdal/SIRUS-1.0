@@ -122,8 +122,8 @@
     </template>
 
     <div class="mt-4">
-        <x-label>Ano</x-label>
-        <x-select x-model="year" class="mt-1 w-full">
+        <x-label for="year">Ano</x-label>
+        <x-select id="year" x-model="year" class="mt-1 w-full">
             <option value="">Selecione um ano</option>
             @php
                 $currentYear = date('Y');
@@ -138,8 +138,8 @@
     </div>
 
     <div class="mt-4">
-        <x-label>Semestre</x-label>
-        <x-select x-model="semester" class="mt-1 w-full">
+        <x-label for="semester">Semestre</x-label>
+        <x-select id="semester" x-model="semester" class="mt-1 w-full">
             <option value="">Selecione um semestre</option>
             @for($i = 1; $i<3; $i++)
                 <option value="{{ $i }}">{{ $i }}</option>
@@ -151,8 +151,8 @@
     </div>
 
     <div class="mt-4">
-        <x-label>Versão</x-label>
-        <x-select x-model="version" class="mt-1 w-full">
+        <x-label for="version">Versão</x-label>
+        <x-select id="version" x-model="version" class="mt-1 w-full">
             <option value="">Selecione uma versão</option>
             <option value="evaluation">Avaliação</option>
             <option value="corrected">Corrigida</option>
@@ -164,8 +164,8 @@
 
     <template x-if="version === 'corrected' && group_id">
         <div class="mt-4">
-            <x-label>Versão avaliada (opcional)</x-label>
-            <x-select x-model.number="evaluation_paper_id" class="mt-1 w-full" x-bind:disabled="version !== 'corrected'">
+            <x-label for="evaluation-version">Versão avaliada (opcional)</x-label>
+            <x-select id="evaluation-version" x-model.number="evaluation_paper_id" class="mt-1 w-full" x-bind:disabled="version !== 'corrected'">
                 <option value="">Selecione uma versão</option>
                 <template x-for="paper in evaluation_papers">
                     <option :value="paper.id" x-text="paper.title"></option>
@@ -179,8 +179,8 @@
 
     <template x-if="version === 'evaluation' && submitted_at">
         <div class="mt-4">
-            <x-label>Versão Corrigida (opcional)</x-label>
-            <x-select x-model.number="corrected_paper_id" class="mt-1 w-full" x-bind:disabled="version !== 'evaluation'">
+            <x-label for="corrected-version">Versão Corrigida (opcional)</x-label>
+            <x-select id="corrected-version" x-model.number="corrected_paper_id" class="mt-1 w-full" x-bind:disabled="version !== 'evaluation'">
                 <option value="">Selecione uma versão</option>
                 <template x-for="paper in corrected_papers">
                     <option :value="paper.id" x-text="paper.title"></option>
@@ -193,8 +193,8 @@
     </template>
 
     <div class="mt-4">
-        <x-label>Curso</x-label>
-        <x-select x-model="course_id" class="mt-1 w-full">
+        <x-label for="course">Curso</x-label>
+        <x-select id="course" x-model="course_id" class="mt-1 w-full">
             <option value="">Selecione um curso</option>
             <template x-for="course in courses">
                 <option :value="course.id" x-text="course.name"></option>
@@ -206,8 +206,8 @@
     </div>
 
     <div class="mt-4">
-        <x-label>Projeto</x-label>
-        <x-select x-model="project" class="mt-1 w-full">
+        <x-label for="project">Projeto</x-label>
+        <x-select id="project" x-model="project" class="mt-1 w-full">
             <option value="">Selecione um projeto</option>
             @for($i = 1; $i<7; $i++)
                 <option value="{{ $i }}">{{ $i }}</option>

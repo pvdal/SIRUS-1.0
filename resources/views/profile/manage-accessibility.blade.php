@@ -40,7 +40,7 @@
                         </p>
                     </div>
 
-                    <x-select data-daltonism-select class="mt-auto w-full !h-[40px]">
+                    <x-select id="daltonism-select" data-daltonism-select class="mt-auto w-full !h-[40px]">
                         <option value="normal">Padrão</option>
                         <option value="achromatomaly">Acromatomalia</option>
                         <option value="achromatopsia">Acromatopsia</option>

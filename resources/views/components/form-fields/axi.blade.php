@@ -13,8 +13,8 @@
 
     {{-- Buscar Critérios --}}
     <div class="mt-4">
-        <x-label value="Buscar Critérios" />
-        <x-input type="text"
+        <x-label for="searchCriterion" value="Buscar Critérios" />
+        <x-input id="searchCriterion" type="text"
                  x-model="searchCriterion"
                  placeholder="Digite o nome do critério..."
                  class="w-full mt-1"/>
