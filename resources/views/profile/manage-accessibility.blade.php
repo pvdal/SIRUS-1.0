@@ -52,7 +52,7 @@
                         <option value="tritanopia">Tritanopia</option>
                     </x-select>
 
-                    <hr class="my-2"/>
+                    <hr class="my-2 border-transparent"/>
 
                     <div class="flex flex-wrap items-center gap-2">
                         <x-button

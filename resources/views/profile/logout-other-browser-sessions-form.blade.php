@@ -83,15 +83,19 @@
             </x-slot>
 
             <x-slot name="footer">
-                <x-secondary-button wire:click="$toggle('confirmingLogout')" wire:loading.attr="disabled">
-                    {{ __('Cancel') }}
-                </x-secondary-button>
+                <div class="flex gap-3">
+                    <x-secondary-button
+                              wire:click="logoutOtherBrowserSessions"
+                              wire:loading.attr="disabled">
+                        {{ __('Log Out Other Browser Sessions') }}
+                    </x-secondary-button>
 
-                <x-button class="ms-3"
-                            wire:click="logoutOtherBrowserSessions"
-                            wire:loading.attr="disabled">
-                    {{ __('Log Out Other Browser Sessions') }}
-                </x-button>
+                    <x-danger-button wire:click="$toggle('confirmingLogout')" wire:loading.attr="disabled">
+                        {{ __('Cancel') }}
+                    </x-danger-button>
+                </div>
+
+
             </x-slot>
         </x-dialog-modal>
     </x-slot>
