@@ -41,7 +41,7 @@ class GroupController extends Controller
         $groups = Group::with([ // Faz uma query no banco trazendo 15 registros paginados
             'papers',
             'students.user:id,name,state,updated_at,created_at'
-        ])->orderBy('id')->paginate(16);
+        ])->orderBy('id')->paginate(12);
 
         $groupsData = $groups->getCollection()->map(function ($group) { // Mapeia os dados manualmente
             return $this->mapGroup($group);
@@ -139,7 +139,7 @@ class GroupController extends Controller
         }
         #endregion
 
-        $groups = $query->paginate(16);
+        $groups = $query->paginate(12);
 
         //Log::info('Queries executadas:', DB::getQueryLog());
 

@@ -73,7 +73,7 @@
             </div>
             {{-- Caso nenhuma avaliação tenha sido efetuada --}}
             <template x-if="evaluations.length === 0">
-                <div class="my-4 p-4 bg-blue-100 border-l-4 border-blue-500 text-blue-700" role="alert">
+                <div class="my-4 p-4 rounded-e-sm shadow-sm bg-blue-100/90 dark:bg-blue-600/10 border-l-4 border-blue-400/60 dark:border-blue-500/50 text-blue-800 dark:text-blue-300 transition ease-in-out duration-150" role="alert">
                     <p class="font-bold">Nenhuma avaliação foi submetida</p>
                     <p>Assim que os membros da banca avaliarem este trabalho, os resultados aparecerão aqui.</p>
                 </div>
@@ -120,15 +120,17 @@
                             <div class="mt-10 p-6 bg-white/80 dark:bg-gray-700/30 rounded-xl border border-gray-400/70 dark:border-gray-700 transition duration-150 ease-in-out">
                                 <!-- Rubrica de Grupo -->
                                 <section class="space-y-6 mb-10">
-                                    <h2 class="text-xl font-semibold border-b-2 border-blue-300 dark:border-blue-700 transition duration-150 ease-in-out pb-1 inline-block"
-                                        x-text="rubric.nameGroup"></h2>
+                                    <div class="text-center my-6">
+                                        <h2 class="text-xl lg:text-2xl font-semibold border-b-2 border-blue-300 dark:border-blue-700 transition duration-150 ease-in-out pb-1 inline-block"
+                                            x-text="rubric.nameGroup"></h2>
+                                    </div>
 
                                     <template x-for="axis in rubric.axes.filter(a => a.type === 'in group')" :key="axis.id">
                                         <div class="space-y-2 border border-gray-400/70 rounded-lg px-3">
                                             <div class="flex flex-wrap justify-between items-center">
                                                 <h3 class="text-lg font-medium mt-4 mr-4 text-gray-700 dark:text-gray-200 transition duration-150 ease-in-out"
                                                     x-text="axis.name"></h3>
-                                                <span class="text-xs text-gray-500 dark:text-gray-400 mt-4 transition">Peso: <span x-text="axis.weight + '%'"></span></span>
+                                                <span class="text-xs lg:text-sm text-gray-500 dark:text-gray-400 mt-4 transition">Peso: <span x-text="axis.weight + '%'"></span></span>
                                             </div>
 
                                             <div class="overflow-x-auto scrollbar-custom py-1">
@@ -138,7 +140,7 @@
                                                         <tr class="transition duration-150 ease-in-out">
                                                             <td class="min-w-32 w-64 p-3 font-medium text-gray-700 dark:text-gray-200 transition duration-150 ease-in-out"
                                                                 >
-                                                                <span x-text="criterion.name"></span>
+                                                                <span x-text="criterion.name" class="text-xs lg:text-sm xl:text-base"></span>
                                                                 <button
                                                                     @click="openCommentModal('group', criterion.id)"
                                                                     title="Ver comentário"
@@ -157,7 +159,7 @@
                                                                         'bg-blue-100 dark:bg-blue-900/40 border border-blue-400 text-blue-800 dark:text-blue-200 transition font-semibold rounded-md'
                                                                         :evaluation.groupSelections[criterion.id]?.grade == level.value,
                                                                     }">
-                                                                    <span x-text="criterion.descriptions[level.key]" class="text-xs leading-snug"></span>
+                                                                    <span x-text="criterion.descriptions[level.key]" class="text-xs lg:text-sm xl:text-base leading-snug"></span>
                                                                 </td>
                                                             </template>
                                                         </tr>
@@ -171,14 +173,16 @@
 
                                 <!-- Rubrica Individual -->
                                 <section class="space-y-6">
-                                    <h2 class="text-xl font-semibold dark:text-gray-100 border-b-2 border-orange-300 dark:border-orange-700 pb-1 inline-block transition duration-150 ease-in-out"
-                                        x-text="rubric.nameIndividual"></h2>
+                                    <div class="text-center my-6">
+                                        <h2 class="text-xl lg:text-2xl font-semibold dark:text-gray-100 border-b-2 border-orange-300 dark:border-orange-700 pb-1 inline-block transition duration-150 ease-in-out"
+                                            x-text="rubric.nameIndividual"></h2>
+                                    </div>
 
                                     <template x-for="axis in rubric.axes.filter(a => a.type === 'individual')" :key="axis.id">
                                         <div class="space-y-2">
                                             <div class="flex flex-wrap justify-between items-center">
                                                 <h3 class="text-lg font-medium mt-4 mr-4 text-gray-700 dark:text-gray-200 transition duration-150 ease-in-out" x-text="axis.name"></h3>
-                                                <span class="text-xs mt-4 text-gray-500 dark:text-gray-400 transition duration-150 ease-in-out">Peso: <span x-text="axis.weight + '%'"></span></span>
+                                                <span class="text-xs lg:text-sm mt-4 text-gray-500 dark:text-gray-400 transition duration-150 ease-in-out">Peso: <span x-text="axis.weight + '%'"></span></span>
                                             </div>
                                             <template x-for="criterion in axis.criteria" :key="criterion.id">
                                                 <div class="border border-gray-400/70 rounded-lg px-3 pt-3">
@@ -188,9 +192,9 @@
                                                             <tbody class="divide-y divide-gray-200 dark:divide-gray-700 transition duration-150 ease-in-out">
                                                             <template x-for="student in students" :key="student.id">
                                                                 <tr class="transition duration-150 ease-in-out">
-                                                                    <td class="min-w-32 p-3 font-medium text-gray-700 dark:text-gray-200 w-48"
+                                                                    <td class="min-w-32 w-64 p-3 font-medium text-gray-700 dark:text-gray-200"
                                                                     >
-                                                                        <span class="transition duration-150 ease-in-out" x-text="student.name"></span>
+                                                                        <span class="text-xs lg:text-sm xl:text-base transition duration-150 ease-in-out" x-text="student.name"></span>
                                                                         <button @click="openCommentModal('individual', criterion.id, student.id)"
                                                                                 title="Ver comentário"
                                                                                 class="ml-2 inline-block text-gray-400 hover:text-blue-500 align-middle relative">
@@ -205,7 +209,7 @@
                                                                                 'bg-orange-100 dark:bg-orange-900/40 border border-orange-400 text-orange-800 dark:text-orange-200 font-semibold rounded-md transition duration-150 ease-in-out'
                                                                                 :evaluation.individualSelections[student.id][criterion.id]?.grade == level.value
                                                                             }">
-                                                                            <span x-text="criterion.descriptions[level.key]" class="text-xs leading-snug"></span>
+                                                                            <span x-text="criterion.descriptions[level.key]" class="text-xs lg:text-sm xl:text-base leading-snug"></span>
                                                                         </td>
                                                                     </template>
                                                                 </tr>
@@ -241,7 +245,7 @@
                                 <!-- Botão de ajuda -->
                                 <button @click="showHelp = !showHelp"
                                         class="flex items-center gap-2 px-3 py-2 mt-4 sm:mt-0 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700
-                                            rounded-lg text-sm font-medium text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-800/40 transition duration-150 ease-in-out">
+                                            rounded-lg text-sm xl:text-base font-medium text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-800/40 transition duration-150 ease-in-out">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 11-10 10A10 10 0 0112 2z"/>
                                     </svg>
@@ -252,8 +256,8 @@
                             <!-- seção explicativa -->
                             <div x-show="showHelp"
                                  x-transition
-                                 class="p-4 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg text-sm text-blue-800 dark:text-blue-200 leading-relaxed transition duration-150 ease-in-out">
-                                <p class="mb-2 font-semibold">Como as notas são calculadas</p>
+                                 class="p-4 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg text-xs lg:text-sm xl:text-base text-blue-800 dark:text-blue-200 leading-relaxed transition duration-150 ease-in-out">
+                                <p class="mb-2 font-semibold text-xs lg:text-base xl:text-lg">Como as notas são calculadas</p>
                                 <ul class="list-disc list-inside space-y-1">
                                     <li>Para cada avaliador:
                                         <br>
@@ -263,7 +267,7 @@
                                     </li>
                                     <li>A média final de cada aluno é a <strong>média das notas de todos os avaliadores</strong>.</li>
                                 </ul>
-                                <p class="mt-3 text-sm text-blue-700 dark:text-blue-300 transition duration-150 ease-in-out">
+                                <p class="mt-3 text-blue-700 dark:text-blue-300 transition duration-150 ease-in-out">
                                     Pesos definidos pela rubrica:
                                     <br>
                                     <span class="font-semibold">Rubrica de Grupo:</span> <span x-text="rubric.groupRubricWeight + '%'"></span> |
@@ -276,21 +280,21 @@
                                 <table class="min-w-full text-sm text-gray-700 dark:text-gray-300 transition duration-150 ease-in-out rounded-lg overflow-hidden">
                                     <thead class="bg-gray-100 dark:bg-gray-700/50 transition duration-150 ease-in-out text-xs uppercase font-semibold">
                                         <tr>
-                                            <th class="py-3 px-4 text-left">Aluno</th>
+                                            <th class="text-xs lg:text-sm py-3 px-4 text-left">Aluno</th>
                                             <template x-for="evaluation in evaluations" :key="evaluation.evaluatorName">
-                                                <th class="py-3 px-4 text-center" x-text="evaluation.evaluatorName"></th>
+                                                <th class="text-xs lg:text-sm py-3 px-4 text-center" x-text="evaluation.evaluatorName"></th>
                                             </template>
-                                            <th class="py-3 px-4 text-center">Média Final</th>
+                                            <th class="text-xs lg:text-sm py-3 px-4 text-center">Média Final</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                                         <template x-for="student in consolidatedResults" :key="student.id">
                                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition">
-                                                <td class="py-3 px-4 font-medium" x-text="student.name"></td>
+                                                <td class="text-xs lg:text-sm xl:text-base py-3 px-4 font-medium" x-text="student.name"></td>
                                                 <template x-for="evalScore in student.evaluators" :key="evalScore.name">
-                                                    <td class="py-3 px-4 text-center" x-text="evalScore.score.toFixed(2)"></td>
+                                                    <td class="text-xs lg:text-sm xl:text-base py-3 px-4 text-center" x-text="evalScore.score.toFixed(2)"></td>
                                                 </template>
-                                                <td class="py-3 px-4 text-center font-semibold text-blue-600 dark:text-blue-400 transition duration-150 ease-in-out"
+                                                <td class="text-xs lg:text-sm xl:text-base py-3 px-4 text-center font-semibold text-blue-600 dark:text-blue-400 transition duration-150 ease-in-out"
                                                     x-text="student.average.toFixed(2)"></td>
                                             </tr>
                                         </template>

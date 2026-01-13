@@ -10,7 +10,7 @@
     </div>
 
     <div class="mt-4">
-        <x-label for="pdfFile" value="Atribuir trabalho do grupo (opcional)"></x-label>
+        <x-label for="pdfFile" value="Atribuir trabalho ao grupo (opcional)"></x-label>
         <div id="fileArea" class="space-y-2">
             {{-- Botão estilizado --}}
             <label for="pdfFile"

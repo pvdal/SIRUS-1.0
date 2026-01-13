@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Paper;
 use ZipArchive;
+use ZipStream\Exception\FileNotFoundException;
+use ZipStream\Exception\FileNotReadableException;
+use ZipStream\Exception\OverflowException;
 use ZipStream\ZipStream;
 
 class PaperService
@@ -162,6 +165,11 @@ class PaperService
         return $paper;
     }
 
+    /**
+     * @throws FileNotFoundException
+     * @throws OverflowException
+     * @throws FileNotReadableException
+     */
     public function streamYearZip(int $year, int $semester): void
     {
         $zip = new ZipStream(

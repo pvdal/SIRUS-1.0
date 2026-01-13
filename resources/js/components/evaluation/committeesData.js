@@ -118,6 +118,7 @@ export function committeesData() {
         },
 
         expanded: false,
+        sendNotification: true,
 
         init(committees, memberTypes, groups, academicStaff, page, totalPages) {
             this.committees = committees;
@@ -164,6 +165,7 @@ export function committeesData() {
                     this.committeeId = null;
                     this.clearFields('store');
                     this.showBanner = false;
+                    this.sendNotification = true;
                 }
             });
         },
@@ -253,7 +255,7 @@ export function committeesData() {
                     });
                     // Filtra membros que ainda não estão na lista de membros
                     this.filteredMembers = response.data.filter(member =>
-                        !this.members.some(m => m.id === member.id)
+                        !this.members.some(m => m.user_id === member.user_id)
                     );
                 } catch (error) {
                     console.error('Erro ao buscar professores:', error);
@@ -453,6 +455,21 @@ export function committeesData() {
             });
         },
 
+        get hasNewMembers() {
+            if (!this.committeeId) return false;
+
+            const committee = this.committees.find(c => c.id === this.committeeId);
+            if (!committee) return false;
+
+            const membersSet = new Set(
+                committee.members.map(m => m.user_id)
+            );
+
+            return this.members.some(
+                m => !membersSet.has(m.user_id)
+            );
+        },
+
         async saveCommittee() {
             let update = this.edit;
             let url = '/committees/save';
@@ -475,6 +492,7 @@ export function committeesData() {
                     paper_id: this.paper_id.evaluation,
                     corrected_paper_id: this.paper_id.corrected ? Number(this.paper_id.corrected) : null,
                     rubrics: this.rubrics,
+                    send_notification: !!this.sendNotification,
                 },
                 contexto: this,
                 campoLista: update ? null : 'newCommittees',
@@ -484,6 +502,10 @@ export function committeesData() {
             if (savedData && Object.keys(savedData).length > 0) {
                 this.empty.data = false;
                 this.empty.result = false;
+            }
+
+            if (savedData && !update) {
+                this.selectedVersion[savedData.id] = 'evaluation';
             }
 
             if(update && savedData) {

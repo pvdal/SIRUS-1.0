@@ -264,6 +264,21 @@
         <x-form-fields.remove-button class="ms-5" :action="'removeMember'" :additional="'$dispatch(\'remove-member\', item.user_id);'" :key="'item.user_id'"/>
     </x-form-fields.selected-list>
 
+    <div id="notifyMembers" class="mt-4">
+        <template x-if="!edit">
+            <label class="flex items-center gap-2">
+                <x-checkbox id="notification-newMember" x-model="sendNotification"/>
+                <span>Notificar membros sobre participação na banca</span>
+            </label>
+        </template>
+        <template x-if="hasNewMembers">
+            <label class="flex items-center gap-2">
+                <x-checkbox id="notification-newMember" x-model="sendNotification"/>
+                <span>Notificar novo(s) membros sobre participação na banca</span>
+            </label>
+        </template>
+    </div>
+
     {{-- Timestamps --}}
     <template x-if="edit && (created_at || updated_at)">
         <x-form-fields.timestamps/>

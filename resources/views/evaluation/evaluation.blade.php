@@ -47,14 +47,16 @@
     </header>
 
     {{-- Inicialização do Alpine --}}
-    <div x-data='evaluationFormData(@json($evaluationData))' :class="{ 'cursor-default pointer-events-none': isReadOnly }">
+    <div x-data='evaluationFormData(@json($evaluationData))'>
         {{-- Conteúdo principal --}}
         <x-main-content x-cloak class="max-w-7xl mx-auto dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-6 md:p-8">
             {{-- Aviso de avaliação concluída --}}
             <template x-if="isReadOnly">
-                <div class="rounded-sm mb-4 p-4 bg-yellow-100 dark:bg-yellow-400 border-l-4 border-yellow-500 dark:border-yellow-600 text-yellow-700 dark: dark:text-yellow-800 transition" role="alert">
-                    <p class="font-bold">Avaliação Concluída</p>
-                    <p>Esta avaliação já foi enviada e não pode mais ser editada. Os dados abaixo são apenas para visualização.</p>
+                <div class="rounded-sm mb-4 bg-amber-50 dark:bg-stone-800/80 border-l-4 border-amber-700 dark:border-amber-400/60 p-4 text-amber-800 dark:text-amber-300" role="alert">
+                    <p class="font-semibold">Avaliação Concluída</p>
+                    <p class="text-sm text-gray-800 dark:text-gray-300">
+                        Esta avaliação já foi enviada e não pode mais ser editada. Os dados abaixo são apenas para visualização.
+                    </p>
                 </div>
             </template>
             {{-- Cabeçalho da ficha avaliativa --}}
@@ -84,7 +86,7 @@
                 {{-- Rubrica em grupo --}}
                 <section class="space-y-6 mb-10">
                     <div class="text-center my-6">
-                        <h1 class="text-xl font-semibold border-b-2 border-blue-300 dark:border-blue-700 transition duration-150 ease-in-out pb-1 inline-block"
+                        <h1 class="text-xl lg:text-2xl font-semibold border-b-2 border-blue-300 dark:border-blue-700 transition duration-150 ease-in-out pb-1 inline-block"
                             x-text="rubric.nameGroup"></h1>
                     </div>
 
@@ -92,16 +94,16 @@
                         <div class="space-y-2 border border-gray-400/70 rounded-lg p-3">
                             <div class="flex flex-wrap justify-between items-center">
                                 <h3 class="text-lg font-medium mt-4 mr-4" x-text="axis.name"></h3>
-                                <span class="text-xs text-gray-500 dark:text-gray-400 transition duration-150 ease-in-out mt-4">Peso: <span x-text="axis.weight + '%'"></span></span>
+                                <span class="text-xs lg:text-sm text-gray-500 dark:text-gray-400 transition duration-150 ease-in-out mt-4">Peso: <span x-text="axis.weight + '%'"></span></span>
                             </div>
 
                             <div class="overflow-x-auto scrollbar-custom rounded-sm">
                                 <table class="min-w-full text-sm">
                                     <thead class="text-left text-xs uppercase font-medium text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 transition duration-150 ease-in-out">
                                     <tr>
-                                        <th class="py-3 px-4 w-1/4">Critério</th>
+                                        <th class="text-xs xl:text-sm py-3 px-4 w-1/4">Critério</th>
                                         <template x-for="level in gradeLevels" :key="level.value">
-                                            <th class="py-3 px-4 text-center" x-text="level.label"></th>
+                                            <th class="text-xs xl:text-sm py-3 px-4 text-center" x-text="level.label"></th>
                                         </template>
                                     </tr>
                                     </thead>
@@ -111,7 +113,7 @@
                                             <tr class="transition duration-150 ease-in-out">
                                                 <td class="min-w-32 p-3 font-medium w-64"
                                                     >
-                                                    <span x-text="criterion.name"></span>
+                                                    <span x-text="criterion.name" class="text-xs lg:text-sm xl:text-base"></span>
 
                                                     <button @click="openCommentModal('group', criterion.id)"
                                                             title="Adicionar comentário"
@@ -135,7 +137,7 @@
                                                                 'hover:bg-blue-50 dark:hover:bg-blue-900/10 rounded-md transition duration-150 ease-in-out':
                                                                     !groupSelections[criterion.id] || groupSelections[criterion.id].grade != level.value
                                                             }">
-                                                        <span x-text="criterion.descriptions[level.key]" class="text-xs leading-snug"></span>
+                                                        <span x-text="criterion.descriptions[level.key]" class="text-xs lg:text-sm xl:text-base leading-snug"></span>
 
                                                     </td>
                                                     <td class="min-w-32 p-3 text-center">
@@ -144,7 +146,6 @@
                                                 </template>
                                             </tr>
                                         </template>
-
                                     </tbody>
                                 </table>
                             </div>
@@ -155,7 +156,7 @@
                 {{-- Rubrica individual --}}
                 <section class="space-y-6 mb-10">
                     <div class="text-center my-6">
-                        <h1 class="text-xl font-semibold text-gray-800 dark:text-gray-100 transition duration-150 ease-in-out border-b-2 border-orange-300 dark:border-orange-700 pb-1 inline-block"
+                        <h1 class="text-xl lg:text-2xl font-semibold text-gray-800 dark:text-gray-100 transition duration-150 ease-in-out border-b-2 border-orange-300 dark:border-orange-700 pb-1 inline-block"
                             x-text="rubric.nameIndividual"></h1>
                     </div>
 
@@ -163,27 +164,27 @@
                         <div class="space-y-4">
                             <div class="flex flex-wrap justify-between items-center">
                                 <h3 class="text-lg font-medium mt-4 mr-4" x-text="axis.name"></h3>
-                                <span class="text-xs text-gray-500 mt-4 dark:text-gray-400 transition duration-150 ease-in-out">Peso: <span x-text="axis.weight + '%'"></span></span>
+                                <span class="text-xs lg:text-sm text-gray-500 mt-4 dark:text-gray-400 transition duration-150 ease-in-out">Peso: <span x-text="axis.weight + '%'"></span></span>
                             </div>
 
                             <template x-for="criterion in axis.criteria" :key="criterion.id">
                                 <div class="overflow-x-auto scrollbar-custom border border-gray-400/70 rounded-lg p-3">
-                                    <p class="font-medium mb-2 text-gray-800 dark:text-gray-200 transition duration-150 ease-in-out" x-text="criterion.name"></p>
+                                    <p class="text-xs lg:text-sm xl:text-base font-medium mb-2 text-gray-800 dark:text-gray-200 transition duration-150 ease-in-out" x-text="criterion.name"></p>
                                     <div class="rounded-sm overflow-y-hidden">
                                         <table class="min-w-full text-sm">
                                             <thead class="text-left text-xs uppercase font-medium text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 transition duration-150 ease-in-out">
                                             <tr>
-                                                <th class="py-3 px-4 w-1/4">Aluno</th>
+                                                <th class="text-xs xl:text-sm py-3 px-4 w-1/4">Aluno</th>
                                                 <template x-for="level in gradeLevels" :key="level.value">
-                                                    <th class="py-3 px-4 text-center" x-text="level.label"></th>
+                                                    <th class="text-xs xl:text-sm py-3 px-4 text-center" x-text="level.label"></th>
                                                 </template>
                                             </tr>
                                             </thead>
                                             <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                                             <template x-for="student in students" :key="student.id">
                                                 <tr class="transition duration-150 ease-in-out">
-                                                    <td class="min-w-32 p-3 font-medium text-gray-700 dark:text-gray-200" >
-                                                        <span class="transition duration-150 ease-in-out" x-text="student.name"></span>
+                                                    <td class="min-w-32 w-64 p-3 font-medium text-gray-700 dark:text-gray-200" >
+                                                        <span class="text-xs lg:text-sm xl:text-base transition duration-150 ease-in-out" x-text="student.name"></span>
 
                                                         <button @click="openCommentModal('individual', criterion.id, student.id)"
                                                                 title="Adicionar comentário"
@@ -206,7 +207,7 @@
                                                                     'hover:bg-orange-50 dark:hover:bg-orange-900/10 rounded-md':
                                                                         !individualSelections[student.id] || !individualSelections[student.id][criterion.id] || individualSelections[student.id][criterion.id].grade != level.value
                                                                 }">
-                                                            <span x-text="criterion.descriptions[level.key]" class="text-xs leading-snug"></span>
+                                                            <span x-text="criterion.descriptions[level.key]" class="text-xs lg:text-sm xl:text-base leading-snug"></span>
                                                         </td>
                                                     </template>
                                                 </tr>
@@ -227,7 +228,7 @@
                     <h3 class="flex items-center gap-2 text-xl mr-4 font-bold">
                         Nota Final (Prévia)
                     </h3>
-                    <span class="text-sm font-medium italic text-gray-500 dark:text-gray-400 transition duration-150 ease-in-out">Atualizado automaticamente</span>
+                    <span class="text-sm lg:text-base font-medium italic text-gray-500 dark:text-gray-400 transition duration-150 ease-in-out">Atualizado automaticamente</span>
                 </div>
 
                 <!-- Nota principal -->
@@ -236,11 +237,11 @@
                           x-text="totalScore.toFixed(2)">
                         0.00
                     </span>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 transition duration-150 ease-in-out mt-2">Pontuação total ponderada</p>
+                    <p class="text-md lg:text-base xl:text-lg text-gray-500 dark:text-gray-400 transition duration-150 ease-in-out mt-2">Pontuação total ponderada</p>
                 </div>
 
                 <!-- Subnotas de Grupo e Média Individual -->
-                <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-md lg:text-base xl:text-lg">
                     <div class="flex flex-col items-center justify-center p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-100 dark:border-blue-700 transition duration-150 ease-in-out">
                         <span class="text-gray-600 dark:text-gray-300 transition duration-150 ease-in-out">Nota do Grupo</span>
                         <span class="text-2xl font-semibold text-blue-700 dark:text-blue-300 mt-1 transition duration-150 ease-in-out"
@@ -256,7 +257,7 @@
 
                 <!-- Lista das notas individuais -->
                 <div class="mt-8">
-                    <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center gap-2 transition duration-150 ease-in-out">
+                    <h4 class="text-md lg:text-base xl:text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center gap-2 transition duration-150 ease-in-out">
                         Desempenho Individual
                     </h4>
 
@@ -264,16 +265,16 @@
                         <table class="min-w-full text-sm text-gray-700 dark:text-gray-300 rounded-lg overflow-hidden">
                             <thead class="bg-gray-100 dark:bg-gray-700/50 transition duration-150 ease-in-out text-xs uppercase font-semibold">
                             <tr>
-                                <th class="py-3 px-4 text-left">Aluno</th>
-                                <th class="py-3 px-4 text-center">Nota Individual</th>
+                                <th class="text-xs lg:text-sm py-3 px-4 text-left">Aluno</th>
+                                <th class="text-xs lg:text-sm py-3 px-4 text-center">Nota Individual</th>
                             </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200 dark:divide-gray-700 transition duration-150 ease-in-out">
                                 <template x-for="student in students" :key="student.id">
                                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition duration-150 ease-in-out">
-                                        <td class="py-3 px-4 font-medium" x-text="student.name"></td>
+                                        <td class="text-xs lg:text-sm xl:text-base py-3 px-4 font-medium" x-text="student.name"></td>
                                         <td class="py-3 px-4 text-center">
-                                        <span class="font-semibold text-orange-600 dark:text-orange-400 transition duration-150 ease-in-out"
+                                        <span class="text-xs lg:text-sm xl:text-base font-semibold text-orange-600 dark:text-orange-400 transition duration-150 ease-in-out"
                                               x-text="individualStudentScores[student.id]?.toFixed(2) ?? '0.00'">
                                             0.00
                                         </span>

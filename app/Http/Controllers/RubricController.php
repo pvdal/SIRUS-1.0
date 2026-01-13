@@ -29,7 +29,7 @@ class RubricController extends Controller
         $rubrics = Rubric::with(['axes.criteria']) // eager load: axes -> criteria (cada criteria terá pivot axis_criteria)
             ->select(['id','name','type','state','created_at','updated_at'])
             ->orderBy('id') // Ordenar por mais recente é comum
-            ->paginate(16);
+            ->paginate(12);
 
         $rubricsData = $rubrics->getCollection()->map(function ($rubric) {
             return $this->mapRubric($rubric);
@@ -203,7 +203,7 @@ class RubricController extends Controller
         }
 
         // Paginação
-        $rubrics = $query->paginate(16);
+        $rubrics = $query->paginate(12);
 
         $data = $rubrics->getCollection()->map(function ($rubric) {
             return $this->mapRubric($rubric);

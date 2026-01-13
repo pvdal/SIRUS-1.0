@@ -65,7 +65,7 @@ class CommitteeController extends Controller
                 })
                 ->where('state', 1);
             })
-            ->paginate(16);
+            ->paginate(12);
 
         // Mapeamento dos dados paginados
         $committeesData = $committees->getCollection()->map(function ($committee) {
@@ -192,7 +192,7 @@ class CommitteeController extends Controller
                     ->orWhere('id', 'like', '%' . $q . '%');
             })
             ->select(['id', 'user_id'])
-            ->limit(5)
+            ->limit(6)
             ->orderBy(
                 User::select('name')
                     ->whereColumn('users.id', 'coordinators.user_id')
@@ -300,7 +300,7 @@ class CommitteeController extends Controller
         }
         #endregion
 
-        $committees = $query->paginate(16);
+        $committees = $query->paginate(12);
         //Log::info('Queries executadas:', DB::getQueryLog());
 
         // Mapeia para retornar somente os campos necessários
@@ -375,6 +375,7 @@ class CommitteeController extends Controller
             'members' => 'required|array|min:3',
             'members.*.user_id' => 'required|exists:users,id',
             'members.*.member_type.id' => 'required|exists:member_types,id',
+            'send_notification' => 'nullable|boolean',
         ]);
 
         #region Verificação extra
@@ -436,11 +437,16 @@ class CommitteeController extends Controller
             ]);
 
             foreach ($request->members as $member) {
-                UserCommittee::create([
+                $userCommittee = UserCommittee::create([
                     'committee_id' => $committee->id,
                     'user_id' => $member['user_id'],
                     'member_type_id' => $member['member_type']['id'],
                 ]);
+
+                if ($request->send_notification) {
+                    $group = $committee->paper->group;
+                    $userCommittee->user->sendCommitteeMemberNotification($committee->name,$group->theme);
+                }
             }
 
             foreach ($request->rubrics as $rubric) {
@@ -452,6 +458,14 @@ class CommitteeController extends Controller
                 ]);
             }
         });
+
+        $committee->load([
+            'coordinator.user:id,name',
+            'members.user:id,name,state,access_level',
+            'members.memberType',
+            'paper.group.students.user:id,name,state',
+            'rubrics.rubric:id,name,type,state',
+        ]);
 
         $committeeData = $this->mapCommittee($committee);
 
@@ -557,6 +571,7 @@ class CommitteeController extends Controller
             'members' => 'required|array|min:3',
             'members.*.user_id' => 'required|exists:users,id',
             'members.*.member_type.id' => 'required|exists:member_types,id',
+            'send_notification' => 'nullable|boolean',
         ]);
 
         #region Verificação extra
@@ -639,11 +654,16 @@ class CommitteeController extends Controller
                 $committee->members()->delete();
 
                 foreach ($newMembers as $member) {
-                    UserCommittee::create([
+                    $userCommittee = UserCommittee::create([
                         'committee_id' => $committee->id,
                         'user_id' => $member['user_id'],
                         'member_type_id' => $member['member_type_id'],
                     ]);
+
+                    if ($request->send_notification) {
+                        $group = $committee->paper->group;
+                        $userCommittee->user->sendCommitteeMemberNotification($committee->name,$group->theme);
+                    }
                 }
                 $committee->touch();
             }

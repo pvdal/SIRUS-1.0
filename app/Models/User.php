@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\QueuedNotifyCommitteeMembers;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -112,6 +113,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendTemporaryPasswordNotification($password): void // Senha temporária
     {
         $this->notify(new QueuedSendPasswordNotification($password));
+    }
+
+    public function sendCommitteeMemberNotification($committee,$group): void
+    {
+        $this->notify(new QueuedNotifyCommitteeMembers($committee,$group));
     }
     #endregion
 

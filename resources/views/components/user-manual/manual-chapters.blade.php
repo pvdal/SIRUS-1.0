@@ -6,11 +6,11 @@
         ['label' => '4. Agenda de Avaliações','page' => 'schedule'],
         ['label' => '5. Gerenciamento de Usuários','page' => 'users'],
         ['label' => '6. Configurações Institucionais','page' => 'institutional'],
-        ['label' => '7. Critérios e Rubricas','page' => 'rubrics'],
-        ['label' => '8. Processo de Avaliação','page' => 'evaluation'],
+        ['label' => '7. Rubricas Processo de Avaliação','page' => 'rubrics-evaluation'],
+        ['label' => '8. Trabalhos','page' => 'paper'],
         ['label' => '9. Perfil','page' => 'profile'],
         ['label' => '10. Acessibilidade','page' => 'accessibility'],
-        ['label' => '11. Suporte','page' => 'support']
+
     ];
 @endphp
 {{--
