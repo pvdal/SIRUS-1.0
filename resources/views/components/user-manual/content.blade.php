@@ -257,7 +257,7 @@
                 {
                     root: null,
                     // cria uma "linha" a 150px do topo
-                    rootMargin: '-24% 0px -76% 0px',
+                    rootMargin: '-25% 0px -75% 0px',
                     threshold: 0
                 }
             );

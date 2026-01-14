@@ -1,63 +1,143 @@
 <div class="max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
-    <h1 class="text-3xl mb-8 font-bold">8. Processo de avaliação</h1>
+    {{-- Capítulo 8 --}}
+    <h1 class="text-3xl font-bold mb-14 text-gray-900 dark:text-gray-100">8. Trabalhos</h1>
 
-    <h2 class="text-xl font-semibold mb-2">Avaliação de Grupo</h2>
-    <p class="leading-relaxed mb-2 text-gray-800 dark:text-gray-300">
-        <strong>Acessando a Rubrica de Grupo:</strong>
+    {{-- Capítulo 8.1 --}}
+    <h2 id="cap-8.1" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">8.1 Visão Geral</h2>
+    <p class="mb-10">
+        A aba <strong>Trabalhos</strong> é responsável pelo gerenciamento dos arquivos acadêmicos
+        submetidos no sistema, incluindo versões para avaliação e versões corrigidas.
+        Nesta área é possível cadastrar, visualizar, alterar, inativar e organizar os trabalhos
+        de forma estruturada.
     </p>
-    <ol class="list-decimal pl-6 space-y-1 mb-4 text-gray-800 dark:text-gray-300">
-        <li>Navegue até a seção de avaliações</li>
-        <li>Selecione o grupo a ser avaliado</li>
-        <li>Clique em "INICIAR AVALIAÇÃO"</li>
-    </ol>
-    <p class="leading-relaxed mb-2 text-gray-800 dark:text-gray-300">
-        <strong>Preenchendo a Rubrica:</strong>
-    </p>
-    <p class="leading-relaxed mb-4 text-gray-800 dark:text-gray-300">
-        A rubrica é organizada por Eixos, cada um contendo vários critérios.
-    </p>
-    <p class="leading-relaxed mb-2 text-gray-800 dark:text-gray-300">
-        <strong>Preenchendo a Rubrica:</strong>
-    </p>
-    <ol class="list-decimal pl-6 space-y-1 mb-8 text-gray-800 dark:text-gray-300">
-        <li>Para cada critério, selecione o nível de desempenho</li>
-        <li>Insatisfatório - Desempenho abaixo do esperado</li>
-        <li>Regular - Desempenho aceitável"</li>
-        <li>Bom - Desempenho acima da expectativa</li>
-        <li>Excelente - Desempenho excepcional</li>
-    </ol>
 
-    <h2 class="text-xl font-semibold mb-2">Avaliação individual</h2>
-    <p class="leading-relaxed mb-2 text-gray-800 dark:text-gray-300">
-        <strong>Acessando a Rubrica Individual:</strong>
+    {{-- Capítulo 8.2 --}}
+    <h2 id="cap-8.2" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">8.2 Visualização em Tabela</h2>
+    <p class="mb-2">
+        A visualização padrão da aba Trabalhos é realizada em formato de tabela.
+        No topo da tela está disponível uma barra de ações contendo:
     </p>
-    <p class="leading-relaxed mb-4 text-gray-800 dark:text-gray-300">
-        Após avaliar o grupo, você passará para a <strong>avaliação individual</strong> dos membros.
+    <ul class="list-disc pl-6 mb-4 space-y-1">
+        <li>Botão de cadastro de novo trabalho</li>
+        <li>Campo de busca textual</li>
+        <li>Filtros avançados</li>
+        <li>Botão de limpar filtros</li>
+    </ul>
+    <p class="mb-4">
+        A tabela possui uma coluna de ações padrão, contendo os botões
+        <strong>Alterar</strong> e <strong>Inativar</strong>.
     </p>
-    <p class="leading-relaxed mb-2 text-gray-800 dark:text-gray-300">
-        <strong>Procedimento:</strong>
+
+    <h3 id="cap-8.2-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Status de Avaliação</h3>
+    <p class="mb-2">
+        A coluna <strong>Avaliação</strong> da tabela varia conforme o estado do trabalho:
     </p>
-    <ol class="list-decimal pl-6 space-y-1 mb-4 text-gray-800 dark:text-gray-300">
-        <li>Localize cada aluno na tabela</li>
-        <li>Para cada critério, selecione o nível de desempenho</li>
-        <li>As seleções aparecem destacadas indicando notas individuais</li>
-        <li>Você pode adicionar comentários ou notas específicas</li>
-    </ol>
-    <p class="leading-relaxed mb-2 text-gray-800 dark:text-gray-300">
-        <strong>Preenchendo a Rubrica:Finalizando a Avaliação:</strong>
+    <ul class="list-disc pl-6 mb-10 space-y-1">
+        <li>Versão corrigida: campo vazio</li>
+        <li>Versão de avaliação não avaliada: <strong>Não avaliado</strong></li>
+        <li>Versão de avaliação avaliada: data e hora da avaliação</li>
+    </ul>
+
+    {{-- Capítulo 8.3 --}}
+    <h2 id="cap-8.3" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">8.3 Cadastro e Edição de Trabalhos</h2>
+    <p class="mb-2">
+        O cadastro e a edição de trabalhos são realizados por meio de um modal.
+        No cadastro inicial, é necessário selecionar um arquivo PDF e preencher os seguintes campos:
     </p>
-    <ol class="list-decimal pl-6 space-y-1 mb-2 text-gray-800 dark:text-gray-300">
-        <li>Revise todas as notas e critérios</li>
-        <li>Clique em "SALVAR AVALIAÇÃO" para registrar tudo no sistema</li>
-        <li>Ou "FECHAR" para sair sem salvar</li>
-    </ol>
-    <div class="mt-6 bg-red-50 dark:bg-red-200 border border-red-200 dark:border-red-300 rounded-lg p-4 text-red-800">
-        <p class="font-semibold">
-            Importante
-        </p>
-        <p class="text-sm leading-relaxed">
-            Importante: Clique em "SALVAR AVALIAÇÃO" para que todas as informações sejam gravadas no sistema.
-            Sem isso, os dados serão perdidos.
+    <ul class="list-disc pl-6 mb-4 space-y-1">
+        <li>Título do trabalho</li>
+        <li>Ano</li>
+        <li>Semestre</li>
+        <li>Versão</li>
+        <li>Curso</li>
+        <li>Projeto</li>
+        <li>Grupo do trabalho</li>
+    </ul>
+
+    <h3 id="cap-8.3-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Edição de Trabalhos</h3>
+    <p class="mb-2">
+        No modal de edição, é disponibilizado o botão <strong>Alterar PDF</strong>.
+        Ao selecionar um novo arquivo, o sistema exibe:
+    </p>
+    <ul class="list-disc pl-6 mb-4 space-y-1">
+        <li>Arquivo selecionado (limite: 5MB)</li>
+        <li>Arquivo salvo anteriormente</li>
+    </ul>
+    <p class="mb-4">
+        O campo de título passa a ser exibido como <strong>“Título do novo trabalho”</strong>
+        e é automaticamente preenchido com o nome do novo arquivo selecionado.
+        Tanto o arquivo salvo quanto o novo arquivo podem ser visualizados a qualquer momento.
+    </p>
+
+    <h3 id="cap-8.3-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Informações de Avaliação</h3>
+    <p class="mb-2">
+        Para trabalhos na versão de avaliação, o modal exibe informações específicas
+        conforme o estado da avaliação:
+    </p>
+    <ul class="list-disc pl-6 mb-4 space-y-1">
+        <li>
+            <strong>Avaliação pendente:</strong> exibe data e hora de início e fim da avaliação
+        </li>
+        <li>
+            <strong>Avaliação não agendada:</strong> texto informativo padrão
+        </li>
+        <li>
+            <strong>Avaliação concluída:</strong> data e hora da avaliação realizada
+        </li>
+        <li>
+            <strong>Versão corrigida:</strong> exibe o texto “Versão corrigida”
+        </li>
+    </ul>
+    <p class="mb-10">
+        A partir da aba Trabalhos, é possível alterar o grupo associado a um trabalho
+        ou cadastrar uma versão corrigida para uma versão de avaliação já submetida à banca.
+    </p>
+
+    {{-- Capítulo 8.4 --}}
+    <h2 id="cap-8.4" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">8.4 Visualização em Diretório</h2>
+    <p class="mb-2">
+        Acima da barra de ações, há um botão de alternância que permite escolher
+        entre a visualização em tabela ou em diretório.
+    </p>
+    <p class="mb-2">
+        Na visualização em diretório, os trabalhos são organizados de forma hierárquica:
+    </p>
+    <p class="mb-6">
+        <strong>Ano → Semestre → Versão → Curso → Projeto</strong>
+    </p>
+    <p class="mb-2">
+        Ao acessar um diretório de projeto, os trabalhos associados são listados.
+        Cada item possui um menu de ações acessado por um ícone de três pontos,
+        contendo as seguintes opções:
+    </p>
+    <ul class="list-disc pl-6 mb-4 space-y-1">
+        <li>Visualizar</li>
+        <li>Abrir em nova aba</li>
+        <li>Baixar</li>
+        <li>Alterar</li>
+        <li>Inativar</li>
+    </ul>
+
+    <h3 id="cap-8.4-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Download por Diretório</h3>
+    <p class="mb-2">
+        Ao acessar um diretório no nível de <strong>Ano</strong>, o sistema exibe a lista
+        de semestres disponíveis para aquele período.
+    </p>
+    <p class="mb-2">
+        Na listagem de diretórios de semestre, cada item possui um botão de ação
+        que permite realizar o <strong>download de todos os trabalhos</strong>
+        contidos naquele semestre.
+    </p>
+    <p class="mb-4">
+        Ao acionar este botão, o sistema gera automaticamente um arquivo compactado
+        contendo todos os trabalhos pertencentes ao diretório selecionado,
+        respeitando a organização interna de versões, cursos e projetos.
+    </p>
+    <div class="bg-blue-50/60 dark:bg-blue-900/10 border border-blue-400/60 dark:border-blue-500/50 rounded-lg p-4 text-blue-800 dark:text-blue-300">
+        <p class="font-semibold mb-1">Observação</p>
+        <p class="text-sm text-gray-800 dark:text-gray-300">
+            O download por diretório está disponível apenas no nível de semestre,
+            não sendo exibido nos níveis de versão, curso ou projeto.
         </p>
     </div>
 </div>
@@ -65,37 +145,37 @@
     <h2 class="font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-4">
         Neste capítulo
     </h2>
-    <nav class="leading-relaxed space-y-2 text-gray-600 dark:text-gray-400">
-        <div class="grid grid-cols-[auto_1fr] gap-x-2">
-            <span class="font-medium">1.1</span>
-            <span>Sobre o sistema</span>
-        </div>
+    <nav class="leading-relaxed text-gray-700 dark:text-gray-300 overflow-y-auto max-h-[calc(100vh-86px-2.5rem)] scrollbar-custom">
+        <a href="#cap-8.1" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
+            <span class="font-medium">8.1</span>
+            <span>Visão Geral</span>
+        </a>
 
-        <div class="grid grid-cols-[auto_1fr] gap-x-2 pl-4">
-            <span>Objetivos Principais</span>
-        </div>
+        <a href="#cap-8.2" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
+            <span class="font-medium">8.2</span>
+            <span>Visualização em Tabela</span>
+        </a>
+        <a href="#cap-8.2-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
+            <span>Status de Avaliação</span>
+        </a>
 
-        <div class="grid grid-cols-[auto_1fr] gap-x-2">
-            <span class="font-medium">1.2</span>
-            <span>Público-Alvo</span>
-        </div>
-        <div class="grid grid-cols-[auto_1fr] gap-x-2">
-            <span class="font-medium">1.3</span>
-            <span>Sobre o SIMBAJU</span>
-        </div>
-        <div class="grid grid-cols-[auto_1fr] gap-x-2">
-            <span class="font-medium">1.4</span>
-            <span>Sobre este Manual do Usuário</span>
-        </div>
+        <a href="#cap-8.3" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
+            <span class="font-medium">8.3</span>
+            <span>Cadastro e Edição de Trabalhos</span>
+        </a>
+        <a href="#cap-8.3-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
+            <span>Edição de Trabalhos</span>
+        </a>
+        <a href="#cap-8.3-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
+            <span>Informações de Avaliação</span>
+        </a>
 
-        <div class="grid grid-cols-[auto_1fr] gap-x-2 pl-4">
-            <span>Finalidade do Manual</span>
-        </div>
-        <div class="grid grid-cols-[auto_1fr] gap-x-2 pl-4">
-            <span>Conteúdo Abordado</span>
-        </div>
-        <div class="grid grid-cols-[auto_1fr] gap-x-2 pl-4">
-            <span>Público e Objetivo de Uso</span>
-        </div>
+        <a href="#cap-8.4" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
+            <span class="font-medium">8.4</span>
+            <span>Visualização em Diretório</span>
+        </a>
+        <a href="#cap-8.4-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
+            <span>Download por Diretório</span>
+        </a>
     </nav>
 </aside>

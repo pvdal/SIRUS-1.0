@@ -239,7 +239,7 @@
         <a href="#cap-2.5-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
             <span>Cabeçalho da página</span>
         </a>
-        <a href="#cap-2.5-d" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
+        <a href="#cap-2.5-d" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
             <span>Escopo e disponibilidade das funcionalidades</span>
         </a>
     </nav>

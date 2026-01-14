@@ -227,7 +227,7 @@
             <span>Controle de Acesso e Permissões</span>
         </a>
 
-        <a href="#cap-4.7" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
+        <a href="#cap-4.7" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
             <span class="font-medium">4.7</span>
             <span>Considerações Importantes</span>
         </a>

@@ -172,7 +172,7 @@
             <span>Tentativas de acesso</span>
         </a>
 
-        <a href="#cap-3.5"  class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
+        <a href="#cap-3.5"  class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
             <span class="font-medium">3.5</span>
             <span>Boas práticas de segurança</span>
         </a>

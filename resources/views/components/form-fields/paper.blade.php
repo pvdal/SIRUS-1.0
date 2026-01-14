@@ -27,7 +27,7 @@
                 </span>
                 <div class="flex flex-col bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-900/70 p-2 rounded">
                     <div class="block xs:flex items-center">
-                        <span class="ms-1 flex flex-row items-center space-x-2 overflow-hidden w-full pe-4">
+                        <span class="ms-1 flex flex-row items-center space-x-2 overflow-hidden w-full pe-4 py-2">
                             <x-lucide-file-text class="w-4 h-4 text-gray-600 dark:text-gray-200 flex-shrink-0"/>
                             <template x-if="file.file && file.url">
                                 <span
@@ -69,8 +69,8 @@
                 <span class="font-medium text-sm text-gray-700 dark:text-gray-300 transition duration-150 ease-in-out">Arquivo salvo</span>
             </span>
             <div class="flex flex-col bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-900/70 p-2 rounded">
-                <div class="flex flex-wrap items-center gap-2">
-                    <span class="ms-1 flex flex-row items-center space-x-2 overflow-hidden me-auto pe-4 py-2">
+                <div class="block xs:flex items-center">
+                    <span class="ms-1 flex flex-row items-center space-x-2 overflow-hidden w-full pe-4 py-2">
                         <x-lucide-file-text class="w-4 h-4 text-gray-600 dark:text-gray-200 flex-shrink-0"/>
                         <template x-if="title && file_path">
                             <span

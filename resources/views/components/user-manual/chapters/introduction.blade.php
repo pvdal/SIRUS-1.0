@@ -204,7 +204,7 @@
         <a href="#cap-1.4.2-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
             <span>Restaurar configurações</span>
         </a>
-        <a href="#cap-1.4.2-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
+        <a href="#cap-1.4.2-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
             <span>Opções disponíveis</span>
         </a>
     </nav>
