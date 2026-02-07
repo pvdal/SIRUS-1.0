@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 // Common
+use App\Exports\StudentsResultExport;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -22,7 +23,14 @@ use Illuminate\Support\Facades\DB;
 use Random\RandomException;
 use App\Utils\TokenGenerator;
 use App\Utils\PasswordGenerator;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
+
+// Excel
+use App\Exports\StudentsExport;
+use App\Imports\StudentsImport;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\StudentsTemplateExport;
 
 class StudentController extends Controller
 {
@@ -297,5 +305,34 @@ class StudentController extends Controller
             'created_at' => $student->created_at ?? $user->created_at,
             'updated_at' => $student->updated_at ?? $user->updated_at,
         ];
+    }
+
+    //Classes para ações excel
+    public function generateFile(Request $request): BinaryFileResponse
+    {
+        $filters = [
+            'search'   => $request->query('searchTerm'),
+            'course_id' => $request->query('courseId'),
+            'group_id'  => $request->query('groupId'),
+            'status'    => $request->query('status'),
+            'period'    => $request->query('period'),
+        ];
+
+    return Excel::download(new StudentsExport($filters), 'relatorio-alunos.xlsx');
+    }
+
+    public function downloadTemplate(): BinaryFileResponse
+    {
+        return Excel::download(new StudentsTemplateExport, 'modelo_alunos_sirus.xlsx');
+    }
+
+    public function import(Request $request): BinaryFileResponse
+    {
+        $request->validate(['file' => 'required|mimes:xlsx,csv']);
+        $import = new StudentsImport;
+        Excel::import($import, $request->file('file'));
+
+        return Excel::download(
+            new StudentsResultExport($import->rowsProcessed),'resultado-importacao.xlsx');
     }
 }

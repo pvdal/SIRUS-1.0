@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\CriteriaExport;
+use App\Exports\CriteriaResultExport;
+use App\Exports\CriteriaTemplateExport;
+use App\Imports\CriteriaImport;
 use App\Utils\TokenGenerator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use App\Models\Criterion;
+use Maatwebsite\Excel\Facades\Excel;
 use Random\RandomException;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class CriteriaController extends Controller
 {
@@ -246,5 +252,31 @@ class CriteriaController extends Controller
             ->get();
 
         return response()->json($results);
+    }
+
+    //Funções para Excel
+    public function generateFile(Request $request): BinaryFileResponse
+    {
+        $filters = [
+            'search'   => $request->query('searchTerm'),
+            'status'    => $request->query('status'),
+            'period'    => $request->query('period'),
+        ];
+        return Excel::download(new CriteriaExport($filters), 'relatorio-criterio.xlsx');
+    }
+
+    public function downloadTemplate(): BinaryFileResponse
+    {
+        return Excel::download(new CriteriaTemplateExport(), 'modelo-importacao-criterios.xlsx');
+    }
+
+    public function import(Request $request): BinaryFileResponse
+    {
+        $request->validate(['file' => 'required|mimes:xlsx,csv']);
+        $import = new CriteriaImport();
+        Excel::import($import, $request->file('file'));
+
+        return Excel::download(
+            new CriteriaResultExport($import->rowsProcessed), 'resultado-importacao.xlsx');
     }
 }

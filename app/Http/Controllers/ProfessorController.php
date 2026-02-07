@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 // Common
+use App\Exports\ProfessorsExport;
+use App\Exports\ProfessorsResultExport;
+use App\Exports\ProfessorsTemplateExport;
+use App\Imports\ProfessorsImport;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -17,10 +21,12 @@ use Illuminate\Support\Facades\DB;
 //use Illuminate\Support\Facades\Log;
 
 // Static Classes and utils
+use Maatwebsite\Excel\Facades\Excel;
 use Random\RandomException;
 use App\Utils\TokenGenerator;
 use App\Utils\PasswordGenerator;
 use Throwable;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ProfessorController extends Controller
 {
@@ -73,7 +79,8 @@ class ProfessorController extends Controller
             $search = $request->input('search');
             $query->whereHas('user', function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('education', 'like', "%{$search}%");
             });
         }
         // statusFilter: ativo ou inativo
@@ -275,5 +282,30 @@ class ProfessorController extends Controller
             'created_at' => $professor->created_at ?? $professor->user->created_at,
             'updated_at' =>$professor->updated_at ?? $professor->user->updated_at,
         ]);
+    }
+
+    public function generateFile(Request $request): BinaryFileResponse
+    {
+        $filters = [
+            'search'   => $request->query('searchTerm'),
+            'status'    => $request->query('status'),
+            'period'    => $request->query('period'),
+        ];
+        return Excel::download(new ProfessorsExport($filters), 'relatorio-professores.xlsx');
+    }
+
+    public function downloadTemplate(): BinaryFileResponse
+    {
+        return Excel::download(new ProfessorsTemplateExport, 'modelo-importacao-professores.xlsx');
+    }
+
+    public function import(Request $request): BinaryFileResponse
+    {
+        $request->validate(['file' => 'required|mimes:xlsx,csv']);
+        $import = new ProfessorsImport;
+        Excel::import($import, $request->file('file'));
+
+        return Excel::download(
+            new ProfessorsResultExport($import->rowsProcessed), 'resultado-importacao.xlsx');
     }
 }

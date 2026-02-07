@@ -2,6 +2,7 @@ export function studentsData() {
     return {
         // Variáveis relacionadas ao actions-table-bar
         showCreateModal: false,
+        showImportModal: false,
         edit: false, // O edit define se o modal vai direcionar a função para store ou ‘update’
         showWarningModal: false,
         searchTerm: '',

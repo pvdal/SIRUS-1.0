@@ -2,6 +2,7 @@ export function criteriaData() {
     return {
         // Variáveis do actions-table-bar
         showCreateModal: false,
+        showImportModal: false,
         edit: false, // Define se o modal vai para store ou update
         showWarningModal: false,
         searchTerm: '',

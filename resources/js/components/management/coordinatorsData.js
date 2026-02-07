@@ -1,6 +1,7 @@
 export function coordinatorsData() {
     return {
         showCreateModal: false,
+        showImportModal: false,
         edit: false,
         showWarningModal: false,
         searchTerm: '',

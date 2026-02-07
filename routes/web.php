@@ -58,6 +58,24 @@ Route::middleware([
         Route::get('/user/api-tokens', [ApiTokenController::class, 'index'])->name('api-tokens.index');
     }
 
+    //Rotas para download arquivos
+    Route::get('/users/students/generate-file', [StudentController::class, 'generateFile'])->name('users.students-generate-file');
+    Route::get('/users/professors/generate-file', [ProfessorController::class, 'generateFile'])->name('users.professors-generate-file');
+    Route::get('/users/coordinators/generate-file', [CoordinatorController::class, 'generateFile'])->name('users.coordinators-generate-file');
+    Route::get('/evaluation/criteria/generate-file', [CriteriaController::class, 'generateFile'])->name('evaluation.criteria-generate-file');
+
+    // Rota para baixar o arquivo de exemplo para importação
+    Route::get('/users/students/download-template', [StudentController::class, 'downloadTemplate'])->name('users.students.download-template');
+    Route::get('/users/professors/download-template', [ProfessorController::class, 'downloadTemplate'])->name('users.professors.download-template');
+    Route::get('/users/coordinators/download-template', [CoordinatorController::class, 'downloadTemplate'])->name('users.coordinators.download-template');
+    Route::get('/evaluation/criteria/download-template', [CriteriaController::class, 'downloadTemplate'])->name('evaluation.criteria.download-template');
+
+    // Rota que recebe o arquivo preenchido
+    Route::post('/users/students/import', [StudentController::class, 'import'])->name('users.students.import');
+    Route::post('/users/professors/import', [ProfessorController::class, 'import'])->name('users.professors.import');
+    Route::post('/users/coordinators/import', [CoordinatorController::class, 'import'])->name('users.coordinators.import');
+    Route::post('/evaluation/criteria/import', [CriteriaController::class, 'import'])->name('evaluation.criteria.import');
+
     // users -> StudentController/Student.php ProfessorController/Professor.php CoordinatorController/Coordinator.php
     Route::get('/users/students', [StudentController::class, 'index'])->name('users.students-table');
     Route::get('/users/professors', [ProfessorController::class, 'index'])->name('users.professors-table');
@@ -153,6 +171,9 @@ Route::middleware([
         Route::post('/papers/save', [PaperController::class, 'store'])->name('paper.store');
         Route::put('/papers/{id}/update', [PaperController::class, 'update'])->name('paper.update');
         Route::put('/papers/{id}/{action}', [PaperController::class, 'toggleStatus'])->name('paper.toggle-status');
+
+
+
     });
 });
 
