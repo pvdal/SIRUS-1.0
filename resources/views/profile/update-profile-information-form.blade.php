@@ -31,6 +31,7 @@
                     <img src="{{ $this->user->profile_photo_url }}" alt="{{ $this->user->name }}" class="rounded-full size-20 object-cover">
                 </div>
 
+
                 <!-- New Profile Photo Preview -->
                 <div class="mt-2" x-show="photoPreview" style="display: none;">
                     <span class="block rounded-full size-20 bg-cover bg-no-repeat bg-center"
@@ -81,6 +82,24 @@
                 @endif
             @endif
         </div>
+        @if($this->user->student)
+            <div class="col-span-6 sm:col-span-4">
+                <x-label for="course" value="{{ __('Curso') }}" />
+                <div class="relative">
+                    <x-input id="course" type="text" class="mt-1 block w-full pe-8" value="{{ auth()->user()->student->course->name }}" readonly />
+                    <x-lucide-lock class="h-4 w-4 absolute right-2 top-3.5 text-gray-900 dark:text-gray-200 transition"/>
+                </div>
+            </div>
+        @endif
+        @if(auth()->user()->isAdmin())
+            <div class="col-span-6 sm:col-span-4">
+                <x-label for="course" value="{{ __('Curso') }}" />
+                <div class="relative">
+                    <x-input id="course" type="text" class="mt-1 block w-full pe-8" value="{{ auth()->user()->coordinator?->course->name ?? '' }}" readonly />
+                    <x-lucide-lock class="h-4 w-4 absolute right-2 top-3.5 text-gray-900 dark:text-gray-200 transition"/>
+                </div>
+            </div>
+        @endif
     </x-slot>
 
     <x-slot name="actions">

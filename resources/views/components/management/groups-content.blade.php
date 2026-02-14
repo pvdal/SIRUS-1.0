@@ -93,10 +93,12 @@
 
                     <x-slot name="list">
                         <template x-for="student in item.students" :key="student.ra">
-                            <li
-                                x-text="student.name"
-                                :class="student.state == 0 ? 'line-through text-gray-400' : ''"
-                            ></li>
+                            <div class="flex flex-wrap items-center space-x-2">
+                                <li
+                                    x-text="student.name"
+                                    :class="student.state == 0 ? 'line-through text-gray-400' : ''"
+                                ></li>
+                            </div>
                         </template>
                     </x-slot>
 

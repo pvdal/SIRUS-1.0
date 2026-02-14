@@ -5,7 +5,7 @@
     {{-- Capítulo 8.1 --}}
     <h2 id="cap-8.1" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">8.1 Visão Geral</h2>
     <p class="mb-10">
-        A aba <strong>Trabalhos</strong> é responsável pelo gerenciamento dos arquivos acadêmicos
+        A aba <strong>"Trabalhos"</strong> é responsável pelo gerenciamento dos arquivos acadêmicos
         submetidos no sistema, incluindo versões para avaliação e versões corrigidas.
         Nesta área é possível cadastrar, visualizar, alterar, inativar e organizar os trabalhos
         de forma estruturada.
@@ -14,7 +14,7 @@
     {{-- Capítulo 8.2 --}}
     <h2 id="cap-8.2" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">8.2 Visualização em Tabela</h2>
     <p class="mb-2">
-        A visualização padrão da aba Trabalhos é realizada em formato de tabela.
+        A visualização padrão da aba "Trabalhos" é realizada em formato de tabela.
         No topo da tela está disponível uma barra de ações contendo:
     </p>
     <ul class="list-disc pl-6 mb-4 space-y-1">
@@ -23,19 +23,15 @@
         <li>Filtros avançados</li>
         <li>Botão de limpar filtros</li>
     </ul>
-    <p class="mb-4">
-        A tabela possui uma coluna de ações padrão, contendo os botões
-        <strong>Alterar</strong> e <strong>Inativar</strong>.
-    </p>
 
     <h3 id="cap-8.2-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Status de Avaliação</h3>
     <p class="mb-2">
-        A coluna <strong>Avaliação</strong> da tabela varia conforme o estado do trabalho:
+        A coluna <strong>"Avaliação"</strong> da tabela varia conforme o estado atual do trabalho no processo de avaliação:
     </p>
     <ul class="list-disc pl-6 mb-10 space-y-1">
         <li>Versão corrigida: campo vazio</li>
-        <li>Versão de avaliação não avaliada: <strong>Não avaliado</strong></li>
-        <li>Versão de avaliação avaliada: data e hora da avaliação</li>
+        <li>Versão de avaliação e ainda não foi avaliado: Não avaliado</li>
+        <li>Versão de avaliação e já foi avaliado: data e hora da avaliação</li>
     </ul>
 
     {{-- Capítulo 8.3 --}}
@@ -56,7 +52,7 @@
 
     <h3 id="cap-8.3-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Edição de Trabalhos</h3>
     <p class="mb-2">
-        No modal de edição, é disponibilizado o botão <strong>Alterar PDF</strong>.
+        No modal de edição, é disponibilizado o botão <strong>"Alterar PDF"</strong>.
         Ao selecionar um novo arquivo, o sistema exibe:
     </p>
     <ul class="list-disc pl-6 mb-4 space-y-1">
@@ -89,7 +85,7 @@
         </li>
     </ul>
     <p class="mb-10">
-        A partir da aba Trabalhos, é possível alterar o grupo associado a um trabalho
+        A partir da aba "Trabalhos", é possível alterar o grupo associado a um trabalho
         ou cadastrar uma versão corrigida para uma versão de avaliação já submetida à banca.
     </p>
 
@@ -115,7 +111,7 @@
         <li>Abrir em nova aba</li>
         <li>Baixar</li>
         <li>Alterar</li>
-        <li>Inativar</li>
+        <li>Inativar ou ativar</li>
     </ul>
 
     <h3 id="cap-8.4-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Download por Diretório</h3>
@@ -136,8 +132,7 @@
     <div class="bg-blue-50/60 dark:bg-blue-900/10 border border-blue-400/60 dark:border-blue-500/50 rounded-lg p-4 text-blue-800 dark:text-blue-300">
         <p class="font-semibold mb-1">Observação</p>
         <p class="text-sm text-gray-800 dark:text-gray-300">
-            O download por diretório está disponível apenas no nível de semestre,
-            não sendo exibido nos níveis de versão, curso ou projeto.
+            O download por diretório está disponível apenas no nível <strong>"Ano"</strong>, no qual são exibidos os semestres.
         </p>
     </div>
 </div>

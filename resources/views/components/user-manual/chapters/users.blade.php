@@ -5,15 +5,15 @@
     {{-- Capítulo 5.1 --}}
     <h2 id="cap-5.1" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">5.1 Acesso à página</h2>
     <p class="mb-10">
-        A página de <strong>Gerenciamento de Usuários</strong> é acessada por meio do menu superior do sistema,
-        selecionando a opção <strong>Usuários</strong>. Logo abaixo do cabeçalho principal, é exibida uma
+        A página de <strong>gerenciamento de usuários</strong> é acessada por meio do menu superior do sistema,
+        selecionando a opção <strong>"Usuários"</strong>. Logo abaixo do cabeçalho principal, é exibida uma
         <strong>subnavegação</strong> que permite alternar entre os diferentes tipos de usuários do sistema.
     </p>
 
     {{-- Capítulo 5.2 --}}
     <h2 id="cap-5.2" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">5.2 Subnavegação entre tipos de usuários</h2>
     <p class="mb-2">
-        A subnavegação apresenta três abas
+        A subnavegação apresenta três abas:
     </p>
     <ul class="list-disc pl-6 space-y-1 mb-4">
         <li><strong>Alunos</strong></li>
@@ -21,14 +21,13 @@
         <li><strong>Coordenadores</strong></li>
     </ul>
     <p class="mb-10">
-        Por padrão, a aba <strong>Alunos</strong> é exibida inicialmente. A alternância entre abas atualiza
-        dinamicamente a tabela, os filtros e o formulário de cadastro, de acordo com o perfil selecionado.
+        Por padrão, a aba <strong>Alunos</strong> é exibida inicialmente.
     </p>
 
     {{-- Capítulo 5.3 --}}
     <h2 id="cap-5.3" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">5.3 Barra de ações e filtros</h2>
     <p class="mb-2">
-        Abaixo da subnavegação, encontra-se uma barra de ações organizada em layout flexível (<em>flex-wrap</em>),
+        Abaixo da subnavegação, encontra-se uma barra de ações organizada em layout flexível,
         que se adapta a diferentes resoluções de tela.
     </p>
     <ul class="list-disc pl-6 space-y-1 mb-4">
@@ -51,32 +50,21 @@
     </p>
     <ul class="list-disc pl-6 space-y-1 mb-4">
         <li><strong>RA:</strong> número obrigatório de 13 dígitos</li>
-        <li><strong>Nome</strong></li>
-        <li><strong>E-mail</strong></li>
-        <li><strong>Grupo</strong> (opcional)</li>
-        <li><strong>Curso</strong> (opcional)</li>
+        <li><strong>Nome:</strong> nome do aluno</li>
+        <li><strong>E-mail:</strong> e-mail do aluno</li>
+        <li><strong>Grupo (opcional):</strong> grupo ao qual o aluno está vinculado</li>
+        <li><strong>Curso (opcional):</strong> curso ao qual o aluno está vinculado</li>
     </ul>
     <p class="mb-4">
         Os campos de Grupo e Curso são apresentados como seletores, enquanto os demais utilizam campos de texto.
-        O salvamento é realizado pelo botão <strong>Salvar</strong>, localizado no canto inferior direito do modal,
-        com a opção <strong>Voltar</strong> ao lado para cancelamento.
+        O salvamento é realizado pelo botão <strong>"Salvar"</strong>, localizado no canto inferior direito do modal,
+        com a opção <strong>"Voltar"</strong> ao lado para cancelamento.
     </p>
 
     <h3 id="cap-5.4-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Busca, filtros e listagem</h3>
     <p class="mb-2">
-        A tabela de alunos exibe até <strong>30 registros por página</strong>, contendo as colunas:
-    </p>
-    <ul class="list-disc pl-6 space-y-1 mb-4">
-        <li>RA</li>
-        <li>Nome</li>
-        <li>E-mail</li>
-        <li>Grupo</li>
-        <li>Curso</li>
-        <li>Estado</li>
-        <li>Ações</li>
-    </ul>
-    <p class="mb-2">
-        O campo de busca permite localizar alunos por <strong>RA, nome ou e-mail</strong>. Os filtros disponíveis são:
+        A tabela de alunos exibe até <strong>30 registros por página</strong>. O campo de busca permite localizar
+        alunos por <strong>RA, nome ou e-mail</strong>. Os filtros disponíveis são:
     </p>
     <ul class="list-disc pl-6 space-y-1 mb-4">
         <li>Curso</li>
@@ -87,9 +75,9 @@
 
     <h3 id="cap-5.4-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Edição, inativação e paginação</h3>
     <p class="mb-2">
-        A ação <strong>Alterar</strong> abre um modal com os dados do aluno para edição.
-        A ação <strong>Inativar</strong> exibe um modal de confirmação, no qual a operação
-        pode ser confirmada, cancelada pelo botão Voltar, clique externo ou tecla ESC.
+        A ação <strong>"Alterar"</strong> abre um modal com os dados do aluno para edição.
+        A ação <strong>"Inativar"</strong> exibe um modal de confirmação, no qual a operação
+        pode ser confirmada, cancelada pelo botão "Voltar", clique externo ou tecla ESC.
     </p>
     <p class="mb-10">
         A navegação entre páginas é feita por um sistema de paginação que permite avançar ou retroceder

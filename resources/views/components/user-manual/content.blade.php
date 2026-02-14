@@ -40,9 +40,15 @@
 
         @foreach($chapters as $chapter)
             <!-- Capítulo {{ $loop->iteration }} -->
+            @if(
+                ($loop->iteration === 5 || $loop->iteration === 8)
+                && !auth()->user()->isAdmin()
+            )
+            @else
             <article id="{{ $chapter }}" class="chapter flex bg-white shadow md:rounded-sm border border-white px-8 py-12 md:py-14 md:px-12 lg:py-20 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-400 lg:scroll-mt-[4rem]">
                 <x-dynamic-component :component="'user-manual.chapters.' . $chapter" :text-settings="$textSettings"/>
             </article>
+            @endif
         @endforeach
 
         {{-- Seção 11

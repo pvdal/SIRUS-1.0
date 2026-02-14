@@ -6,7 +6,7 @@
         ['label' => '4. Agenda de Avaliações','page' => 'schedule'],
         ['label' => '5. Gerenciamento de Usuários','page' => 'users'],
         ['label' => '6. Configurações Institucionais','page' => 'institutional'],
-        ['label' => '7. Rubricas Processo de Avaliação','page' => 'rubrics-evaluation'],
+        ['label' => '7. Rubricas e Processo de Avaliação','page' => 'rubrics-evaluation'],
         ['label' => '8. Trabalhos','page' => 'paper'],
         ['label' => '9. Perfil','page' => 'profile'],
         ['label' => '10. Acessibilidade','page' => 'accessibility'],
@@ -23,6 +23,11 @@
 @endforeach
 --}}
 @foreach($links as $link)
+    @if(
+        ($loop->iteration === 5 || $loop->iteration === 8)
+        && !auth()->user()->isAdmin()
+    )
+    @else
     <a href="#{{ $link['page'] }}" class="chapter-link flex justify-between items-center px-3 py-2 rounded-lg border border-transparent hover:bg-slate-100 text-gray-700
         dark:text-gray-200 transition duration-150 ease-in-out"
         data-target="{{ $link['page'] }}"
@@ -30,6 +35,7 @@
         <span>{{ $link['label'] }}</span>
         <x-lucide-chevron-right class="chevron hidden w-4 h-4"/>
     </a>
+    @endif
 @endforeach
 
 <script>

@@ -32,11 +32,6 @@ Route::get('/legal/policy', [LegalController::class, 'showPolicies'])->name('pol
 Route::get('/legal/terms', [LegalController::class, 'showTerms'])->name('terms.show');
 
 //  Rota para as páginas do manual do usuário
-//Route::get('/manual/{page}', [ManualController::class, 'show'])
-//   ->where('page', '[A-Za-z0-9\-]+')
-//    ->name('manual.show');
-
-//  Rota para as páginas do manual do usuário
 Route::get('/manual', [ManualController::class, 'show'])
     ->middleware('auth:sanctum')->name('manual.show');
 
@@ -58,6 +53,7 @@ Route::middleware([
         Route::get('/user/api-tokens', [ApiTokenController::class, 'index'])->name('api-tokens.index');
     }
 
+    #region Importação / Exportação de planilhas
     //Rotas para download arquivos
     Route::get('/users/students/generate-file', [StudentController::class, 'generateFile'])->name('users.students-generate-file');
     Route::get('/users/professors/generate-file', [ProfessorController::class, 'generateFile'])->name('users.professors-generate-file');
@@ -75,19 +71,17 @@ Route::middleware([
     Route::post('/users/professors/import', [ProfessorController::class, 'import'])->name('users.professors.import');
     Route::post('/users/coordinators/import', [CoordinatorController::class, 'import'])->name('users.coordinators.import');
     Route::post('/evaluation/criteria/import', [CriteriaController::class, 'import'])->name('evaluation.criteria.import');
+    #endregion
 
     // users -> StudentController/Student.php ProfessorController/Professor.php CoordinatorController/Coordinator.php
     Route::get('/users/students', [StudentController::class, 'index'])->name('users.students-table');
     Route::get('/users/professors', [ProfessorController::class, 'index'])->name('users.professors-table');
     Route::get('/users/coordinators', [CoordinatorController::class, 'index'])->name('users.coordinators-table');
 
-    // Groups -> GroupController/Group.php
-    Route::get('/groups', [GroupController::class, 'index'])->name('groups-table');
-
     // Courses -> CourseController/Course.php
     Route::get('/courses', [CourseController::class, 'index'])->name('courses-table');
 
-    // Evaluations -> CommitteeController/Committee.php
+    // Evaluations -> CriteriaController/Criterion.php AxisController/Axis.php RubricController/Rubric.php
     Route::get('/evaluation/criteria', [CriteriaController::class, 'index'])->name('evaluation.criteria-table');
     Route::get('/evaluation/axis', [AxisController::class, 'index'])->name('evaluation.axis-table');
     Route::get('/evaluation/rubric', [RubricController::class, 'index'])->name('evaluation.rubric-table');
@@ -171,9 +165,6 @@ Route::middleware([
         Route::post('/papers/save', [PaperController::class, 'store'])->name('paper.store');
         Route::put('/papers/{id}/update', [PaperController::class, 'update'])->name('paper.update');
         Route::put('/papers/{id}/{action}', [PaperController::class, 'toggleStatus'])->name('paper.toggle-status');
-
-
-
     });
 });
 
@@ -194,6 +185,9 @@ Route::middleware([
 
     // Calendar -> EventController/Committee.php
     Route::get('/calendar', [EventController::class, 'index'])->name('calendar');
+
+    // Groups -> GroupController/Group.php
+    Route::get('/groups', [GroupController::class, 'index'])->name('groups-table');
 
     // Committees -> CommitteeController/Committee.php
     Route::get('/committees', [CommitteeController::class, 'index'])->name('committees-table');

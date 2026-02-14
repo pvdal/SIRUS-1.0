@@ -18,19 +18,23 @@
         <li>Centralizar o gerenciamento das avaliações acadêmicas em uma única plataforma</li>
         <li>Padronizar critérios, rubricas e métodos de atribuição de notas</li>
         <li>Facilitar a organização e o acompanhamento das bancas avaliativas e dos grupos avaliados</li>
-        <li>Organizar e disponibilizar dados de alunos, professores e coordenadores de forma estruturada</li>
+        <li>Organizar e disponibilizar dados de alunos, professores e coordenadores, relacionados ao evento, de forma estruturada</li>
         <li>Fornecer registros, análises e relatórios que apoiem a tomada de decisão e o feedback aos alunos</li>
     </ul>
 
     {{-- Capítulo 1.2 --}}
     <h2 id="cap-1.2" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">1.2 Público-Alvo</h2>
     <p class="mb-2">
-        O sistema foi projetado para os seguintes usuários
+        O sistema foi projetado para atender às demandas do SIMBAJU, portanto, destina-se aos envolvidos nas
+        atividades relacionadas ao evento, sendo eles:
     </p>
     <ul class="list-disc pl-6 space-y-1 mb-10 text-gray-800 dark:text-gray-300">
-        <li><strong>Coordenadores acadêmicos:</strong> Gerenciam toda a plataforma</li>
-        <li><strong>Professores e avaliadores:</strong> Realizam avaliações de alunos</li>
-        <li><strong>Alunos (organizados em grupos):</strong> Participam de avaliações e acompanham resultados</li>
+        <li><strong>Coordenadores acadêmicos:</strong> gerenciam toda a plataforma, podendo também atuar como avaliadores</li>
+        <li><strong>Professores e avaliadores:</strong> realizam as avaliações dos trabalhos acadêmicos dos alunos</li>
+        <li>
+            <strong>Alunos (organizados em grupos):</strong> participam de avaliações, tendo seus trabalhos e apresentações submetidos à avaliação,
+            e acompanham seus resultados
+        </li>
     </ul>
 
     {{-- Capítulo 1.3 --}}
@@ -55,14 +59,14 @@
     <h3 id="cap-1.4-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Finalidade do Manual</h3>
     <p class="mb-4">
         Este manual do usuário tem como objetivo orientar os usuários do sistema SIRUS na utilização correta
-        e eficiente de suas funcionalidades. O documento apresenta, de forma clara e organizada, as principais
-        operações disponíveis na plataforma, considerando os diferentes perfis de acesso existentes.
+        e eficiente de suas funcionalidades. O documento apresenta as principais operações disponíveis na plataforma,
+        considerando os diferentes perfis de acesso existentes.
     </p>
 
     <h3 id="cap-1.4-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Conteúdo Abordado</h3>
     <p class="mb-4">
         Ao longo do manual, são descritos os procedimentos necessários para navegação no sistema, realização
-        de cadastros, acompanhamento das bancas avaliativas, visualização de trabalhos e registro ou consulta
+        de cadastros, acompanhamento das bancas avaliadoras, visualização de trabalhos e registro ou consulta
         das avaliações, conforme as permissões de cada tipo de usuário.
     </p>
 
@@ -100,14 +104,14 @@
 
     <h3 id="cap-1.4.1-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Voltar ao topo</h3>
     <p class="mb-8">
-        Para facilitar a navegação, especialmente em dispositivos móveis onde não há um
-        menu lateral fixo, o manual disponibiliza um botão de retorno ao topo da página.
+        Para facilitar a navegação, especialmente em dispositivos móveis onde não há um menu lateral fixo,
+        o manual disponibiliza um botão de retorno ao topo da página, localizado no canto inferior direito da tela.
     </p>
 
     {{-- Capítulo 1.4.2 --}}
     <h2 id="cap-1.4.2" class="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">1.4.2 Preferências de leitura</h2>
     <p class="mb-4">
-        Ao clicar no ícone de configurações localizado no topo do menu de navegação, é exibido
+        Ao clicar no ícone de configurações, localizado no topo do menu de navegação, é exibido
         o painel <strong>"Preferências de leitura"</strong>. Esse painel permite personalizar
         a forma como o conteúdo do manual é apresentado, de acordo com as preferências
         individuais de leitura.
@@ -143,7 +147,8 @@
         </li>
     </ul>
     <p>
-        Essas configurações afetam exclusivamente a visualização do manual.
+        Essas configurações afetam exclusivamente a visualização do manual. Ao acessar o sistema em outro navegador
+        ou dispositivo, as configurações retornam ao padrão.
     </p>
 </div>
 <aside class="chapter-aside hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">

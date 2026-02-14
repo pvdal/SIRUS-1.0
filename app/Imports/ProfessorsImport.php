@@ -20,9 +20,9 @@ class ProfessorsImport implements ToCollection, WithHeadingRow
             $data = $row->toArray();
 
             $validator = Validator::make($data, [
-                'nome'  => ['required', 'string'],
+                'nome'  => ['required', 'string', 'max:255'],
                 'email' => ['required', 'email', 'unique:users,email'],
-                'formacao' => ['nullable','string'],
+                'formacao' => ['nullable','string', 'max:255'],
             ], [
                 'email.unique' => 'E-mail já cadastrado',
             ]);

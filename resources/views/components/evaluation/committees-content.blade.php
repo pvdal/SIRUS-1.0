@@ -112,9 +112,10 @@
             :item-key="'id'"
         >
             <x-card.layout>
+                {{-- Card da banca --}}
                 <x-card.content
                     x-show="getCardType(item.id) === 'committee'"
-                    :listMeta="['count' => 'members', 'icon' => 'users', 'title' => 'Membros', 'sinTitle' => 'Membro', 'pluTitle' => 'Membros']"
+                    :listMeta="['count' => 'members', 'icon' => 'users', 'sinTitle' => 'Membro', 'pluTitle' => 'Membros']"
                 >
                     <x-slot name="header">
                         <span x-text="item.id" class="text-sm text-gray-600 dark:text-gray-300 me-3 transition duration-150 ease-in-out"></span>
@@ -219,7 +220,7 @@
                 {{-- Card dos grupos --}}
                 <x-card.content
                     x-show="getCardType(item.id) === 'group'"
-                    :listMeta="['count' => 'members', 'icon' => 'users', 'title' => 'Membros']"
+                    :listMeta="['count' => 'students', 'icon' => 'users', 'sinTitle' => 'Aluno', 'pluTitle' => 'Alunos']"
                 >
                     <x-slot name="header">
                         <span x-text="item.group_id" class="text-sm text-gray-600 dark:text-gray-200 me-3 transition duration-150 ease-in-out"></span>

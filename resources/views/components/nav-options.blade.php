@@ -33,18 +33,25 @@
             </div>
         </x-dynamic-component>
     </div>
-
-    <div class="{{ $menuClass }}">
-        <x-dynamic-component :component="$menuComponent" href="{{ route('groups-table') }}" :active="request()->routeIS('groups-table')">
-            <div class="flex flex-wrap justify-start lg:justify-center items-center gap-2 min-w-0">
-                <x-lucide-users class="h-4 w-4 shrink-0"/>
+@endcan
+<div class="{{ $menuClass }}">
+    <x-dynamic-component :component="$menuComponent" href="{{ route('groups-table') }}" :active="request()->routeIS('groups-table')">
+        <div class="flex flex-wrap justify-start lg:justify-center items-center gap-2 min-w-0">
+            <x-lucide-users class="h-4 w-4 shrink-0"/>
+            @if(auth()->user()->isAdmin())
                 <span class="truncate">
                     {{ __('Grupos') }}
                 </span>
-            </div>
-        </x-dynamic-component>
-    </div>
-@endcan
+            @endif
+            @if(auth()->user()->access_level === 1)
+                <span class="truncate">
+                    {{ __('Grupo') }}
+                </span>
+            @endif
+        </div>
+    </x-dynamic-component>
+</div>
+
 
 <div class="{{ $menuClass }}">
     <x-dynamic-component :component="$menuComponent" href="{{ route('committees-table') }}" :active="request()->routeIS('committees-table')">

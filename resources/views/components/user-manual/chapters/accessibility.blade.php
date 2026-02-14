@@ -11,7 +11,7 @@
     </p>
     <p class="mb-10">
         A alternância entre tema claro e escuro é feita pelo cabeçalho da aplicação, conforme
-        descrito no <strong>Capítulo 2.5 – Interface e Navegação</strong>.
+        descrito no <strong>capítulo 2.5</strong>.
     </p>
 
     {{-- Capítulo 10.2 --}}
@@ -38,16 +38,19 @@
 
     <h3 id="cap-10.2-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Ativação pelo Perfil</h3>
     <ol class="list-decimal pl-6 space-y-1 mb-4">
-        <li>Acesse <strong>Perfil → Acessibilidade</strong></li>
+        <li>
+            Na página de perfil — acessível pelo menu superior, conforme exposto no capítulo 2.5 deste manual —,
+            localize a seção <strong>"Acessibilidade"</strong>
+        </li>
         <li>Selecione o filtro de daltonismo desejado</li>
-        <li>Opcionalmente, ative a opção <strong>Exibir ícone de daltonismo</strong></li>
+        <li>Opcionalmente, ative a opção <strong>"Exibir ícone de daltonismo"</strong></li>
     </ol>
 
     <h3 id="cap-10.2-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Ícone flutuante de Daltonismo</h3>
     <p class="mb-2">
         Ao ativar a exibição do ícone de daltonismo, um botão flutuante é apresentado na interface,
         permitindo acesso rápido às configurações sem a necessidade de retornar ao perfil. Esse botão
-        é identificado por um ícone de olho, e ao ser clicado exibe duas opções
+        é identificado por um ícone de olho, e ao ser clicado exibe duas opções:
     </p>
     <ul class="list-disc pl-6 space-y-1 mb-4">
         <li><strong>Seleção de filtro:</strong> Abre um menu com um seletor de filtros de daltonismo.</li>
@@ -72,23 +75,23 @@
     <h3 id="cap-10.3-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Acesso e visibilidade</h3>
     <ul class="list-disc pl-6 space-y-1 mb-4">
         <li>O acesso ao VLibras é feito exclusivamente por meio do ícone flutuante</li>
-        <li>O ícone pode ser exibido ou ocultado em <strong>Perfil → Acessibilidade</strong></li>
+        <li>O ícone pode ser exibido ou ocultado na seção de Acessiblidade do perfil</li>
         <li>Sem o ícone visível, o assistente não pode ser utilizado</li>
     </ul>
 
     <h3 id="cap-10.3-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Utilização</h3>
     <ol class="list-decimal pl-6 space-y-1 mb-4">
         <li>
-            <strong>Ativar Assistente:</strong> Clique no ícone VLibras exibidos na tela
+            Ative o assistente clicando no ícone VLibras exibidos na tela
         </li>
         <li>
-            <strong>Selecionar Conteúdo:</strong> O assistente interpreta o conteúdo da página
+            Ao selecionar um conteúdo, o assistente interpreta o conteúdo da página
         </li>
         <li>
-            <strong>Ativar Legendas:</strong> As legendas aparecem automaticamente
+            Ao ativar as legendas elas são exibidas automaticamente
         </li>
         <li>
-            <strong>Ajustar Velocidade:</strong> Controle a velocidade conforme necessário
+            Controle a velocidade conforme necessário
         </li>
     </ol>
     <p>
@@ -117,7 +120,7 @@
         <a href="#cap-10.2-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
             <span>Ativação pelo Perfil</span>
         </a>
-        <a href="#cap-10.2-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
+        <a href="#cap-10.2-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
             <span>Ícone flutuante de Daltonismo</span>
         </a>
 

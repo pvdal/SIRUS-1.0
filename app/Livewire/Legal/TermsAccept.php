@@ -20,7 +20,7 @@ class TermsAccept extends Component
     }
 
     // Caso o usuário aceite os termos, será salvo o datetime atual no banco na coluna referente a isso
-    public function accept(): void
+    public function accept()
     {
         if ($this->accepted && Auth::check()) {
             $user = Auth::user();
@@ -31,7 +31,10 @@ class TermsAccept extends Component
             Auth::setUser($user);
 
             $this->show = false;
+
+            return redirect()->to(route('calendar'));
         }
+        return $this->show = true;
     }
     // Caso o usuário recuse os termos, terá sua sessão encerrada e será redirecionado para a home
     public function refuse(): \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse

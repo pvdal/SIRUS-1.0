@@ -96,7 +96,6 @@
                 </template>
             </x-slot>
         </x-custom-modal>
-
     @endcan
     {{-- Professor e aluno --}}
     @cannot('manage-events')

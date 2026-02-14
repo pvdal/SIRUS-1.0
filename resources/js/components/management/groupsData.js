@@ -91,6 +91,8 @@ export function groupsData() {
             // Se a array vier vazia ou o objeto recebido não for array, o usuário terá como retorno que não há registros
             this.empty.data = !Array.isArray(groups) || groups.length === 0;
 
+            console.log(this.groups);
+
             // Evento de escuta para a busca de alunos para cadastro no grupo
             this.$watch('searchStudent', (value) => {
                 value = value.trim();

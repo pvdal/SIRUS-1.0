@@ -8,17 +8,17 @@
     <h3 id="cap-9.1-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Como acessar</h3>
     <p class="mb-2">
         A área de perfil permite ao usuário gerenciar informações pessoais, segurança da conta
-        e preferências de acessibilidade.
+        e preferências de acessibilidade:
     </p>
     <ol class="list-decimal pl-6 mb-4 space-y-1">
-        <li>Clique na foto de perfil localizada no canto superior direito da tela</li>
-        <li>No menu suspenso, selecione a opção <strong>Perfil</strong></li>
+        <li>Clique na foto de perfil localizada no canto superior direito da tela, no menu superior</li>
+        <li>No menu suspenso, selecione a opção <strong>"Perfil"</strong></li>
     </ol>
 
     <h3 id="cap-9.1-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Encerrar Sessão</h3>
     <p class="mb-10">
         Para sair do sistema, clique na foto de perfil no menu superior e selecione a opção
-        <strong>Sair</strong>. Essa ação encerra a sessão atual e redireciona o usuário para a
+        <strong>"Sair"</strong>. Essa ação encerra a sessão atual e redireciona o usuário para a
         página inicial.
     </p>
 
@@ -28,23 +28,34 @@
     <h3 id="cap-9.2-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Informações do Perfil</h3>
     <p class="mb-2">
         Nesta seção, o usuário pode atualizar seus dados básicos de identificação no sistema. Os campos disponíveis
-        para edição são
+        para edição são:
     </p>
     <ul class="list-disc pl-6 mb-4 space-y-1">
         <li>Nome</li>
         <li>E-mail</li>
         <li>Foto de perfil</li>
+        <li>Curso vinculado (coordenadores e alunos)</li>
     </ul>
+    <div class="mb-4 bg-amber-50 dark:bg-stone-800/80 border border-amber-700 dark:border-amber-400/60 rounded-lg p-4 text-amber-800 dark:text-amber-300">
+        <p class="font-semibold">
+            Cuidado
+        </p>
+        <p class="text-sm leading-relaxed text-gray-800 dark:text-gray-300">
+            <strong>Embora seja possível alterar o e-mail atualmente cadastrado, assegure-se de que o novo e-mail seja válido e esteja ativo. </strong>
+            A alteração exige nova validação e, caso o e-mail informado não exista, a validação não poderá ser concluída, o que resultará no bloqueio
+            da conta. Nessa situação será necessário entrar em contato com a administração responsável pelo suporte para a resolução do problema.
+        </p>
+    </div>
 
     <h3 id="cap-9.2-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Foto de Perfil</h3>
     <p class="mb-2">
         A foto de perfil é exibida no menu superior do sistema e pode ser alterada a qualquer momento.
-        Caso já exista uma imagem cadastrada, também é possível removê-la.
+        Caso já exista uma imagem cadastrada, também é possível removê-la:
     </p>
     <ol class="list-decimal pl-6 mb-4 space-y-1">
-        <li>Clique em <strong>Selecionar uma nova imagem</strong> para escolher um arquivo do computador</li>
-        <li>Para remover a imagem atual, utilize o botão <strong>Remover imagem</strong></li>
-        <li>Após realizar as alterações desejadas, clique em <strong>Salvar</strong></li>
+        <li>Clique em <strong>"Selecionar uma nova imagem"</strong> para escolher um arquivo do computador</li>
+        <li>Para remover a imagem atual, utilize o botão <strong>"Remover imagem"</strong></li>
+        <li>Após realizar as alterações desejadas, clique em <strong>"Salvar"</strong></li>
     </ol>
     <div class="mb-10 bg-blue-50/60 dark:bg-blue-900/10 border border-blue-400/60 dark:border-blue-500/50 rounded-lg p-4 text-blue-800 dark:text-blue-300">
         <p class="font-semibold mb-1">Requisitos da imagem</p>
@@ -70,21 +81,21 @@
     <p class="mb-4">
         Nesta seção é possível habilitar a autenticação de dois fatores, adicionando uma camada extra
         de segurança à conta. O funcionamento detalhado dessa funcionalidade é descrito no
-        <strong>Capítulo 3.2 – Autenticação de Dois Fatores</strong>.
+        <strong>capítulo 3.2</strong> deste manual.
     </p>
 
     <h3 id="cap-9.2-f" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Sessões do Navegador</h3>
     <p class="mb-4">
         A área de sessões permite visualizar dispositivos conectados e encerrar sessões ativas em
         outros navegadores ou dispositivos. O comportamento dessa funcionalidade está descrito no
-        <strong>Capítulo 3.3 – Gerenciamento de Sessões e Dispositivos</strong>.
+        <strong>capítulo 3.3</strong> deste manual.
     </p>
 
     <h3 id="cap-9.2-g" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Acessibilidade</h3>
     <p class="mb-4">
         O sistema disponibiliza recursos de acessibilidade, como filtros de daltonismo e integração
         com o VLibras, visando melhorar a experiência de uso para diferentes perfis de usuários.
-        O funcionamento detalhado desses recursos é apresentado no <strong>Capítulo 10</strong>.
+        O funcionamento detalhado desses recursos é apresentado no <strong>capítulo 10</strong> deste manual.
     </p>
 
 </div>

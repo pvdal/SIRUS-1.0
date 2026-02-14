@@ -9,7 +9,7 @@
     {{-- Inicia contexto alpine --}}
     <div
         x-data="{
-            stickyNav: localStorage.getItem('manual.sticky_nav') === 'true',
+            stickyNav: localStorage.getItem('manual.sticky_nav') !== 'false',
             showChapterNav: localStorage.getItem('manual.show_chapter_nav') !== 'false',
             settings: false,
 

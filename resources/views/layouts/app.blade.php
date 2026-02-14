@@ -17,7 +17,7 @@
         <link rel="icon" type="image/icon" href="{{ asset('favicon.ico') }}?v=1">
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <!-- Styles -->
@@ -141,7 +141,7 @@
                                 class="ms-auto sm:mx-0 relative flex items-center gap-2 p-2 rounded-lg
                                 border border-gray-300 dark:border-gray-600
                                 text-gray-500 dark:text-gray-300
-                                hover:bg-gray-100 dark:hover:bg-gray-800
+                                bg-gray-100 dark:bg-gray-800
                                 transition duration-150 ease-in-out"
                                 aria-label="Alternar tema"
                             >

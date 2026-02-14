@@ -7,7 +7,7 @@
     <ul class="list-disc pl-6 space-y-1 mb-4">
         <li>Navegador web atualizado (Chrome, Firefox, Edge ou equivalente)</li>
         <li>Conexão ativa com a internet</li>
-        <li>Conta de usuário previamente cadastrada no sistema</li>
+        <li>Conta de usuário previamente cadastrada no sistema (ações de cadastro são competência do coordenador acadêmico)</li>
     </ul>
     <p class="mb-10">
         O SIRUS pode ser acessado por diferentes dispositivos, como computadores, tablets
@@ -19,14 +19,14 @@
     <p class="mb-2">
         Ao acessar o <strong>SIRUS</strong>, o usuário é direcionado à Página Inicial do sistema.
         No topo da tela encontra-se o menu de navegação principal, que disponibiliza os seguintes
-        acessos
+        acessos:
     </p>
     <ul class="list-disc pl-6 space-y-1 mb-4">
-        <li><strong>Início:</strong> Retorna à Página Inicial (também acessível ao clicar no logotipo do sistema)</li>
-        <li><strong>Manual:</strong> Acesso ao Manual do Usuário</li>
-        <li><strong>Termos:</strong> Acesso aos Termos de Uso</li>
-        <li><strong>Privacidade:</strong> Acesso às Políticas de Privacidade</li>
-        <li><strong>Login:</strong> Direciona para a tela de autenticação do sistema</li>
+        <li><strong>Início:</strong> retorna à Página Inicial (também acessível ao clicar no logotipo do sistema)</li>
+        <li><strong>Manual:</strong> acesso a este Manual do Usuário</li>
+        <li><strong>Termos:</strong> acesso aos Termos de Uso</li>
+        <li><strong>Privacidade:</strong> acesso à Política de Privacidade</li>
+        <li><strong>Login:</strong> direciona para a tela de autenticação do sistema</li>
     </ul>
 
     <h3 id="cap-2.2-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Boas-vindas</h3>
@@ -51,15 +51,14 @@
 
     <h3 id="cap-2.2-d" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Rodapé</h3>
     <p class="mb-10">
-        No rodapé da página, estão disponíveis um texto institucional do sistema, links para os
-        Termos de Uso e Políticas de Privacidade, além de um botão com ícone de sol/lua que permite
-        alternar entre os temas claro e escuro da interface.
+        No rodapé da página, estão disponíveis links para os Termos de Uso e Políticas de Privacidade, além de um botão
+        identificado com ícone de sol ou lua que permite alternar entre os temas claro e escuro da interface.
     </p>
 
     {{-- Capítulo 2.3 --}}
     <h2 id="cap-2.3" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">2.3 Autenticação de Usuário</h2>
     <p class="mb-2">
-        Na tela de login, você deverá
+        Na tela de login, você deverá:
     </p>
     <ol class="list-decimal pl-6 space-y-1 mb-4">
         <li>Inserir seu <strong>E-mail</strong> (endereço de e-mail cadastrado no sistema)</li>
@@ -79,7 +78,7 @@
 
     <h3 id="cap-2.3-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Manter conectado</h3>
     <p class="mb-4">
-        Ao selecionar a opção <strong>Manter conectado</strong>, não será necessário realizar
+        Ao selecionar a opção <strong>"Manter conectado"</strong>, não será necessário realizar
         o login novamente nesse navegador, a menos que os dados de navegação sejam limpos.
     </p>
 
@@ -88,7 +87,7 @@
         Caso a <strong>autenticação de dois fatores (2FA)</strong> esteja ativada, após informar
         o e-mail e a senha na tela de login, você também deverá inserir o código gerado pelo
         aplicativo autenticador configurado ou um dos códigos de recuperação.
-        O capítulo <strong>3.2</strong> deste manual apresenta os detalhes sobre a ativação
+        O <strong>capítulo 3.2</strong> deste manual apresenta os detalhes sobre a ativação
         e o funcionamento dessa funcionalidade.
     </p>
     <div class="mb-10 bg-amber-50 dark:bg-stone-800/80 border border-amber-700 dark:border-amber-400/60 rounded-lg p-4 text-amber-800 dark:text-amber-300">
@@ -97,15 +96,17 @@
         </p>
         <p class="text-sm leading-relaxed text-gray-800 dark:text-gray-300">
             Nunca compartilhe sua senha com outras pessoas, pois isso compromete a segurança da sua conta.
-            Para aumentar o nível de segurança da conta, recomenda-se a ativação da autenticação de dois fatores,
-            citada em detalhes no capítulo <strong>3.2</strong> deste manual. Caso esqueça sua senha, siga os procedimentos
-            descritos no capítulo <strong>3.1</strong> deste manual para recuperá-la. Persistindo o problema,
+            Para aumentar o nível de segurança da conta, recomenda-se a ativação da autenticação de dois fatores.
+            Caso esqueça sua senha, siga os procedimentos
+            descritos no <strong> capítulo 3.1</strong> deste manual para recuperá-la. Persistindo o problema,
             entre em contato com o administrador do sistema.
         </p>
     </div>
 
     {{-- Capítulo 2.4 --}}
-    <h2 id="cap-2.4" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">2.4 Primeiro Acesso</h2>
+    <h2 id="cap-2.4" class="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">2.4 Primeiro Acesso</h2>
+
+    <h3 id="cap-2.4-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Autenticação de e-mail</h3>
     <p class="mb-2">
         No primeiro acesso ao SIRUS, será necessário validar seu e-mail. Siga os passos:
     </p>
@@ -114,20 +115,40 @@
         <li>Fazer login usando a senha temporária</li>
         <li>Solicitar o envio do <strong>e-mail de validação</strong></li>
         <li>Acessar o link enviado para confirmar seu endereço de e-mail</li>
-        <li>Aceitar os <strong>Termos de Uso</strong> e <strong>Políticas de Privacidade</strong></li>
-        <li>Acessar o SIRUS com acesso completo</li>
     </ol>
-    <p class="mb-10">
-        O link de validação possui validade de <strong>24 horas</strong>. Após esse período, será necessário
-        solicitar um novo link ao realizar o login novamente.
+
+    <h3 id="cap-2.4-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Aceite dos Temos de Uso e Política de Privacidade</h3>
+    <p class="mb-2">
+        Além de validar o e-mail, para ter acesso completo ao SIRUS é necessário aceitar os
+        <strong>Termos de Uso</strong> e a <strong>Política de Privacidade</strong> do sistema.
+        Essa etapa tem o objetivo de deixar claro as condições de uso do sistema
+        e como os seus dados serão tratados.
     </p>
+    <p class="mb-2">
+        Antes de aceitar, é possível clicar nos termos destacados em azul e sublinhados —
+        <strong>Termos de Uso</strong> e <strong>Política de Privacidade</strong> — e ter acesso
+        a esses documentos.
+    </p>
+    <p class="mb-4">
+        Caso concorde com a política e os termos, marque a opção <strong>"Eu concordo com os Termos de uso e com a Política
+        de Privacidade"</strong> e, em seguida, clique em <strong>"Aceitar e continuar"</strong>.
+    </p>
+    <div class="mb-10 bg-blue-50/60 dark:bg-blue-900/10 border border-blue-400/60 dark:border-blue-500/50 rounded-lg p-4 text-blue-800 dark:text-blue-300">
+        <p class="font-semibold">
+            Lembre-se
+        </p>
+        <p class="text-sm text-gray-800 dark:text-gray-300">
+            O link de validação possui validade de <strong>24 horas</strong>. Após esse período, será necessário
+            solicitar um novo link ao realizar o login novamente.
+        </p>
+    </div>
 
     {{-- Capítulo 2.5 --}}
     <h2 id="cap-2.5" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">
         2.5 Interface e Navegação
     </h2>
     <p class="mb-4">
-        Após a autenticação, o usuário é direcionado à interface principal do SIRUS.
+        Após a autenticação, você será é direcionado à interface principal do SIRUS.
         Essa interface é composta por um <strong>menu superior fixo</strong>, presente em todas
         as páginas internas do sistema, responsável por centralizar a navegação entre
         as funcionalidades disponíveis.
@@ -140,7 +161,7 @@
     </p>
     <p class="mb-2">
         Seguindo da esquerda para a direita, o menu disponibiliza acesso às áreas do sistema,
-        conforme o perfil do usuário
+        conforme o perfil do usuário:
     </p>
     <ul class="list-disc pl-6 space-y-1 mb-4">
         <li><strong>Agenda</strong></li>
@@ -169,7 +190,7 @@
         Abaixo do menu superior, o sistema apresenta um <strong>cabeçalho da página</strong>,
         responsável por identificar de forma sucinta o conteúdo exibido, por meio de títulos
         como <em>"Bancas agendadas"</em> ou <em>"Alunos cadastrados"</em>. Nessa cabeçalho se encontra um
-        botão identificado por um ícone de sol/lua, clicando nele é possível alterar o tema do sistema
+        botão identificado por um ícone de sol ou lua. Clicando nele é possível alterar o tema do sistema
         (<strong>claro</strong> ou <strong>escuro</strong>).
     </p>
 
@@ -224,6 +245,12 @@
         <a href="#cap-2.4" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
             <span class="font-semibold">2.4</span>
             <span>Primeiro Acesso</span>
+        </a>
+        <a href="#cap-2.4-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
+            <span>Autenticação de e-mail</span>
+        </a>
+        <a href="#cap-2.4-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
+            <span>Aceite dos Temos de Uso e Política de Privacidade</span>
         </a>
 
         <a href="#cap-2.5" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">

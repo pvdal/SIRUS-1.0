@@ -37,30 +37,43 @@ class GroupController extends Controller
     public function index(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         TokenGenerator::initializeTab();// Inicializa o DynamicToken
+        $groupsData = null;
+        $groups = null;
+        $courses = null;
+        if(auth()->user()->isAdmin()) {
+            $groups = Group::with([ // Faz uma query no banco trazendo 15 registros paginados
+                'papers',
+                'students.user:id,name,profile_photo_path,state,updated_at,created_at'
+            ])->orderBy('id')->paginate(12);
 
-        $groups = Group::with([ // Faz uma query no banco trazendo 15 registros paginados
-            'papers',
-            'students.user:id,name,state,updated_at,created_at'
-        ])->orderBy('id')->paginate(12);
-
-        $groupsData = $groups->getCollection()->map(function ($group) { // Mapeia os dados manualmente
-            return $this->mapGroup($group);
-        })->values();
-
-        $courses = Course::select(['id', 'name'])
-            ->get()
-            ->map(function ($course) {
-                return [
-                    'id' => $course->id,
-                    'name' => $course->name,
-                ];
+            $groupsData = $groups->getCollection()->map(function ($group) { // Mapeia os dados manualmente
+                return $this->mapGroup($group);
             })->values();
+
+            $courses = Course::select(['id', 'name'])
+                ->get()
+                ->map(function ($course) {
+                    return [
+                        'id' => $course->id,
+                        'name' => $course->name,
+                    ];
+                })->values();
+        } else if(auth()->user()->access_level === 1) {
+            $groupsData = Group::with([ // Faz uma query no banco trazendo 15 registros paginados
+                'papers',
+                'students.user:id,name,profile_photo_path,state,updated_at,created_at'
+            ])->where('id', auth()->user()->student->group_id)
+                ->get()
+                ->map(function ($group) {
+                    return $this->mapGroup($group);
+                })->values();
+        }
 
         return view('management.groups', [
             'groups' => $groupsData,
             'courses' => $courses,
-            'page' => $groups->currentPage(),
-            'totalPages' => $groups->lastPage(),
+            'page' => $groups?->currentPage() ?? 1,
+            'totalPages' => $groups?->lastPage() ?? 1,
         ]);
     }
 
@@ -546,11 +559,12 @@ class GroupController extends Controller
 
     private function mapGroup($group): array
     {
+        $user = auth()->user();
         return [
             'id' => $group->id,
             'theme' => $group->theme,
             'state' => (int) $group->state,
-            'papers' => $group->papers->map(fn($p) => [
+            'papers' => $group->state ? $group->papers->map(fn($p) => [
                 'id' => $p->id,
                 'title' => $p->title ?? 'Sem título',
                 'file_path' => $p->state ? $p->file_path : null,
@@ -560,13 +574,14 @@ class GroupController extends Controller
                 'course' => $p->course_id ?? null,
                 'project' => $p->project ?? null,
                 'state' => (int) $p->state,
-            ]),
+            ]) : null,
             'students' => $group->students->map(fn($s) => [
                 'ra' => $s->ra,
                 'name' => $s->user->name,
+                'profile_photo_url' => $s->user->profile_photo_path,
             ]),
-            'created_at' => $group->created_at,
-            'updated_at' =>  $group->updated_at,
+            'created_at' => $user->access_level === 1 ? $group->created_at->format('d/m/Y') : $group->created_at,
+            'updated_at' => $user->access_level === 1 ? $group->updated_at->format('d/m/y') : $group->updated_at,
         ];
     }
 }

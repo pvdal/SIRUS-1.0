@@ -4,7 +4,13 @@
     </x-slot>
 
     <x-slot name="header">
-        <h2 id="page-title" x-text="window.headerTitle ?? ''" class="font-semibold text-xl leading-tight">Grupos cadastrados</h2>
+        @if(auth()->user()->access_level === 1)
+            <h2 id="page-title" x-text="window.headerTitle ?? ''" class="font-semibold text-xl leading-tight">Meu grupo</h2>
+        @endif
+        @if(auth()->user()->isAdmin())
+            <h2 id="page-title" x-text="window.headerTitle ?? ''" class="font-semibold text-xl leading-tight">Grupos cadastrados</h2>
+        @endif
+
         <div x-data="{ showPaper: false }"
              x-init="document.getElementById('page-title')?.remove()"
              x-on:toggle-paper.window="showPaper = $event.detail"
@@ -13,7 +19,13 @@
             <div x-show="showPaper" x-cloak>
                 <x-button x-on:click="$dispatch('toggle-groups'); $dispatch('toggle-nav-bar', true);">Visualizar Grupos</x-button>
             </div>
-            <h2 x-show="!showPaper" x-cloak class="font-semibold text-xl leading-tight">Grupos cadastrados</h2>
+
+            @if(auth()->user()->access_level === 1)
+                <h2 x-show="!showPaper" x-cloak class="font-semibold text-xl leading-tight">Meu grupo</h2>
+            @endif
+            @if(auth()->user()->isAdmin())
+                <h2 x-show="!showPaper" x-cloak class="font-semibold text-xl leading-tight">Grupos cadastrados</h2>
+            @endif
         </div>
     </x-slot>
 
@@ -32,39 +44,58 @@
         {{-- Grupos cadastrados --}}
         <div x-show="showGroupCards">
             <x-main-content>
-                {{-- Menu utilitário das tabelas --}}
-                <template x-if="groups">
-                    <x-actions-table-bar
-                        :primary-action="['label' => 'Cadastrar grupo', 'method' => 'showCreateModal']"
-                        :clear-action="['label' => 'Limpar filtros', 'method' => 'clearFields()']"
-                        :search-model="'searchTerm'"
-                        :search-placeholder="'Buscar grupos...'"
-                        :status-filter="'statusFilter'"
-                        :register-period="'registerPeriod'"
-                        :load-function="'loadGroups()'"
-                        :class="'md:justify-start'"
-                    />
-                </template>
-                {{-- Componente com o conteúdo --}}
-                <template x-if="groups">
-                    <x-management.groups-content
-                        :courses="$courses"
-                    />
-                </template>
-                {{-- Div exibida enquanto os dados não chegam no front --}}
-                <x-feedback.loading/>
-                {{-- Div exibida caso não haja registros no banco --}}
-                <template x-if="isEmpty && !loading">
-                    <x-feedback.empty-state/>
-                </template>
-                {{-- Paginação --}}
-                <template x-if="page && !loading">
-                    <x-feedback.pagination
-                        :page-var="'page'"
-                        :total-pages="'totalPages'"
-                        :load-function="'loadGroups'"
-                    />
-                </template>
+                @if(auth()->user()->isAdmin())
+                    {{-- Menu utilitário das tabelas --}}
+                    <template x-if="groups">
+                        <x-actions-table-bar
+                            :primary-action="['label' => 'Cadastrar grupo', 'method' => 'showCreateModal']"
+                            :clear-action="['label' => 'Limpar filtros', 'method' => 'clearFields()']"
+                            :search-model="'searchTerm'"
+                            :search-placeholder="'Buscar grupos...'"
+                            :status-filter="'statusFilter'"
+                            :register-period="'registerPeriod'"
+                            :load-function="'loadGroups()'"
+                            :class="'md:justify-start'"
+                        />
+                    </template>
+                    {{-- Componente com o conteúdo --}}
+                    <template x-if="groups">
+                        <x-management.groups-content
+                            :courses="$courses"
+                        />
+                    </template>
+                @endif
+                @if(auth()->user()->access_level === 1)
+                    <template x-if="groups">
+                        <x-management.studentView-group-content
+                            :courses="$courses"
+                        />
+                    </template>
+
+                    {{-- Div exibida caso não haja registros no banco --}}
+                    <template x-if="isEmpty && !loading">
+                        <x-feedback.no-group/>
+                    </template>
+                @endif
+
+                    {{-- Div exibida enquanto os dados não chegam no front --}}
+                    <x-feedback.loading/>
+
+                @if(auth()->user()->isAdmin())
+                    {{-- Paginação --}}
+                    <template x-if="page && !loading">
+                        <x-feedback.pagination
+                            :page-var="'page'"
+                            :total-pages="'totalPages'"
+                            :load-function="'loadGroups'"
+                        />
+                    </template>
+
+                    {{-- Div exibida caso não haja registros no banco --}}
+                    <template x-if="isEmpty && !loading">
+                        <x-feedback.empty-state/>
+                    </template>
+                @endif
             </x-main-content>
         </div>
         {{-- Trabalhos cadastrados --}}

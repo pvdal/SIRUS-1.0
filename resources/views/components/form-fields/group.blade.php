@@ -137,7 +137,11 @@
             {{-- Mostra os trabalhos que o grupo já tem --}}
             <template x-if="papers.length > 0">
                 <div class="flex flex-col justify-center space-y-1">
-                    <h4 class="font-semibold mt-2">Trabalhos do grupo:</h4>
+                    <div class="w-full flex flex-wrap items-center justify-between mt-2">
+                        <h4 class="font-semibold">Trabalhos do grupo:</h4>
+                        <span x-text="papers.length + ' arquivos'"></span>
+                    </div>
+
                     <button
                         type="button"
                         class="max-w-[140px] cursor-pointer inline-flex items-center px-4 py-2 bg-primary-orange hover:opacity-90

@@ -2,22 +2,23 @@
     {{-- Capítulo 6 --}}
     <h1 class="text-3xl font-bold mb-14 text-gray-900 dark:text-gray-100">6. Configurações Institucionais</h1>
 
+@can('is-admin')
     {{-- Capítulo 6.1 --}}
     <h2 id="cap-6.1" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">6.1 Gerenciamento de Cursos</h2>
     <p class="mb-4">
-        A página de <strong>Gerenciamento de Cursos</strong> é acessada pelo menu superior do sistema,
-        por meio da opção <strong>Cursos</strong>. A visualização é apresentada em formato de tabela,
+        A página de <strong>gerenciamento de cursos</strong> é acessada pelo menu superior do sistema,
+        por meio da opção <strong>"Cursos"</strong>. A visualização é apresentada em formato de tabela,
         seguindo o mesmo padrão das demais telas administrativas.
     </p>
 
     <h3 id="cap-6.1-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Estrutura da tabela</h3>
     <ul class="list-disc pl-6 space-y-1 mb-4">
-        <li><strong>ID:</strong> Identificador do curso</li>
-        <li><strong>Nome:</strong> Nome do curso</li>
-        <li><strong>Turno:</strong> Manhã, Tarde ou Noite</li>
-        <li><strong>Coordenador:</strong> Responsável pelo curso</li>
-        <li><strong>Estado:</strong> Ativo ou Inativo</li>
-        <li><strong>Ações:</strong> Alterar, Inativar ou Ativar</li>
+        <li><strong>ID:</strong> identificador do curso</li>
+        <li><strong>Nome:</strong> nome do curso</li>
+        <li><strong>Turno:</strong> manhã, Tarde ou Noite</li>
+        <li><strong>Coordenador:</strong> responsável pelo curso</li>
+        <li><strong>Estado:</strong> ativo ou Inativo</li>
+        <li><strong>Ações:</strong> alterar, Inativar ou Ativar</li>
     </ul>
 
     <h3 id="cap-6.1-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Barra de ações e filtros</h3>
@@ -25,7 +26,7 @@
         Acima da tabela, encontra-se uma barra de ações e filtros contendo
     </p>
     <ul class="list-disc pl-6 space-y-1 mb-4">
-        <li>Botão <strong>Cadastrar curso</strong>, que abre o modal de criação de curso</li>
+        <li>Botão <strong>"Cadastrar curso"</strong>, que abre o modal de criação de curso</li>
         <li>Campo de busca textual</li>
         <li>Filtros disponíveis (<strong>Estado</strong> e <strong>Período</strong>)</li>
         <li>Opção <strong>Limpar filtros</strong></li>
@@ -87,21 +88,21 @@
     <p class="mb-2">
         Na parte inferior do cartão, é exibida uma etiqueta de estado indicando se o grupo está
         <strong>Ativo</strong> (em azul) ou <strong>Inativo</strong> (em cinza), seguida pelos botões
-        de ação disponíveis.
+        de ação disponíveis:
     </p>
     <ul class="list-disc pl-6 space-y-1 mb-4">
         <li><strong>Alterar:</strong> abre o modal de edição do grupo</li>
         <li><strong>Inativar:</strong> altera o estado do grupo para inativo</li>
     </ul>
     <p class="mb-4">
-        Quando o grupo se encontra no estado <strong>Inativo</strong>, o botão <em>Alterar</em>
-        deixa de ser exibido, permanecendo apenas a opção de <strong>Ativar</strong>. Esse
+        Quando o grupo se encontra no estado <strong>Inativo</strong>, o botão <strong>"Alterar"</strong>
+        deixa de ser exibido, permanecendo apenas a opção de <strong>"Ativar"</strong>. Esse
         comportamento é padronizado em todas as tabelas e cartões do sistema.
     </p>
 
     <h2 id="cap-6.2.2" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">6.2.2 Cadastro e edição de grupos</h2>
     <p class="mb-2">
-        Ao clicar em <strong>Cadastrar grupo</strong>, é aberto um modal para criação ou edição do grupo,
+        Ao clicar em <strong>"Cadastrar grupo"</strong>, é aberto um modal para criação ou edição do grupo,
         contendo os seguintes campos
     </p>
     <ul class="list-disc pl-6 space-y-2 mb-4">
@@ -128,14 +129,14 @@
         Alguns campos são preenchidos automaticamente, considerando o ano e semestre atuais.
     </p>
     <p class="mb-4">
-        O trabalho somente passa a integrar o formulário após o clique no botão <strong>+</strong>.
+        O trabalho somente passa a integrar o formulário após o clique no botão <strong>"+"</strong>.
         Caso contrário, o arquivo selecionado é desconsiderado.
     </p>
 
     <h3 id="cap-6.2.2-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Lista de trabalhos do grupo</h3>
     <p class="mb-2">
-        Os trabalhos adicionados são exibidos em uma lista de menus expansíveis (accordion).
-        Trabalhos recém-adicionados são identificados com a etiqueta <strong>Pendente</strong>,
+        Os trabalhos adicionados são exibidos em uma lista de menus expansíveis.
+        Trabalhos recém-adicionados são identificados com a etiqueta <strong>"Pendente"</strong>,
         removida após o salvamento do grupo. Além dos campos já citados, para os trabalhos adicionados
         também é possível
     </p>
@@ -143,10 +144,10 @@
         <li>Editar o título do trabalho</li>
         <li>Visualizar o arquivo dentro do sistema ou abrir em nova aba</li>
         <li>Realizar download do arquivo</li>
-        <li>Inativar o trabalho clicando no botão de exclusão "X"</li>
+        <li>Inativar o trabalho clicando no botão de exclusão <strong>"X"</strong></li>
     </ul>
     <p class="mb-4">
-        O botão <strong>Fechar todos</strong> permite colapsar todos os itens da lista simultaneamente.
+        O botão <strong>"Fechar todos"</strong> permite colapsar todos os itens da lista simultaneamente.
     </p>
 
     <h3 id="cap-6.2.2-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Seleção de membros do grupo</h3>
@@ -155,7 +156,7 @@
         pelo nome ou RA. Os resultados são exibidos dinamicamente, com limite de até 20 registros.
     </p>
     <p class="mb-10">
-        Ao selecionar um aluno, ele é adicionado à lista de <strong>Alunos selecionados</strong>,
+        Ao selecionar um aluno, ele é adicionado à lista de <strong>alunos selecionados</strong>,
         podendo ser removido a qualquer momento pelo botão de exclusão.
     </p>
 
@@ -164,7 +165,7 @@
     <p class="mb-4">
         A aba <strong>"Bancas"</strong> apresenta as bancas de avaliação em formato de
         <strong>cartões responsivos</strong>, seguindo o mesmo padrão visual e funcional da
-        aba de <strong>Grupos</strong>. A tela conta com botão de cadastro, campo de busca, filtros e opção
+        aba de <strong>grupos</strong>. A tela conta com botão de cadastro, campo de busca, filtros e opção
         para limpar filtros.
     </p>
 
@@ -199,7 +200,7 @@
     </p>
     <ul class="list-disc pl-6 space-y-1 mb-4">
         <li><strong>Alterar:</strong> edição das informações da banca</li>
-        <li><strong>Inativar / Ativar:</strong> alteração do estado da banca</li>
+        <li><strong>Inativar ou Ativar:</strong> alteração do estado da banca</li>
     </ul>
 
     <h3 id="cap-6.3.1-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Visualização do grupo associado à banca</h3>
@@ -291,14 +292,15 @@
 
     <h3 id="cap-6.3.2-e" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Botão Avaliar / Avaliação</h3>
     <p class="mb-2">
-        No topo do modal existe um botão contextual, que pode assumir os rótulos <strong>"Avaliar"</strong> ou <strong>"Avaliação"</strong>, dependendo do perfil do usuário e do estado da banca.
+        No topo do modal existe um botão contextual, que pode assumir os rótulos <strong>"Avaliar"</strong> ou
+        <strong>"Avaliação"</strong>, dependendo do estado da banca.
     </p>
     <ul class="list-disc pl-6 space-y-2 mb-4">
-        <li><strong>Avaliar:</strong> exibido para professores ou coordenadores que ainda não realizaram a avaliação e enquanto a banca estiver dentro do período válido</li>
-        <li><strong>Avaliação:</strong> exibido quando a avaliação já foi realizada ou quando o usuário é um membro do grupo avaliado</li>
+        <li><strong>Avaliar:</strong> exibido para coordenadores que ainda não realizaram a avaliação</li>
+        <li><strong>Avaliação:</strong> exibido quando a avaliação já foi realizada</li>
     </ul>
     <p class="mb-2">
-        Ao clicar em <strong>"Avaliar"</strong>, o professor ou coordenador é redirecionado para a tela de avaliação da banca, desde que o prazo ainda esteja ativo.
+        Ao clicar em <strong>"Avaliar"</strong>, o professor ou coordenador é redirecionado para a tela de avaliação da banca, desde que dentro do prazo.
     </p>
     <p class="mb-4">
         Caso o período de avaliação já tenha sido encerrado e o membro não tenha avaliado, o sistema exibe um aviso no topo da tela informando: <strong>"Banca finalizada!"</strong>.
@@ -330,9 +332,88 @@
         <li>Na criação da banca, todos os membros selecionados recebem a notificação</li>
         <li>Na edição da banca, apenas os membros adicionados após a criação recebem o convite</li>
     </ul>
-    <p>
+    <p class="mb-10">
         Caso a opção não seja marcada, nenhuma notificação por e-mail é enviada, e a banca é
         criada ou atualizada normalmente.
+    </p>
+@endcan
+    <h2 id="cap-6.4" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">
+        6.4 Visualização do Grupo pelo Aluno
+    </h2>
+    <p class="mb-4">
+        @can('is-admin')
+            Diferentemente do coordenador, que visualiza os grupos em formato de <strong>cartões</strong>,
+            o aluno possui acesso à aba <strong>"Grupo"</strong>, no singular, disponível no menu superior
+            do sistema.
+        @endcan
+        Essa página apresenta exclusivamente as informações referentes ao grupo ao qual
+        o aluno está vinculado.
+    </p>
+
+    <h2 id="cap-6.4.1" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">
+        6.4.1 Estrutura da página
+    </h2>
+    <p class="mb-4">
+        A interface é organizada em blocos informativos e listagem de trabalhos, mantendo o padrão
+        visual do sistema.
+    </p>
+
+    <h3 id="cap-6.4.1-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">
+        Informações do grupo
+    </h3>
+    <ul class="list-disc pl-6 space-y-1 mb-4">
+        <li><strong>ID do grupo:</strong> identificador exibido no topo da página</li>
+        <li><strong>Tema do grupo:</strong> título principal do grupo</li>
+        <li><strong>Quantidade de membros:</strong> total de integrantes vinculados</li>
+        <li><strong>Quantidade de trabalhos:</strong> total de arquivos cadastrados</li>
+        <li><strong>Status:</strong> indicação se o grupo está Ativo ou Inativo</li>
+        <li><strong>Data de criação:</strong> registro da criação do grupo</li>
+        <li><strong>Última atualização:</strong> data da modificação mais recente</li>
+    </ul>
+
+    <h3 id="cap-6.4.1-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">
+        Membros do grupo
+    </h3>
+    <p class="mb-2">
+        A seção de membros do grupo apresenta a listagem nominal dos integrantes do grupo.
+    </p>
+    <ul class="list-disc pl-6 space-y-1 mb-4">
+        <li><strong>Nome completo</strong> de cada integrante</li>
+        <li><strong>Identificação visual</strong> (avatar ou iniciais)</li>
+    </ul>
+    <p class="mb-4">
+        O aluno possui permissão exclusivamente de <strong>visualização</strong>, não sendo possível
+        alterar a composição do grupo.
+    </p>
+
+    <h3 id="cap-6.4.1-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">
+        Trabalhos do grupo
+    </h3>
+    <p class="mb-2">
+        A página exibe a listagem de trabalhos vinculados ao grupo.
+        Cada trabalho é apresentado como um <strong>item expansível</strong>.
+    </p>
+    <ul class="list-disc pl-6 space-y-1 mb-4">
+        <li><strong>Nome do arquivo</strong></li>
+        <li><strong>Ano</strong></li>
+        <li><strong>Semestre</strong></li>
+        <li><strong>Projeto</strong></li>
+        <li><strong>Versão</strong></li>
+    </ul>
+    <p class="mb-2">
+        Os itens da lista são clicáveis. Ao clicar sobre o nome do trabalho,
+        é exibido um painel expandido logo abaixo do próprio item,
+        contendo informações adicionais e ações disponíveis.
+    </p>
+    <ul class="list-disc pl-6 space-y-1 mb-4">
+        <li><strong>Visualizar:</strong> abre o arquivo dentro do sistema</li>
+        <li><strong>Nova aba:</strong> abre o arquivo em uma nova aba do navegador</li>
+        <li><strong>Baixar:</strong> realiza o download do arquivo</li>
+    </ul>
+    <p>
+        Trabalhos marcados como <strong>Inativo</strong> permanecem visíveis na listagem,
+        identificados por etiqueta específica, porém sem alteração estrutural
+        na organização da página.
     </p>
 </div>
 <aside class="chapter-aside hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
@@ -340,6 +421,7 @@
         Neste capítulo
     </h2>
     <nav class="leading-relaxed text-gray-800 dark:text-gray-300 overflow-y-auto max-h-[calc(100vh-86px-2.5rem)] scrollbar-custom">
+    @can('is-admin')
         <a href="#cap-6.1" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
             <span class="font-medium">6.1</span>
             <span>Gerenciamento de Cursos</span>
@@ -429,6 +511,25 @@
         </a>
         <a href="#cap-6.3.2-f" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-600 dark:text-gray-400">
             <span>Notificação por e-mail</span>
+        </a>
+    @endcan
+        <a href="#cap-6.4" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
+            <span class="font-medium">6.4</span>
+            <span>Visualização do Grupo pelo Aluno</span>
+        </a>
+
+        <a href="#cap-6.4.1" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 !pl-7 font-medium">
+            <span class="font-medium">6.4.1</span>
+            <span>Estrutura da página</span>
+        </a>
+        <a href="#cap-6.4.1-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
+            <span>Informações do grupo</span>
+        </a>
+        <a href="#cap-6.4.1-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
+            <span>Membros do grupo</span>
+        </a>
+        <a href="#cap-6.4.1-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-600 dark:text-gray-400">
+            <span>Trabalhos do grupo</span>
         </a>
     </nav>
 </aside>

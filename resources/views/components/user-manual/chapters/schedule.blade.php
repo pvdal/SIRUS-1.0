@@ -6,15 +6,15 @@
     <h2 id="cap-4.1" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.1 Visão Geral da Agenda</h2>
     <p class="mb-4">
         A <strong>Agenda de Avaliações</strong> é a primeira tela exibida ao usuário após o login no sistema.
-        Ela centraliza o agendamento e a visualização das bancas avaliativas do evento SIMABJU.
+        Ela centraliza o agendamento e a visualização das bancas avaliadoras do evento SIMABJU.
     </p>
 
     <h3 id="cap-4.1-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Exibição</h3>
     <p class="mb-2">
-        A agenda é apresentada na forma de um calendário interativo, baseado em visualização temporal,
+        A agenda é apresentada na forma de um calendário interativo,
         permitindo ao usuário acompanhar facilmente as bancas programadas durante o evento.
         Por padrão, a agenda é exibida na visualização mensal, mas o usuário pode alternar entre
-        diferentes modos de exibição.
+        diferentes modos de exibição:
     </p>
     <ul class="list-disc pl-6 space-y-1 mb-4">
         <li><strong>Mensal:</strong> visão geral das bancas distribuídas ao longo do mês</li>
@@ -41,7 +41,7 @@
     <h3 id="cap-4.2-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Navegação por datas</h3>
     <p class="mb-2">
         No canto superior direito do calendário, estão disponíveis controles de navegação
-        que auxiliam na localização das datas desejadas.
+        que auxiliam na localização das datas desejadas:
     </p>
     <ul class="list-disc pl-6 space-y-1 mb-4">
         <li>
@@ -56,7 +56,7 @@
     <h3 id="cap-4.2-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Seleção de datas e horários</h3>
     <p class="mb-2">
         Ao clicar em uma <strong>célula do calendário</strong> (dia ou horário), o sistema
-        responde de acordo com o contexto.
+        responde de acordo com o contexto:
     </p>
     <ul class="list-disc pl-6 space-y-1 mb-10">
         <li>
@@ -67,36 +67,37 @@
         </li>
     </ul>
 
-    {{-- Capítulo 4.3 --}}
-    <h2 id="cap-4.3" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.3 Agendamento de Nova Banca</h2>
-    <p class="mb-2">
-        A criação de novos agendamentos é uma funcionalidade <strong>exclusiva do coordenador</strong>.
-        Ao clicar em um horário disponível no calendário, é aberto um <strong>modal de agendamento</strong>, onde o coordenador deve
-    </p>
-    <ol class="list-decimal pl-6 space-y-1 mb-4">
-        <li>Selecionar a banca avaliativa (por meio de um seletor ou informando seu identificador)</li>
-        <li>Após a seleção, o sistema preenche automaticamente as seguintes informações
-            <ul class="list-disc pl-4 space-y-1">
-                <li>Identificador da banca</li>
-                <li>Nome da banca</li>
-                <li>Nome do grupo</li>
-                <li>Membros do grupo</li>
-                <li>Título do trabalho</li>
-                <li>Membros da banca avaliadora</li>
-            </ul>
-        </li>
-        <li>Informar
-            <ul class="list-disc pl-4 space-y-1">
-                <li>Data e horário de início da avaliação</li>
-                <li>Data e horário de término da avaliação</li>
-            </ul>
-        </li>
-        <li>Confirmar o agendamento clicando em <strong>Salvar</strong>, localizado no canto inferior direito do modal</li>
-    </ol>
-    <p class="mb-10">
-        Após a confirmação, o evento passa a ser exibido no calendário.
-    </p>
-
+    @if(auth()->user()->isAdmin())
+        {{-- Capítulo 4.3 --}}
+        <h2 id="cap-4.3" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.3 Agendamento de Nova Banca</h2>
+        <p class="mb-2">
+            A criação de novos agendamentos é uma funcionalidade <strong>exclusiva do coordenador acadêmico</strong>.
+            Ao clicar em um horário disponível no calendário, é aberto um <strong>modal de agendamento</strong>, onde o coordenador deve:
+        </p>
+        <ol class="list-decimal pl-6 space-y-1 mb-4">
+            <li>Selecionar a banca avaliadora (por meio de um seletor ou informando seu identificador)</li>
+            <li>Após a seleção, o sistema preenche automaticamente as seguintes informações
+                <ul class="list-disc pl-4 space-y-1">
+                    <li>Identificador da banca</li>
+                    <li>Nome da banca</li>
+                    <li>Tema do grupo</li>
+                    <li>Membros do grupo</li>
+                    <li>Título do trabalho</li>
+                    <li>Membros da banca avaliadora</li>
+                </ul>
+            </li>
+            <li>Informar
+                <ul class="list-disc pl-4 space-y-1">
+                    <li>Data e horário de início da avaliação</li>
+                    <li>Data e horário de término da avaliação</li>
+                </ul>
+            </li>
+            <li>Confirmar o agendamento clicando em <strong>Salvar</strong>, localizado no canto inferior direito do modal</li>
+        </ol>
+        <p class="mb-10">
+            Após a confirmação, o evento passa a ser exibido no calendário.
+        </p>
+    @endif
     {{-- Capítulo 4.4 --}}
     <h2 id="cap-4.4" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.4 Visualização de Bancas Agendadas</h2>
     <p class="mb-4">
@@ -113,46 +114,53 @@
         Usuários com perfil de aluno e professor possuem acesso apenas à visualização das informações da banca.
     </p>
 
-    {{-- Capítulo 4.5 --}}
-    <h2 id="cap-4.5" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.5 Edição e Cancelamento de Agendamentos</h2>
-    <p class="mb-2">
-        O coordenador pode <strong>editar</strong> ou <strong>cancelar</strong> um agendamento existente,
-        desde que <strong>nenhuma avaliação tenha sido submetida</strong> para aquela banca. No modal de
-        visualização, o coordenador pode clicar em Editar, localizado no canto superior direito. Ao entrar
-        no modo de edição, é possível
-    </p>
-    <ul class="list-disc pl-6 space-y-1 mb-4">
-        <li>Alterar a data e o horário da banca</li>
-        <li>Salvar as alterações</li>
-        <li>Cancelar o agendamento</li>
-    </ul>
-    <p class="mb-10">
-        Ao cancelar uma banca, o evento é removido do calendário e o sistema exibe um aviso no topo da página
-        confirmando a operação. Após a submissão de pelo menos uma avaliação por um membro da banca, o
-        agendamento passa a ser <strong>bloqueado para edição</strong>, garantindo a integridade do processo
-        avaliativo.
-    </p>
+    @if(auth()->user()->isAdmin())
+        {{-- Capítulo 4.5 --}}
+        <h2 id="cap-4.5" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.5 Edição e Cancelamento de Agendamentos</h2>
+        <p class="mb-2">
+            O coordenador pode <strong>editar</strong> ou <strong>cancelar</strong> um agendamento existente,
+            desde que <strong>nenhuma avaliação tenha sido submetida</strong> para aquela banca. No modal de
+            visualização, o coordenador pode clicar em <strong>"Editar"</strong>, localizado no canto superior direito. Ao entrar
+            no modo de edição, é possível:
+        </p>
+        <ul class="list-disc pl-6 space-y-1 mb-4">
+            <li>Alterar a data e o horário da banca</li>
+            <li>Salvar as alterações</li>
+            <li>Cancelar o agendamento</li>
+        </ul>
+        <p class="mb-10">
+            Ao cancelar uma banca, o evento é removido do calendário e o sistema exibe um aviso no topo da página
+            confirmando a operação. Após a submissão de pelo menos uma avaliação por um membro da banca, o
+            agendamento passa a ser <strong>bloqueado para edição</strong>, garantindo a integridade do processo
+            avaliativo.
+        </p>
+    @endif
 
     {{-- Capítulo 4.6 --}}
     <h2 id="cap-4.6" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.6 Controle de Acesso e Permissões</h2>
     <p class="mb-2">
-        O comportamento da agenda varia conforme o perfil do usuário
+        O comportamento da agenda varia conforme o perfil do usuário:
     </p>
     <ul class="list-disc pl-6 space-y-1 mb-4">
-        <li><strong>Coordenador</strong>
-            <ul class="list-disc pl-4 space-y-1">
-                <li>Criar, editar e cancelar agendamentos</li>
-                <li>Visualizar todas as bancas</li>
-            </ul>
-        </li>
-        <li><strong>Professor</strong>
-            <ul class="list-disc pl-4 space-y-1">
-                <li>Visualizar apenas bancas das quais participa</li>
-            </ul>
-        </li>
+        @if(auth()->user()->isAdmin())
+            <li><strong>Coordenador</strong>
+                <ul class="list-disc pl-4 space-y-1">
+                    <li>Criar, editar e cancelar agendamentos, além de conseguir participar de bancas como avaliador</li>
+                    <li>Visualizar todas as avaliações das bancas</li>
+                </ul>
+            </li>
+        @endif
+
+        @if(auth()->user()->isAdmin() || auth()->user()->access_level === 2)
+            <li><strong>Professor</strong>
+                <ul class="list-disc pl-4 space-y-1">
+                    <li>Visualizar apenas as próprias avaliações</li>
+                </ul>
+            </li>
+        @endif
         <li><strong>Aluno</strong>
             <ul class="list-disc pl-4 space-y-1">
-                <li>Visualizar apenas bancas relacionadas ao seu trabalho</li>
+                <li>Visualizar as avaliações apenas das bancas relacionadas aos trabalhos dos quais já participou enquanto membro do grupo que os detém</li>
             </ul>
         </li>
     </ul>
@@ -161,7 +169,7 @@
             Importante
         </p>
         <p class="text-sm text-gray-800 dark:text-gray-300">
-            Tentativas de acesso a bancas não autorizadas são automaticamente bloqueadas pelo sistema.
+            Tentativas de acesso as avaliações de bancas não autorizadas são automaticamente bloqueadas pelo sistema.
         </p>
     </div>
 
@@ -172,10 +180,12 @@
         <li>Todas as ações são registradas e controladas conforme permissões</li>
         <li>A edição de horários é restrita para evitar inconsistências após o início das avaliações</li>
     </ul>
-    <p>
-        Os detalhes sobre o <strong>processo de avaliação</strong>, preenchimento de fichas e visualização
-        de notas são abordados em um capítulo específico deste manual.
-    </p>
+    @if(auth()->user()->isAdmin() || auth()->user()->access_level === 2)
+        <p>
+            Os detalhes sobre o <strong>processo de avaliação</strong>, preenchimento de fichas e visualização
+            de notas são abordados no <strong>capítulo 7</strong> deste manual.
+        </p>
+    @endif
 </div>
 <aside class="chapter-aside hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
     <h2 class="font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-4">
@@ -204,10 +214,12 @@
             <span>Seleção de datas e horários</span>
         </a>
 
-        <a href="#cap-4.3" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
-            <span class="font-medium">4.3</span>
-            <span>Agendamento de Nova Banca</span>
-        </a>
+        @if(auth()->user()->isAdmin())
+            <a href="#cap-4.3" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
+                <span class="font-medium">4.3</span>
+                <span>Agendamento de Nova Banca</span>
+            </a>
+        @endif
 
         <a href="#cap-4.4" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
             <span class="font-medium">4.4</span>
@@ -217,10 +229,12 @@
             <span>Modo visualização</span>
         </a>
 
-        <a href="#cap-4.5" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
-            <span class="font-medium">4.5</span>
-            <span>Edição e Cancelamento de Agendamentos</span>
-        </a>
+        @if(auth()->user()->isAdmin())
+            <a href="#cap-4.5" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
+                <span class="font-medium">4.5</span>
+                <span>Edição e Cancelamento de Agendamentos</span>
+            </a>
+        @endif
 
         <a href="#cap-4.6" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
             <span class="font-medium">4.6</span>

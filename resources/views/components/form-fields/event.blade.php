@@ -105,26 +105,23 @@
 
 
     {{-- Definição de data --}}
-    <div class="flex flex-wrap sm:flex-nowrap gap-4 justify-center xs:justify-between mt-4">
-        <fieldset class="flex flex-col justify-center items-center w-1/2">
-            <div>
-                <legend class="text-sm font-medium w-full text-center xs:text-start">Data/hora de início</legend>
+    <div class="flex flex-wrap sm:flex-nowrap gap-4 justify-center sm:justify-between mt-4">
+        <fieldset class="w-full sm:w-1/2">
+            <div class="flex flex-col">
+                <legend class="text-sm font-medium w-full text-center">Data/hora de início</legend>
                 <div class="flex flex-col xs:flex-row items-center gap-2 mt-1">
-                    <div>
-                        <x-input
-                            type="date"
-                            class="w-full text-center"
-                            x-model="dateStart"
-                            x-bind:disabled="(showEvaluationModal && !edit) || (showCreateModal && events.length < 1)"/>
-                    </div>
-                    <div>
-                        <x-input
-                            type="time"
-                            step="1"
-                            class="w-full text-center"
-                            x-model="timeStart"
-                            x-bind:disabled="(showEvaluationModal && !edit) || (showCreateModal && events.length < 1)"/>
-                    </div>
+                    <x-input
+                        type="date"
+                        class="w-full text-start"
+                        x-model="dateStart"
+                        x-bind:disabled="(showEvaluationModal && !edit) || (showCreateModal && events.length < 1)"/>
+
+                    <x-input
+                        type="time"
+                        step="1"
+                        class="w-full text-start"
+                        x-model="timeStart"
+                        x-bind:disabled="(showEvaluationModal && !edit) || (showCreateModal && events.length < 1)"/>
                 </div>
                 <template x-if="errors?.date_start || errors?.time_start">
                     <div class="flex flex-wrap">
@@ -135,25 +132,22 @@
             </div>
         </fieldset>
 
-        <fieldset class="flex justify-center w-1/2">
-            <div>
-                <legend class="text-sm font-medium w-full text-center xs:text-start">Data/hora de fim</legend>
+        <fieldset class="w-full sm:w-1/2">
+            <div class="flex flex-col">
+                <legend class="text-sm font-medium text-center">Data/hora de fim</legend>
                 <div class="flex flex-col xs:flex-row items-center gap-2 mt-1">
-                    <div>
-                        <x-input
-                            type="date"
-                            class="w-full text-center"
-                            x-model="dateEnd"
-                            x-bind:disabled="(showEvaluationModal && !edit) || (showCreateModal && events.length < 1)"/>
-                    </div>
-                    <div>
-                        <x-input
-                            type="time"
-                            step="1"
-                            class="w-full text-center"
-                            x-model="timeEnd"
-                            x-bind:disabled="(showEvaluationModal && !edit) || (showCreateModal && events.length < 1)"/>
-                    </div>
+                    <x-input
+                        type="date"
+                        class="w-full text-start"
+                        x-model="dateEnd"
+                        x-bind:disabled="(showEvaluationModal && !edit) || (showCreateModal && events.length < 1)"/>
+
+                    <x-input
+                        type="time"
+                        step="1"
+                        class="w-full text-start"
+                        x-model="timeEnd"
+                        x-bind:disabled="(showEvaluationModal && !edit) || (showCreateModal && events.length < 1)"/>
                 </div>
                 <template x-if="errors?.date_end || errors?.time_end">
                     <div class="flex flex-wrap">

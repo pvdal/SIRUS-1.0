@@ -5,29 +5,29 @@
     {{-- Capítulo 3.1 --}}
     <h2 id="cap-3.1" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">3.1 Recuperação de Senha</h2>
     <p class="mb-2">
-        Caso tenha esquecido sua senha, siga o procedimento abaixo para recuperá-la.
+        Caso tenha esquecido sua senha, siga o procedimento abaixo para recuperá-la:
     </p>
     <ol class="list-decimal pl-6 space-y-1 mb-4">
         <li>
-            Acesse a Página de Login e clique em <strong>Esqueceu sua senha?</strong>.
+            Acesse a Página de Login e clique em <strong>"Esqueceu sua senha?"</strong>
         </li>
         <li>
-            Digite o e-mail cadastrado no sistema no local indicado e clique em <strong>Enviar link para redefinir senha por e-mail</strong>.
+            Digite o e-mail cadastrado no sistema no local indicado e clique em <strong>"Enviar link para redefinir senha por e-mail"</strong>
         </li>
         <li>
-            Verifique sua caixa de entrada (e pasta de spam), buscando por o e-mail de recuperação enviado pelo sistema.
+            Verifique sua caixa de entrada (e pasta de spam), buscando por o e-mail de recuperação enviado pelo sistema
         </li>
         <li>
-            Abra o e-mail e clique em <strong>Modificar senha</strong>.
+            Abra o e-mail e clique em <strong>"Modificar senha"</strong>
         </li>
         <li>
-            Você será redirecionado para uma página onde poderá inserir uma nova senha.
+            Você será redirecionado para uma página onde poderá inserir uma nova senha
         </li>
         <li>
-            Repita a senha para confirmar e clique em <strong>Modificar senha</strong>.
+            Repita a senha para confirmar e clique em <strong>"Modificar senha"</strong>
         </li>
         <li>
-            Retorne à página de login e acesse o sistema com sua nova senha.
+            Retorne à página de login e acesse o sistema com sua nova senha
         </li>
     </ol>
     <div class="mb-10 bg-amber-50 dark:bg-stone-800/80 border border-amber-700 dark:border-amber-400/60 rounded-lg p-4 text-amber-800 dark:text-amber-300">
@@ -46,14 +46,7 @@
         A autenticação de dois fatores fornece segurança adicional à sua conta. Ao ativar, você precisará de um código além da sua senha para acessar o sistema.
     </p>
 
-    <h3 id="cap-3.2-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Benefícios</h3>
-    <ul class="list-disc pl-6 space-y-1 mb-4">
-        <li>Proteção contra roubo de senha</li>
-        <li>Acesso seguro mesmo se dados forem vazados</li>
-        <li>Rastreamento de atividades suspeitas</li>
-    </ul>
-
-    <h3 id="cap-3.2-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Como Funciona</h3>
+    <h3 id="cap-3.2-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Como Funciona</h3>
     <ul class="list-disc pl-6 space-y-1 mb-4">
         <li>Código gerado por aplicativo autenticador (ex: Microsoft Authenticator, Google Authenticator)</li>
         <li>Código válido por cerca de 30 segundos, renovando a cada período</li>
@@ -64,13 +57,16 @@
         </li>
     </ul>
 
-    <h3 id="cap-3.2-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Configurando 2FA</h3>
+    <h3 id="cap-3.2-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Configurando 2FA</h3>
     <ol class="list-decimal pl-6 space-y-1 mb-10">
-        <li><strong>Acesse Configurações de Segurança:</strong> Vá para seu Perfil → Autenticação de Dois Fatores</li>
-        <li><strong>Inicie o processo:</strong> Clique em "Habilitar"</li>
-        <li><strong>Confirme Seu Telefone/App:</strong> Insira sua chave de configuração ou escaneie o QR code</li>
-        <li><strong>Insira o Código de Verificação:</strong> Digite o código gerado e clique em "Confirmar"</li>
-        <li><strong>Guarde Códigos de Recuperação:</strong> Salve os códigos em local seguro para caso perca acesso ao seu telefone</li>
+        <li>
+            Na página de perfil — acessível pelo menu superior, conforme exposto no <strong>capítulo 2.5</strong>
+            deste manual —, localize a seção <strong>"Autenticação de dois fatores"</strong>
+        </li>
+        <li>Clique em <strong>"Habilitar"</strong></li>
+        <li>Insira sua chave de configuração ou escaneie o QR code</li>
+        <li>Digite o código gerado e clique em <strong>"Confirmar"</strong></li>
+        <li>Salve os códigos em local seguro para caso perca acesso ao seu telefone</li>
     </ol>
 
     {{-- Capítulo 3.3 --}}
@@ -97,20 +93,24 @@
     </div>
 
     <h3 id="cap-3.3-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Sessão inativa</h3>
+    <p class="mb-2">
+        Por motivos de segurança, sessões inativas são encerradas automaticamente após duas horas. Essa medida reduz
+        o risco de acesso não autorizado, especialmente em dispositivos compartilhados. Recomenda-se revisar periodicamente
+        as sessões ativas e manter apenas dispositivos reconhecidos, contribuindo para a segurança contínua da conta.
+    </p>
     <p class="mb-4">
-        Por motivos de segurança, sessões inativas são encerradas automaticamente após
-        duas horas. Essa medida reduz o risco de acesso não autorizado,
-        especialmente em dispositivos compartilhados.
-        Recomenda-se revisar periodicamente as sessões ativas e manter apenas dispositivos reconhecidos,
-        contribuindo para a segurança contínua da conta.
+        <strong>OBS.:</strong> Ao selecionar a opção <strong>"Manter conectado"</strong>, sua sessão não será submetida
+        a limite de tempo de inatividade, permanecendo ativa no navegador até que você decida encerrá-la, por meio de
+        funcionalidade específica do sistema, conforme disposto no <strong>capítulo 9.1</strong> desde manual.
     </p>
     <div class="mb-10 bg-red-50/60 dark:bg-red-900/10 border border-red-400/60 dark:border-red-500/50 rounded-lg p-4 text-red-800 dark:text-red-300">
         <p class="font-semibold">
             Atividade Suspeita?
         </p>
         <p class="text-sm text-gray-800 dark:text-gray-300">
-            Se vir um dispositivo ou navegador desconhecido, clique em "Sair de outras sessões do navegador" para encerrar outras sessões além da atual imediatamente.
-            Se você acha que sua conta foi comprometida, você também deve atualizar sua senha.
+            Se vir um dispositivo ou navegador desconhecido, clique em <strong>"Sair de outras sessões do navegador"</strong>
+            para encerrar outras sessões além da atual imediatamente. Se você acha que sua conta foi comprometida, você
+            também deve atualizar sua senha.
         </p>
     </div>
 
@@ -150,12 +150,9 @@
             <span>Autenticação de Dois Fatores (2FA)</span>
         </a>
         <a href="#cap-3.2-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Benefícios</span>
-        </a>
-        <a href="#cap-3.2-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
             <span>Como funciona</span>
         </a>
-        <a href="#cap-3.2-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
+        <a href="#cap-3.2-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
             <span>Configurando 2FA</span>
         </a>
 

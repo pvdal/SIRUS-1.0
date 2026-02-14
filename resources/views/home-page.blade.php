@@ -151,7 +151,7 @@
                     </p>
                 </div>
                 {{-- Botões de ação --}}
-                <div class="flex flex-col sm:flex-row gap-2 w-full lg:mt-auto mb-8 px-1 xs:px-0">
+                <div class="flex flex-col sm:flex-row gap-2 w-full lg:mt-auto mb-8 px-4 xs:px-0">
                     {{-- Botão para entrar no sistema --}}
                     <a
                         rel="noreferrer noopener"
@@ -377,8 +377,8 @@
             <div class="flex flex-col justify-center gap-4 sm:flex-row sm:items-center sm:justify-between">
 
                 <!-- Copyright -->
-                <p class="text-sm lg:text-base text-gray-500 dark:text-gray-400 text-center sm:text-left">
-                    &copy; 2025. Todos os direitos reservados.
+                <p class="text-sm lg:text-base text-gray-500 dark:text-gray-400 text-center sm:text-left transition">
+                    &copy; 2026. Todos os direitos reservados.
                 </p>
 
                 <!-- Links + Tema -->

@@ -34,6 +34,7 @@ class PasswordGenerator
         $password .= $numbers[random_int(0, strlen($numbers) - 1)];
         $password .= $symbols[random_int(0, strlen($symbols) - 1)];
 
+        // Completa a string $password com os caracteres que faltam para chegar no $lenght
         $allChars = $lowerLetters . $upperLetters . $numbers . $symbols;
         for ($i = strlen($password); $i < $length; $i ++) {
             $password .= $allChars[random_int(0, strlen($allChars) -1)];
