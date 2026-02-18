@@ -91,7 +91,7 @@
                                     &copy; <strong>SIRUS –</strong> Sistema de Rubricas para Gestão avaliativa do SIMBAJU
                                 </p>
                                 <p class="text-xs text-center">
-                                    Versão 1.0 | 2025
+                                    Versão 1.0 | 2026
                                 </p>
                             </div>
                         </div>
@@ -134,7 +134,7 @@
             const letterSpacing = Number(localStorage.getItem('manual.letter_spacing')) || 1;
             const wordSpacing = Number(localStorage.getItem('manual.word_spacing')) || 1;
 
-            const sn = localStorage.getItem('manual.sticky_nav') === 'true';
+            const sn = localStorage.getItem('manual.sticky_nav') !== 'false';
             const cn = localStorage.getItem('manual.show_chapter_nav') !== 'false';
 
             const mapFont = {

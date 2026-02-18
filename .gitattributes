@@ -9,3 +9,18 @@
 /.github export-ignore
 CHANGELOG.md export-ignore
 .styleci.yml export-ignore
+
+###############################################################################
+# Linguist configuration
+###############################################################################
+
+# Ignorar diretórios que não representam código autoral
+/vendor/** linguist-vendored
+/node_modules/** linguist-vendored
+/public/build/** linguist-generated
+
+# Ignorar arquivos minificados
+*.min.js linguist-vendored
+*.min.css linguist-vendored
+
+/public/pdfjs/** linguist-vendored
