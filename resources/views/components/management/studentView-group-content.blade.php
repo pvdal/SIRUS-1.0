@@ -82,11 +82,11 @@
             </div>
             <ul class="space-y-2">
                 <template x-for="student in groups[0]?.students">
-                    <li class="flex flex-col bg-gray-200/60 hover:bg-gray-200/80 dark:bg-gray-700/40 dark:hover:bg-gray-700/50 p-3 rounded transition">
+                    <li class="flex flex-col bg-gray-200/40 hover:bg-gray-200/60 dark:bg-gray-700/40 dark:hover:bg-gray-700/50 p-3 rounded transition">
                         <div class="flex flex-wrap items-center mx-2">
                             <img
                                 :src="student.profile_photo_url
-                                    ? 'http://192.168.1.105/storage/' + student.profile_photo_url
+                                    ? window.appUrl + '/storage/' + student.profile_photo_url
                                     : (() => {
                                         const name = student.name;
 
@@ -152,7 +152,7 @@
                     <li class="flex flex-col space-y-1">
                         <button
                             type="button"
-                            class="flex items-center p-3 rounded justify-between bg-gray-200/60 hover:bg-gray-200/80 dark:bg-gray-700/40 dark:hover:bg-gray-700/50  transition"
+                            class="flex items-center p-3 rounded justify-between bg-gray-200/40 hover:bg-gray-200/60 dark:bg-gray-700/40 dark:hover:bg-gray-700/50  transition"
                             :class="{
                                 'cursor-pointer': paper.state !== 0,
                                 'cursor-default opacity-50': paper.state === 0,

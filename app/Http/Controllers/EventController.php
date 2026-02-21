@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Committee;
+use App\Models\Course;
 use App\Models\Paper;
 use App\Models\UserCommittee;
 use App\Utils\TokenGenerator;
@@ -30,14 +31,18 @@ class EventController extends Controller
             $eventsData = $this->getEvents();
         }
 
+        $courses = Course::select(['id', 'name'])->where('state', 1)
+            ->orderBy('name')->get();
+
         return view('evaluation.events', [
             'events' => $eventsData ?? [],
+            'courses' => $courses ?? [],
         ]);
     }
 
-    public function show(): JsonResponse
+    public function show(Request $request): JsonResponse
     {
-        $events = Committee::with([
+        $query = Committee::with([
             'paper.group.students.user:id,name',
             'members' => function ($query) {
                 $query->whereHas('user', function ($q) {
@@ -45,8 +50,43 @@ class EventController extends Controller
                 })->with('user:id,name', 'memberType:id,name');
             },
         ])
-            ->where('state', 1)
-            ->get();
+            ->where('state', 1);
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                ->orWhereHas('paper', function ($sub) use ($search) {
+                    $sub->where('title', 'like', "%{$search}%");
+                })
+                ->orWhereHas('paper.group', function ($sub) use ($search) {
+                    $sub->where('theme', 'like', "%{$search}%");
+                })
+                ->orWhereHas('paper.group.students.user', function ($sub) use ($search) {
+                    $sub->where('name', 'like', "%{$search}%");
+                })
+
+                ->orWhereHas('members.user', function ($sub) use ($search) {
+                    $sub->where('name', 'like', "%{$search}%");
+                });
+            });
+        }
+        if ($request->filled('course')) {
+            $course = $request->input('course');
+
+            $query->whereHas('paper', function ($q) use ($course) {
+                $q->where('course_id', $course);
+            });
+        }
+        if ($request->filled('project')) {
+            $project = $request->input('project');
+
+            $query->whereHas('paper', function ($q) use ($project) {
+                $q->where('project', $project);
+            });
+        }
+
+        $events = $query->get();
 
         // Ajustar para formato que o FullCalendar espera
         $data = $events

@@ -7,6 +7,11 @@ import ptBrLocale from '@fullcalendar/core/locales/pt-br';
 document.addEventListener('alpine:initialized', function () {
     const calendarEl = document.getElementById('calendar');
     if (!calendarEl) return;
+    let filters = {
+        search: '',
+        course: '',
+        project: '',
+    }
 
     const calendar = new Calendar(calendarEl, {
         plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -40,6 +45,9 @@ document.addEventListener('alpine:initialized', function () {
                         params: {
                             start: info.startStr,
                             end: info.endStr,
+                            search: filters.search,
+                            course: filters.course,
+                            project: filters.project,
                         },
                         withCredentials: true
                     })
@@ -53,6 +61,11 @@ document.addEventListener('alpine:initialized', function () {
                 }
             }
         ],
+        loading: function(isLoading) {
+            window.dispatchEvent(new CustomEvent('calendar-loading', {
+                detail: { loading: isLoading }
+            }));
+        },
 
         select: function (info) {
             // Ajuste do endDate para não parecer que selecionou um a mais
@@ -166,9 +179,12 @@ document.addEventListener('alpine:initialized', function () {
 
     window.addEventListener('reload-calendar', (e) => {
         if(e.detail.reload) {
+            filters.search = e.detail.search ?? '';
+            filters.course = e.detail.course ?? '';
+            filters.project = e.detail.project ?? '';
             calendar.refetchEvents();
         }
-    })
+    });
 
     calendar.render();
 

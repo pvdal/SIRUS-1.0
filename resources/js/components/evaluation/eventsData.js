@@ -5,8 +5,22 @@ export function eventsData() {
         showEvaluationModal: false,
         showEvaluationForm: false,
         edit: false,
+        filters: false,
+        searchTerm: '',
+        courseFilter: {
+            value: '',
+            name: '',
+            drop: false,
+        },
+        projectFilter: {
+            value: '',
+            name: '',
+            drop: false,
+        },
+
         showWarningModal: false,
         events: [],
+        courses: [],
         belongsTo: false,
         evaluatedByUser: false,
         // Campos do formulário
@@ -38,6 +52,7 @@ export function eventsData() {
         },
         saving: false,
         loading: false,
+        loadingData: false,
         showBanner: false,
         style: '',
         message: '',
@@ -47,8 +62,9 @@ export function eventsData() {
         //Variável para uso da rubrica
         userCommitteeId: null,
 
-        init(events) {
+        init(events,courses) {
             this.events = events;
+            this.courses = courses;
             // Escuta os despachos do calendar.js para cadastro
             window.addEventListener('open-create-modal', e => {
                 if(!window.userPermissions.canManageEvents) return; // Se usuário sem permissão, aborta
@@ -61,6 +77,11 @@ export function eventsData() {
                 this.showEvaluationModal = true;
                 this.show(e,'view');
             });
+            // Escuta os despachos do calendar.js para desativar as animações de carregamento
+            window.addEventListener('calendar-loading', (e) => {
+                this.loadingData = e.detail.loading;
+            });
+
             // Observa o id do evento para preencher os campos reativamente com os seus dados
             this.$watch('eventId', (value) => {
                 if(!window.userPermissions.canManageEvents || !this.showCreateModal) return; // Se usuário sem permissão, ou o modal ativo é de avaliação, aborta
@@ -98,8 +119,6 @@ export function eventsData() {
                     this.paper = e.detail.paper;
                     this.committeeMembers = e.detail.committeeMembers;
                     this.groupMembers = e.detail.groupMembers;
-                    console.log(this.committeeMembers);
-                    console.log(this.groupMembers);
 
                     this.belongsTo = e.detail.belongsTo === true;
                     this.evaluatedByUser = e.detail.evaluatedByUser === true;
@@ -171,6 +190,18 @@ export function eventsData() {
                     this.groupMembers = committee.groupMembers;
                 });
             }
+        },
+
+        async loadEvents() {
+            console.log(this.searchTerm);
+            window.dispatchEvent(new CustomEvent('reload-calendar', {
+                detail: {
+                    reload: true,
+                    search: this.searchTerm,
+                    course: this.courseFilter.id,
+                    project: this.projectFilter.id,
+                }
+            }));
         },
 
         async saveEvent() {
@@ -267,17 +298,22 @@ export function eventsData() {
         // Limpa/reinicia os campos
         clearFields(type) {
             clearComponentData(this, type, [
-                'eventId',
-                'eventTitle',
-                'group',
-                'paper',
-                'committeeMembers',
-                'groupMembers',
-                'timeStart',
-                'timeEnd',
-                'dateStart',
-                'dateEnd',
-            ]);
+                    'eventId',
+                    'eventTitle',
+                    'group',
+                    'paper',
+                    'committeeMembers',
+                    'groupMembers',
+                    'timeStart',
+                    'timeEnd',
+                    'dateStart',
+                    'dateEnd',
+                ],
+                [
+                    'courseFilter',
+                    'projectFilter',
+                ]
+            );
 
             this.timeStart = this.initialDate.timeStart ?? '';
             this.timeEnd   = this.initialDate.timeEnd ?? '';

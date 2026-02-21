@@ -46,6 +46,19 @@ class PaperController extends Controller
         $filename = basename($filepath); // pega só o arquivo, sem pastas
         $displayName = preg_replace('/_[a-f0-9]{10}(\.pdf)$/', '$1', $filename);
 
+        /*
+         * Trecho que deve ser aplicado nem substituição ao return padrão nos casos de uso em host local ser servidor web
+         *
+         * Retorno da função = StreamedResponse
+         *
+            return Storage::disk('public')->response("papers/{$filepath}", null, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="' . $filepath . '"',
+                'Content-Disposition' => 'inline; filename="' . $displayName . '"',
+                'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+            ]);
+          */
+
         // Retorna resposta com X-Accel-Redirect para Nginx
         return response('', 200, [
             'Content-Type' => 'application/pdf',

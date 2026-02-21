@@ -13,7 +13,7 @@
     <x-main-content>
         {{-- Chamada da função alpine -> recources/js/components/evaluation/eventsData.js--}}
         <div x-data="eventsData()"
-             x-init='init(@json($events))'>
+             x-init='init(@json($events),@json($courses))'>
             {{-- Componente com o conteúdo que o alpine vai manipular --}}
             <template x-if="events">
                 <x-evaluation.events-content/>

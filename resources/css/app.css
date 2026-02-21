@@ -23,6 +23,7 @@
     --light: #6b7280;
     --shadow: #ccc;
 }
+
 /*********************************
     Retirar setas do campo number
 ***********************************/
@@ -150,6 +151,20 @@ select {
 select::-ms-expand {
     display: none;
 }
+
+/***************************
+   Formatação dos inputs
+****************************/
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: brightness(0) invert(0.85); /* deixa branco */
+    cursor: pointer;
+}
+
+.dark input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: brightness(0) invert(0.85); /* deixa branco */
+    cursor: pointer;
+}
+
 
 /******************************************************
     Autofill com um tom branco levemente amarelado.

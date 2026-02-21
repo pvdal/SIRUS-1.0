@@ -35,7 +35,7 @@
             x-model="eventId"
             :disabled="{{ Gate::denies('manage-events') ? 'true' : ($type === 'evaluation' ? 'true' : 'events.length < 1') }}"
             :readonly="{{ Gate::denies('manage-events') ? 'true' : ($type === 'evaluation' ? 'true' : 'false') }}"
-            class="w-full border-gray-300 focus:border-secondary-blue focus:ring-secondary-blue rounded-md shadow-sm mt-1 dark:bg-gray-800 dark:text-gray-200 dark:placeholder-gray-300 transition duration-150 ease-in-out"
+            class="w-full border-gray-400 focus:border-secondary-blue focus:ring-secondary-blue rounded-md shadow-sm mt-1 dark:bg-gray-800 dark:text-gray-200 dark:placeholder-gray-300 transition duration-150 ease-in-out"
             placeholder="ID da banca"
         />
     </div>
@@ -61,8 +61,8 @@
         </div>
     @else
         <div class="mt-4">
-            <x-label for="name" value="Nome da banca"/>
-            <x-input id="name" type="text" class="w-full mt-1"
+            <x-label for="committee" value="Nome da banca"/>
+            <x-input id="committee" type="text" class="w-full mt-1"
                      placeholder="Nome da banca" x-model="eventTitle"
                      readonly disabled/>
         </div>
@@ -70,7 +70,7 @@
 
     <div class="mt-4">
         <x-label for="group" value="Nome do grupo"/>
-        <x-input id="name" type="text" class="w-full mt-1"
+        <x-input id="group" type="text" class="w-full mt-1"
                  placeholder="Nome do grupo" x-model="group"
                  readonly disabled/>
     </div>
@@ -87,7 +87,7 @@
 
     <div class="mt-4">
         <x-label for="paper" value="Título do trabalho"/>
-        <x-input id="name" type="text" class="w-full mt-1"
+        <x-input id="paper" type="text" class="w-full mt-1"
                  placeholder="Título do trabalho" x-model="paper"
                  readonly disabled/>
     </div>
@@ -105,18 +105,20 @@
 
 
     {{-- Definição de data --}}
-    <div class="flex flex-wrap sm:flex-nowrap gap-4 justify-center sm:justify-between mt-4">
-        <fieldset class="w-full sm:w-1/2">
+    <div class="flex flex-col md:flex-row gap-4 justify-center sm:justify-between mt-4 overflow-hidden">
+        <fieldset class="w-full md:w-1/2">
             <div class="flex flex-col">
                 <legend class="text-sm font-medium w-full text-center">Data/hora de início</legend>
                 <div class="flex flex-col xs:flex-row items-center gap-2 mt-1">
                     <x-input
+                        id="start-date"
                         type="date"
                         class="w-full text-start"
                         x-model="dateStart"
                         x-bind:disabled="(showEvaluationModal && !edit) || (showCreateModal && events.length < 1)"/>
 
                     <x-input
+                        id="start-time"
                         type="time"
                         step="1"
                         class="w-full text-start"
@@ -132,17 +134,19 @@
             </div>
         </fieldset>
 
-        <fieldset class="w-full sm:w-1/2">
+        <fieldset class="w-full md:w-1/2">
             <div class="flex flex-col">
                 <legend class="text-sm font-medium text-center">Data/hora de fim</legend>
                 <div class="flex flex-col xs:flex-row items-center gap-2 mt-1">
                     <x-input
+                        id="end-date"
                         type="date"
                         class="w-full text-start"
                         x-model="dateEnd"
                         x-bind:disabled="(showEvaluationModal && !edit) || (showCreateModal && events.length < 1)"/>
 
                     <x-input
+                        id="end-time"
                         type="time"
                         step="1"
                         class="w-full text-start"
