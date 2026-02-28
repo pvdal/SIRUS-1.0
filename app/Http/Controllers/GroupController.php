@@ -564,7 +564,7 @@ class GroupController extends Controller
             'id' => $group->id,
             'theme' => $group->theme,
             'state' => (int) $group->state,
-            'papers' => $group->state ? $group->papers->map(fn($p) => [
+            'papers' => $group->papers->map(fn($p) => [
                 'id' => $p->id,
                 'title' => $p->title ?? 'Sem título',
                 'file_path' => $p->state ? $p->file_path : null,
@@ -574,7 +574,7 @@ class GroupController extends Controller
                 'course' => $p->course_id ?? null,
                 'project' => $p->project ?? null,
                 'state' => (int) $p->state,
-            ]) : null,
+            ]),
             'students' => $group->students->map(fn($s) => [
                 'ra' => $s->ra,
                 'name' => $s->user->name,

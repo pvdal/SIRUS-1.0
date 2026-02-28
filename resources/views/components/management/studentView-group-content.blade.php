@@ -55,7 +55,7 @@
                             <x-lucide-circle-check class="w-4 h-4 text-green-600 flex-shrink-0"/>
                         </template>
                         <template x-if="groups[0]?.state === 0">
-                            <x-lucide-circle-check class="w-4 h-4 text-red-500 flex-shrink-0"/>
+                            <x-lucide-circle-x class="w-4 h-4 text-red-500 flex-shrink-0"/>
                         </template>
                     </div>
                     <h2 class="text-gray-600 dark:text-gray-400 text-sm transition">Status</h2>
@@ -143,9 +143,11 @@
                     <x-lucide-file-text class="w-5 h-5 text-primary-orange flex-shrink-0 me-2"/>
                     <h2 class="font-medium text-xl dark:text-gray-300 transition">Trabalhos do grupo</h2>
                 </div>
-                <div class="mb-2">
-                    <span x-text="(groups[0]?.papers?.length ?? 0) + ' arquivos'" class="text-gray-600 dark:text-gray-300 transition">X arquivos</span>
-                </div>
+                <template x-if="groups[0]?.papers">
+                    <div class="mb-2">
+                        <span x-text="(groups[0]?.papers?.length ?? 0) + ' arquivos'" class="text-gray-600 dark:text-gray-300 transition">X arquivos</span>
+                    </div>
+                </template>
             </div>
             <ul class="space-y-2" :class="groups[0]?.state === 0 ? 'pointer-events-none' : ''">
                 <template x-for="paper in (groups[0]?.papers ?? [])">

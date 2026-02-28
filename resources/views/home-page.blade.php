@@ -260,8 +260,16 @@
                     ] as $feature)
 
                     <!-- Feature Card {{ $loop->index + 1 }} -->
-                    <div class="bg-white border border-gray-200 hover:border-secondary-blue rounded-3xl p-8 shadow-[0_2px_5px_rgba(0,0,0,0.28)]
-                        dark:bg-slate-800 dark:border-slate-900 dark:hover:border-secondary-blue transition duration-150 ease-in-out">
+                    <div
+                        x-data="{ show: false }"
+                        x-intersect="show = true"
+                        :class="show
+                            ? 'opacity-100 translate-y-0'
+                            : 'opacity-0 translate-y-6'"
+                            class="bg-white border border-gray-200 hover:border-secondary-blue rounded-3xl p-8
+                            shadow-[0_2px_5px_rgba(0,0,0,0.28)]
+                            dark:bg-slate-800 dark:border-slate-900 dark:hover:border-secondary-blue
+                            transition-all duration-700 ease-out" >
                         <div class="bg-secondary-blue p-3 w-12 h-12 lg:w-16 lg:h-16 flex items-center justify-center rounded-xl mb-4">
                             <x-dynamic-component :component="'lucide-' . $feature['icon']" class="text-white w-5 h-5 lg:w-6 lg:h-6"/>
                         </div>

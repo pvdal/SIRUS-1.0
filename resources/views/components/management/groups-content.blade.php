@@ -103,10 +103,20 @@
                     </x-slot>
 
                     <x-slot name="paperAction">
-                        <template x-if="item?.papers?.length && item.papers[item.papers.length -1]?.file_path">
+                        <template
+                            x-if="
+                                item?.papers?.filter(p => p.state === 1).length &&
+                                item.papers.filter(p => p.state === 1).slice(-1)[0]?.file_path
+                            "
+                        >
                             <x-card.link-button
-                                x-on:click="showPaper(`${item.papers[item.papers.length -1]?.file_path}`)"
-                            >
+                                x-on:click="
+                                showPaper(
+                                    item.papers
+                                        .filter(p => p.state === 1)
+                                        .slice(-1)[0]?.file_path
+                                )
+                            ">
                                 <x-lucide-file-text class="w-4 h-4 text-gray-600 dark:text-gray-200 transition duration-150 ease-in-out flex-shrink-0"/>
                                 <span class="text-sm text-gray-800 dark:text-gray-200 transition duration-150 ease-in-out font-semibold truncate" x-text="item.papers[item.papers.length -1]?.title"></span>
                                 <x-slot name="optionsButton">

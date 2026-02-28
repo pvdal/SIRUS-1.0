@@ -2851,16 +2851,16 @@
         },
         {
             "name": "mallardduck/blade-lucide-icons",
-            "version": "1.26.4",
+            "version": "1.26.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mallardduck/blade-lucide-icons.git",
-                "reference": "f8a29beae8f0fbc3adf08be3764d8b15dcd9ea28"
+                "reference": "9d28ad825bb47c6dee5e3e0fcde1478c9c789042"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mallardduck/blade-lucide-icons/zipball/f8a29beae8f0fbc3adf08be3764d8b15dcd9ea28",
-                "reference": "f8a29beae8f0fbc3adf08be3764d8b15dcd9ea28",
+                "url": "https://api.github.com/repos/mallardduck/blade-lucide-icons/zipball/9d28ad825bb47c6dee5e3e0fcde1478c9c789042",
+                "reference": "9d28ad825bb47c6dee5e3e0fcde1478c9c789042",
                 "shasum": ""
             },
             "require": {
@@ -2905,9 +2905,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mallardduck/blade-lucide-icons/issues",
-                "source": "https://github.com/mallardduck/blade-lucide-icons/tree/1.26.4"
+                "source": "https://github.com/mallardduck/blade-lucide-icons/tree/1.26.6"
             },
-            "time": "2026-02-18T00:23:31+00:00"
+            "time": "2026-02-20T00:20:20+00:00"
         },
         {
             "name": "markbaker/complex",
