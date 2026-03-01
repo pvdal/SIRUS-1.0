@@ -271,15 +271,17 @@
                             </thead>
                             <tbody class="divide-y divide-gray-200 dark:divide-gray-700 transition duration-150 ease-in-out">
                                 <template x-for="student in students" :key="student.id">
-                                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition duration-150 ease-in-out">
-                                        <td class="text-xs lg:text-sm xl:text-base py-3 px-4 font-medium" x-text="student.name"></td>
-                                        <td class="py-3 px-4 text-center">
-                                        <span class="text-xs lg:text-sm xl:text-base font-semibold text-orange-600 dark:text-orange-400 transition duration-150 ease-in-out"
-                                              x-text="individualStudentScores[student.id]?.toFixed(2) ?? '0.00'">
-                                            0.00
-                                        </span>
-                                        </td>
-                                    </tr>
+                                    <template x-if="individualStudentScores[student.id] > 0 || !isReadOnly">
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition duration-150 ease-in-out">
+                                            <td class="text-xs lg:text-sm xl:text-base py-3 px-4 font-medium" x-text="student.name"></td>
+                                            <td class="py-3 px-4 text-center">
+                                            <span class="text-xs lg:text-sm xl:text-base font-semibold text-orange-600 dark:text-orange-400 transition duration-150 ease-in-out"
+                                                  x-text="individualStudentScores[student.id]?.toFixed(2) ?? '0.00'">
+                                                0.00
+                                            </span>
+                                            </td>
+                                        </tr>
+                                    </template>
                                 </template>
                             </tbody>
                         </table>

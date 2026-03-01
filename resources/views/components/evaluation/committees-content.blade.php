@@ -209,7 +209,7 @@
                                     <x-secondary-button x-on:click="$el.blur(); openEvaluationForm(item.id);">Avaliação</x-secondary-button>
                                 </template>
                             @else
-                                <template x-if="item.belongsTo">
+                                <template x-if="item.belongsTo || !item.belongsTo">
                                     <x-secondary-button x-on:click="$el.blur(); openEvaluationForm(item.id);">Avaliação</x-secondary-button>
                                 </template>
                             @endcan

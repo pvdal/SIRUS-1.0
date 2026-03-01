@@ -44,6 +44,9 @@ class CommitteeController extends Controller
         // Inicializa o DynamicToken
         TokenGenerator::initializeTab();
 
+        $user = auth()->user();
+        $ra = $user->student?->ra;
+
         // Paginação agora em cima de Committee
         $committees = Committee::with([
             'coordinator.user:id,name',
@@ -53,10 +56,23 @@ class CommitteeController extends Controller
             'rubrics.rubric:id,name,type,state',
         ])
             ->orderBy('id')
-            ->when(Gate::denies('manage-events'), function ($query) {
-                $query->where(function ($q) {
-                    $q->whereHas('members', function ($sub) {
+            ->when(Gate::denies('manage-events'), function ($query) use($user, $ra) {
+                $query->where(function ($q) use ($user, $ra) {
+                    $q->whereHas('members', function ($sub) use($user) {
                         $sub->where('user_id', auth()->id());
+                    })
+
+                    ->when($ra, function ($subQuery) use ($ra) {
+                        return $subQuery->orWhereHas('members.individualEvaluations', function ($sub) use ($ra) {
+                            $sub->where('ra', $ra);
+                        });
+                    })
+
+                    ->orWhere(function ($sub) {
+                        $sub->where('start', '>', now())
+                        ->whereHas('paper.group.students', function ($studentQuery) {
+                            $studentQuery->where('user_id', auth()->id());
+                        });
                     })
 
                     ->orWhereHas('paper.group.students', function ($sub) {

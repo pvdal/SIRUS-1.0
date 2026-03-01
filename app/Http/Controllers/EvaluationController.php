@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Committee;
+use App\Models\Student;
 use App\Models\UserCommittee;
 use App\Models\GroupEvaluation;
 use App\Models\IndividualEvaluation;
@@ -29,7 +30,38 @@ class EvaluationController extends Controller
      */
     public function index(Committee $committee): View|RedirectResponse
     {
-        if (Gate::denies('view-evaluation', $committee)) {
+
+        $user = Auth::user();
+        $ra = $user->student?->ra;
+
+        // 1. Definição de Permissões
+        $isAuthorizedByGate = Gate::allows('view-evaluation', $committee);
+        $isFutureCommittee = $committee->start > now();
+
+        $hasParticipation = false;
+        if ($user->access_level === 1 && $ra) {
+            $hasParticipation = IndividualEvaluation::where('ra', $ra)
+                ->whereHas('userCommittee', function($q) use ($committee) {
+                    $q->where('committee_id', $committee->id);
+                })->exists();
+        }
+
+        // --- REGRA DE ACESSO PARA ALUNOS ---
+        if ($user->access_level === 1 && !$user->isAdmin()) {
+
+            // O aluno só entra se:
+            // (Ele tem nota OU é uma banca futura do grupo atual)
+            $canAccess = $hasParticipation || ($isAuthorizedByGate && $isFutureCommittee);
+
+            if (!$canAccess) {
+                return back()->with([
+                    'flash.banner' => 'Acesso negado: Esta banca já ocorreu e você não participou dela.',
+                    'flash.bannerStyle' => 'warning'
+                ]);
+            }
+        }
+        // --- REGRA DE ACESSO PARA OUTROS (Admin/Avaliadores) ---
+        else if (!$isAuthorizedByGate && !$user->isAdmin()) {
             return back()->with([
                 'flash.banner' => 'Você não tem permissão para acessar esta avaliação.',
                 'flash.bannerStyle' => 'danger'
@@ -38,7 +70,6 @@ class EvaluationController extends Controller
         // Inicializa o DynamicToken
         TokenGenerator::initializeTab();
 
-        $user = Auth::user();
         $userCommittee = $committee->members()
             ->where('user_id', $user->id)
             ->first();
@@ -100,6 +131,11 @@ class EvaluationController extends Controller
      */
     private function showResultsView(Committee $committee): View
     {
+        // Variavel usada para pegar os RAs de todos os alunos que receberam nota individual nesta banca
+        $evaluatedRAs = IndividualEvaluation::whereHas('userCommittee', function($q) use ($committee) {
+            $q->where('committee_id', $committee->id);
+        })->distinct()->pluck('ra')->toArray();
+
         // 1. Carrega os dados base
         $committee->load('paper.group.students.user', 'rubrics.rubric.axes.criteria');
 
@@ -111,6 +147,10 @@ class EvaluationController extends Controller
 
         // 3. Formata os dados da Rubrica e Alunos (Igual a antes)
         $data = $this->formatBaseEvaluationData($committee);
+
+        $data['students'] = collect($data['students'])->filter(function ($student) use ($evaluatedRAs) {
+            return in_array($student['id'], $evaluatedRAs);
+        })->values()->all();
 
         // 4. Formata as AVALIAÇÕES COMPLETAS em um array para as TABS
         $data['evaluations'] = $completedEvaluations->map(function ($eval) {
@@ -154,7 +194,6 @@ class EvaluationController extends Controller
         // 1. Carrega os dados base
         $committee = $userCommittee->committee;
         $data = $this->formatBaseEvaluationData($committee);
-//        dd($data);
 
         // 2. Define o estado de "somente leitura" (usando o Gate)
         $data['isReadOnly'] = Gate::denies('evaluate-paper', $committee);
@@ -227,6 +266,17 @@ class EvaluationController extends Controller
         $paper = $committee->paper;
         $group = $paper->group;
 
+        // 1. Pegamos os RAs de quem REALMENTE tem nota nesta banca (Histórico)
+        $evaluatedRAs = IndividualEvaluation::whereHas('userCommittee', function($q) use ($committee) {
+            $q->where('committee_id', $committee->id);
+        })->distinct()->pluck('ra')->toArray();
+
+        // 2. Pegamos os RAs de quem está no grupo HOJE (Futuro/Presente)
+        $currentRAs = $group->students->pluck('ra')->toArray();
+
+        // 3. Unimos os dois (sem duplicatas)
+        $allRAs = array_unique(array_merge($evaluatedRAs, $currentRAs));
+
         $committeeRubrics = $committee->rubrics;
 
         $groupCommitteeRubric = $committeeRubrics->first(function ($cr) {
@@ -247,13 +297,15 @@ class EvaluationController extends Controller
             abort(404, 'Dados incompletos para esta banca (Falta Paper, Grupo ou Rubrica).');
         }
 
-        $students = $group->students->map(function ($student) {
-            return [
-                'id'   => $student->ra,
-                'name' => $student->user->name,
-            ];
-        });
-
+        $students = Student::whereIn('ra', $allRAs)
+            ->with('user:id,name')
+            ->get()
+            ->map(function ($student) {
+                return [
+                    'id'   => $student->ra,
+                    'name' => $student->user->name,
+                ];
+            });
         $allAxes = collect();
 
         // Adiciona os Eixos da Rubrica de GRUPO (Type 1)
