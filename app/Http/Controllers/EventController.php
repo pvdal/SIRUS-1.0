@@ -140,7 +140,7 @@ class EventController extends Controller
                 ];
             });
 
-        return response()->json($data);
+        return response()->json($data->values()->toArray());
     }
 
     /*

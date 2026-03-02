@@ -294,7 +294,7 @@
                 <!-- Barra superior -->
                 <div x-show="loadingData"
                      x-transition.opacity
-                     class="absolute top-0 left-0 w-full h-1 overflow-hidden z-50">
+                     class="absolute top-0 left-0 w-full h-1 overflow-hidden z-10">
                     <div class="h-full bg-secondary-blue animate-progress"></div>
                 </div>
 
