@@ -10,7 +10,7 @@
     </x-slot>
 
         <x-main-content>
-            <div x-data="criteriaData()"
+            <div x-data="{ ...criteriaData(),showImportModal:false }"
                  x-init='init(@json($criteria), {{ $page }}, {{ $totalPages }})'>
 
                 <x-nav-evaluation-table>
@@ -91,30 +91,12 @@
                 </x-nav-evaluation-table>
 
                 {{--            Modal importação--}}
-                <div x-show="showImportModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-                    <div @click.outside="showImportModal = false" class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl max-w-md w-full">
-                        <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Importar Critérios</h2>
-
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">
-                            Para importar, utilize nosso modelo padrão para evitar erros de leitura.
-                            <a href="{{ route('evaluation.criteria.download-template') }}" class="text-blue-500 font-bold block mt-2 underline">
-                                Baixar Modelo Excel
-                            </a>
-                        </p>
-
-                        <form action="{{ route('evaluation.criteria.import') }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            <div class="mb-4">
-                                <input type="file" name="file" required class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                            </div>
-
-                            <div class="flex justify-end space-x-3">
-                                <button type="button" @click="showImportModal = false" class="px-4 py-2 text-gray-500 hover:bg-gray-100 rounded">Cancelar</button>
-                                <button type="submit" @click="showImportModal = false" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Iniciar Importação</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                <x-import-modal
+                    title="Importar Critérios"
+                    :downloadRoute="route('evaluation.criteria.download-template')"
+                    :importRoute="route('evaluation.criteria.import')"
+                    loadFunction="loadCriteria()"
+                />
             </div>
         </x-main-content>
     {{-- Fechamento do novo menu --}}

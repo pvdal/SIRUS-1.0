@@ -4,10 +4,11 @@ namespace App\Exports;
 
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class CriteriaResultExport implements FromCollection, WithHeadings, WithStyles
+class CriteriaResultExport implements FromCollection, WithHeadings, WithStyles, withMapping
 {
     protected $results;
 
@@ -19,6 +20,17 @@ class CriteriaResultExport implements FromCollection, WithHeadings, WithStyles
     public function collection()
     {
         return collect($this->results);
+    }
+
+    public function map($row): array{
+        return [
+            $row['nome'],
+            $row['insatisfatorio'],
+            $row['satisfatorio'],
+            $row['bom'],
+            $row['excelente'],
+            $row['resultado_da_importacao']
+        ];
     }
 
     public function headings(): array {

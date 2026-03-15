@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\Coordinator;
+use App\Utils\PasswordGenerator;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -30,14 +31,28 @@ class CoordinatorsImport implements ToCollection, WithHeadingRow
                 $data['resultado_da_importacao'] = $validator->errors()->first();
             } else {
                 try {
-                    $user = User::create(['name' => $data['nome'], 'email' => $data['email'], 'password' => bcrypt('123456')]);
-                    Coordinator::create(['user_id' => $user->id, 'education' => $data['formacao']]);
+                    $password = PasswordGenerator::random();
+                    $user = User::create([
+                        'name' => $data['nome'],
+                        'email' => $data['email'],
+                        'password' => bcrypt($password)
+                    ]);
+                    Coordinator::create([
+                        'user_id' => $user->id,
+                        'education' => $data['formacao']
+                    ]);
                     $data['resultado_da_importacao'] = 'Importado com sucesso';
+                    $user->sendTemporaryPasswordNotification($password);
                 } catch (\Exception $e) {
                     $data['resultado_da_importacao'] = 'Erro técnico: ' . $e->getMessage();
                 }
             }
-            $this->rowsProcessed[] = $data;
+            $this->rowsProcessed[] = [
+                'nome'      => $row['nome'],
+                'email'     => $row['email'],
+                'formacao'  => $row['formacao'] ?? '',
+                'resultado' => $data['resultado_da_importacao']
+            ];
         }
     }
 }

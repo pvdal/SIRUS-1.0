@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Utils\PasswordGenerator;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Illuminate\Support\Facades\Validator;
@@ -10,6 +11,7 @@ use App\Models\Student;
 use Illuminate\Support\Str;
 use App\Notifications\QueuedSendPasswordNotification;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+
 
 
 class StudentsImport implements ToCollection, WithHeadingRow
@@ -35,10 +37,10 @@ class StudentsImport implements ToCollection, WithHeadingRow
             ]);
 
             if ($validator->fails()) {
-                $data['Resultado da Importação'] = $validator->errors()->first();
+                $data['resultado_da_importacao'] = $validator->errors()->first();
             } else {
                 try {
-                    $password = Str::random(10);
+                    $password = PasswordGenerator::random();
                     $user = User::create([
                         'name' => $data['nome'],
                         'email' => $data['email'],
@@ -52,15 +54,23 @@ class StudentsImport implements ToCollection, WithHeadingRow
                         'group_id' => $data['grupo_id'],
                     ]);
 
-                    $data['Resultado da Importação'] = 'Importado com sucesso';
+                    $data['resultado_da_importacao'] = 'Importado com sucesso';
 
-                    $user->notify(new QueuedSendPasswordNotification($password));
+                    $user->sendTemporaryPasswordNotification($password);
+
                 } catch (\Exception $e) {
-                    $data['Resultado da Importação'] = 'Erro técnico: ' . $e->getMessage();
+                    $data['resultado_da_importacao'] = 'Erro técnico: ' . $e->getMessage();
                 }
             }
 
-            $this->rowsProcessed[] = $data;
+            $this->rowsProcessed[] = [
+                'ra'        => $row['ra'],
+                'nome'      => $row['nome'],
+                'email'     => $row['email'],
+                'curso_id'  => $row['curso_id'],
+                'grupo_id'  => $row['grupo_id'],
+                'resultado' => $data['resultado_da_importacao'],
+            ];
         }
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 // Common
 use App\Exports\StudentsResultExport;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\DB;
 //use Illuminate\Support\Facades\Log;
 
 // Static Classes and utils
+use Illuminate\Validation\ValidationException;
 use Random\RandomException;
 use App\Utils\TokenGenerator;
 use App\Utils\PasswordGenerator;
@@ -328,11 +330,26 @@ class StudentController extends Controller
 
     public function import(Request $request): BinaryFileResponse
     {
-        $request->validate(['file' => 'required|mimes:xlsx,csv']);
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls,csv'
+        ]);
         $import = new StudentsImport;
         Excel::import($import, $request->file('file'));
-
         return Excel::download(
             new StudentsResultExport($import->rowsProcessed),'resultado-importacao.xlsx');
     }
+
+//    public function import(Request $request)
+//    {
+//
+//
+//            $request->validate(['file' => 'required|mimes:xlsx,csv']);
+//            $import = new StudentsImport;
+//            Excel::import($import, $request->file('file'));
+//            return Excel::download(
+//                new StudentsResultExport($import->rowsProcessed),
+//                'resultado-importacao.xlsx'
+//            );
+//
+//    }
 }

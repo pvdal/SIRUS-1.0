@@ -52,6 +52,15 @@ class CriteriaImport implements ToCollection, WithHeadingRow
             }
 
             $this->rowsProcessed[] = $data;
+
+            $this->rowsProcessed[] = [
+                'nome'      => $row['nome'],
+                'insatisfatorio'     => $row['insatisfatorio'],
+                'satisfatorio'  => $row['satisfatorio'],
+                'bom'  => $row['bom'],
+                'excelente' => $row['excelente'],
+                'resultado_da_importacao' => $data['resultado_da_importacao'],
+            ];
         }
     }
 }
