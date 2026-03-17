@@ -63,7 +63,7 @@
                         <div class="flex flex-wrap justify-center md:justify-start gap-5 px-6 py-4 md:px-14 pb-2 bg-gray-50 dark:bg-gray-600/50">
                             <div>
                                 <x-label class="mb-1">Ano</x-label>
-                                <x-select x-model="file.year" class="w-32 dark:!bg-gray-700">
+                                <x-select x-model="file.year" class="w-32 dark:!bg-gray-700 md:w-[176.5px]">
                                     @php
                                         $currentYear = date('Y');
                                     @endphp
@@ -75,7 +75,7 @@
 
                             <div>
                                 <x-label class="mb-1">Semestre</x-label>
-                                <x-select x-model="file.semester" class="w-32 dark:!bg-gray-700">
+                                <x-select x-model="file.semester" class="w-32 dark:!bg-gray-700 md:w-[176.5px]">
                                     @for($i = 1; $i<3; $i++)
                                         <option value="{{ $i }}">{{ $i }}</option>
                                     @endfor
@@ -84,14 +84,14 @@
 
                             <div>
                                 <x-label class="mb-1">Projeto</x-label>
-                                <x-select x-model="file.project" class="w-32 dark:!bg-gray-700">
+                                <x-select x-model="file.project" class="w-32 dark:!bg-gray-700 md:w-[176.5px]">
                                     @for($i = 1; $i<7; $i++)
                                         <option value="{{ $i }}">{{ $i }}</option>
                                     @endfor
                                 </x-select>
                             </div>
 
-                            <div>
+                            <div class="hidden">
                                 <x-label class="mb-1">Versão</x-label>
                                 <x-select x-model="file.version" class="w-32 dark:!bg-gray-700">
                                     <option value="evaluation">Avaliação</option>
@@ -126,7 +126,7 @@
                         <template x-if="file.file && file.url">
                             <div class="ms-2 mt-2">
                                 <span class="truncate block flex-1 text-gray-500 dark:text-gray-200">
-                                    <span class="flex" x-text="'Tamanho do arquivo: ' + '(' + (file.file.size / (1024 * 1024)).toFixed(2) + ' MB)'"></span>
+                                    <span class="flex" x-text="'Tamanho do arquivo: ' + (file.file.size / (1024 * 1024)).toFixed(2) + ' MB'"></span>
                                 </span>
                             </div>
                         </template>
@@ -197,46 +197,46 @@
                                 {{-- Conteúdo expandido --}}
                                 <div
                                     x-show="paperExpanded[paper.id ?? paper.tempId] && paper.state !== 0"
-                                    class="flex flex-wrap justify-center md:justify-start overflow-hidden gap-5 px-6 py-4 md:px-14 pb-2 bg-gray-50 dark:bg-gray-600/50"
+                                    class="grid grid-cols-1 xs:grid-cols-3 justify-items-center overflow-hidden gap-5 px-6 py-4 md:px-14 pb-2 bg-gray-50 dark:bg-gray-600/50"
                                 >
                                     {{-- DEBUG: log dos valores
                                     <div class="col-span-full p-2 bg-yellow-100 dark:bg-yellow-800 mb-2 rounded">
                                         <strong>DEBUG paper:</strong>
                                         <pre x-text="JSON.stringify(paper, null, 2)"></pre>
                                     </div>--}}
-                                    <div>
+                                    <div class="w-full xs:col-span-3">
                                         <x-label>Projeto</x-label>
-                                        <x-input x-model="paper.title" type="text" class="mt-1 w-32 dark:!bg-gray-700 sm:w-[277px] md:w-[572px] truncate"/>
+                                        <x-input x-model="paper.title" type="text" class="w-full mt-1 dark:!bg-gray-700 truncate"/>
                                     </div>
 
-                                    <div>
+                                    <div class="w-full">
                                         <x-label class="mb-1">Ano</x-label>
-                                        <x-select x-model="paper.year" x-ref="yearSelect" class="w-32 dark:!bg-gray-700">
+                                        <x-select x-model="paper.year" x-ref="yearSelect" class="w-full dark:!bg-gray-700">
                                             @for($i = 2024; $i< ($currentYear + 1); $i++)
                                                 <option value="{{ $i }}">{{ $i }}</option>
                                             @endfor
                                         </x-select>
                                     </div>
 
-                                    <div>
+                                    <div class="w-full">
                                         <x-label class="mb-1">Semestre</x-label>
-                                        <x-select x-model="paper.semester" class="w-32 dark:!bg-gray-700">
+                                        <x-select x-model="paper.semester" class="w-full dark:!bg-gray-700">
                                             @for($i = 1; $i<3; $i++)
                                                 <option value="{{ $i }}">{{ $i }}</option>
                                             @endfor
                                         </x-select>
                                     </div>
 
-                                    <div>
+                                    <div class="w-full">
                                         <x-label class="mb-1">Projeto</x-label>
-                                        <x-select x-model="paper.project" class="w-32 dark:!bg-gray-700">
+                                        <x-select x-model="paper.project" class="w-full dark:!bg-gray-700">
                                             @for($i = 1; $i<7; $i++)
                                                 <option value="{{ $i }}">{{ $i }}</option>
                                             @endfor
                                         </x-select>
                                     </div>
 
-                                    <div>
+                                    <div class="hidden">
                                         <x-label class="mb-1">Versão</x-label>
                                         <x-select x-model="paper.version" class="w-32 dark:!bg-gray-700">
                                             <option value="evaluation">Avaliação</option>
@@ -244,9 +244,9 @@
                                         </x-select>
                                     </div>
 
-                                    <div>
+                                    <div class="w-full xs:col-span-3">
                                         <x-label class="mb-1">Curso</x-label>
-                                        <x-select x-model="paper.course" class="w-32 dark:!bg-gray-700 sm:w-[277px] md:w-[425px]">
+                                        <x-select x-model="paper.course" class="w-full dark:!bg-gray-700">
                                             <option value="">Selecione um curso</option>
                                             @foreach($courses as $course)
                                                 <option value="{{ $course['id'] }}" title="{{ $course['name'] }}">{{ $course['name'] ?? '-' }}</option>
@@ -254,33 +254,33 @@
                                         </x-select>
                                     </div>
 
-                                    <div class="flex items-center mt-auto">
+                                    <div class="flex items-center w-full">
                                         <button
-                                            class="flex justify-center items-center pr-4 min-w-[127px] whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 rounded-lg
+                                            class="w-full flex justify-center items-center pr-4 whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 rounded-lg
                                             text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 focus:ring-1 focus:ring-secondary-blue bg-white dark:!bg-gray-700
-                                            focus:border-secondary-blue cursor-pointer mt-auto"
+                                            focus:border-secondary-blue cursor-pointer"
                                             x-on:click="paper.file_path ? showPaper(`${paper.file_path}`) : window.open(paper.url, '_blank')"
                                         >
                                             Visualizar
                                         </button>
                                     </div>
 
-                                    <div class="flex items-center mt-auto">
+                                    <div class="flex items-center w-full">
                                         <button
-                                            class="flex justify-center items-center pr-4 min-w-[127px] whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 rounded-lg
+                                            class="w-full flex justify-center items-center pr-4 whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 rounded-lg
                                             text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 focus:ring-1 focus:ring-secondary-blue bg-white dark:!bg-gray-700
-                                            focus:border-secondary-blue cursor-pointer mt-auto"
+                                            focus:border-secondary-blue cursor-pointer"
                                             x-on:click="$el.blur(); window.open(paper.file_path, '_blank');"
                                         >
                                             Nova aba
                                         </button>
                                     </div>
 
-                                    <div class="flex items-center mt-auto">
+                                    <div class="flex items-center w-full">
                                         <a
-                                            class="flex justify-center items-center pr-4 min-w-[127px] whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 rounded-lg
+                                            class="w-full flex justify-center items-center pr-4 whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 rounded-lg
                                             text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 focus:ring-1 focus:ring-secondary-blue bg-white dark:!bg-gray-700
-                                            focus:border-secondary-blue cursor-pointer mt-auto"
+                                            focus:border-secondary-blue cursor-pointer"
                                             x-on:click="$el.blur();"
                                             :href="paper.file_path"
                                             download
@@ -327,9 +327,16 @@
                                     <x-form-fields.field-error
                                        x-text="errors['papers.' + index + '.course']?.[0]"/>
                                 </template>
+
+                                <div x-show="paper.id" class="ms-2 mt-2">
+                                    <span class="truncate block flex-1 text-gray-500 dark:text-gray-300">
+                                        <span class="flex" x-text="formatFileSize(paper.file_size)"></span>
+                                    </span>
+                                </div>
                             </li>
                         </template>
                     </ul>
+                    <span x-text="'Tamanho total: ' + formatFileSize(total_size)"></span>
                 </div>
             </template>
         </div>

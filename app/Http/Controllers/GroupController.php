@@ -568,11 +568,13 @@ class GroupController extends Controller
                 'id' => $p->id,
                 'title' => $p->title ?? 'Sem título',
                 'file_path' => $p->state ? $p->file_path : null,
+                'file_size' => $p->file_size,
                 'year' => $p->year ?? null,
                 'semester' => $p->semester ?? null,
                 'version' => $p->version ?? null,
                 'course' => $p->course_id ?? null,
                 'project' => $p->project ?? null,
+                'submitted_at' => $p->submitted_at,
                 'state' => (int) $p->state,
             ]),
             'students' => $group->students->map(fn($s) => [

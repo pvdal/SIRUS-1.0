@@ -47,11 +47,14 @@ class PaperService
         $newFileName = $originalName . '_' . $hash . '.' . $extension;
         $filePath = $file->storeAs($path, $newFileName, 'public');// Salva o arquivo
 
+        $fileSize = $file->getSize(); // tamanho em bytes
+
         $finalTitle = $title ?: $originalName;
         // Cria registro no banco
         return Paper::create([
             'title' => $finalTitle,
             'file_path' => $filePath,
+            'file_size' => $fileSize,
             'group_id' => $groupId,
             'year' => $folders['year'],
             'semester' => $folders['semester'],
@@ -104,6 +107,8 @@ class PaperService
             $newFileName = $paperTitle . '_' . $hash . '.' . $extension;
             $newPath = $newFile->storeAs($path, $newFileName, 'public');
 
+            $fileSize = $newFile->getSize();
+
             // Remove o arquivo antigo
             if ($paper->file_path && Storage::disk('public')->exists($paper->file_path)) {
                 Storage::disk('public')->delete($paper->file_path);
@@ -111,6 +116,7 @@ class PaperService
 
             $paper->update([
                 'file_path'  => $newPath,
+                'file_size'  => $fileSize,
                 'group_id'   => $group->id,
                 'year'       => $folders['year'],
                 'semester'   => $folders['semester'],

@@ -190,6 +190,20 @@ class CriteriaController extends Controller
             'unsatisfactory' => 'required|string',
         ]);
 
+        $hasEvaluation = $criterion
+            ->axes()
+            ->whereHas('rubrics.committees.committee.paper', function ($q) {
+                $q->whereNotNull('submitted_at');
+            })
+            ->exists();
+
+        if ($hasEvaluation) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Não é possível alterar critérios atrelados a rubricas já utilizadas.',
+            ], 422);
+        }
+
         $criterion->update([
             'name' => $validated['name'],
             'excellent' => $validated['excellent'] ?? null,

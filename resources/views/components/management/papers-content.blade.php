@@ -122,6 +122,7 @@
                     <x-table.th>Nome</x-table.th>
                     <x-table.th class="hidden md:table-cell">Grupo</x-table.th>
                     <x-table.th class="hidden xl:table-cell">Projeto</x-table.th>
+                    <x-table.th class="hidden xl:table-cell">Tamanho</x-table.th>
                     <x-table.th class="hidden lg:table-cell">Avaliação</x-table.th>
                     <x-table.th class="hidden xl:table-cell">Status</x-table.th>
                 </x-slot>
@@ -130,6 +131,7 @@
                     <x-table.td class="break-all" x-text="item.title"></x-table.td>
                     <x-table.td class="hidden md:table-cell" x-text="item.group_theme"></x-table.td>
                     <x-table.td class="hidden xl:table-cell" x-text="item.project"></x-table.td>
+                    <x-table.td class="hidden xl:table-cell" x-text="formatFileSize(item.file_size)"></x-table.td>
                     <x-table.td class="hidden lg:table-cell" x-text="item.version === 'corrected' ? '' : (item.submitted_at ?? 'Não avaliado')"></x-table.td>
                     <x-table.td class="hidden xl:table-cell" x-text="item.state == 1 ? 'Ativo' : 'Inativo'"></x-table.td>
                 </x-slot>
@@ -210,53 +212,52 @@
                 <div class="flex flex-col mt-8 justify-center md:grid md:grid-cols-2 lg:grid-cols-3 xlg:grid-cols-4 gap-4 items-center transition-all duration-150 ease-in-out">
                     {{-- Mostra os anos salvos --}}
                     <template x-for="year in (folders ? Object.keys(folders) : [])" :key="year">
-                        <div x-show="currentLevel === 'root'" class="relative w-auto">
-                            <button
-                                type="button"
-                                class="flex flex-col p-2 rounded-md gap-x-2 justify-center items-start shadow-sm border border-gray-300 dark:border-gray-400
-                                hover:cursor-pointer hover:bg-soft-blue bg-white dark:bg-gray-800 transition duration-150 ease-in-out
-                                w-full xs:w-[400px] md:w-full max-w-full"
-                                x-on:click="openYear(year)"
-                            >
-                                <div class="inline-flex items-center gap-2">
-                                    <x-lucide-folder class="flex-shrink-0 h-6 w-6 text-secondary-blue" stroke-width="1.5"/>
-                                    <span x-text="year" class="font-medium text-lg text-gray-800 dark:text-gray-100 transition duration-150 ease-in-out"></span>
-                                </div>
-                                <div class="ms-8"
-                                    :class="foldersByYear[year]?.loaded === false ? 'py-3' : ''">
-                                    <template x-if="isLoadingYear(year)">
-                                        <span
-                                            x-text="'Carregando...'"
-                                            class="text-sm text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out">
-                                        </span>
-                                    </template>
+                        <button
+                            x-show="currentLevel === 'root'"
+                            type="button"
+                            class="flex flex-col p-2 rounded-md gap-x-2 justify-center items-start shadow-sm border border-gray-300 dark:border-gray-400
+                            hover:cursor-pointer hover:bg-soft-blue bg-white dark:bg-gray-800 transition duration-150 ease-in-out
+                            w-full xs:w-[400px] md:w-full max-w-full"
+                            x-on:click="openYear(year)"
+                        >
+                            <div class="inline-flex items-center gap-2">
+                                <x-lucide-folder class="flex-shrink-0 h-6 w-6 text-secondary-blue" stroke-width="1.5"/>
+                                <span x-text="year" class="font-medium text-lg text-gray-800 dark:text-gray-100 transition duration-150 ease-in-out"></span>
+                            </div>
+                            <div class="ms-8"
+                                :class="foldersByYear[year]?.loaded === false ? 'py-3' : ''">
+                                <template x-if="isLoadingYear(year)">
+                                    <span
+                                        x-text="'Carregando...'"
+                                        class="text-sm text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out">
+                                    </span>
+                                </template>
 
-                                    <template x-if="foldersByYear[year]?.loaded === true">
+                                <template x-if="foldersByYear[year]?.loaded === true">
+                                    <div>
                                         <span
                                             x-text="Object.keys(folders[year]).length +
                                             (Object.keys(folders[year]).length > 1 ? ' itens' : ' item')"
                                             class="text-sm text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out">
                                         </span>
-                                    </template>
-                                </div>
-                            </button>
-                            <button
-                                x-on:click="downloadFolder(year)"
-                                class="absolute hidden top-[23%] right-4 p-3 rounded-full text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 transition"
-                            >
-                                <x-lucide-download class="w-4 h-4"/>
-                            </button>
-                        </div>
+                                        <span class="text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out">•</span>
+                                        <span x-text="formatFileSize(foldersByYear[year]?.total_size)"
+                                            class="text-sm text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"
+                                        ></span>
+                                    </div>
+                                </template>
+                            </div>
+                        </button>
                     </template>
 
                     {{-- Mostra os semestres salvos --}}
                     <template x-for="semester in (folders[selected.year] ? Object.keys(folders[selected.year]) : [])" :key="semester">
-                        <div x-show="currentLevel === 'year'" class="relative w-auto">
+                        <div x-show="currentLevel === 'year'"
+                             class="relative w-full xs:w-[400px] md:w-auto max-w-full">
                             <button
                                 type="button"
                                 class="flex flex-col p-2 rounded-md gap-x-2 justify-center items-start shadow-sm border border-gray-300 dark:border-gray-400
-                                hover:cursor-pointer hover:bg-soft-blue bg-white dark:bg-gray-800 transition duration-150 ease-in-out
-                                w-full xs:w-[400px] md:w-full max-w-full"
+                                hover:cursor-pointer hover:bg-soft-blue bg-white dark:bg-gray-800 transition duration-150 ease-in-out w-full"
                                 x-on:click="navigateTo('semester',semester)"
                             >
                                 <div class="inline-flex items-center gap-2">
@@ -374,10 +375,11 @@
                         <template x-if="currentLevel === 'project'">
                             <div class="w-full bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-md transition ease-in-out">
                                 <div class="grid grid-cols-12 me-10 rounded-md p-2 transition duration-150 ease-in-out">
-                                    <span class="font-semibold text-left text-gray-700 dark:text-gray-300 transition col-span-12 md:col-span-6 lg:col-span-5 px-4 flex items-center justify-start gap-2">Nome</span>
-                                    <span class="font-semibold text-left text-gray-700 dark:text-gray-300 transition col-span-3 px-4 hidden md:flex md:col-span-6 lg:col-span-3 items-center justify-start">Grupo</span>
-                                    <span class="font-semibold text-left text-gray-700 dark:text-gray-300 transition col-span-2 px-4 hidden lg:flex lg:col-span-2 items-center justify-start">Avaliação</span>
-                                    <span class="font-semibold text-left text-gray-700 dark:text-gray-300 transition col-span-2 px-4 hidden lg:flex lg:col-span-2 items-center justify-start">Status</span>
+                                    <span class="font-semibold text-left text-gray-700 dark:text-gray-300 transition col-span-12 md:col-span-6 lg:col-span-5 xl:col-span-4 px-4 flex items-center justify-start gap-2">Nome</span>
+                                    <span class="font-semibold text-left text-gray-700 dark:text-gray-300 transition px-4 hidden md:flex md:col-span-6 lg:col-span-3 xl:col-span-2 items-center justify-start">Grupo</span>
+                                    <span class="font-semibold text-left text-gray-700 dark:text-gray-300 transition px-4 hidden xl:flex xl:col-span-2 items-center justify-start">Tamanho</span>
+                                    <span class="font-semibold text-left text-gray-700 dark:text-gray-300 transition px-4 hidden lg:flex lg:col-span-2 items-center justify-start">Avaliação</span>
+                                    <span class="font-semibold text-left text-gray-700 dark:text-gray-300 transition px-4 hidden lg:flex lg:col-span-2 items-center justify-start">Status</span>
                                 </div>
                             </div>
                         </template>
@@ -390,7 +392,7 @@
                                 border rounded-md p-2 border-gray-200 dark:border-gray-700 transition duration-150 ease-in-out">
                                 <div class="grid grid-cols-12 w-full">
                                     <!-- Colunas do card -->
-                                    <div class="col-span-12 md:col-span-6 lg:col-span-5 px-4 flex items-center justify-start gap-2 overflow-hidden">
+                                    <div class="col-span-12 md:col-span-6 lg:col-span-5 xl:col-span-4 px-4 flex items-center justify-start gap-2 overflow-hidden">
                                         <x-lucide-file-text class="w-6 h-6 text-gray-600 dark:text-gray-300 flex-shrink-0 transition duration-150 ease-in-out"/>
                                         <span x-text="paper.title"
                                               class="font-medium text-left text-lg text-gray-800 dark:text-gray-300 line-clamp-2 break-all
@@ -398,8 +400,11 @@
                                     </div>
 
                                     <!-- Outras colunas -->
-                                    <div class="hidden md:flex md:col-span-6 lg:col-span-3 px-4 items-center justify-start">
+                                    <div class="hidden md:flex md:col-span-6 lg:col-span-3 xl:col-span-2 px-4 items-center justify-start">
                                         <span class="text-gray-900 dark:text-gray-300 text-left line-clamp-2 transition duration-150 ease-in-out" x-text="paper.group_theme"></span>
+                                    </div>
+                                    <div class="hidden xl:flex xl:col-span-2 px-4 items-center justify-start">
+                                        <span class="text-gray-900 dark:text-gray-300 text-left line-clamp-2 transition duration-150 ease-in-out" x-text="formatFileSize(paper.file_size)"></span>
                                     </div>
                                     <div class="hidden lg:flex lg:col-span-2 px-4  items-center justify-start">
                                         <span class="text-gray-900 dark:text-gray-300 text-left line-clamp-2 transition duration-150 ease-in-out" x-text="paper.version === 'corrected' ? 'Corrigido' : (paper.submitted_at ?? 'Não avaliado')"></span>

@@ -102,6 +102,7 @@ Route::middleware([
         Route::put('/events/{id}/update', [EventController::class, 'update'])->name('events.update');
 
         // Students -> StudentController/Student.php
+        Route::get('/groups/search', [StudentController::class, 'search'])->name('students.search-groups');
         Route::get('/students/show', [StudentController::class, 'show'])->name('students.show');
         Route::post('/students/save', [StudentController::class, 'store'])->name('students.store');
         Route::put('/students/{id}/update', [StudentController::class, 'update'])->name('students.update');
@@ -187,7 +188,8 @@ Route::middleware([
     Route::get('/calendar', [EventController::class, 'index'])->name('calendar');
 
     // Groups -> GroupController/Group.php
-    Route::get('/groups', [GroupController::class, 'index'])->name('groups-table');
+    Route::get('/groups', [GroupController::class, 'index'])->name('groups-table')
+        ->middleware('access.level:1,3');
 
     // Committees -> CommitteeController/Committee.php
     Route::get('/committees', [CommitteeController::class, 'index'])->name('committees-table');

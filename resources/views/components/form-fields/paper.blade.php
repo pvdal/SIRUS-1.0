@@ -49,9 +49,9 @@
                     <hr class="mt-2"/>
                     <template x-if="file.file && file.url">
                         <div class="ms-2 xs:ms-7">
-                        <span class="truncate overflow-hidden w-full flex-1 text-gray-500 dark:text-gray-200">
-                            <span class="block truncate text-ellipsis" x-text="'Tamanho do arquivo: ' + '(' + (file.file.size / (1024 * 1024)).toFixed(2) + ' MB)'"></span>
-                        </span>
+                            <span class="truncate overflow-hidden w-full flex-1 text-gray-500 dark:text-gray-200">
+                                <span class="block truncate text-ellipsis" x-text="'Tamanho do arquivo: ' + '(' + (file.file.size / (1024 * 1024)).toFixed(2) + ' MB)'"></span>
+                            </span>
                         </div>
                     </template>
                 </div>
@@ -88,6 +88,12 @@
                     >
                         Visualizar
                     </button>
+                </div>
+                <hr class="mt-2"/>
+                <div class="ms-2 xs:ms-7">
+                    <span class="truncate overflow-hidden w-full flex-1 text-gray-500 dark:text-gray-200">
+                        <span class="block truncate text-ellipsis" x-text="'Tamanho do arquivo: ' + formatFileSize(file_size)"></span>
+                    </span>
                 </div>
             </div>
         </div>
@@ -149,7 +155,7 @@
             <x-form-fields.field-error x-text="errors.semester[0]"/>
         </template>
     </div>
-
+    {{--
     <div class="mt-4">
         <x-label for="version">Versão</x-label>
         <x-select id="version" x-model="version" class="mt-1 w-full">
@@ -191,7 +197,7 @@
             </template>
         </div>
     </template>
-
+    --}}
     <div class="mt-4">
         <x-label for="course">Curso</x-label>
         <x-select id="course" x-model="course_id" class="mt-1 w-full">
@@ -217,7 +223,7 @@
             <x-form-fields.field-error x-text="errors.project[0]"/>
         </template>
     </div>
-
+    {{--
     <div class="mt-4">
         <x-label for="group_id" value="Grupo do trabalho"/>
         <x-select id="group_id" x-model="group_id" class="mt-1 w-full">
@@ -226,6 +232,57 @@
                 <option :value="group.id" x-text="group.theme"></option>
             </template>
         </x-select>
+        <template x-if="errors.group_id">
+            <x-form-fields.field-error x-text="errors.group_id[0]"/>
+        </template>
+    </div>
+    --}}
+    <div class="mt-4 block w-full me-1 xs:me-2">
+        <legend
+            class="block font-medium text-sm text-gray-700 dark:text-gray-300 transition duration-150 ease-in-out"
+        >Grupo do trabalho</legend>
+        <button @click="group.drop = !group.drop"
+                class="mt-1 flex justify-between items-center pr-4 w-full whitespace-nowrap overflow-hidden text-ellipsis border border-gray-300 dark:border-gray-400 rounded-lg
+                                           text-left px-4 py-2.5 xs:me-2 mb-2 text-base text-gray-700 dark:text-gray-100 focus:ring-1 focus:ring-secondary-blue
+                                           focus:border-secondary-blue cursor-pointer transition"
+                x-bind:disabled="loading"
+                :title="group.theme || 'Selecione um grupo'">
+            <span class="truncate" x-text="group.theme || 'Selecione um grupo'"></span>
+            <x-lucide-chevron-down class="w-4 h-4 text-gray-700 dark:text-gray-100 flex-shrink-0 ms-auto transition"/>
+        </button>
+
+        <ul x-show="group.drop"
+            @click.outside="group.drop = false"
+            class="w-full border bg-gray-200/50 dark:bg-gray-700 mt-1 rounded-lg max-h-60 overflow-auto z-50 scrollbar-custom transition duration-150 ease-in-out">
+            <li class="flex items-center m-1 mx-2">
+                <x-lucide-search class="w-4 h-4 text-gray-600 dark:text-gray-200 flex-shrink-0 transition"/>
+                <input
+                    type="search"
+                    class="bg-transparent w-full py-1 px-2 border-transparent focus:outline-none focus:ring-0 focus:border-transparent
+                                                text-gray-700 dark:text-gray-100"
+                    placeholder="Buscar grupo..."
+                    x-model="group.search"
+                />
+            </li>
+
+            <template x-if="searching">
+                <li class="px-4 py-2 text-base text-gray-500 break-words rounded-sm transition duration-150 ease-in-out">Buscando...</li>
+            </template>
+            <template x-if="!groups.length && group.search && !searching && showNoGroupsMsg">
+                <li class="px-4 py-2 text-base text-gray-500 break-words rounded-sm transition duration-150 ease-in-out">Nenhum grupo encontrado.</li>
+            </template>
+
+            <div x-show="groups.length > 0">
+                <template x-for="item in groups" :key="item.id">
+                    <li @click="group.id = item.id; group.theme = item.theme; group.drop = false"
+                        class="border-t border-gray-300 px-4 py-2 text-base text-gray-700 dark:text-gray-100 break-words cursor-pointer rounded-sm transition duration-150 ease-in-out
+                            hover:bg-gray-200/50 dark:hover:bg-gray-600
+                        "
+                        x-text="item.theme">
+                    </li>
+                </template>
+            </div>
+        </ul>
         <template x-if="errors.group_id">
             <x-form-fields.field-error x-text="errors.group_id[0]"/>
         </template>

@@ -75,19 +75,19 @@
                     </template>
                 </x-nav-evaluation-table>
             </div>
-
-            {{-- Alternativa para manter a animação e evitar o flash (aparição seguida de remoção rápida) com conteúdo da banca --}}
-            <div
-                x-show="showModel"
-                x-cloak
-                x-transition:enter="transition ease-out duration-300"
-                x-transition:enter-start="opacity-0 translate-y-4"
-                x-transition:enter-end="opacity-100 translate-y-0"
-            >
-                <template x-if="rubricForModelView">
-                    <x-evaluation.rubric-preview />
-                </template>
-            </div>
+        </x-main-content>
+        {{-- Alternativa para manter a animação e evitar o flash (aparição seguida de remoção rápida) com conteúdo da banca --}}
+        <div
+            x-show="showModel"
+            x-cloak
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 translate-y-4"
+            x-transition:enter-end="opacity-100 translate-y-0"
+        >
+            <template x-if="rubricForModelView">
+                <x-evaluation.rubric-preview />
+            </template>
+        </div>
 
             {{--    Visualização das Rubricas--}}
             {{--        <div x-show="showModelIframe" x-transition>--}}
@@ -108,6 +108,6 @@
             {{--        </div>--}}
 
             {{--        Sem iframe--}}
-        </x-main-content>
+
     </div>
 </x-app-layout>

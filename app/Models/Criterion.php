@@ -28,8 +28,8 @@ class Criterion extends Model
         'state',
     ];
 
-    public function axes(): belongsToMany
+    public function axes(): BelongsToMany
     {
-        return $this->belongsToMany(Axis::class, 'axis_criterion', 'criteria_id', 'axis_id');
+        return $this->belongsToMany(Axis::class, 'axis_criteria', 'criteria_id', 'axis_id');
     }
 }

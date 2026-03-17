@@ -6,6 +6,7 @@ use App\Models\Axis;
 use App\Utils\TokenGenerator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Random\RandomException;
 
@@ -91,6 +92,19 @@ class AxisController extends Controller
             'criteria' => 'nullable|array|min:1',
             'criteria.*' => 'exists:criteria,id'
         ]);
+
+        $hasEvaluation = $axis
+            ->whereHas('rubrics.committees.committee.paper', function ($q) {
+                $q->whereNotNull('submitted_at');
+            })
+            ->exists();
+
+        if ($hasEvaluation) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Não é possível alterar eixos atrelados a rubricas já utilizadas.',
+            ], 422);
+        }
 
         // MUDANÇA IMPORTANTE: Recontamos os critérios.
         $criteriaCount = count($validatedData['criteria'] ?? []);

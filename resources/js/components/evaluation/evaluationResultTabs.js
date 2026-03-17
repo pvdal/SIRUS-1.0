@@ -18,6 +18,18 @@ export function evaluationResultTabs(initialData) {
         isCommentReadOnly: true,
         showHelp: false,
 
+        // Marcação de tempo
+        lap: {
+            group: initialData.presentation_time ?? null,
+            committee: initialData.evaluation_time ?? null,
+        },
+
+        format(t) {
+            let m = Math.floor(t / 60);
+            let s = t % 60;
+            return `${m}:${s.toString().padStart(2,'0')}`
+        },
+
         init() {
             // 1. Calcula as notas de cada avaliador
             this.evaluations.forEach(evaluation => {
@@ -32,6 +44,8 @@ export function evaluationResultTabs(initialData) {
                 evaluation.groupRubricScore = scores.groupRubricScore;
                 evaluation.averageIndividualScore = scores.averageIndividualScore;
                 evaluation.individualStudentScores = scores.individualStudentScores;
+
+
             });
 
             // 2. Gera o panorama consolidado (para a tabela)

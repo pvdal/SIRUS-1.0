@@ -30,6 +30,7 @@ export function groupsData() {
             course: '',  // ID do curso selecionado
 
         },
+        total_size: 0,
         fileObjectUrl: null,
         papers: [], // Guarda todos os trabalhos do grupo
         paperOptions: {},
@@ -122,6 +123,7 @@ export function groupsData() {
                         version: 'evaluation',
                         course: null
                     };
+                    this.total_size = 0;
                 }
             });
             // Observador reativo que garante que ao ser adicionado um arquivo no modal de update, a url seja alterada para a url do novo arquivo
@@ -257,6 +259,7 @@ export function groupsData() {
                     id: p.id,
                     title: p.title,
                     file_path: p.file_path,
+                    file_size: p.file_size,
                     year: p.year,
                     semester: p.semester,
                     project: p.project,
@@ -269,6 +272,7 @@ export function groupsData() {
                 this.papers.forEach(p => {
                     const key = p.id ?? p.tempId;
                     this.paperExpanded[key] = false;
+                    this.total_size += p.file_size;
                 });
                 //const paper = group.papers[0];
                 //this.file = { name: paper.title.split('/').pop(), url: paper.file_path };
@@ -302,6 +306,8 @@ export function groupsData() {
                 title: this.file.title.replace(/\.pdf$/i,''),
             };
             this.papers.push(newPaper);
+            this.total_size += newPaper.file_size ?? newPaper?.file?.size;
+
             this.paperExpanded[newPaper.tempId] = false;
 
             //console.log(this.papers[0]);
@@ -323,6 +329,8 @@ export function groupsData() {
 
         removePaper(paperId) {
             const paperToRemove = this.papers.find(p => p.id === paperId || p.tempId === paperId);
+
+            this.total_size -= paperToRemove.file_size ?? paperToRemove?.file?.size;
 
             if(paperToRemove?.url) {
                 URL.revokeObjectURL(paperToRemove.url);
@@ -498,6 +506,20 @@ export function groupsData() {
                 this.inactivatingIds = this.inactivatingIds.filter(item => item !== targetId);
                 this.activatingIds = this.activatingIds.filter(item => item !== targetId);
             }
+        },
+
+        formatFileSize(bytes) {
+            if (!bytes) return '0 B';
+
+            const units = ['B','KB','MB','GB','TB'];
+            let i = 0;
+
+            while (bytes >= 1024 && i < units.length - 1) {
+                bytes /= 1024;
+                i++;
+            }
+
+            return bytes.toFixed(2) + ' ' + units[i];
         },
 
         clearFields(type) {

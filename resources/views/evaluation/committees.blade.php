@@ -37,7 +37,7 @@
             paperUrl = '';
             $dispatch('toggle-paper', false);
         "
-        x-init='init(@json($committees), @json($member_types), @json($groups), @json($academicStaff), {{ $page}}, {{ $totalPages}})'
+        x-init='init(@json($committees), @json($member_types), @json($groups), {{ $page}}, {{ $totalPages}})'
     >
         {{-- Grupos cadastrados --}}
         <div x-show="showGroupCards">

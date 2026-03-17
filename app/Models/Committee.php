@@ -17,10 +17,12 @@ class Committee extends Model
         'coordinator_id',
         'rubric_id',
         'paper_id',
+        'corrected_paper_id',
         'start',
         'end',
         'state',
-        'corrected_paper_id'
+        'presentation_time',
+        'evaluation_time',
     ];
 
     protected $casts = [

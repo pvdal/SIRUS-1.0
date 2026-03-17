@@ -29,7 +29,7 @@
     </div>
     {{-- Trabalho de avaliação --}}
     <div x-show="groupSelected" class="mt-4">
-        <x-label for="paper_id_evaluation" value="Trabalho para avaliação"/>
+        <x-label for="paper_id_evaluation" value="Trabalho"/>
         <x-select id="paper_id_evaluation" class="w-full mt-1" x-model="paper_id.evaluation" x-bind:disabled="!groupSelected">
             <option value="">Selecione um artigo</option>
             <template x-for="paper in papers.evaluation" :key="paper.id">
@@ -40,7 +40,7 @@
             <x-form-fields.field-error x-text="errors.paper_id[0]"/>
         </template>
     </div>
-    {{-- Trabalho corrigido --}}
+    {{-- Trabalho corrigido
     <template x-if="edit && submittedPaper">
         <div x-show="groupSelected" class="mt-4">
             <x-label for="paper_id_corrected" value="Trabalho corrigido (opcional)"/>
@@ -55,7 +55,7 @@
             </template>
         </div>
     </template>
-
+    --}}
     {{-- Rubrica
     <div class="pt-4">
         <div class="mt-4">

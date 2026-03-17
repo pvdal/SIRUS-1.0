@@ -96,28 +96,6 @@ class CommitteeController extends Controller
 
         #region Dados auxiliares
         if(Gate::allows('manage-events')){
-            $coordinators = Coordinator::with('user:id,name')
-                ->whereHas('user', function ($sub) {
-                    $sub->where('state', 1);
-                })
-                ->select(['id', 'user_id'])
-                ->orderBy(
-                    User::select('name')
-                        ->whereColumn('users.id', 'coordinators.user_id')
-                )
-                ->get();
-
-            $professors = Professor::with('user:id,name')
-                ->whereHas('user', function ($sub) {
-                    $sub->where('state', 1);
-                })
-                ->select(['id', 'user_id'])
-                ->orderBy(
-                    User::select('name')
-                        ->whereColumn('users.id', 'professors.user_id')
-                )
-                ->get();
-
             $member_types = MemberType::orderBy('name')->get();
 
             $groups = Group::with('papers:id,title,file_path,group_id,version')
@@ -142,7 +120,6 @@ class CommitteeController extends Controller
             'committees' => $committeesData,
             'member_types' => $member_types,
             'groups' => $groups,
-            'academicStaff' => $this->mapAcademicStaff($coordinators, $professors),
             'page' => $committees->currentPage(),
             'totalPages' => $committees->lastPage(),
         ]);
@@ -194,49 +171,56 @@ class CommitteeController extends Controller
     {
         $this->authorize('manage-events');
 
+        // Traz coordenadores ativos com nome ou ‘id’ pesquisado
         $q = $request->query('q', '');
 
-        // Traz coordenadores ativos com nome ou ‘id’ pesquisado
-        $coordinators = Coordinator::with('user:id,name')
-            ->whereHas('user', function ($sub) {
-                $sub->where('state', 1);
-            })
+        $coordinators = Coordinator::query()
+            ->join('users as u', 'u.id', '=', 'coordinators.user_id')
+            ->where('u.state', 1)
             ->where(function ($query) use ($q) {
-                $query->whereHas('user', function ($sub) use ($q) {
-                    $sub->where('name', 'like', '%' . $q . '%');
-                })
-                    ->orWhere('id', 'like', '%' . $q . '%');
+                $query->where('u.name', 'like', "%{$q}%")
+                    ->orWhere('coordinators.id', 'like', "%{$q}%");
             })
-            ->select(['id', 'user_id'])
-            ->limit(6)
-            ->orderBy(
-                User::select('name')
-                    ->whereColumn('users.id', 'coordinators.user_id')
-            )
-            ->get();
+            ->selectRaw("
+                coordinators.id,
+                coordinators.user_id,
+                u.name,
+                'coordinator' as user_type_slug,
+                'Coordenador' as user_type_name
+            ");
 
-        // Traz professores ativos com nome ou ‘id’ pesquisado
-        $professors = Professor::with('user:id,name')
-            ->whereHas('user', function ($sub) {
-                $sub->where('state', 1);
-            })
+        $professors = Professor::query()
+            ->join('users as u', 'u.id', '=', 'professors.user_id')
+            ->where('u.state', 1)
             ->where(function ($query) use ($q) {
-                $query->whereHas('user', function ($sub) use ($q) {
-                    $sub->where('name', 'like', '%' . $q . '%');
-                })
-                    ->orWhere('id', 'like', '%' . $q . '%');
+                $query->where('u.name', 'like', "%{$q}%")
+                    ->orWhere('professors.id', 'like', "%{$q}%");
             })
-            ->select(['id', 'user_id'])
-            ->limit(15)
-            ->orderBy(
-                User::select('name')
-                    ->whereColumn('users.id', 'professors.user_id')
-            )
+            ->selectRaw("
+                professors.id,
+                professors.user_id,
+                u.name,
+                'professor' as user_type_slug,
+                'Professor' as user_type_name
+            ");
+
+        $staff = $coordinators
+            ->unionAll($professors)
+            ->orderBy('name')
+            ->limit(20)
             ->get();
 
         // Retorna array concatenada dos coordenadores + professores
         return response()->json(
-            $this->mapAcademicStaff($coordinators, $professors),
+            $staff->map(fn($member) => [
+                'id' => $member->id,
+                'name' => $member->name,
+                'user_id' => $member->user_id,
+                'user_type' => [
+                    'slug' => $member->user_type_slug,
+                    'name' => $member->user_type_name
+                ]
+            ])
         );
     }
 
@@ -325,28 +309,6 @@ class CommitteeController extends Controller
         })->values();
 
         #region Dados auxiliares
-        $coordinators = Coordinator::with('user:id,name')
-            ->whereHas('user', function ($sub) {
-                $sub->where('state', 1);
-            })
-            ->select(['id', 'user_id'])
-            ->orderBy(
-                User::select('name')
-                    ->whereColumn('users.id', 'coordinators.user_id')
-            )
-            ->get();
-
-        $professors = Professor::with('user:id,name')
-            ->whereHas('user', function ($sub) {
-                $sub->where('state', 1);
-            })
-            ->select(['id', 'user_id'])
-            ->orderBy(
-                User::select('name')
-                    ->whereColumn('users.id', 'professors.user_id')
-            )
-            ->get();
-
         $member_types = MemberType::orderBy('name')->get();
 
         $groups = Group::with('papers:id,title,file_path,group_id')
@@ -368,7 +330,6 @@ class CommitteeController extends Controller
             'data' => $committeesData,
             'member_types' => $member_types,
             'groups' => $groups,
-            'academicStaff' => $this->mapAcademicStaff($coordinators, $professors),
             'page' => $committees->currentPage(),
             'totalPages' => $committees->lastPage(),
         ]);
@@ -838,22 +799,4 @@ class CommitteeController extends Controller
         ];
     }
 
-    private function mapAcademicStaff($coordinators, $professors): array
-    {
-        if(Gate::denies('manage-events')) return [];
-        $mapStaff = fn($collection,$slug,$name) => $collection->map(fn($member) => [
-            'id' => $member->id,
-            'name' => $member->user->name ?? '(sem nome)',
-            'user_id' => $member->user_id,
-            'user_type' => [
-                'slug' => $slug,
-                'name' => $name,
-            ]
-        ]);
-
-        return $mapStaff($coordinators,'coordinator','Coordenador')
-            ->concat($mapStaff($professors,'professor','Professor'))
-            ->values()
-            ->toArray();
-    }
 }

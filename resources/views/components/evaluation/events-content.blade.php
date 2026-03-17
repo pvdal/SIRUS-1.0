@@ -174,7 +174,7 @@
             </div>
             {{-- Filtros | animação de loading | calendário --}}
             <div class="relative">
-                <div x-show="filters" class="bg-white flex flex-wrap gap-4 justify-center sm:justify-start px-4 py-2 pb-3 w-full dark:bg-gray-900/40 transition ease-in-out">
+                <div x-show="filters" class="flex flex-wrap gap-4 justify-center sm:justify-start px-4 py-2 pb-3 w-full dark:bg-gray-900/40 transition">
                     <div class="flex flex-col max-w-[180px] xs:max-w-full xs:flex-1 xs:min-w-[170px] mb-2">
                         <x-label for="search" class="uppercase text-xs font-light mb-2">Buscar</x-label>
                         <div class="relative">
@@ -292,29 +292,31 @@
                 </div>
 
                 <!-- Barra superior -->
-                <div x-show="loadingData"
-                     x-transition.opacity
-                     class="absolute top-0 left-0 w-full h-1 overflow-hidden z-10">
-                    <div class="h-full bg-secondary-blue animate-progress"></div>
-                </div>
+                @if(auth()->user()->terms_accepted_at)
+                    <div x-show="loadingData"
+                         x-transition.opacity
+                         class="absolute top-0 left-0 w-full h-1 overflow-hidden z-10">
+                        <div class="h-full bg-secondary-blue animate-progress"></div>
+                    </div>
 
-                <!-- Overlay leve -->
-                <div x-show="loadingData"
-                     x-transition.opacity
-                     class="absolute w-full inset-0 z-40 bg-white/40 dark:bg-gray-900/40">
-                </div>
+                    <!-- Overlay leve -->
+                    <div x-show="loadingData"
+                         x-transition.opacity
+                         class="absolute w-full inset-0 z-40 bg-white/40 dark:bg-gray-900/40">
+                    </div>
 
-                <style>
-                    @keyframes progress {
-                        0%   { transform: translateX(-100%); width: 100%; }
-                        50%  { transform: translateX(0%); width: 60%; }
-                        100% { transform: translateX(100%); width: 100%; }
-                    }
+                    <style>
+                        @keyframes progress {
+                            0%   { transform: translateX(-100%); width: 100%; }
+                            50%  { transform: translateX(0%); width: 60%; }
+                            100% { transform: translateX(100%); width: 100%; }
+                        }
 
-                    .animate-progress {
-                        animation: progress 1.2s ease-in-out infinite;
-                    }
-                </style>
+                        .animate-progress {
+                            animation: progress 1.2s ease-in-out infinite;
+                        }
+                    </style>
+                @endif
 
                 <div id="calendar" class="p-4 w-full bg-transparent text-gray-900 dark:bg-gray-900/40 dark:text-gray-300 transition duration-150 ease-in-out">
                     {{-- conteúdo do calendário --}}

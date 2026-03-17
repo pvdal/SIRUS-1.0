@@ -120,11 +120,11 @@ export function committeesData() {
         expanded: false,
         sendNotification: true,
 
-        init(committees, memberTypes, groups, academicStaff, page, totalPages) {
+        init(committees, memberTypes, groups, page, totalPages) {
             this.committees = committees;
             this.memberTypes = memberTypes;
             this.groups = groups;
-            this.academicStaff = academicStaff;
+
             this.page = page;
             this.totalPages = totalPages;
             this.empty.data = !Array.isArray(committees) || committees.length === 0;
@@ -246,7 +246,7 @@ export function committeesData() {
                 }
 
                 this.searching = true;
-                this.searchingMembers = false;
+                this.searchingMembers = true;
                 this.showNoMembersMsg = true;
                 try {
                     const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';

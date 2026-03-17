@@ -122,13 +122,29 @@
     <section id="hero" class="flex justify-center items-center sm:py-6 lg:py-10 xl:py-16 bg-white dark:bg-gray-900 transition duration-150 ease-in-out">
         <div class="grid items-center justify-center lg:grid-cols-10 xl:min-h-[750px] xlg:min-h-[800px] max-w-[1900px] xs:px-5 sm:px-10 py-16 mb-2 2xl:px-16 2xl:pt-20 lg:pb-20 xl:pb-28">
             {{-- Logo para telas < 1024px --}}
-            <div class="lg:hidden flex flex-col items-center justify-center lg:col-span-4 w-full lg:max-h-[70%] max-h-full xl:max-h-[80%] 2xl:max-h-[90%] 3xl:max-h-full mx-auto shadow-[2px_2px_5px_rgba(0,0,0,0.40)]
-                rounded-xl py-10 md:py-20 px-10 h-full bg-gradient-to-b from-secondary-blue to-blue-700 dark:from-primary-blue dark:to-blue-950 border border-gray-500 dark:border-slate-900">
-                <x-authentication-card-logo class="w-[152px] h-[80px] md:w-[190px] md:h-[100px] xl:w-[228px] lg:h-[120px] 2xl:w-[266px] xl:h-[140px]"/>
-                <h1 class="text-white mt-3 mb-0 text-[2.5rem] md:text-[3rem] lg:text-[3.5rem] xlg::text-[4.5rem] font-bold leading-tight">
+            <div x-data="{ show: false }" x-init="$nextTick(() => show = true)"
+                 class="lg:hidden flex flex-col items-center justify-center lg:col-span-4 w-full lg:max-h-[70%] max-h-full xl:max-h-[80%] 2xl:max-h-[90%] 3xl:max-h-full mx-auto shadow-[2px_2px_5px_rgba(0,0,0,0.40)]
+                 rounded-xl py-10 md:py-20 px-10 min-h-[280px] md:min-h-[362px] h-full bg-gradient-to-b from-secondary-blue to-blue-700 dark:from-primary-blue dark:to-blue-950 border border-gray-500 dark:border-slate-900">
+                <x-authentication-card-logo
+                    x-show="show"
+                    x-transition:enter="transition ease-out duration-500"
+                    x-transition:enter-start="opacity-0 translate-y-20"
+                    x-transition:enter-end="opacity-100"
+                    class="w-[152px] h-[80px] md:w-[190px] md:h-[100px] xl:w-[228px] lg:h-[120px] 2xl:w-[266px] xl:h-[140px]"/>
+                <h1
+                    x-show="show"
+                    x-transition:enter="transition ease-out duration-500 delay-200"
+                    x-transition:enter-start="opacity-0 translate-y-20"
+                    x-transition:enter-end="opacity-100"
+                    class="text-white mt-3 mb-0 text-[2.5rem] md:text-[3rem] lg:text-[3.5rem] xlg::text-[4.5rem] font-bold leading-tight">
                     SIRUS
                 </h1>
-                <p class="text-white text-sm sm:text-base md:text-xl font-medium opacity-80 mb-0 text-center">
+                <p
+                    x-show="show"
+                    x-transition:enter="transition ease-out duration-500 delay-500"
+                    x-transition:enter-start="opacity-0 translate-y-20"
+                    x-transition:enter-end="opacity-100"
+                    class="text-gray-100 dark:text-gray-300 text-xl font-medium mb-0 text-center">
                     Sistema de Rubricas para Gestão Avaliativa do SIMBAJU
                 </p>
             </div>
@@ -212,15 +228,31 @@
                 </div>
             </div>
             {{-- Logo para telas > 1024px --}}
-            <div class="hidden lg:flex flex-col items-center justify-center lg:col-span-4 w-full lg:max-h-[70%] max-h-full xl:max-h-[80%] 2xl:max-h-[90%] 3xl:max-h-full mx-auto shadow-[2px_2px_5px_rgba(0,0,0,0.40)]
+            <div x-data="{ show: false }" x-init="$nextTick(() => show = true)"
+                class="hidden lg:flex flex-col items-center justify-center lg:col-span-4 w-full lg:max-h-[70%] max-h-full xl:max-h-[80%] 2xl:max-h-[90%] 3xl:max-h-full mx-auto shadow-[2px_2px_5px_rgba(0,0,0,0.40)]
                 rounded-xl py-20 px-10 h-full bg-gradient-to-b from-secondary-blue to-blue-700 dark:from-primary-blue dark:to-blue-950 border border-gray-500 dark:border-slate-900">
-                <x-authentication-card-logo class="w-[190px] h-[100px] xl:w-[228px] lg:h-[120px] 2xl:w-[266px] xl:h-[140px]"/>
-                <h1 class="text-white mt-3 mb-0 text-[3.5rem] xlg::text-[4.5rem] font-bold leading-tight">
+                <x-authentication-card-logo
+                    x-show="show"
+                    x-transition:enter="transition ease-out duration-500"
+                    x-transition:enter-start="opacity-0 translate-y-20"
+                    x-transition:enter-end="opacity-100"
+                    class="w-[190px] h-[100px] xl:w-[228px] lg:h-[120px] 2xl:w-[266px] xl:h-[140px]"/>
+                <h1
+                    x-show="show"
+                    x-transition:enter="transition ease-out duration-500 delay-200"
+                    x-transition:enter-start="opacity-0 translate-y-20"
+                    x-transition:enter-end="opacity-100"
+                    class="text-white mt-3 mb-0 text-[3.5rem] xlg::text-[4.5rem] font-bold leading-tight">
                     SIRUS
                 </h1>
-                <p class="text-white text-xl font-medium opacity-80 mb-0 text-center">
+                <span
+                    x-show="show"
+                    x-transition:enter="transition ease-out duration-500 delay-500"
+                    x-transition:enter-start="opacity-0 translate-y-20"
+                    x-transition:enter-end="opacity-100"
+                    class="text-gray-100 dark:text-gray-300 text-xl font-medium mb-0 text-center">
                     Sistema de Rubricas para Gestão Avaliativa do SIMBAJU
-                </p>
+                </span>
             </div>
         </div>
     </section>
@@ -265,11 +297,12 @@
                         x-intersect="show = true"
                         :class="show
                             ? 'opacity-100 translate-y-0'
-                            : 'opacity-0 translate-y-6'"
-                            class="bg-white border border-gray-200 hover:border-secondary-blue rounded-3xl p-8
-                            shadow-[0_2px_5px_rgba(0,0,0,0.28)]
-                            dark:bg-slate-800 dark:border-slate-900 dark:hover:border-secondary-blue
-                            transition-all duration-700 ease-out" >
+                            : 'opacity-0 translate-y-40'"
+                        class="bg-white border border-gray-200 hover:border-secondary-blue rounded-3xl p-8
+                        shadow-[0_2px_5px_rgba(0,0,0,0.28)]
+                        dark:bg-slate-800 dark:border-slate-900 dark:hover:border-secondary-blue
+                        transition-all duration-700 ease-out"
+                    >
                         <div class="bg-secondary-blue p-3 w-12 h-12 lg:w-16 lg:h-16 flex items-center justify-center rounded-xl mb-4">
                             <x-dynamic-component :component="'lucide-' . $feature['icon']" class="text-white w-5 h-5 lg:w-6 lg:h-6"/>
                         </div>

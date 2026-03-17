@@ -45,6 +45,16 @@ export function evaluationFormData(initialData) { // <<<< NOVA VERSÃO
         warningContent: '',
         finished: false,
 
+        // Variáveis relacionadas ao cronômetro
+        time: 0,
+        timer: null,
+        running: false,
+        stopped: false,
+        lap: {
+            group: null,
+            committee: null,
+        },
+
         init() {
             // Inicializa o objeto de notas individuais
             this.students.forEach(student => {
@@ -159,6 +169,8 @@ export function evaluationFormData(initialData) { // <<<< NOVA VERSÃO
                 user_committee_id: this.userCommitteeId,
                 group_evaluations: this.groupSelections,
                 individual_evaluations: this.individualSelections,
+                presentation_time: this.lap.group,
+                evaluation_time: this.lap.committee
             };
 
             // 2. Envia os dados para o Controller
@@ -257,6 +269,38 @@ export function evaluationFormData(initialData) { // <<<< NOVA VERSÃO
             this.currentCommentTarget = { axisType: null, criterionId: null, studentId: null };
         },
 
-    }
 
+        // Cronômetro
+        start() {
+            this.running = true;
+
+            this.timer = setInterval(() => {
+                this.time++
+            }, 1000)
+        },
+
+        mark() {
+            this.lap.group = this.time;
+            this.time = 0;
+            console.log(this.lap.group);
+        },
+
+        finish() {
+            clearInterval(this.timer);
+            this.running = false;
+            this.stopped = true;
+            this.lap.committee = this.time;
+            console.log(this.lap.committee);
+        },
+
+        format(t) {
+            let m = Math.floor(t / 60);
+            let s = t % 60;
+            return `${m}:${s.toString().padStart(2,'0')}`
+        },
+
+        get formattedTime() {
+            return this.format(this.time)
+        }
+    }
 }

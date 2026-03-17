@@ -22,6 +22,8 @@ return new class extends Migration
             $table->foreignId('corrected_paper_id')->nullable()->constrained('papers')->nullOnDelete();
             $table->dateTime('start')->nullable();
             $table->dateTime('end')->nullable();
+            $table->time('presentation_time')->nullable();
+            $table->time('evaluation_time')->nullable();
             $table->boolean('state')->default(true);
             $table->timestamps();
         });

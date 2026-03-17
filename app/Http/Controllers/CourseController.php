@@ -51,14 +51,12 @@ class CourseController extends Controller
         })->values();
 
         #region Dados auxiliares
-        $coordinators = Coordinator::with('user:id,name')
-            ->whereHas('user', function ($q) {
-                $q->where('state', 1);
-            })
-            ->orderBy(
-                User::select('name')
-                    ->whereColumn('users.id', 'coordinators.user_id')
-            )
+        $coordinators = Coordinator::query()
+            ->join('users', 'users.id', '=', 'coordinators.user_id')
+            ->where('users.state', 1)
+            ->select('coordinators.id', 'coordinators.user_id', 'users.name')
+            ->orderBy('users.name')
+            ->limit(50)
             ->get();
         #endregion
 
@@ -114,14 +112,12 @@ class CourseController extends Controller
 
         $courses = $query->paginate(30);
 
-        $coordinators = Coordinator::with('user:id,name')
-            ->whereHas('user', function ($q) {
-                $q->where('state', 1);
-            })
-            ->orderBy(
-                User::select('name')
-                    ->whereColumn('users.id', 'coordinators.user_id')
-            )
+        $coordinators = Coordinator::query()
+            ->join('users', 'users.id', '=', 'coordinators.user_id')
+            ->where('users.state', 1)
+            ->select('coordinators.id', 'coordinators.user_id', 'users.name')
+            ->orderBy('users.name')
+            ->limit(50)
             ->get();
 
         $data = $coordinators->map(function ($coordinator) {

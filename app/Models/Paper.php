@@ -12,6 +12,7 @@ class Paper extends Model
         'title',
         'group_id',
         'file_path',
+        'file_size',
         'year',
         'semester',
         'version',

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('ra', 13)->primary();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('course_id')->nullable()->constrained('courses')->nullOnDelete();
-            $table->foreignId('group_id')->nullable()->constrained('groups')->nullOnDelete();;
+            $table->foreignId('group_id')->nullable()->constrained('groups')->nullOnDelete();
             $table->timestamps();
         });
     }

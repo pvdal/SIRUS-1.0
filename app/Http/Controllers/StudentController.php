@@ -53,8 +53,11 @@ class StudentController extends Controller
         )->orderBy('ra')->paginate(30);
 
         // Dados utilizados para o modal de cadastro e filtros
-        $groups = Group::select(['id', 'theme'])->where('state', 1)
-            ->orderBy('theme')->get();
+        $groups = Group::select(['id', 'theme'])
+            ->where('state', 1)
+            ->orderByDesc('created_at') // ou orderBy('id', 'desc')
+            ->limit(10)
+            ->get();
         $courses = Course::select(['id', 'name'])->where('state', 1)
             ->orderBy('name')->get();
 
@@ -72,6 +75,23 @@ class StudentController extends Controller
             'page' => $students->currentPage(),
             'totalPages' => $students->lastPage(),
         ]);
+    }
+
+    public function search(Request $request): JsonResponse
+    {
+        $q = $request->query('q', '');
+
+        $groups = Group::where('state', 1)
+            ->where('theme', 'like', '%' . $q . '%')
+            ->limit(10)
+            ->get();
+
+        return response()->json(
+            $groups->map(fn($group) => [
+                'id' => $group->id,
+                'theme' => $group->theme ?? '(sem tema)'
+            ])->values()->all() // <-- converte Collection para array
+        );
     }
 
     // Exibição de alunos com aplicação de filtros ou troca de página (‘READ’)
@@ -129,8 +149,11 @@ class StudentController extends Controller
 
         $students = $query->paginate(30);
 
-        $groups = Group::select(['id', 'theme'])->where('state', 1)
-            ->orderBy('theme', 'asc')->get();
+        $groups = Group::select(['id', 'theme'])
+            ->where('state', 1)
+            ->orderByDesc('created_at') // ou orderBy('id', 'desc')
+            ->limit(10)
+            ->get();
         $courses = Course::select(['id', 'name'])->where('state', 1)
             ->orderBy('name', 'asc')->get();
         //Log::info('Queries executadas:', DB::getQueryLog());

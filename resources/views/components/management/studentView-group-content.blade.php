@@ -6,7 +6,7 @@
                     <div class="bg-secondary-orange/15 p-2 rounded-lg">
                         <x-lucide-hash class="w-5 h-5 text-primary-orange flex-shrink-0"/>
                     </div>
-                    <h2 class="text-gray-600 dark:text-gray-300 transition" x-text="'Grupo ' + groups[0].id"></h2>
+                    <h2 class="text-gray-600 dark:text-gray-300 transition" x-text="'Grupo ' + groups[0]?.id"></h2>
                 </div>
                 <div>
                     <span
@@ -18,7 +18,7 @@
                     </span>
                 </div>
             </div>
-            <h1 x-text="groups[0].theme" class="text-3xl lg:text-4xl font-bold dark:text-gray-100 transition duration-150 ease-in-out"></h1>
+            <h1 x-text="groups[0]?.theme" class="text-3xl lg:text-4xl font-bold dark:text-gray-100 transition duration-150 ease-in-out"></h1>
             <hr class="border-t border-gray-200 dark:border-gray-700 transition duration-150 ease-in-out my-4">
             <div class="flex flex-wrap text-gray-500 dark:text-gray-400 transition">
                 <div class="flex items-center space-x-2 me-6">
@@ -149,7 +149,7 @@
                     </div>
                 </template>
             </div>
-            <ul class="space-y-2" :class="groups[0]?.state === 0 ? 'pointer-events-none' : ''">
+            <ul class="space-y-2">
                 <template x-for="paper in (groups[0]?.papers ?? [])">
                     <li class="flex flex-col space-y-1">
                         <button
@@ -195,28 +195,28 @@
                                         <x-lucide-calendar class="w-3 h-3 "/>
                                         <span class=" text-sm">Ano</span>
                                     </div>
-                                    <span x-text="paper.year" class="text-gray-800 dark:text-gray-200"></span>
+                                    <span x-text="paper.year" class="text-gray-800 dark:text-gray-200 transition"></span>
                                 </div>
                                 <div class="flex flex-col items-center">
                                     <div class="flex items-center space-x-1">
                                         <x-lucide-book-open class="w-3 h-3 "/>
                                         <span class=" text-sm">Semestre</span>
                                     </div>
-                                    <span x-text="paper.semester" class="text-gray-800 dark:text-gray-200"></span>
+                                    <span x-text="paper.semester" class="text-gray-800 dark:text-gray-200 transition"></span>
                                 </div>
                                 <div class="flex flex-col items-center">
                                     <div class="flex items-center space-x-1">
                                         <x-lucide-folder-kanban class="w-3 h-3 "/>
                                         <span class=" text-sm">Projeto</span>
                                     </div>
-                                    <span x-text="paper.project" class="text-gray-800 dark:text-gray-200"></span>
+                                    <span x-text="paper.project" class="text-gray-800 dark:text-gray-200 transition"></span>
                                 </div>
                                 <div class="flex flex-col items-center">
                                     <div class="flex items-center space-x-1">
-                                        <x-lucide-layers-2 class="w-3 h-3 "/>
-                                        <span class=" text-sm">Versão</span>
+                                        <x-lucide-hourglass class="w-3 h-3 "/>
+                                        <span class=" text-sm">Andamento</span>
                                     </div>
-                                    <span x-text="paper.version === 'evaluation' ? 'Avaliação' : 'Corrigida'" class="text-gray-800 dark:text-gray-200"></span>
+                                    <span x-text="paper.submitted_at ? 'Avaliado' : 'Não avaliado'" class="text-gray-800 dark:text-gray-200 transition"></span>
                                 </div>
                             </div>
                             <hr class="border-t border-gray-200 dark:border-gray-600 transition duration-150 ease-in-out my-2">
@@ -269,17 +269,6 @@
                             Assim que houver, eles serão listados aqui.
                         </p>
                         <x-lucide-book-open class="shrink-0 w-12 h-12 mt-6 text-gray-500 dark:text-gray-300 transition"/>
-                    </div>
-                </template>
-                <template x-if="groups[0]?.state === 0">
-                    <div class="flex flex-col items-center justify-center text-center pt-5">
-                        <p class="text-gray-700 text-md font-medium dark:text-gray-300 transition">
-                            Não é possível exibir trabalhos de grupos inativos
-                        </p>
-                        <p class="text-gray-500 mt-1 text-sm">
-                            Caso seu grupo seja reativado, seus trabalhos aparecerão aqui.
-                        </p>
-                        <x-lucide-frown class="shrink-0 w-12 h-12 mt-6 text-gray-500 dark:text-gray-300 transition"/>
                     </div>
                 </template>
             </ul>

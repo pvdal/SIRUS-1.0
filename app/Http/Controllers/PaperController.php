@@ -97,14 +97,10 @@ class PaperController extends Controller
             })->values();
 
         $groups = Group::select(['id', 'theme'])
-            ->orderBy('theme')
-            ->get()
-            ->map(function ($group) {
-                return [
-                    'id' => $group->id,
-                    'theme' => $group->theme,
-                ];
-            });
+            ->where('state', 1)
+            ->orderByDesc('created_at') // ou orderBy('id', 'desc')
+            ->limit(10)
+            ->get();
 
         return view('management.papers',[
             'papers' => $papersData,
@@ -191,13 +187,13 @@ class PaperController extends Controller
 
     public function years():JsonResponse
     {
-        $papers = Paper::query()
-            ->select('year')
-            ->distinct()
+        $years = Paper::query()
+            ->select('year', DB::raw('SUM(file_size) as total_size'))
+            ->groupBy('year')
             ->orderByDesc('year')
-            ->pluck('year');
+            ->get(['year', DB::raw('SUM(file_size) as total_size')]);
 
-        return response()->json($papers);
+        return response()->json($years);
     }
 
     /**
@@ -587,6 +583,7 @@ class PaperController extends Controller
             'group_id' => $paper->group_id,
             'group_theme' => $paper->group->theme,
             'file_path' => $paper->file_path,
+            'file_size' => $paper->file_size,
             'year' => $paper->year,
             'semester' => $paper->semester,
             'version' => $paper->version,

@@ -126,7 +126,7 @@
 
         <a href="#cap-10.3" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
             <span class="font-semibold">10.3</span>
-            <span>Filtros para Daltonismo</span>
+            <span>Assistente de Libras (VLibras)</span>
         </a>
         <a href="#cap-10.3-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
             <span>Acesso e visibilidade</span>

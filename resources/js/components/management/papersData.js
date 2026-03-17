@@ -18,6 +18,7 @@ export function papersData(){
         },
         groupFilter: {
             value: '',
+            search: '',
             name: '',
             drop: false,
         },
@@ -28,13 +29,19 @@ export function papersData(){
         },
 
         file_path: '',
+        file_size: '',
         title: '',
         newPaperTitle: '',
         year: new Date().getFullYear(), // Ano padrão
         semester: new Date().getMonth() < 6 ? 1 : 2, // Semestre padrão
         version: 'evaluation', // Versão padrão ('evaluation' ou 'corrected')
         course_id: '',
-        group_id: '',
+        group: {
+            id: '',
+            theme: '',
+            drop: false,
+            search: '',
+        },
         evaluation_paper_id: '',
         corrected_paper_id: '',
         _tempEvaluationPaperId: null,
@@ -73,6 +80,8 @@ export function papersData(){
 
         courses: [],
         groups: [],
+        searching: false,
+        showNoGroupsMsg: false,
 
         currentLevel: 'root', // root → year → semester → version → ...
         nav: [], // <-- array reativo que representa o caminho
@@ -114,12 +123,34 @@ export function papersData(){
             this.papers = papers;
             this.courses = courses;
             this.groups = groups;
+            this.filteredGroups = this.groups;
 
             this.page = page;
             this.totalPages = totalPages;
             this.totalPapers = totalItems;
 
             this.empty.data =  !Array.isArray(papers) || papers.length === 0;
+
+            this.$watch('groupFilter.search', (value) => {
+                value = value.trim();
+                if(value) {
+                    this.searchGroups('filter');
+                } else {
+                    this.searching = false;
+                    this.showNoGroupsMsg = false;
+
+                }
+            });
+            this.$watch('group.search', (value) => {
+                value = value.trim();
+                if(value) {
+                    this.searchGroups('modal');
+                } else {
+                    this.searching = false;
+                    this.showNoGroupsMsg = false;
+
+                }
+            });
 
             this.$watch('showCreateModal', (value) => {
                 if(!value) {
@@ -137,6 +168,8 @@ export function papersData(){
                     this.version = 'evaluation'; // Versão padrão ('evaluation' ou 'corrected')
                     // Limpa a referência do ‘input’ como PDF
                     this.$refs.pdfFile.value = '';
+
+                    this.showNoGroupsMsg = false;
                 }
             });
             // Observador reativo que garante que ao ser adicionado um arquivo no modal de update, a url seja alterada para a url do novo arquivo
@@ -146,7 +179,7 @@ export function papersData(){
                 this.file.url = newFile ? URL.createObjectURL(newFile) : null;
             });
 
-            this.$watch('group_id', (value) => {
+            this.$watch('group.id', (value) => {
                 if(value) {
                     this.showGroupPapers(parseInt(value));
                 } else {
@@ -176,6 +209,62 @@ export function papersData(){
                     this.evaluation_paper_id = this._tempEvaluationPaperId;
                 }
             });
+        },
+
+        filteredGroups: [],
+
+        async searchGroups(origin = 'filter') {
+            if (this.searchTimeout) clearTimeout(this.searchTimeout);
+
+            this.searchTimeout = setTimeout(async () => {
+                if (!this.groupFilter.drop && !this.group.drop) {
+                    this.searching = false;
+                    this.showNoGroupsMsg = false;
+                    return;
+                }
+
+                let term
+                if (origin === 'filter') {
+                    term = this.groupFilter.search.trim();
+                }
+                if (origin === 'modal') {
+                    term = this.group.search.trim();
+                }
+
+                if (!term) {
+                    this.searching = false;
+                    this.showNoGroupsMsg = false;
+                    return;
+                }
+
+                this.searching = true;
+
+                try {
+                    const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
+                    const response = await axios.get(`/${requestPrefix}/groups/search`, {
+                        params: { q: term }
+                    });
+
+                    if (origin === 'modal') {
+                        this.groups = response.data.filter(
+                            group => this.group.id !== group.id
+                        );
+                    }
+                    if (origin === 'filter') {
+                        this.filteredGroups = response.data.filter(
+                            group => this.groupFilter.id !== group.id
+                        );
+                    }
+
+
+                    this.showNoGroupsMsg = this.groups.length === 0;
+
+                } catch (error) {
+                    console.error('Erro ao buscar grupos:', error);
+                } finally {
+                    this.searching = false;
+                }
+            }, 200); // debounce
         },
 
         get loadedPapers() {
@@ -223,12 +312,14 @@ export function papersData(){
                     }
                 });
 
-                years.forEach(year => {
+
+                years.forEach(({ year, total_size }) => {
                     if (!this.foldersByYear[year]) {
                         this.foldersByYear[year] = {
                             loaded: false,
                             papers: [],
                             folders: null,
+                            total_size,
                         };
                     }
                 });
@@ -270,6 +361,7 @@ export function papersData(){
                         : [];
 
                 this.foldersByYear[year] = {
+                    ...this.foldersByYear[year],
                     loaded: true,
                     papers,
                     folders: this.prepareFolders(papers),
@@ -452,7 +544,7 @@ export function papersData(){
                     search: this.searchTerm,
                     status: this.statusFilter.value,
                     period: this.registerPeriod.value,
-                    group: this.groupFilter.value,
+                    group: this.groupFilter.id,
                     version: this.versionFilter.value,
                 };
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
@@ -494,12 +586,14 @@ export function papersData(){
             }
 
             this.file_path = paper.file_path;
+            this.file_size = paper.file_size;
             this.title = paper.title;
             this.year = paper.year;
             this.semester = paper.semester;
             this.version = paper.version;
             this.course_id = paper.course_id;
-            this.group_id = paper.group_id;
+            this.group.id = paper.group_id;
+            this.group.theme = paper.group_theme;
             this.project = paper.project;
             this.submitted_at = paper?.submitted_at;
             this.schedule.start = paper?.scheduleDate?.start || '';
@@ -548,7 +642,7 @@ export function papersData(){
             formData.append('semester', this.semester ?? '');
             formData.append('version', this.version ?? '');
             formData.append('course_id', this.course_id ?? '');
-            formData.append('group_id', this.group_id ?? '');
+            formData.append('group_id', this.group.id ?? '');
             formData.append('project', this.project ?? '');
             formData.append('evaluation_paper_id', this.evaluation_paper_id ?? '');
             if (update) {
@@ -597,6 +691,7 @@ export function papersData(){
                 this.syncPaper(oldPaper, savedData.updated);
 
                 this.file_path = savedData.updated.file_path;
+                this.file_size = savedData.updated.file_size;
 
                 savedData.touched.forEach(touched => {
                     const oldTouched = this.papers.find(p => p.id === touched.id) || this.newPapers.find(p => p.id === touched.id);
@@ -614,10 +709,11 @@ export function papersData(){
             }
 
             if(!update && savedData) {
-                this.prepareFolders(this.newPapers);
+                if (savedData.year) {
+                    this.syncPaper(savedData,savedData);
+                }
             }
         },
-
 
         isInactivating(id) {
             return this.inactivatingIds.includes(id);
@@ -691,6 +787,20 @@ export function papersData(){
             this.action = 'inactivate';
         },
 
+        formatFileSize(bytes) {
+            if (!bytes) return '0 B';
+
+            const units = ['B','KB','MB','GB','TB'];
+            let i = 0;
+
+            while (bytes >= 1024 && i < units.length - 1) {
+                bytes /= 1024;
+                i++;
+            }
+
+            return bytes.toFixed(2) + ' ' + units[i];
+        },
+
         showPaper(url) {
             // Remove overflow-hidden pra aplicar o auto e permitir scroll na página de visualização do paper
             document.body.classList.remove("overflow-hidden");
@@ -752,7 +862,7 @@ export function papersData(){
                     'semester',
                     'version',
                     'course_id',
-                    'group_id',
+                    'group.id',
                     'project',
                     'submitted_at',
                     'corrected_version',

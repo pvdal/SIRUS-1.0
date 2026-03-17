@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('title', 150)->unique();
             $table->foreignId('group_id')->nullable()->constrained('groups')->nullOnDelete();
             $table->string('file_path', 255)->nullable();
+            $table->integer('file_size');
             $table->integer('year');
             $table->integer('semester');
             $table->enum('version', ['evaluation', 'corrected']);

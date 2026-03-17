@@ -18,6 +18,7 @@ export function studentsData() {
         },
         groupFilter: {
             id:'',
+            search: '',
             theme:'',
             drop: false,
         },
@@ -51,7 +52,11 @@ export function studentsData() {
         // Arrays de registros do banco
         students: [],
         newStudents: [],
+
         groups: [],
+        searching: false,
+        showNoGroupsMsg: false,
+
         courses: [],
         // Variáveis de estado das tabelas
         loading: false,
@@ -77,6 +82,17 @@ export function studentsData() {
 
             this.empty.data = !Array.isArray(students) || students.length === 0;
 
+            this.$watch('groupFilter.search', (value) => {
+                value = value.trim();
+                if(value) {
+                    this.searchGroups();
+                } else {
+                    this.searching = false;
+                    this.showNoGroupsMsg = false;
+
+                }
+            });
+
             this.$watch('showCreateModal', (value) => {
                 if(!value) {
                     this.edit = false;
@@ -85,6 +101,46 @@ export function studentsData() {
                     this.showBanner = false;
                 }
             });
+        },
+
+        async searchGroups() {
+            if (this.searchTimeout) clearTimeout(this.searchTimeout);
+
+            this.searchTimeout = setTimeout(async () => {
+                if (!this.groupFilter.drop) {
+                    this.searching = false;
+                    this.showNoGroupsMsg = false;
+                    return;
+                }
+
+                const term = this.groupFilter.search.trim();
+                if (!term) {
+                    this.searching = false;
+                    this.showNoGroupsMsg = false;
+                    return;
+                }
+
+                this.searching = true;
+
+                try {
+                    const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
+                    const response = await axios.get(`/${requestPrefix}/groups/search`, {
+                        params: { q: term }
+                    });
+
+
+                    this.groups = response.data.filter(
+                        group => this.groupFilter.id !== group.id
+                    );
+
+                    this.showNoGroupsMsg = this.groups.length === 0;
+
+                } catch (error) {
+                    console.error('Erro ao buscar grupos:', error);
+                } finally {
+                    this.searching = false;
+                }
+            }, 200); // debounce
         },
 
         async loadStudents(page = 1) {
@@ -288,6 +344,7 @@ export function studentsData() {
                     'courseFilter',
                 ],
             );
+            this.filteredGroups = [];
         },
 
         showMessage(style, message) {

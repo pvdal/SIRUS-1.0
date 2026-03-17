@@ -51,7 +51,7 @@ class EvaluationController extends Controller
 
             // O aluno só entra se:
             // (Ele tem nota OU é uma banca futura do grupo atual)
-            $canAccess = $hasParticipation || ($isAuthorizedByGate && $isFutureCommittee);
+            $canAccess = $hasParticipation || $isAuthorizedByGate;
 
             if (!$canAccess) {
                 return back()->with([
@@ -112,12 +112,12 @@ class EvaluationController extends Controller
             ]);
         } else if($now->lt($start)) {
             return back()->with([
-                'flash.banner' => 'Banca não iniciada!',
+                'flash.banner' => 'Banca não iniciada, ainda não é possível avaliar!',
                 'flash.bannerStyle' => 'danger'
             ]);
         } else if($now->gt($end)){
             return back()->with([
-                'flash.banner' => 'Banca finalizada!',
+                'flash.banner' => 'Banca finalizada, não é mais possível avaliar!',
                 'flash.bannerStyle' => 'danger'
             ]);
         }
@@ -179,6 +179,13 @@ class EvaluationController extends Controller
                 'individualSelections' => $indivSels,
             ];
         });
+        $data['presentation_time'] = $committee->presentation_time
+            ? strtotime($committee->presentation_time) - strtotime('TODAY')
+            : null;
+
+        $data['evaluation_time'] = $committee->evaluation_time
+            ? strtotime($committee->evaluation_time) - strtotime('TODAY')
+            : null;
 
         // 5. Retorna a NOVA view 'evaluation.results'
         return view('evaluation.evaluation-results', ['pageData' => $data]);
@@ -221,7 +228,14 @@ class EvaluationController extends Controller
             $data['individualSelections'] = (object)$indivSels;
         }
 
-        return view('evaluation.evaluation', ['evaluationData' => $data]);
+        $isPresident = $userCommittee->memberType->id === 1;
+
+        return view('evaluation.evaluation', [
+            'evaluationData' => $data,
+            'isCreator' => $committee->coordinator_id === auth()->user()?->coordinator?->id ? true : false,
+            'isPresident' => $isPresident,
+            'timed' => $committee->evaluation_time !== null && $committee->presentation_time !== null,
+        ]);
     }
 
 
@@ -377,7 +391,19 @@ class EvaluationController extends Controller
             'individual_evaluations' => 'required|array',
             'individual_evaluations.*.*.grade' => 'numeric|in:0,2,6,8,10', // Garante as notas
             'individual_evaluations.*.*.comment' => 'nullable|string|max:1000',
+
+            'presentation_time' => 'nullable|numeric',
+            'evaluation_time' => 'nullable|numeric',
         ]);
+
+        // Transforma o tempo vindo do front em segundos no formato Hora:Minuto:Segundo
+        $presentationTime = $request->presentation_time !== null
+            ? gmdate('H:i:s', $request->presentation_time)
+            : null;
+
+        $evaluationTime = $request->evaluation_time !== null
+            ? gmdate('H:i:s', $request->evaluation_time)
+            : null;
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
@@ -445,6 +471,13 @@ class EvaluationController extends Controller
             if ($paper && $paper->submitted_at === null) {
                 $paper->submitted_at = now();
                 $paper->save();
+            }
+
+            if (auth()->user()?->coordinator?->id === $committee->coordinator_id &&
+                $committee->evaluation_time === null && $committee->presentation_time === null) {
+                $committee->evaluation_time = $evaluationTime;
+                $committee->presentation_time = $presentationTime;
+                $committee->save();
             }
 
             DB::commit(); // Sucesso! Confirma as operações no banco.
