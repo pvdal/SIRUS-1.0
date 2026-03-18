@@ -47,15 +47,11 @@
                                     class="absolute min-w-[170px] md:max-w-[200px] w-full border bg-white dark:bg-gray-700 dark:border-gray-900 mt-1 rounded-lg max-h-60 overflow-auto z-50 scrollbar-custom py-5 px-1 transition duration-150 ease-in-out">
 
                                     <hr/>
-
-
                                     <li @click="showImportModal = true; openExcel = false"
-                                        class="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 break-words cursor-pointer rounded-sm transition duration-150 ease-in-out">
+                                        class="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 break-words cursor-pointer rounded-sm transition duration-150 ease-in-out">
                                         <x-lucide-upload class="w-4 h-4 me-2 text-blue-500" />
                                         Importar Coordenadores
                                     </li>
-
-
 
                                     <li class="p-0">
                                         <a :href="'{{ route('users.coordinators-generate-file') }}?' +
@@ -63,12 +59,11 @@
                                            '&status=' + statusFilter.value +
                                            '&period=' + registerPeriod.value"
                                            @click="openExcel = false"
-                                           class="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 break-words cursor-pointer rounded-sm transition duration-150 ease-in-out">
+                                           class="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 break-words cursor-pointer rounded-sm transition duration-150 ease-in-out">
                                             <x-lucide-download class="w-4 h-4 me-2 text-green-500" />
                                             Exportar Lista
                                         </a>
                                     </li>
-
                                     <hr/>
                                 </ul>
 
@@ -101,7 +96,7 @@
                 title="Importar Coordenadores"
                 :downloadRoute="route('users.coordinators.download-template')"
                 :importRoute="route('users.coordinators.import')"
-                loadFunction="loadCoordinators()
+                loadFunction="loadCoordinators()"
             />
         </div>
     </x-main-content>

@@ -37,8 +37,8 @@
                                                 focus:border-secondary-blue cursor-pointer transition duration-150 ease-in-out"
                                         type="button">
 
-                                        <x-lucide-file-spreadsheet class="w-4 h-4 me-2 text-green-600" />
-                                        <span class="truncate" x-text="'Opções Excel'"></span>
+                                    <x-lucide-file-spreadsheet class="w-4 h-4 me-2 text-green-600" />
+                                    <span class="truncate" x-text="'Opções Excel'"></span>
                                     <x-lucide-chevron-down class="w-4 h-4 text-gray-700 dark:text-gray-100 flex-shrink-0 ms-auto transition"/>
                                 </button>
 
@@ -48,21 +48,18 @@
                                     class="absolute min-w-[170px] md:max-w-[200px] w-full border bg-white dark:bg-gray-700 dark:border-gray-900 mt-1 rounded-lg max-h-60 overflow-auto z-50 scrollbar-custom py-5 px-1 transition duration-150 ease-in-out">
 
                                     <hr/>
-
-
                                     <li @click="showImportModal = true; openExcel = false"
-                                        class="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 break-words cursor-pointer rounded-sm transition duration-150 ease-in-out">
+                                        class="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 break-words cursor-pointer rounded-sm transition duration-150 ease-in-out">
                                         <x-lucide-upload class="w-4 h-4 me-2 text-blue-500" />
-                                        Importar Professores
+                                        <span>Importar Professores</span>
                                     </li>
-
                                     <li class="p-0">
                                         <a :href="'{{ route('users.professors-generate-file') }}?' +
                                            'searchTerm=' + searchTerm +
                                            '&status=' + statusFilter.value +
                                            '&period=' + registerPeriod.value"
                                            @click="openExcel = false"
-                                           class="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 break-words cursor-pointer rounded-sm transition duration-150 ease-in-out">
+                                           class="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 break-words cursor-pointer rounded-sm transition duration-150 ease-in-out">
                                             <x-lucide-download class="w-4 h-4 me-2 text-green-500" />
                                             Exportar Lista
                                         </a>
@@ -99,7 +96,7 @@
                 title="Importar Professores"
                 :downloadRoute="route('users.professors.download-template')"
                 :importRoute="route('users.professors.import')"
-                loadFunction="loadProfessors()
+                loadFunction="loadProfessors()"
             />
         </div>
     </x-main-content>

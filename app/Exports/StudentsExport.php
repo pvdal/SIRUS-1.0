@@ -67,7 +67,7 @@ class StudentsExport extends StringValueBinder implements FromQuery, WithMapping
             $student->user->email,
             $student->course->name ?? 'N/A',
             $student->group->theme ?? 'N/A',
-            $student->created_at->format('d/m/Y'),
+            $student->created_at?->format('d/m/Y') ?? $student->user->created_at?->format('d/m/Y'),
         ];
     }
 

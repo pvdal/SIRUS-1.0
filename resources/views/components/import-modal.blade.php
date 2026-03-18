@@ -14,8 +14,8 @@
     <div @click.outside="showImportModal = false" class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl max-w-md w-full">
         <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">{{ $title }}</h2>
 
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">
-            Para importar, utilize nosso modelo padrão para evitar erros de leitura.
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-6">
+            <span>Para importar, utilize nosso modelo padrão para evitar erros de leitura.</span>
             <a href="{{ $downloadRoute }}" class="text-blue-500 font-bold block mt-2 underline">
                 Baixar Modelo Excel
             </a>
@@ -41,15 +41,17 @@
             @csrf
             <div class="mb-4">
                 <input type="file" name="file" x-ref="fileInput" required
-                       class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                       class="w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 focus:outline-none
+                       file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold
+                       file:bg-blue-50/95 file:text-blue-700 hover:file:bg-blue-100/90 file:cursor-pointer">
             </div>
 
             <div class="flex justify-end space-x-3">
-                <button type="button" @click="showImportModal = false" class="px-4 py-2 text-gray-500 hover:bg-gray-100 rounded">
-                    Cancelar
-                </button>
-                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
                     Iniciar Importação
+                </button>
+                <button type="button" @click="showImportModal = false" class="bg-transparent px-4 py-2 text-gray-500 hover:bg-gray-100/95 rounded-lg">
+                    Cancelar
                 </button>
             </div>
         </form>

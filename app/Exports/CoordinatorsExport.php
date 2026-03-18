@@ -49,7 +49,7 @@ class CoordinatorsExport implements FromQuery, WithMapping, WithHeadings, Should
             $row->user->name,
             $row->user->email,
             $row->education,
-            $row->created_at->format('d/m/Y'),
+            $row->created_at?->format('d/m/Y') ?? $row->user->created_at?->format('d/m/Y'),
         ];
     }
 

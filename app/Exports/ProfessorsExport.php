@@ -51,7 +51,7 @@ class ProfessorsExport implements FromQuery, WithMapping, WithHeadings, ShouldAu
             $professor->user->name,
             $professor->user->email,
             $professor->education,
-            $professor->created_at->format('d/m/Y'),
+            $professor->created_at?->format('d/m/Y') ?? $professor->user->created_at?->format('d/m/Y'),
         ];
     }
 
