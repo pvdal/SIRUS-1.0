@@ -7,6 +7,7 @@ use App\Exports\ProfessorsExport;
 use App\Exports\ProfessorsResultExport;
 use App\Exports\ProfessorsTemplateExport;
 use App\Imports\ProfessorsImport;
+use App\Models\FacultyEducation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -22,6 +23,7 @@ use Illuminate\Support\Facades\DB;
 
 // Static Classes and utils
 use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Exception;
 use Random\RandomException;
 use App\Utils\TokenGenerator;
 use App\Utils\PasswordGenerator;
@@ -39,23 +41,14 @@ class ProfessorController extends Controller
         // Inicializa o DynamicToken
         TokenGenerator::initializeTab();
         // Faz uma query no banco trazendo 15 registros paginados
-        $professors = Professor::with(
-            'user:id,name,email,state,updated_at,created_at'
-        )->orderBy('id')->paginate(30);
+        $professors = Professor::with([
+            'user:id,name,email,state,updated_at,created_at',
+            'user.education'
+        ])->orderBy('id')->paginate(30);
 
         // Pega a coleção paginada que retornou da query acima e mapeia com chaves amigáveis
         $professorsData = $professors->getCollection()->map(function ($professor) {
-            $user = $professor->user;
-            return [
-                'id' => $professor->id,
-                'user_id' => $professor->user_id,
-                'name' => $user->name ?? '-',
-                'email' => $user->email ?? '-',
-                'education' => $professor->education ?? '-',
-                'state' => isset($user->state) ? (int) $user->state : 0,
-                'created_at' => $professor->created_at ?? $user->created_at,
-                'updated_at' => $professor->updated_at ?? $user->updated_at,
-            ];
+            return $this->mapProfessor($professor);
         })->values(); // Pega apenas a array de valores
         // Retorna os dados na view de gerenciamento de professores
         return view('management.professors', [
@@ -69,9 +62,11 @@ class ProfessorController extends Controller
     public function show(Request $request): JsonResponse
     {
         //DB::enableQueryLog();
-        $query = Professor::with(
-            'user:id,name,email,state,updated_at,created_at'
-        )->orderBy('id'); // Carrega dados do usuário
+
+        $query = Professor::with([
+            'user:id,name,email,state,updated_at,created_at',
+            'user.education'
+        ])->orderBy('id'); // Carrega dados do usuário
 
         #region Filtros
         // searchTerm: por nome ou email
@@ -84,7 +79,7 @@ class ProfessorController extends Controller
             });
         }
         // statusFilter: ativo ou inativo
-        if($request->filled('status')) {
+        if ($request->filled('status')) {
             $status = $request->input('status');
             $query->whereHas('user', function ($q) use ($status) {
                 $q->where('state', $status);
@@ -111,17 +106,7 @@ class ProfessorController extends Controller
 
         // Mapeia para retornar somente os campos necessários
         $professorsData = $professors->getCollection()->map(function ($professor) {
-            $user = $professor->user;
-            return [
-                'id'    => $professor->id,
-                'user_id' => $professor->user_id,
-                'name'  => $professor->user->name ?? '-',
-                'email' => $professor->user->email ?? '-',
-                'education' => $professor->education ?? '-',
-                'state' => ($professor->user->state ?? 0),
-                'created_at' => $professor->created_at ?? $user->created_at,
-                'updated_at' => $professor->updated_at ?? $user->updated_at, // pega o mais recente
-            ];
+            return $this->mapProfessor($professor);
         })->values();
 
         // Retorna json com os registros filtrados
@@ -141,14 +126,19 @@ class ProfessorController extends Controller
     {
         //$start = microtime(true);
         $validated = $request->validate([
-            'name'  => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'email' => 'required|email:rfc|unique:users,email',
-            'education'  => 'nullable|string|max:255',
+            'education' => 'nullable|array',
+            'education.*.level' => 'required|string|in:graduation,specialization,masters,doctorate',
+            'education.*.course' => 'required|string|max:255',
+            'education.*.institution' => 'nullable|string|max:255',
+        ], [
+            'education.*.course.required' => 'O curso da formação é obrigatório.',
         ]);
 
-        $user = null;
         $professor = null;
-        DB::transaction(function () use ($validated, $creator, &$user, &$professor) {
+
+        DB::transaction(function () use ($validated, $creator, &$professor) {
             $password = PasswordGenerator::random();
 
             // Cria o usuário usando o controller nativo do Fortify
@@ -164,8 +154,19 @@ class ProfessorController extends Controller
             // Cria o professor vinculado ao usuário
             $professor = Professor::create([
                 'user_id' => $user->id,
-                'education' => $validated['education'],
             ]);
+
+            if (!empty($validated['education'])) {
+                $user->education()->createMany(
+                    collect($validated['education'])->map(function ($education) {
+                        return [
+                            'level' => $education['level'],
+                            'course' => $education['course'],
+                            'institution' => $education['institution'],
+                        ];
+                    })->toArray()
+                );
+            }
 
             // Envio da senha para o usuário cadastrado pelo e-mail por fila no banco
             $user->sendTemporaryPasswordNotification($password);
@@ -176,16 +177,7 @@ class ProfessorController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Professor cadastrado com sucesso.',
-            'data' => [
-                'id'    => $professor->id,
-                'user_id' => $professor->user_id,
-                'name'  => $user->name,
-                'email' => $user->email,
-                'education' => $professor->education,
-                'state' => (int) $user->state,
-                'created_at' => $professor->created_at,
-                'updated_at' => $professor->updated_at,
-            ]
+            'data' => $this->mapProfessor($professor)
         ]);
     }
 
@@ -200,12 +192,19 @@ class ProfessorController extends Controller
         $request->validate([
             'name'  => 'required|string|max:255',
             'email' => "required|email:rfc|unique:users,email,{$id},id",
-            'education'  => 'nullable|string|max:255',
+            'education' => 'nullable|array',
+            'education.*.level' => 'required|string|in:graduation,specialization,masters,doctorate',
+            'education.*.course' => 'required|string|max:255',
+            'education.*.institution' => 'nullable|string|max:255',
+        ], [
+            'education.*.course.required' => 'O curso da formação é obrigatório.',
         ]);
 
-        $professor = Professor::with(
-            'user:id,name,email,state,updated_at,created_at'
-        )->where('user_id', $id)->first();
+        $professor = Professor::with([
+            'user:id,name,email,state,updated_at,created_at',
+            'user.education'
+        ])->where('user_id', $id)
+            ->first();
 
         if(!$professor || !$professor->user) {
             return response()->json([
@@ -225,27 +224,43 @@ class ProfessorController extends Controller
             $professor->touch(); // Atualiza timestamps do professor
         }
 
-        $professor->fill([
-            'education' => $request['education'],
-        ]);
+        $currentEducation = $professor->user->education
+            ->map(fn ($item) => [
+                'level' => $item->level,
+                'course' => $item->course,
+                'institution' => $item->institution,
+            ])
+            ->sortBy('level')
+            ->values()
+            ->toArray();
+
+        $newEducation = collect($request->education)
+            ->map(fn ($item) => [
+                'level' => $item['level'],
+                'course' => $item['course'],
+                'institution' => $item['institution'] ?? null,
+            ])
+            ->sortBy('level')
+            ->values()
+            ->toArray();
+
+        if (json_encode($currentEducation) != json_encode($newEducation)) {
+            $professor->user->education()->delete();
+            $professor->user->education()->createMany($newEducation);
+
+            $professor->touch();
+        }
 
         if($professor->isDirty()) {
             $professor->save();
         }
 
+        $professor->user->load('education');
+
         return response()->json([
             'success' => true,
             'message' => 'Professor atualizado com sucesso.',
-            'data' => [
-                'id'    => $professor->id,
-                'user_id' => $professor->user_id,
-                'name'  => $professor->user->name,
-                'email' => $professor->user->email,
-                'education' => $professor->education,
-                'state' => (int) $professor->user->state,
-                'created_at' => $professor->created_at,
-                'updated_at' => $professor->updated_at,
-            ]
+            'data' => $this->mapProfessor($professor)
         ]);
     }
 
@@ -284,6 +299,10 @@ class ProfessorController extends Controller
         ]);
     }
 
+    /**
+     * @throws Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function generateFile(Request $request): BinaryFileResponse
     {
         $filters = [
@@ -294,11 +313,19 @@ class ProfessorController extends Controller
         return Excel::download(new ProfessorsExport($filters), 'relatorio-professores.xlsx');
     }
 
+    /**
+     * @throws Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function downloadTemplate(): BinaryFileResponse
     {
         return Excel::download(new ProfessorsTemplateExport, 'modelo-importacao-professores.xlsx');
     }
 
+    /**
+     * @throws Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function import(Request $request): BinaryFileResponse
     {
         $request->validate(['file' => 'required|mimes:xlsx,csv']);
@@ -307,5 +334,32 @@ class ProfessorController extends Controller
 
         return Excel::download(
             new ProfessorsResultExport($import->rowsProcessed), 'resultado-importacao.xlsx');
+    }
+
+    private function mapProfessor($professor): array
+    {
+        $user = $professor->user;
+        return [
+            'id' => $professor->id,
+            'user_id' => $professor->user_id,
+            'name' => $user->name ?? '-',
+            'email' => $user->email ?? '-',
+            'education' => $professor->user->education->isNotEmpty() ?
+                $professor->user->education
+                    ->groupBy('level')
+                    ->map(function ($items) {
+                        return $items->map(function ($item) {
+                            return [
+                                'id' => $item->id,
+                                'course' => $item->course,
+                                'institution' => $item->institution,
+                            ];
+                        });
+                    }) : [],
+            'state' => isset($user->state) ? (int) $user->state : 0,
+            'created_at' => $professor->created_at ?? $user->created_at,
+            'updated_at' => $professor->updated_at ?? $user->updated_at,
+            'expanded' => false,
+        ];
     }
 }

@@ -20,7 +20,7 @@
     {{-- Header --}}
     @if($header)
         <div>
-            <div class="flex-shrink-0 h-[35px] w-full flex items-center gap-3 px-6 py-1">
+            <div class="flex-shrink-0 h-[35px] w-full flex items-center gap-3 px-5 py-1">
                 {{ $header }}
             </div>
             <hr class="mt-0 block border-gray-300 dark:border-gray-700 transition duration-150 ease-in-out">

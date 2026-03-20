@@ -18,7 +18,12 @@ export function coordinatorsData() {
 
         name: '',
         email: '',
-        education: '',
+        education: {
+            graduation: { checked: false, course: '', institution: '' },
+            specialization: { checked: false, course: '', institution: '' },
+            masters: { checked: false, course: '', institution: '' },
+            doctorate: { checked: false, course: '', institution: '' },
+        },
         created_at: '',
         updated_at: '',
 
@@ -124,6 +129,18 @@ export function coordinatorsData() {
             this.name = coordinator.name || '';
             this.email = coordinator.email || '';
 
+            this.education.graduation.checked = !!coordinator.education.graduation?.length;
+            this.education.graduation.course = coordinator.education.graduation?.[0]?.course || '';
+
+            this.education.specialization.checked = !!coordinator.education.specialization?.length;
+            this.education.specialization.course = coordinator.education.specialization?.[0]?.course || '';
+
+            this.education.masters.checked = !!coordinator.education.masters?.length;
+            this.education.masters.course = coordinator.education.masters?.[0]?.course || '';
+
+            this.education.doctorate.checked = !!coordinator.education.doctorate?.length;
+            this.education.doctorate.course = coordinator.education.doctorate?.[0]?.course || '';
+
             // Trata os timestamps
             this.created_at = formatDateTime('Criado em', coordinator.created_at);
             this.updated_at = formatDateTime('Atualizado em', coordinator.updated_at, coordinator.created_at);
@@ -147,13 +164,21 @@ export function coordinatorsData() {
                 method = 'put'; // 'post'/'put'/'patch' conforme backend
             }
 
+            const formattedEducation = Object.entries(this.education)
+                .filter(([_, value]) => value.checked)
+                .map(([level, value]) => ({
+                    level,
+                    course: value.course,
+                    institution: value.institution,
+                }));
+
             const savedData = await saveData({
                 url: url,
                 method,
                 payload: {
                     name: this.name,
                     email: this.email,
-                    education: this.education,
+                    education: formattedEducation,
                 },
                 contexto: this,
                 campoLista: update ? null : 'newCoordinators',
@@ -244,9 +269,14 @@ export function coordinatorsData() {
                 [
                     'name',
                     'email',
-                    'education'
                 ],
             );
+            this.education = {
+                graduation: { checked: false, course: '', institution: '' },
+                specialization: { checked: false, course: '', institution: '' },
+                masters: { checked: false, course: '', institution: '' },
+                doctorate: { checked: false, course: '', institution: '' },
+            };
         },
 
         showMessage(style, message) {

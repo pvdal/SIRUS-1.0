@@ -21,11 +21,14 @@ use Illuminate\Support\Facades\DB;
 //use Illuminate\Support\Facades\Log;
 
 // Static Classes and utils
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Exception;
 use Random\RandomException;
 use App\Utils\TokenGenerator;
 use App\Utils\PasswordGenerator;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Throwable;
 
 class CoordinatorController extends Controller
 {
@@ -38,21 +41,14 @@ class CoordinatorController extends Controller
         // Inicializa o DynamicToken
         TokenGenerator::initializeTab();
         // Faz uma query no banco trazendo 15 registros paginados
-        $coordinators = Coordinator::with(
-            'user:id,name,email,state,updated_at,created_at'
-        )->orderBy('id')->paginate(30);
+        $coordinators = Coordinator::with([
+            'user:id,name,email,state,updated_at,created_at',
+            'user.education'
+        ])->orderBy('id')->paginate(30);
+
         // Pega a coleção paginada que retornou da query acima e mapeia com chaves amigáveis
         $coordinatorsData = $coordinators->getCollection()->map(function ($coordinator) {
-            return [
-                'id' => $coordinator->id,
-                'user_id' => $coordinator->user_id,
-                'name' => $coordinator->user->name,
-                'email' => $coordinator->user->email,
-                'education' => $coordinator->education,
-                'state' => (int) $coordinator->user->state,
-                'created_at' => $coordinator->created_at,
-                'updated_at' => $coordinator->updated_at,
-            ];
+            return $this->mapCoordinator($coordinator);
         })->values();
         // Retorna os dados na view de gerenciamento de coordenadores
         return view('management.coordinators', [
@@ -67,15 +63,16 @@ class CoordinatorController extends Controller
     {
         //DB::enableQueryLog();
         // Consulta no banco, join user com alguns campos ordenados por id
-        $query = Coordinator::with(
-            'user:id,name,email,state,updated_at,created_at'
-        )->orderBy('id');
+        $query = Coordinator::with([
+            'user:id,name,email,state,updated_at,created_at',
+            'user.education'
+        ])->orderBy('id');
 
         #region Filtros
         // searchTerm: por nome ou email
         if ($request->filled('search')) {
             $search = $request->input('search');
-            $query->whereHas('user',function ($q) use ($search) {
+            $query->whereHas('user', function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%")
                     ->orWhere('education', 'like', "%{$search}%");
@@ -109,16 +106,7 @@ class CoordinatorController extends Controller
 
         // Mapeia para retornar somente os campos necessários com chaves amigáveis
         $coordinatorsData = $coordinators->getCollection()->map(function ($coordinator) {
-            return [
-                'id' => $coordinator->id,
-                'user_id' => $coordinator->user_id,
-                'name' => $coordinator->user->name,
-                'email' => $coordinator->user->email,
-                'education' => $coordinator->education,
-                'state' => ($coordinator->user->state ?? 0),
-                'created_at' => $coordinator->created_at,
-                'updated_at' => $coordinator->updated_at,
-            ];
+            return $this->mapCoordinator($coordinator);
         })->values();
 
         // Retorna dos dados dos coordenadores + pagina atual e última página
@@ -132,7 +120,7 @@ class CoordinatorController extends Controller
     // Cadastro de coordenadores (‘CREATE’)
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function store (Request $request, CreateNewUser $creator): jsonResponse
     {
@@ -140,13 +128,17 @@ class CoordinatorController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email:rfc|unique:users,email',
-            'education' => 'nullable|string|max:255',
+            'education' => 'nullable|array',
+            'education.*.level' => 'required|string|in:graduation,specialization,masters,doctorate',
+            'education.*.course' => 'required|string|max:255',
+            'education.*.institution' => 'nullable|string|max:255',
+        ], [
+            'education.*.course.required' => 'O curso da formação é obrigatório.',
         ]);
 
-        $user = null;
         $coordinator = null;
 
-        DB::transaction(function () use($validated, $creator, &$user, &$coordinator) {
+        DB::transaction(function () use ($validated, $creator, &$coordinator) {
             $password = PasswordGenerator::random();
 
             // Cria o usuário usando o Fortify
@@ -162,8 +154,19 @@ class CoordinatorController extends Controller
             // Cria o coordenador vinculado ao usuário
             $coordinator = Coordinator::create([
                 'user_id' => $user->id,
-                'education' => $validated['education'],
             ]);
+
+            if (!empty($validated['education'])) {
+                $user->education()->createMany(
+                    collect($validated['education'])->map(function ($education) {
+                        return [
+                            'level' => $education['level'],
+                            'course' => $education['course'],
+                            'institution' => $education['institution'],
+                        ];
+                    })->toArray()
+                );
+            }
 
             // Envio da senha para o usuário cadastrado pelo e-mail por fila no banco
             $user->sendTemporaryPasswordNotification($password);
@@ -174,16 +177,7 @@ class CoordinatorController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Coordenador cadastrado com sucesso.',
-            'data' => [
-                'id' => $coordinator->id,
-                'user_id' => $coordinator->user_id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'education' => $coordinator->education,
-                'state' => ($user->state ?? 0),
-                'created_at' => $coordinator->created_at,
-                'updated_at' => $coordinator->updated_at,
-            ]
+            'data' => $this->mapCoordinator($coordinator)
         ]);
     }
 
@@ -198,13 +192,19 @@ class CoordinatorController extends Controller
         $request->validate([
             'name'  => 'required|string|max:255',
             'email' => "required|email:rfc|unique:users,email,{$id},id",
-            'education'  => 'nullable|string|max:255',
+            'education' => 'nullable|array',
+            'education.*.level' => 'required|string|in:graduation,specialization,masters,doctorate',
+            'education.*.course' => 'required|string|max:255',
+            'education.*.institution' => 'nullable|string|max:255',
+        ], [
+            'education.*.course.required' => 'O curso da formação é obrigatório.',
         ]);
 
-        $coordinator = Coordinator::with(
-            'user:id,name,email,state,updated_at,created_at'
-        )->where('user_id', $id)
-         ->first();
+        $coordinator = Coordinator::with([
+            'user:id,name,email,state,updated_at,created_at',
+            'user.education'
+        ])->where('user_id', $id)
+            ->first();
 
         if(!$coordinator || !$coordinator->user) {
             return response()->json([
@@ -216,7 +216,6 @@ class CoordinatorController extends Controller
         $coordinator->user->fill([
             'name' => $request['name'],
             'email' => $request['email'],
-            'education' => $request['education'],
         ]);
 
         // Só salva se houver mudanças
@@ -225,19 +224,43 @@ class CoordinatorController extends Controller
             $coordinator->touch(); // Atualiza timestamps do coordenador
         }
 
+        $currentEducation = $coordinator->user->education
+            ->map(fn ($item) => [
+                'level' => $item->level,
+                'course' => $item->course,
+                'institution' => $item->institution,
+            ])
+            ->sortBy('level')
+            ->values()
+            ->toArray();
+
+        $newEducation = collect($request->education)
+            ->map(fn ($item) => [
+                'level' => $item['level'],
+                'course' => $item['course'],
+                'institution' => $item['institution'] ?? null,
+            ])
+            ->sortBy('level')
+            ->values()
+            ->toArray();
+
+        if (json_encode($currentEducation) != json_encode($newEducation)) {
+            $coordinator->user->education()->delete();
+            $coordinator->user->education()->createMany($newEducation);
+
+            $coordinator->touch();
+        }
+
+        if($coordinator->isDirty()) {
+            $coordinator->save();
+        }
+
+        $coordinator->user->load('education');
+
         return response()->json([
             'success' => true,
             'message' => 'Coordenador atualizado com sucesso.',
-            'data' => [
-                'id' => $coordinator->id,
-                'user_id' => $coordinator->user_id,
-                'name' => $coordinator->user->name,
-                'email' => $coordinator->user->email,
-                'education' => $coordinator->education,
-                'state' => (int) $coordinator->user->state,
-                'created_at' => $coordinator->created_at,
-                'updated_at' => $coordinator->updated_at,
-            ]
+            'data' => $this->mapCoordinator($coordinator)
         ]);
     }
 
@@ -290,11 +313,19 @@ class CoordinatorController extends Controller
         return Excel::download(new CoordinatorsExport($filters), 'relatorio-Coordenadores.xlsx');
     }
 
+    /**
+     * @throws Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function downloadTemplate(): BinaryFileResponse
     {
         return Excel::download(new ProfessorsTemplateExport, 'modelo-importacao.xlsx');
     }
 
+    /**
+     * @throws Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function import(Request $request): BinaryFileResponse
     {
         $request->validate(['file' => 'required|mimes:xlsx,csv']);
@@ -305,4 +336,29 @@ class CoordinatorController extends Controller
             new ProfessorsResultExport($import->rowsProcessed), 'resultado-importacao.xlsx');
     }
 
+    private function mapCoordinator($coordinator): array
+    {
+        $user = $coordinator->user;
+        return [
+            'id' => $coordinator->id,
+            'user_id' => $coordinator->user_id,
+            'name' => $user->name ?? '-',
+            'email' => $user->email ?? '-',
+            'education' => $coordinator->user->education->isNotEmpty() ?
+                $coordinator->user->education
+                    ->groupBy('level')
+                    ->map(function ($items) {
+                        return $items->map(function ($item) {
+                            return [
+                                'id' => $item->id,
+                                'course' => $item->course,
+                                'institution' => $item->institution,
+                            ];
+                        });
+                    }) : [],
+            'state' => isset($user->state) ? (int) $user->state : 0,
+            'created_at' => $coordinator->created_at ?? $user->created_at,
+            'updated_at' => $coordinator->updated_at ?? $user->updated_at,
+        ];
+    }
 }

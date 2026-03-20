@@ -21,6 +21,7 @@
         "vite": "^6.2.4"
     },
     "dependencies": {
+        "@alpinejs/collapse": "^3.15.8",
         "@alpinejs/focus": "^3.14.9",
         "@fullcalendar/core": "^6.1.18",
         "@fullcalendar/daygrid": "^6.1.18",

@@ -138,5 +138,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(UserCommittee::class);
     }
+    public function education(): HasMany
+    {
+        return $this->hasMany(FacultyEducation::class);
+    }
     #endregion
 }
