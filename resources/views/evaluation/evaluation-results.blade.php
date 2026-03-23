@@ -174,7 +174,7 @@
                                                                         title="Ver comentário"
                                                                         class="inline-block text-gray-400 hover:text-blue-500 transition align-middle relative"
                                                                     >
-                                                                        <x-lucide-message-square-text class="w-4 h-4"/>
+                                                                        <x-lucide-message-square-text class="w-4 h-4 transition duration-150 ease-in-out"/>
                                                                         <!-- Indicador visual de comentário existente -->
                                                                         <span x-show="evaluation.groupSelections[criterion.id]?.comment"
                                                                               class="absolute ml-1 -mt-1 w-2 h-2 bg-blue-500 transition rounded-full"></span>
@@ -245,7 +245,7 @@
                                                                             <button @click="openCommentModal('individual', criterion.id, student.id)"
                                                                                     title="Ver comentário"
                                                                                     class="inline-block text-gray-400 hover:text-blue-500 align-middle relative">
-                                                                                <x-lucide-message-square-text class="w-4 h-4 text-gray-500 dark:text-gray-400 transition duration-150 ease-in-out"/>
+                                                                                <x-lucide-message-square-text class="w-4 h-4 transition duration-150 ease-in-out"/>
                                                                                 <span x-show="evaluation.individualSelections[student.id]?.[criterion.id]?.comment"
                                                                                       class="absolute ml-1 -mt-1 w-2 h-2 bg-blue-500 rounded-full transition duration-150 ease-in-out"></span>
                                                                             </button>

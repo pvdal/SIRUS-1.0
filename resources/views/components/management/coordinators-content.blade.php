@@ -176,12 +176,12 @@
                                 <template x-if="item.education.graduation && item.education.graduation.length > 0">
                                     <ul class="space-y-1">
                                         <template x-for="edu in item.education.graduation" :key="edu.id">
-                                            <li class="text-sm font-bold text-gray-700 dark:text-gray-300 transition ease-in-out duration-150" x-text="edu.course"></li>
+                                            <li class="text-base font-bold text-gray-700 dark:text-gray-300 transition ease-in-out duration-150" x-text="edu.course"></li>
                                         </template>
                                     </ul>
                                 </template>
                                 <template x-if="!item.education.graduation || item.education.graduation.length === 0">
-                                    <span class="text-sm text-gray-400">-</span>
+                                    <span class="text-base text-gray-400">-</span>
                                 </template>
                             </div>
 
@@ -191,12 +191,12 @@
                                 <template x-if="item.education.specialization && item.education.specialization.length > 0">
                                     <ul class="space-y-1">
                                         <template x-for="edu in item.education.specialization" :key="edu.id">
-                                            <li class="text-sm font-bold text-gray-700 dark:text-gray-300 transition ease-in-out duration-150" x-text="edu.course"></li>
+                                            <li class="text-base font-bold text-gray-700 dark:text-gray-300 transition ease-in-out duration-150" x-text="edu.course"></li>
                                         </template>
                                     </ul>
                                 </template>
                                 <template x-if="!item.education.specialization || item.education.specialization.length === 0">
-                                    <span class="text-sm text-gray-400">-</span>
+                                    <span class="text-base text-gray-400">-</span>
                                 </template>
                             </div>
 
@@ -206,12 +206,12 @@
                                 <template x-if="item.education.masters && item.education.masters.length > 0">
                                     <ul class="space-y-1">
                                         <template x-for="edu in item.education.masters" :key="edu.id">
-                                            <li class="text-sm font-bold text-gray-700 dark:text-gray-300 transition ease-in-out duration-150" x-text="edu.course"></li>
+                                            <li class="text-base font-bold text-gray-700 dark:text-gray-300 transition ease-in-out duration-150" x-text="edu.course"></li>
                                         </template>
                                     </ul>
                                 </template>
                                 <template x-if="!item.education.masters || item.education.masters.length === 0">
-                                    <span class="text-sm text-gray-400">-</span>
+                                    <span class="text-base text-gray-400">-</span>
                                 </template>
                             </div>
 
@@ -221,12 +221,12 @@
                                 <template x-if="item.education.doctorate && item.education.doctorate.length > 0">
                                     <ul class="space-y-1">
                                         <template x-for="edu in item.education.doctorate" :key="edu.id">
-                                            <li class="text-sm font-bold text-gray-700 dark:text-gray-300 transition ease-in-out duration-150" x-text="edu.course"></li>
+                                            <li class="text-base font-bold text-gray-700 dark:text-gray-300 transition ease-in-out duration-150" x-text="edu.course"></li>
                                         </template>
                                     </ul>
                                 </template>
                                 <template x-if="!item.education.doctorate || item.education.doctorate.length === 0">
-                                    <span class="text-sm text-gray-400">-</span>
+                                    <span class="text-base text-gray-400">-</span>
                                 </template>
                             </div>
                         </div>

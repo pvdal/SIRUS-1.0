@@ -359,7 +359,6 @@ class ProfessorController extends Controller
             'state' => isset($user->state) ? (int) $user->state : 0,
             'created_at' => $professor->created_at ?? $user->created_at,
             'updated_at' => $professor->updated_at ?? $user->updated_at,
-            'expanded' => false,
         ];
     }
 }

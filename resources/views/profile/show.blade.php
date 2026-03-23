@@ -13,6 +13,14 @@
                 <x-section-border />
             @endif
 
+            @if(auth()->user()->professor || auth()->user()->coordinator)
+                <div class="mt-10 sm:mt-0">
+                    @livewire('profile.update-education-form')
+                </div>
+
+                <x-section-border />
+            @endif
+
             @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::updatePasswords()))
                 <div class="mt-10 sm:mt-0">
                     @livewire('profile.update-password-form')
