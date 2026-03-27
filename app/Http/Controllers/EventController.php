@@ -88,13 +88,21 @@ class EventController extends Controller
 
         $events = $query->get();
 
+        /*
+         * Busca todas as avaliações do usuário de uma vez só
+         */
+        $userEvaluations = UserCommittee::where('user_id', auth()->id())
+            ->whereNotNull('evaluated_at')
+            ->pluck('committee_id')
+            ->toArray();
+
         // Ajustar para formato que o FullCalendar espera
         $data = $events
             ->filter(fn($c) => !empty($c->start) && !empty($c->end))
-            ->map(function($event) {
+            ->map(function($event) use ($userEvaluations) {
                 $start = $event->start;
                 $end = $event->end;
-                // Verifica se tem hora
+
                 $allDay = (substr($start, 11) === '00:00:00' && substr($end, 11) === '00:00:00');
 
                 $group = $event->paper?->group;
@@ -108,6 +116,7 @@ class EventController extends Controller
                     'extendedProps' => [
                         'group' => $group->theme,
                         'paper' => $event->paper?->title,
+
                         'committeeMembers' => $event->members
                             ->map(fn($m) => [
                                 'user_committee_id' => $m->id,
@@ -118,24 +127,21 @@ class EventController extends Controller
                                     'name' => $m->memberType?->name,
                                 ],
                             ])->values(),
+
                         'groupMembers' => $group->students
                             ->map(fn($m) => [
                                 'ra' => $m->ra,
                                 'name' => $m->user->name,
                             ])->values(),
-                        // Indica se o usuário autenticado pertence à comissão
+
                         'belongsTo' => $event->members
-                            ->contains(fn($m) => $m->user_id === auth()->id())
+                                ->contains(fn($m) => $m->user_id === auth()->id())
                             ||
                             $event->paper?->group?->students->contains(
                                 fn($s) => $s->user_id === auth()->id()
                             ),
 
-                        // Indica se o usuário autenticado já avaliou
-                        'evaluatedByUser' => UserCommittee::where('user_id', auth()->id())
-                            ->where('committee_id', $event->id)
-                            ->whereNotNull('evaluated_at')
-                            ->exists(),
+                        'evaluatedByUser' => in_array($event->id, $userEvaluations),
                     ]
                 ];
             });

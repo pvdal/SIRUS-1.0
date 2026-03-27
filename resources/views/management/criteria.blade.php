@@ -10,7 +10,7 @@
     </x-slot>
 
         <x-main-content>
-            <div x-data="{ ...criteriaData(),showImportModal:false }"
+            <div x-data="criteriaData()"
                  x-init='init(@json($criteria), {{ $page }}, {{ $totalPages }})'>
 
                 <x-nav-evaluation-table>

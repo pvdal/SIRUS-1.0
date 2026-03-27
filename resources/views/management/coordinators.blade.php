@@ -12,7 +12,7 @@
     {{-- Conteúdo principal --}}
     <x-main-content>
         {{-- Chamada da função alpine -> recources/js/components/management/coordinatorsData.js--}}
-        <div x-data="{ ...coordinatorsData(),showImportModal:false }"
+        <div x-data="coordinatorsData()"
              x-init='init(@json($coordinators), {{ $page}}, {{ $totalPages}})'>
             <x-nav-users-table> {{-- Navegação das tabelas de usuário --}}
                 {{-- Menu utilitário das tabelas --}}
