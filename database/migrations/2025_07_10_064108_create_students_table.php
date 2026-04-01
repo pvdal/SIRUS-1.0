@@ -13,7 +13,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('students', function (Blueprint $table) {
-            $table->string('ra', 13)->primary();
+            $table->id();
+            $table->string('ra', 13)->unique();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('course_id')->nullable()->constrained('courses')->nullOnDelete();
             $table->foreignId('group_id')->nullable()->constrained('groups')->nullOnDelete();

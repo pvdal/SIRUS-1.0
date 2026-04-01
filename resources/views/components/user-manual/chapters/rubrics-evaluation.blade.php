@@ -9,7 +9,7 @@
             <li>
                 <strong>Critério:</strong> item avaliativo específico que descreve um aspecto do desempenho,
                 como por exemplo <strong>"Domínio do tema"</strong>. Cada critério possui quatro níveis de desempenho,
-                inspirado na escala do tipo Likert.
+                inspirados na escala do tipo Likert: insatisfatório, satisfatório, bom e excelente.
             </li>
             <li>
                 <strong>Eixo:</strong> conjunto de critérios relacionados, utilizado para organizar a avaliação
@@ -64,23 +64,14 @@
             <li>Nome do Eixo</li>
             <li>Campo de busca para adicionar critérios</li>
         </ul>
-        <p class="mb-2">
-            Os eixos são adicionados por meio de um campo de busca. Cada eixo selecionado
-            possui um campo de <strong>peso</strong>, sendo obrigatório que a soma dos pesos
-            totalize <strong>100%</strong>.
-        </p>
-        <p class="mb-4">
-            Não é permitido cadastrar uma rubrica contendo dois ou mais eixos que compartilhem
-            critérios iguais, garantindo consistência e evitando duplicidade na avaliação.
-        </p>
 
         <h3 id="cap-7.2-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Rubricas</h3>
         <p class="mb-2">
-            A aba de rubricas possui visualização em <strong>cards</strong>, semelhante às abas de
+            A aba de rubricas possui visualização em <strong>cartões</strong>, semelhante às abas de
             grupos e bancas.
         </p>
         <p class="mb-2">
-            Cada card apresenta
+            Cada <cartão></cartão> apresenta:
         </p>
         <ul class="list-disc pl-6 mb-4 space-y-1">
             <li>ID da rubrica</li>
@@ -91,12 +82,11 @@
             <li>Botões de alterar e inativar</li>
         </ul>
         <p class="mb-2">
-            O modal de criação ou edição de rubricas contém:
+            O modal de criação ou edição de rubricas contém campos de:
         </p>
         <ul class="list-disc pl-6 mb-4 space-y-1">
             <li>
-                <strong>Tipo de Avaliação:</strong>
-                Individual ou Em grupo
+                <strong>Tipo de Avaliação</strong> (Individual ou Em grupo)
             </li>
             <li><strong>Nome da Rubrica</strong></li>
             <li><strong>Adicionar Eixos à Rubrica</strong></li>
@@ -121,14 +111,14 @@
     </p>
     <ol class="list-decimal pl-6 mb-4 space-y-1">
         <li>
-            Pela aba <strong>Agenda</strong>, clicando em um evento no calendário e,
+            Pela aba <strong>"Agenda"</strong>, clicando em um evento no calendário e,
             em seguida, no botão <strong>Avaliar</strong> ou <strong>Avaliação</strong>.
         </li>
         <li>
-            Pela aba <strong>Bancas</strong>:
+            Pela aba <strong>"Bancas"</strong>:
             <ul class="list-disc pl-6 mt-2">
                 <li>Coordenadores acessam pelo modal de edição da banca</li>
-                <li>Professores e alunos acessam diretamente pelo card da banca</li>
+                <li>Professores e alunos acessam diretamente pelo cartão da banca</li>
             </ul>
         </li>
     </ol>
@@ -140,7 +130,7 @@
 
     <h3 id="cap-7.3-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Ficha Avaliativa</h3>
     <p class="mb-2">
-        A ficha avaliativa é exibida em layout vertical, sem menu de navegação superior, para maior foco.
+        A ficha avaliativa é exibida sem menu de navegação superior, para maior foco.
         No cabeçalho são exibidas as seguintes informações:
     </p>
     <ul class="list-disc pl-6 mb-4 space-y-1">
@@ -149,10 +139,15 @@
         <li>Grupo</li>
         <li>Trabalho avaliado</li>
     </ul>
+    <p class="mb-2">
+        Abaixo do cabeçalho, encontra-se uma seção dedicada ao controle do tempo total da apresentação do grupo e do
+        tempo reservado para a arguição da banca. O membro responsável por esse controle será o usuário que realizou
+        o cadastro a banca no sistema ou o membro identificado como <strong>presidente</strong>.
+    </p>
     <p class="mb-4">
         A área de rubricas é dividida em:
-        <strong>Rubrica de Grupo</strong> (destacada em laranja) e
-        <strong>Rubrica Individual</strong> (destacada em azul).
+        <strong>Rubrica em Grupo</strong> (destacada em azul) e
+        <strong>Rubrica Individual</strong> (destacada em laranja).
     </p>
 
     <h3 id="cap-7.3-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Preenchimento e Envio</h3>
@@ -173,7 +168,7 @@
         um modal de aviso será exibido listando os critérios pendentes.
     </p>
     <p class="mb-2">
-        Ao clicar em <strong>Finalizar Avaliação</strong>, um modal de confirmação é exibido.
+        Ao clicar em <strong>"Finalizar Avaliação"</strong>, um modal de confirmação é exibido.
         Após o envio, a avaliação não pode mais ser editada.
     </p>
     <div class="mb-10 bg-red-50/60 dark:bg-red-900/10 border border-red-400/60 dark:border-red-500/50 rounded-lg p-4 text-red-800 dark:text-red-300">

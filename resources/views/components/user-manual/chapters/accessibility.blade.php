@@ -25,15 +25,15 @@
 
     <h3 id="cap-10.2-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Filtros disponíveis</h3>
     <ul class="list-disc pl-6 space-y-1 mb-4">
-        <li><strong>Padrão:</strong> Visualização sem alterações.</li>
-        <li><strong>Acromatomalia:</strong> Redução geral da intensidade das cores.</li>
-        <li><strong>Acromatopsia:</strong> Visualização em escala de cinza.</li>
-        <li><strong>Deuteranomalia:</strong> Sensibilidade reduzida ao verde.</li>
-        <li><strong>Deuteranopia:</strong> Dificuldade severa na distinção entre verde e vermelho.</li>
-        <li><strong>Protanomalia:</strong> Sensibilidade reduzida ao vermelho.</li>
-        <li><strong>Protanopia:</strong> Dificuldade acentuada na percepção do vermelho.</li>
-        <li><strong>Tritanomalia:</strong> Sensibilidade reduzida ao azul e amarelo.</li>
-        <li><strong>Tritanopia:</strong> Dificuldade severa na distinção entre azul e amarelo.</li>
+        <li><strong>Padrão:</strong> Visualização sem alterações</li>
+        <li><strong>Acromatomalia:</strong> Redução geral da intensidade das cores</li>
+        <li><strong>Acromatopsia:</strong> Visualização em escala de cinza</li>
+        <li><strong>Deuteranomalia:</strong> Sensibilidade reduzida ao verde</li>
+        <li><strong>Deuteranopia:</strong> Dificuldade severa na distinção entre verde e vermelho</li>
+        <li><strong>Protanomalia:</strong> Sensibilidade reduzida ao vermelho</li>
+        <li><strong>Protanopia:</strong> Dificuldade acentuada na percepção do vermelho</li>
+        <li><strong>Tritanomalia:</strong> Sensibilidade reduzida ao azul e amarelo</li>
+        <li><strong>Tritanopia:</strong> Dificuldade severa na distinção entre azul e amarelo</li>
     </ul>
 
     <h3 id="cap-10.2-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Ativação pelo Perfil</h3>
@@ -66,10 +66,11 @@
     <h2 id="cap-10.3" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">10.3 Assistente de Libras (VLibras)</h2>
     <p class="mb-4">
         Libras (Língua Brasileira de Sinais) é a língua natural da comunidade surda. Nosso sistema
-        disponibiliza o VLibras, uma tecnologia desenvolvida pelo Ministério da Economia e pela UFPE,
-        que traduz textos, elementos da interface e partes do conteúdo multimídia para Libras por meio
-        de um avatar animado. Ele auxilia na compreensão de páginas, documentos e conteúdos digitais,
-        ampliando significativamente a acessibilidade para pessoas surdas.
+        disponibiliza o VLibras, uma tecnologia desenvolvida pelo Ministério da Economia e pela
+        Universidade Federal de Pernambuco (UFPE), que traduz textos, elementos da interface e
+        partes do conteúdo multimídia para Libras por meio de um avatar animado. Ele auxilia na
+        compreensão de páginas, documentos e conteúdos digitais, ampliando significativamente a
+        acessibilidade para pessoas surdas.
     </p>
 
     <h3 id="cap-10.3-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Acesso e visibilidade</h3>
@@ -82,7 +83,7 @@
     <h3 id="cap-10.3-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Utilização</h3>
     <ol class="list-decimal pl-6 space-y-1 mb-4">
         <li>
-            Ative o assistente clicando no ícone VLibras exibidos na tela
+            Ative o assistente clicando no ícone VLibras exibido na tela
         </li>
         <li>
             Ao selecionar um conteúdo, o assistente interpreta o conteúdo da página

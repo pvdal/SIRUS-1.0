@@ -14,7 +14,7 @@
     {{-- Capítulo 8.2 --}}
     <h2 id="cap-8.2" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">8.2 Visualização em Tabela</h2>
     <p class="mb-2">
-        A visualização padrão da aba "Trabalhos" é realizada em formato de tabela.
+        A visualização padrão da aba <strong>"Trabalhos"</strong> é realizada em formato de tabela.
         No topo da tela está disponível uma barra de ações contendo:
     </p>
     <ul class="list-disc pl-6 mb-4 space-y-1">
@@ -29,9 +29,8 @@
         A coluna <strong>"Avaliação"</strong> da tabela varia conforme o estado atual do trabalho no processo de avaliação:
     </p>
     <ul class="list-disc pl-6 mb-10 space-y-1">
-        <li>Versão corrigida: campo vazio</li>
-        <li>Versão de avaliação e ainda não foi avaliado: Não avaliado</li>
-        <li>Versão de avaliação e já foi avaliado: data e hora da avaliação</li>
+        <li><strong>Trabalho ainda não avaliado:</strong> Não avaliado</li>
+        <li><strong>Trabalho avaliado:</strong> data e hora da avaliação</li>
     </ul>
 
     {{-- Capítulo 8.3 --}}
@@ -41,13 +40,12 @@
         No cadastro inicial, é necessário selecionar um arquivo PDF e preencher os seguintes campos:
     </p>
     <ul class="list-disc pl-6 mb-4 space-y-1">
-        <li>Título do trabalho</li>
-        <li>Ano</li>
-        <li>Semestre</li>
-        <li>Versão</li>
-        <li>Curso</li>
-        <li>Projeto</li>
-        <li>Grupo do trabalho</li>
+        <li><strong>Título do trabalho</strong></li>
+        <li><strong>Ano</strong></li>
+        <li><strong>Semestre</strong></li>
+        <li><strong>Curso</strong></li>
+        <li><strong>Projeto</strong></li>
+        <li><strong>Grupo do trabalho</strong></li>
     </ul>
 
     <h3 id="cap-8.3-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Edição de Trabalhos</h3>
@@ -67,8 +65,7 @@
 
     <h3 id="cap-8.3-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Informações de Avaliação</h3>
     <p class="mb-2">
-        Para trabalhos na versão de avaliação, o modal exibe informações específicas
-        conforme o estado da avaliação:
+        O modal exibe informações específicas conforme o estado da avaliação:
     </p>
     <ul class="list-disc pl-6 mb-4 space-y-1">
         <li>
@@ -80,13 +77,9 @@
         <li>
             <strong>Avaliação concluída:</strong> data e hora da avaliação realizada
         </li>
-        <li>
-            <strong>Versão corrigida:</strong> exibe o texto “Versão corrigida”
-        </li>
     </ul>
     <p class="mb-10">
-        A partir da aba "Trabalhos", é possível alterar o grupo associado a um trabalho
-        ou cadastrar uma versão corrigida para uma versão de avaliação já submetida à banca.
+        Por meio do modal é possível alterar o grupo associado a um trabalho.
     </p>
 
     {{-- Capítulo 8.4 --}}
@@ -102,21 +95,26 @@
         <strong>Ano → Semestre → Versão → Curso → Projeto</strong>
     </p>
     <p class="mb-2">
+        Inicialmente, todos os trabalhos são armazenados como versão de avaliação, correspondente ao material
+        entregue à banca para análise dos membros.
+        A estrutura de diretórios do sistema segue o padrão apresentado acima para organização dos arquivos.
+    </p>
+    <p class="mb-2">
         Ao acessar um diretório de projeto, os trabalhos associados são listados.
         Cada item possui um menu de ações acessado por um ícone de três pontos,
         contendo as seguintes opções:
     </p>
     <ul class="list-disc pl-6 mb-4 space-y-1">
-        <li>Visualizar</li>
-        <li>Abrir em nova aba</li>
-        <li>Baixar</li>
-        <li>Alterar</li>
-        <li>Inativar ou ativar</li>
+        <li><strong>Visualizar</strong></li>
+        <li><strong>Abrir em nova aba</strong></li>
+        <li><strong>Baixar</strong></li>
+        <li><strong>Alterar</strong></li>
+        <li><strong>Inativar ou ativar</strong></li>
     </ul>
 
     <h3 id="cap-8.4-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Download por Diretório</h3>
     <p class="mb-2">
-        Ao acessar um diretório no nível de <strong>Ano</strong>, o sistema exibe a lista
+        Ao acessar um diretório do nível <strong>"Ano"</strong>, o sistema exibe a lista
         de semestres disponíveis para aquele período.
     </p>
     <p class="mb-2">

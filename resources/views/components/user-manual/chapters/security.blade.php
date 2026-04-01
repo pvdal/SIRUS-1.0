@@ -41,9 +41,9 @@
     </div>
 
     {{-- Capítulo 3.2 --}}
-    <h2 id="cap-3.2" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">3.2 Autenticação de Dois Fatores (2FA)</h2>
+    <h2 id="cap-3.2" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">3.2 Autenticação em Dois Fatores (2FA)</h2>
     <p class="mb-4">
-        A autenticação de dois fatores fornece segurança adicional à sua conta. Ao ativar, você precisará de um código além da sua senha para acessar o sistema.
+        A autenticação em dois fatores fornece segurança adicional à sua conta. Ao ativar, você precisará de um código além da sua senha para acessar o sistema.
     </p>
 
     <h3 id="cap-3.2-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Como Funciona</h3>
@@ -61,7 +61,7 @@
     <ol class="list-decimal pl-6 space-y-1 mb-10">
         <li>
             Na página de perfil — acessível pelo menu superior, conforme exposto no <strong>capítulo 2.5</strong>
-            deste manual —, localize a seção <strong>"Autenticação de dois fatores"</strong>
+            deste manual —, localize a seção <strong>"Autenticação em dois fatores"</strong>
         </li>
         <li>Clique em <strong>"Habilitar"</strong></li>
         <li>Insira sua chave de configuração ou escaneie o QR code</li>
@@ -129,8 +129,8 @@
     <h2 id="cap-3.5" class="text-2xl font-semibold mb-2">3.5 Boas Práticas de Segurança</h2>
     <ul class="list-disc pl-6 space-y-1">
         <li>Não compartilhe suas credenciais com terceiros</li>
-        <li>Utilize senhas fortes e exclusivas</li>
-        <li>Ative a autenticação de dois fatores sempre que possível</li>
+        <li>Utilize senhas fortes e exclusivas, contendo caracteres alfanuméricos e especiais</li>
+        <li>Ative a autenticação em dois fatores sempre que possível</li>
         <li>Finalize a sessão ao utilizar computadores públicos</li>
         <li>Verifique regularmente os dispositivos conectados à sua conta</li>
     </ul>
@@ -147,7 +147,7 @@
 
         <a href="#cap-3.2" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
             <span class="font-medium">3.2</span>
-            <span>Autenticação de Dois Fatores (2FA)</span>
+            <span>Autenticação em Dois Fatores (2FA)</span>
         </a>
         <a href="#cap-3.2-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
             <span>Como funciona</span>

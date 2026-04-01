@@ -80,8 +80,9 @@
             :haveActions="true"
         >
             <x-slot name="columns">
+                <x-table.th class="hidden md:table-cell">ID</x-table.th>
                 <x-table.th class="hidden md:table-cell">RA</x-table.th>
-                <x-table.th  >Nome</x-table.th >
+                <x-table.th>Nome</x-table.th >
                 <x-table.th class=" hidden lg:table-cell">E-mail</x-table.th>
                 <x-table.th class=" hidden md:table-cell">Grupo</x-table.th>
                 <x-table.th class=" hidden xl:table-cell">Curso</x-table.th>
@@ -89,6 +90,7 @@
             </x-slot>
 
             <x-slot name="rows">
+                <x-table.td class="hidden md:table-cell" x-text="item.id"></x-table.td>
                 <x-table.td class="hidden md:table-cell" x-text="item.ra"></x-table.td>
                 <x-table.td x-text="item.name"></x-table.td>
                 <x-table.td class="hidden lg:table-cell" x-text="item.email"></x-table.td>

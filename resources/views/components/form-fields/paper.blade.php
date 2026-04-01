@@ -288,7 +288,6 @@
         </template>
     </div>
 
-
     <template x-if="!corrected_version">
         <div class="mt-4">
             <template x-if="schedule.start && schedule.end && edit">

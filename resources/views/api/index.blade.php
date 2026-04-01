@@ -1,4 +1,8 @@
 <x-app-layout>
+    <x-slot name="title">
+        Tokens de API
+    </x-slot>
+
     <x-slot name="header">
         <h2 class="font-semibold text-xl leading-tight">
             {{ __('API Tokens') }}

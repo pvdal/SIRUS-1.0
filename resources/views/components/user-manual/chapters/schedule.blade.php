@@ -31,14 +31,21 @@
         4.2 Interação com o Calendário
     </h2>
 
-    <h3 id="cap-4.2-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Alternância de visualização</h3>
+    <h3 id="cap-4.2-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Filtros</h3>
+    <p class="mb-2">
+        No canto superior esquerdo do calendário, há um botão identificado como <strong>"Filtros"</strong>,
+        que ao ser clicado exibe filtros de busca de eventos (bancas) por
+        termo, curso ou projeto.
+    </p>
+
+    <h3 id="cap-4.2-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Alternância de visualização</h3>
     <p class="mb-4">
-        No canto superior esquerdo do calendário, estão disponíveis botões que permitem ao usuário
+        No canto superior esquerdo do calendário, também estão disponíveis botões que permitem ao usuário
         alternar o modo de visualização da agenda <strong>(mensal, semanal, diária)</strong>,
         conforme a necessidade de análise ou planejamento.
     </p>
 
-    <h3 id="cap-4.2-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Navegação por datas</h3>
+    <h3 id="cap-4.2-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Navegação por datas</h3>
     <p class="mb-2">
         No canto superior direito do calendário, estão disponíveis controles de navegação
         que auxiliam na localização das datas desejadas:
@@ -53,7 +60,7 @@
         </li>
     </ul>
 
-    <h3 id="cap-4.2-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Seleção de datas e horários</h3>
+    <h3 id="cap-4.2-d" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Seleção de datas e horários</h3>
     <p class="mb-2">
         Ao clicar em uma <strong>célula do calendário</strong> (dia ou horário), o sistema
         responde de acordo com o contexto:
@@ -205,12 +212,15 @@
             <span>Interação com o Calendário</span>
         </a>
         <a href="#cap-4.2-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Alternância de visualização</span>
+            <span>Filtros</span>
         </a>
         <a href="#cap-4.2-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
+            <span>Alternância de visualização</span>
+        </a>
+        <a href="#cap-4.2-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
             <span>Navegação por datas</span>
         </a>
-        <a href="#cap-4.2-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
+        <a href="#cap-4.2-d" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
             <span>Seleção de datas e horários</span>
         </a>
 

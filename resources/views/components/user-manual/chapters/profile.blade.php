@@ -36,6 +36,11 @@
         <li>Foto de perfil</li>
         <li>Curso vinculado (coordenadores e alunos)</li>
     </ul>
+    <p class="mb-2">
+        Coordenadores e professores possuem, em seu perfil, a seção <strong>"Formação"</strong>, onde podem cadastrar
+        seus principais cursos de graduação, especialização, mestrado ou doutorado. Após atualizar essas informações,
+        o usuário deverá aguardar ao menos duas horas antes de realizar uma nova atualização.
+    </p>
     <div class="mb-4 bg-amber-50 dark:bg-stone-800/80 border border-amber-700 dark:border-amber-400/60 rounded-lg p-4 text-amber-800 dark:text-amber-300">
         <p class="font-semibold">
             Cuidado
@@ -61,7 +66,7 @@
         <p class="font-semibold mb-1">Requisitos da imagem</p>
         <p class="text-sm text-gray-800 dark:text-gray-300">
             Formatos aceitos: JPG, JPEG ou PNG<br>
-            Tamanho máximo: 5MB
+            Tamanho máximo: 256KB
         </p>
     </div>
 
@@ -77,9 +82,9 @@
         <strong>um número</strong> e <strong>um caractere especial</strong>.
     </p>
 
-    <h3 id="cap-9.2-e" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Autenticação de Dois Fatores (2FA)</h3>
+    <h3 id="cap-9.2-e" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Autenticação em Dois Fatores (2FA)</h3>
     <p class="mb-4">
-        Nesta seção é possível habilitar a autenticação de dois fatores, adicionando uma camada extra
+        Nesta seção é possível habilitar a autenticação em dois fatores, adicionando uma camada extra
         de segurança à conta. O funcionamento detalhado dessa funcionalidade é descrito no
         <strong>capítulo 3.2</strong> deste manual.
     </p>
@@ -132,7 +137,7 @@
             <span>Critérios da senha</span>
         </a>
         <a href="#cap-9.2-e" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Autenticação de Dois Fatores (2FA)</span>
+            <span>Autenticação em Dois Fatores (2FA)</span>
         </a>
         <a href="#cap-9.2-f" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
             <span>Sessões do Navegador</span>

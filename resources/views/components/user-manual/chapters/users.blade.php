@@ -77,7 +77,7 @@
     <p class="mb-2">
         A ação <strong>"Alterar"</strong> abre um modal com os dados do aluno para edição.
         A ação <strong>"Inativar"</strong> exibe um modal de confirmação, no qual a operação
-        pode ser confirmada, cancelada pelo botão "Voltar", clique externo ou tecla ESC.
+        pode ser confirmada, ou cancelada pelo botão "Voltar", clique externo ou tecla "ESC".
     </p>
     <p class="mb-10">
         A navegação entre páginas é feita por um sistema de paginação que permite avançar ou retroceder
@@ -95,12 +95,21 @@
     <ul class="list-disc pl-6 space-y-1 mb-4">
         <li>Nome</li>
         <li>E-mail</li>
+        <li>Graduação</li>
+        <li>Especialização</li>
+        <li>Mestrado</li>
+        <li>Doutorado</li>
     </ul>
+    <p class="mb-4">
+        Os campos de formação não precisam ser preenchidos no cadastro, pois são opcionais. O próprio usuário
+        pode inserir essas informações posteriormente pelo seu perfil. É possível cadastrar apenas um curso
+        para cada tipo de formação, portanto, recomenda-se informar os principais.
+    </p>
 
     <h3 id="cap-5.5-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Filtros disponíveis</h3>
     <ul class="list-disc pl-6 space-y-1 mb-4">
         <li>Estado (ativo ou inativo)</li>
-        <li>Período de cadastro</li>
+        <li>Período de cadastro (hoje, últimos 7 dias, últimos 30 dias)</li>
     </ul>
     <div class="bg-blue-50/60 dark:bg-blue-900/10 border border-blue-400/60 dark:border-blue-500/50 rounded-lg p-4 text-blue-800 dark:text-blue-300">
         <p class="font-semibold">

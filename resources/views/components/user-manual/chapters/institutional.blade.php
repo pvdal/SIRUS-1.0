@@ -119,11 +119,12 @@
         tamanho, além de campos para definição de
     </p>
     <ul class="list-disc pl-6 space-y-1 mb-4">
+        <li><strong>Título do trabalho</strong></li>
         <li><strong>Ano</strong></li>
         <li><strong>Semestre</strong></li>
-        <li><strong>Projeto</strong></li>
-        <li><strong>Versão</strong></li>
         <li><strong>Curso</strong></li>
+        <li><strong>Projeto</strong></li>
+        <li><strong>Grupo do trabalho</strong></li>
     </ul>
     <p class="mb-2">
         Alguns campos são preenchidos automaticamente, considerando o ano e semestre atuais.
@@ -141,13 +142,14 @@
         também é possível
     </p>
     <ul class="list-disc pl-6 space-y-1 mb-4">
-        <li>Editar o título do trabalho</li>
         <li>Visualizar o arquivo dentro do sistema ou abrir em nova aba</li>
         <li>Realizar download do arquivo</li>
         <li>Inativar o trabalho clicando no botão de exclusão <strong>"X"</strong></li>
     </ul>
     <p class="mb-4">
-        O botão <strong>"Fechar todos"</strong> permite colapsar todos os itens da lista simultaneamente.
+        O botão <strong>“Fechar todos”</strong> possibilita recolher todos os itens da lista de uma só vez.
+        Na parte inferior de cada menu expansível, também é exibido o tamanho do arquivo em MB (megabytes).
+        Ao final da lista, é apresentado o tamanho total ocupado por todos os trabalhos vinculados ao grupo.
     </p>
 
     <h3 id="cap-6.2.2-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Seleção de membros do grupo</h3>
@@ -163,7 +165,7 @@
     {{-- Capítulo 6.3 --}}
     <h2 id="cap-6.3" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">6.3 Gerenciamento de Bancas</h2>
     <p class="mb-4">
-        A aba <strong>"Bancas"</strong> apresenta as bancas de avaliação em formato de
+        A aba <strong>"Bancas"</strong> apresenta as bancas avaliadoras em formato de
         <strong>cartões responsivos</strong>, seguindo o mesmo padrão visual e funcional da
         aba de <strong>grupos</strong>. A tela conta com botão de cadastro, campo de busca, filtros e opção
         para limpar filtros.
@@ -191,7 +193,7 @@
         <li><strong>ID da banca:</strong> exibido no topo do cartão</li>
         <li><strong>Criador:</strong> nome do coordenador responsável pela criação da banca</li>
         <li><strong>Nome da banca:</strong> identificação textual da banca</li>
-        <li><strong>Lista de membros:</strong> integrantes da banca com indicação de papel (ex.: Orientador, Membro)</li>
+        <li><strong>Lista de membros:</strong> integrantes da banca com indicação de função (ex.: Orientador, Membro)</li>
     </ul>
     <p class="mb-2">
         Na parte inferior do cartão são exibidos a etiqueta de estado
@@ -225,19 +227,11 @@
         <li><strong>Nova aba:</strong> abre o arquivo em uma nova aba do navegador</li>
         <li><strong>Baixar:</strong> realiza o download do arquivo</li>
     </ul>
-    <p class="mb-2">
-        Abaixo desse botão, estão disponíveis as opções <strong>"Avaliação"</strong> e
-        <strong>"Corrigido"</strong>, que alternam dinamicamente o arquivo exibido:
-    </p>
-    <ul class="list-disc pl-6 space-y-1 mb-4">
-        <li><strong>Avaliação:</strong> versão avaliada pela banca</li>
-        <li><strong>Corrigido:</strong> versão corrigida do trabalho após a avaliação</li>
-    </ul>
 
     <h2 id="cap-6.3.2" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">6.3.2 Cadastro e edição de bancas</h2>
     <p class="mb-4">
         O cadastro e a edição de bancas são realizados por meio de um modal, acessado a partir da tela de gerenciamento de bancas.
-        O modal concentra todas as configurações necessárias para a definição da banca avaliativa, incluindo grupo, trabalho, rubricas e membros.
+        O modal concentra todas as configurações necessárias para a definição da banca avaliadora, incluindo grupo, trabalho, rubricas e membros.
     </p>
 
     <h3 id="cap-6.3.2-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Campos do formulário</h3>
@@ -256,7 +250,7 @@
     </p>
     <ul class="list-disc pl-6 space-y-1 mb-4">
         <li>É obrigatório selecionar, no mínimo, duas rubricas</li>
-        <li>Deve existir pelo menos uma rubrica do tipo <strong>Individual</strong> e uma do tipo <strong>Em grupo</strong></li>
+        <li>Deve existir pelo menos uma rubrica do tipo <strong>"Individual"</strong> e uma do tipo <strong>"Em grupo"</strong></li>
         <li>A soma dos pesos de todas as rubricas deve totalizar <strong>100%</strong></li>
     </ul>
     <p class="mb-4">
@@ -265,7 +259,7 @@
 
     <h3 id="cap-6.3.2-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Tipo de membro</h3>
     <p class="mb-2">
-        O campo <strong>"Tipo de membro"</strong> define o papel que será atribuído aos membros adicionados à banca. As opções disponíveis são:
+        O campo <strong>"Tipo de membro"</strong> define a função que será atribuída aos membros adicionados à banca. As opções disponíveis são:
     </p>
     <ul class="list-disc pl-6 space-y-1 mb-4">
         <li>Convidado</li>
@@ -276,7 +270,12 @@
         <li>Presidente</li>
     </ul>
     <p class="mb-4">
-        O tipo selecionado nesse campo será aplicado automaticamente a todos os membros adicionados enquanto ele estiver ativo, podendo ser alterado a qualquer momento.
+        O tipo selecionado neste campo será aplicado automaticamente a todos os membros adicionados
+        enquanto estiver ativo, podendo ser alterado a qualquer momento.
+
+        O membro <strong>presidente</strong> é o líder da banca, responsável pela contagem do tempo de
+        apresentação do grupo e pela condução da arguição. Caso não haja um presidente designado, a
+        contagem do tempo deverá ser realizada pelo usuário responsável pelo cadastro da banca.
     </p>
 
     <h3 id="cap-6.3.2-d" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Membros da banca</h3>
@@ -284,7 +283,7 @@
         O campo de busca de membros funciona de forma semelhante à busca de membros do grupo. À medida que o usuário digita, são exibidas até <strong>20 sugestões</strong> de coordenadores e professores.
     </p>
     <p class="mb-2">
-        Cada item da lista exibe o <strong>tipo do usuário</strong> (Coordenador ou Professor), o nome e o identificador. Ao clicar em um membro, ele é adicionado à lista de membros da banca com o tipo definido no campo <strong>"Tipo de membro"</strong>.
+        Cada item da lista exibe o <strong>tipo do usuário</strong> (coordenador ou professor), o nome e o identificador. Ao clicar em um membro, ele é adicionado à lista de membros da banca com o tipo definido no campo <strong>"Tipo de membro"</strong>.
     </p>
     <p class="mb-4">
         Os membros adicionados são exibidos em uma lista abaixo, cada um com um botão de exclusão no canto direito, que permite removê-los da banca. As alterações somente são efetivadas após clicar em <strong>"Salvar"</strong>.
@@ -341,11 +340,6 @@
         6.4 Visualização do Grupo pelo Aluno
     </h2>
     <p class="mb-4">
-        @can('is-admin')
-            Diferentemente do coordenador, que visualiza os grupos em formato de <strong>cartões</strong>,
-            o aluno possui acesso à aba <strong>"Grupo"</strong>, no singular, disponível no menu superior
-            do sistema.
-        @endcan
         Essa página apresenta exclusivamente as informações referentes ao grupo ao qual
         o aluno está vinculado.
     </p>
@@ -366,7 +360,7 @@
         <li><strong>Tema do grupo:</strong> título principal do grupo</li>
         <li><strong>Quantidade de membros:</strong> total de integrantes vinculados</li>
         <li><strong>Quantidade de trabalhos:</strong> total de arquivos cadastrados</li>
-        <li><strong>Status:</strong> indicação se o grupo está Ativo ou Inativo</li>
+        <li><strong>Status:</strong> indicação se o grupo está ativo ou inativo</li>
         <li><strong>Data de criação:</strong> registro da criação do grupo</li>
         <li><strong>Última atualização:</strong> data da modificação mais recente</li>
     </ul>
@@ -382,7 +376,7 @@
         <li><strong>Identificação visual</strong> (avatar ou iniciais)</li>
     </ul>
     <p class="mb-4">
-        O aluno possui permissão exclusivamente de <strong>visualização</strong>, não sendo possível
+        O aluno possui permissão apenas de <strong>visualização</strong>, não sendo possível
         alterar a composição do grupo.
     </p>
 
@@ -398,7 +392,7 @@
         <li><strong>Ano</strong></li>
         <li><strong>Semestre</strong></li>
         <li><strong>Projeto</strong></li>
-        <li><strong>Versão</strong></li>
+        <li><strong>Curso</strong></li>
     </ul>
     <p class="mb-2">
         Os itens da lista são clicáveis. Ao clicar sobre o nome do trabalho,
@@ -411,7 +405,7 @@
         <li><strong>Baixar:</strong> realiza o download do arquivo</li>
     </ul>
     <p>
-        Trabalhos marcados como <strong>Inativo</strong> permanecem visíveis na listagem,
+        Trabalhos marcados como <strong>"inativo"</strong> permanecem visíveis na listagem,
         identificados por etiqueta específica, porém sem alteração estrutural
         na organização da página.
     </p>

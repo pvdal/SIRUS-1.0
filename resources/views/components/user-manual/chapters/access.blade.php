@@ -51,7 +51,7 @@
 
     <h3 id="cap-2.2-d" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Rodapé</h3>
     <p class="mb-10">
-        No rodapé da página, estão disponíveis links para os Termos de Uso e Políticas de Privacidade, além de um botão
+        No rodapé da página, estão disponíveis links para os Termos de Uso e Política de Privacidade, além de um botão
         identificado com ícone de sol ou lua que permite alternar entre os temas claro e escuro da interface.
     </p>
 
@@ -82,9 +82,9 @@
         o login novamente nesse navegador, a menos que os dados de navegação sejam limpos.
     </p>
 
-    <h3 id="cap-2.3-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Autenticação de dois fatores (2FA)</h3>
+    <h3 id="cap-2.3-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Autenticação em dois fatores (2FA)</h3>
     <p class="mb-4">
-        Caso a <strong>autenticação de dois fatores (2FA)</strong> esteja ativada, após informar
+        Caso a <strong>autenticação em dois fatores (2FA)</strong> esteja ativada, após informar
         o e-mail e a senha na tela de login, você também deverá inserir o código gerado pelo
         aplicativo autenticador configurado ou um dos códigos de recuperação.
         O <strong>capítulo 3.2</strong> deste manual apresenta os detalhes sobre a ativação
@@ -96,7 +96,7 @@
         </p>
         <p class="text-sm leading-relaxed text-gray-800 dark:text-gray-300">
             Nunca compartilhe sua senha com outras pessoas, pois isso compromete a segurança da sua conta.
-            Para aumentar o nível de segurança da conta, recomenda-se a ativação da autenticação de dois fatores.
+            Para aumentar o nível de segurança da conta, recomenda-se a ativação da autenticação em dois fatores.
             Caso esqueça sua senha, siga os procedimentos
             descritos no <strong> capítulo 3.1</strong> deste manual para recuperá-la. Persistindo o problema,
             entre em contato com o administrador do sistema.
@@ -113,8 +113,8 @@
     <ol class="list-decimal pl-6 space-y-1 mb-4">
         <li>Receber sua <strong>senha temporária</strong> enviada pelo sistema após o cadastro realizado pelo coordenador</li>
         <li>Fazer login usando a senha temporária</li>
-        <li>Solicitar o envio do <strong>e-mail de validação</strong></li>
-        <li>Acessar o link enviado para confirmar seu endereço de e-mail</li>
+        <li>Solicitar o envio do <strong>e-mail de validação</strong> (o envio pode levar alguns segundos)</li>
+        <li>Acessar o link recebido para confirmar seu endereço de e-mail</li>
     </ol>
 
     <h3 id="cap-2.4-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Aceite dos Temos de Uso e Política de Privacidade</h3>
@@ -130,7 +130,7 @@
         a esses documentos.
     </p>
     <p class="mb-4">
-        Caso concorde com a política e os termos, marque a opção <strong>"Eu concordo com os Termos de uso e com a Política
+        Caso concorde com a Política e os Termos, marque a opção <strong>"Eu concordo com os Termos de uso e com a Política
         de Privacidade"</strong> e, em seguida, clique em <strong>"Aceitar e continuar"</strong>.
     </p>
     <div class="mb-10 bg-blue-50/60 dark:bg-blue-900/10 border border-blue-400/60 dark:border-blue-500/50 rounded-lg p-4 text-blue-800 dark:text-blue-300">
@@ -149,7 +149,7 @@
     </h2>
     <p class="mb-4">
         Após a autenticação, você será é direcionado à interface principal do SIRUS.
-        Essa interface é composta por um <strong>menu superior fixo</strong>, presente em todas
+        Essa interface é composta por um <strong>menu superior fixo</strong>, presente em quase todas
         as páginas internas do sistema, responsável por centralizar a navegação entre
         as funcionalidades disponíveis.
     </p>
@@ -174,8 +174,9 @@
     </ul>
     <p class="mb-4">
         Para usuários com perfil de <strong>professor</strong> ou <strong>aluno</strong>,
-        o menu é simplificado, exibindo apenas os acessos à <strong>Agenda</strong> e às
-        <strong>Bancas</strong>.
+        o menu é simplificado, exibindo apenas os acessos à <strong>agenda</strong> e às
+        <strong>bancas</strong>, que correspondem ao histórico de avaliações. o Aluno também tem acesso
+        a uma panorama geral de seu próprio <strong>grupo</strong>.
     </p>
 
     <h3 id="cap-2.5-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Acesso ao perfil</h3>
@@ -189,7 +190,7 @@
     <p class="mb-4">
         Abaixo do menu superior, o sistema apresenta um <strong>cabeçalho da página</strong>,
         responsável por identificar de forma sucinta o conteúdo exibido, por meio de títulos
-        como <em>"Bancas agendadas"</em> ou <em>"Alunos cadastrados"</em>. Nessa cabeçalho se encontra um
+        como <strong>"Bancas agendadas"</strong> ou <strong>"Alunos cadastrados"</strong>. Nessa cabeçalho se encontra um
         botão identificado por um ícone de sol ou lua. Clicando nele é possível alterar o tema do sistema
         (<strong>claro</strong> ou <strong>escuro</strong>).
     </p>
@@ -239,7 +240,7 @@
             <span>Manter conectado</span>
         </a>
         <a href="#cap-2.3-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Autenticação de dois fatores (2FA)</span>
+            <span>Autenticação em dois fatores (2FA)</span>
         </a>
 
         <a href="#cap-2.4" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">

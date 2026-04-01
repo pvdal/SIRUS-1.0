@@ -50,7 +50,7 @@ class StudentController extends Controller
             'user:id,name,email,state,updated_at,created_at',
             'group:id,theme,state',
             'course:id,name,state',
-        )->orderBy('ra')->paginate(30);
+        )->paginate(30);
 
         // Dados utilizados para o modal de cadastro e filtros
         $groups = Group::select(['id', 'theme'])
@@ -102,7 +102,7 @@ class StudentController extends Controller
             'user:id,name,email,state,updated_at,created_at',
             'group:id,theme,state',
             'course:id,name,state',
-        )->orderBy('ra');
+        );
 
         #region Filtros
         if ($request->filled('search')) {
@@ -312,6 +312,7 @@ class StudentController extends Controller
     private function mapStudent($student, $user): array
     {
         return [
+            'id' => $student->id,
             'ra' => $student->ra,
             'user_id' => $student->user_id,
             'name' => $student->user->name,

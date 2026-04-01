@@ -17,7 +17,7 @@
     <ul class="list-disc pl-6 space-y-1 mb-10">
         <li>Centralizar o gerenciamento das avaliações acadêmicas em uma única plataforma</li>
         <li>Padronizar critérios, rubricas e métodos de atribuição de notas</li>
-        <li>Facilitar a organização e o acompanhamento das bancas avaliativas e dos grupos avaliados</li>
+        <li>Facilitar a organização e o acompanhamento das bancas avaliadoras e dos grupos avaliados</li>
         <li>Organizar e disponibilizar dados de alunos, professores e coordenadores, relacionados ao evento, de forma estruturada</li>
         <li>Fornecer registros, análises e relatórios que apoiem a tomada de decisão e o feedback aos alunos</li>
     </ul>
@@ -30,7 +30,7 @@
     </p>
     <ul class="list-disc pl-6 space-y-1 mb-10 text-gray-800 dark:text-gray-300">
         <li><strong>Coordenadores acadêmicos:</strong> gerenciam toda a plataforma, podendo também atuar como avaliadores</li>
-        <li><strong>Professores e avaliadores:</strong> realizam as avaliações dos trabalhos acadêmicos dos alunos</li>
+        <li><strong>Professores:</strong> realizam as avaliações dos trabalhos acadêmicos dos alunos</li>
         <li>
             <strong>Alunos (organizados em grupos):</strong> participam de avaliações, tendo seus trabalhos e apresentações submetidos à avaliação,
             e acompanham seus resultados
@@ -93,6 +93,7 @@
         Abaixo do título, encontra-se a lista de capítulos do manual. O capítulo atualmente
         selecionado permanece destacado, permitindo ao usuário identificar facilmente
         sua posição no conteúdo.
+        Na parte inferior, é exibida a data da última atualização realizada no conteúdo deste manual.
     </p>
 
     <h3 id="cap-1.4.1-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Navegação do capítulo</h3>

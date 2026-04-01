@@ -49,11 +49,14 @@
             <aside class="w-full lg:w-1/4">
                 <div class="flex flex-col bg-white dark:bg-gray-900 shadow
                     lg:h-[calc(100vh-64px)] sticky top-[64px]
-                    pb-10 lg:pb-2 pt-5 overflow-hidden
+                    pb-10 lg:pb-2 pt-5
                     border border-white dark:border-gray-900
                     rounded-b-md lg:rounded-sm">
                     <div class="flex items-center mb-4 px-4 text-gray-800 dark:text-gray-100">
-                        <h1 class="text-lg font-semibold me-auto">Manual do Usuário</h1>
+                        <div id="manual-heading" class="flex flex-col me-auto">
+                            <h1 class="text-lg font-semibold me-auto">Manual do Usuário</h1>
+                        </div>
+
                         <button
                             x-on:click="settings = !settings"
                             class="hover:bg-gray-200 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md p-2">
@@ -63,12 +66,20 @@
                     <hr x-show="!settings" class="border-gray-100 dark:border-gray-700 mx-2">
                     {{-- Navegação entre capítulos --}}
                     <nav x-show="!settings" class="flex-1 overflow-y-auto scrollbar-custom
-                        space-y-1 px-4 py-2 lg:h-[calc('100vh-80px-48px-34px)]">
+                        space-y-1 px-4 py-2 lg:h-[calc(100vh-80px-48px-34px)]">
                         <x-user-manual.manual-chapters/>
                     </nav>
                     {{-- Configuração de tipografia --}}
                     <div x-cloak x-show="settings">
                         <x-user-manual.settings/>
+                    </div>
+                    <div class="flex justify-start px-2 pt-3">
+                        <span
+                            class="inline-flex px-3 py-1 rounded-lg text-xs lg:text-sm font-light text-gray-600
+                            dark:text-gray-400 "
+                        >
+                            Última atualização: 01/04/2026
+                        </span>
                     </div>
                 </div>
             </aside>

@@ -10,9 +10,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Student extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'ra'; // Chave primária personalizada (string)
-    public $incrementing = false; // Impede autoincremento
-    protected $keyType = 'string'; // Define como string
 
     // Campos que serão aceitos por esse model usando os métodos eloquent
     protected $fillable = [

@@ -33,7 +33,12 @@ export function studentsData() {
         name: '',
         email: '',
         semester: '',
-        group_id: '',
+        group: {
+            id: '',
+            theme: '',
+            drop: false,
+            search: '',
+        },
         course_id: '',
         created_at: '',
         updated_at: '',
@@ -93,6 +98,18 @@ export function studentsData() {
                 }
             });
 
+            this.$watch('group.search', (value) => {
+                console.log('chegou');
+                value = value.trim();
+                if(value) {
+                    this.searchGroups();
+                } else {
+                    this.searching = false;
+                    this.showNoGroupsMsg = false;
+
+                }
+            });
+
             this.$watch('showCreateModal', (value) => {
                 if(!value) {
                     this.edit = false;
@@ -107,13 +124,13 @@ export function studentsData() {
             if (this.searchTimeout) clearTimeout(this.searchTimeout);
 
             this.searchTimeout = setTimeout(async () => {
-                if (!this.groupFilter.drop) {
+                if (!this.groupFilter.drop && !this.group.drop ) {
                     this.searching = false;
                     this.showNoGroupsMsg = false;
                     return;
                 }
 
-                const term = this.groupFilter.search.trim();
+                const term = this.groupFilter.search.trim() || this.group.search.trim();
                 if (!term) {
                     this.searching = false;
                     this.showNoGroupsMsg = false;
@@ -213,7 +230,8 @@ export function studentsData() {
             this.name = student.name || '';
             this.email = student.email || '';
             this.semester = student.semester || '';
-            this.group_id = student.group.id || '';
+            this.group.id = student.group.id || '';
+            this.group.theme = student.group.name || '';
             this.course_id = student.course.id || '';
 
             // Trata os timestamps
@@ -246,7 +264,7 @@ export function studentsData() {
                     ra: this.ra ? this.ra.toString().replace(/\D/g, '') : null,
                     name: this.name,
                     email: this.email,
-                    group_id: this.group_id,
+                    group_id: this.group.id,
                     course_id: this.course_id,
                 },
                 contexto: this,
@@ -336,7 +354,6 @@ export function studentsData() {
                     'ra',
                     'name',
                     'email',
-                    'group_id',
                     'course_id',
                 ],
                 [
@@ -345,6 +362,12 @@ export function studentsData() {
                 ],
             );
             this.filteredGroups = [];
+            this.group = {
+                id: '',
+                theme: '',
+                drop: false,
+                search: '',
+            };
         },
 
         showMessage(style, message) {

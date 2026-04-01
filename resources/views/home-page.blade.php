@@ -287,7 +287,7 @@
                         semestrais são armazenados de forma prática e acessível, permitindo que alunos e professores visualizem ou baixem o material sempre que necessário.'],
                         ['icon' =>'import', 'title' => 'Importação de dados', 'text' => 'Importação de dados via planilhas Excel para acelerar cadastros em massa.
                         Em vez de registrar usuários um por um, o sistema permite um fluxo automatizado e eficiente para grandes volumes de informações.'],
-                        ['icon' =>'lock', 'title' => 'Autenticação de dois fatores', 'text' => 'A autenticação de dois fatores fortalece o processo de
+                        ['icon' =>'lock', 'title' => 'Autenticação em dois fatores', 'text' => 'A autenticação em dois fatores fortalece o processo de
                         login ao exigir que o usuário confirme sua identidade por meio de um código temporário gerado em um aplicativo autenticador.'],
                     ] as $feature)
 
