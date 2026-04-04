@@ -27,14 +27,17 @@ class ProfessorsResultExport implements FromCollection, WithHeadings, WithStyles
         return [
             $row['nome'] ?? $row['Nome'] ?? '',
             $row['email'] ?? $row['Email'] ?? '',
-            $row['formacao'] ?? $row['Formação'] ?? '',
+            $row['graduacao'] ?? $row['Graduação'] ?? '-',
+            $row['especializacao'] ?? $row['Especialização'] ?? '-',
+            $row['mestrado'] ?? $row['Mestrado'] ?? '-',
+            $row['doutorado'] ?? $row['Doutorado'] ?? '-',
             $row['resultado'] ?? $row['resultado_da_importacao'] ?? '',
         ];
     }
 
     public function headings(): array
     {
-        return ['Nome', 'Email', 'Formação', 'Resultado da Importação'];
+        return ['Nome', 'Email', 'Graduação','Especialização','Mestrado','Doutorado', 'Resultado da Importação'];
     }
 
     public function styles(Worksheet $sheet)
@@ -42,7 +45,10 @@ class ProfessorsResultExport implements FromCollection, WithHeadings, WithStyles
         $sheet->getColumnDimension('A')->setWidth(30);
         $sheet->getColumnDimension('B')->setWidth(30);
         $sheet->getColumnDimension('C')->setWidth(25);
-        $sheet->getColumnDimension('D')->setWidth(40);
+        $sheet->getColumnDimension('D')->setWidth(25);
+        $sheet->getColumnDimension('E')->setWidth(25);
+        $sheet->getColumnDimension('F')->setWidth(25);
+        $sheet->getColumnDimension('G')->setWidth(40);
         return [
             1 => ['font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']], 'fill' => ['fillType' => 'solid', 'startColor' => ['rgb' => '1E293B']]]
         ];

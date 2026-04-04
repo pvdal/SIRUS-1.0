@@ -15,15 +15,17 @@ class ProfessorsImport implements ToCollection, WithHeadingRow
 {
     public $rowsProcessed = [];
 
-    public function collection(Collection $rows):void
+    public function collection(Collection $rows): void
     {
         foreach ($rows as $row) {
             $data = $row->toArray();
-
             $validator = Validator::make($data, [
-                'nome'  => ['required', 'string', 'max:255'],
-                'email' => ['required', 'email', 'unique:users,email'],
-                'formacao' => ['nullable','string', 'max:255'],
+                'nome'           => ['required', 'string'],
+                'email'          => ['required', 'email', 'unique:users,email'],
+                'graduacao'      => ['nullable', 'string'],
+                'especializacao' => ['nullable', 'string'],
+                'mestrado'       => ['nullable', 'string'],
+                'doutorado'      => ['nullable', 'string'],
             ], [
                 'email.unique' => 'E-mail já cadastrado',
             ]);
@@ -40,8 +42,25 @@ class ProfessorsImport implements ToCollection, WithHeadingRow
                     ]);
                     Professor::create([
                         'user_id' => $user->id,
-                        'education' => $data['formacao']
                     ]);
+                    //Mapear os níveis do BD com as colunas
+                    $educations = [
+                        'graduation'     => $data['graduacao'] ?? null,
+                        'specialization' => $data['especializacao'] ?? null,
+                        'masters'         => $data['mestrado'] ?? null,
+                        'doctorate'      => $data['doutorado'] ?? null,
+                    ];
+                    //Salvar na tabela faculty_education apenas os níveis que foram preenchidos
+                    foreach ($educations as $level => $course) {
+                        // Ignoramos vazios e também o traço '-' ou 'Não informado' caso
+                        // o usuário tenha exportado a planilha, alterado algo e reimportado
+                        if (!empty($course) && $course !== '-' && $course !== 'Não informado') {
+                            $user->education()->create([
+                                'level'  => $level,
+                                'course' => trim($course),
+                            ]);
+                        }
+                    }
                     $data['resultado_da_importacao'] = 'Importado com sucesso';
                     $user->sendTemporaryPasswordNotification($password);
                 } catch (\Exception $e) {
@@ -49,10 +68,13 @@ class ProfessorsImport implements ToCollection, WithHeadingRow
                 }
             }
             $this->rowsProcessed[] = [
-                'nome'      => $row['nome'],
-                'email'     => $row['email'],
-                'formacao'  => $row['formacao'] ?? '',
-                'resultado' => $data['resultado_da_importacao']
+                'nome'           => $row['nome'] ?? '',
+                'email'          => $row['email'] ?? '',
+                'graduacao'      => $row['graduacao'] ?? '',
+                'especializacao' => $row['especializacao'] ?? '',
+                'mestrado'       => $row['mestrado'] ?? '',
+                'doutorado'      => $row['doutorado'] ?? '',
+                'resultado'      => $data['resultado_da_importacao']
             ];
         }
     }

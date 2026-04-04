@@ -36,10 +36,54 @@
         <li><strong>Filtros:</strong> refinam os resultados exibidos</li>
         <li><strong>Limpar filtros:</strong> restaura a visualização padrão</li>
     </ul>
-    <p class="mb-10">
+    <p class="mb-2.5">
         Dependendo do tamanho da tela, os botões e filtros podem ser organizados em mais de uma linha,
         mantendo a usabilidade da interface.
     </p>
+
+    <p class="mb-2">
+        Para facilitar a gestão de grandes volumes de informações, o sistema disponibiliza ferramentas
+        de manipulação de dados em massa, localizadas junto à barra de ações.
+    </p>
+
+    <h3 id="cap-5.3-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Exportação</h3>
+    <p class="mb-2">
+        O botão <strong>"Exportar"</strong> gera um arquivo no formato <code class="px-1.5 py-0.5 rounded font-mono text-sm bg-slate-100 text-slate-800 border border-slate-200">.xlsx</code> (Excel) contendo todos os registros exibidos
+        na listagem atual.
+    </p>
+    <ul class="list-disc pl-6 space-y-1 mb-4">
+        <li><strong>Comportamento:</strong> o arquivo gerado respeita os filtros aplicados no momento do clique (ex: se o filtro "Ativo" estiver selecionado, apenas usuários ativos serão exportados).</li>
+        <li><strong>Utilização:</strong> ideal para auditorias externas, geração de relatórios de matrículas ou backups rápidos.</li>
+    </ul>
+    <h3 id="cap-5.3-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Importação</h3>
+    <p class="mb-2">
+        O botão <strong>"Importar"</strong> abre um modal dedicado para a inserção de novos registros via planilha.
+    </p>
+    <ul class="list-disc pl-6 space-y-1 mb-4">
+        <li>
+            <strong>Modelo de dados:</strong> o sistema fornece um link para download de uma <strong>planilha modelo</strong>. É obrigatório seguir a estrutura de colunas deste arquivo para evitar erros de leitura.
+        </li>
+        <li>
+            <strong>Processamento:</strong> ao selecionar o arquivo e confirmar a operação, o sistema valida os dados (como formato de e-mail e unicidade do RA).
+        </li>
+        <li>
+            <strong>Feedback ao usuário:</strong> durante o processamento, são exibidos banners de notificação no topo da tela:
+            <ul class="list-[circle] pl-6 mt-1 space-y-1">
+                <li><strong>Em andamento:</strong> indica que o servidor está processando as linhas do arquivo.</li>
+                <li><strong>Sucesso:</strong> confirma a conclusão e o número de registros inseridos ou alterados.</li>
+                <li><strong>Erro:</strong> aponta falhas específicas, como dados duplicados ou campos obrigatórios vazios, interrompendo a operação para garantir a integridade do banco de dados.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="mb-10 bg-blue-50/60 dark:bg-blue-900/10 border border-blue-400/60 dark:border-blue-500/50 rounded-lg p-4 text-blue-800 dark:text-blue-300">
+        <p class="font-semibold">
+            Dica
+        </p>
+        <p class="text-sm leading-relaxed text-gray-800 dark:text-gray-300">
+            Recomenda-se realizar uma exportação em <code class="px-1.5 py-0.5 rounded font-mono text-xs bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 border border-blue-200 dark:border-blue-700">.xlsx</code> antes de grandes importações para servir como um ponto de restauração manual dos dados.
+        </p>
+    </div>
 
     {{-- Capítulo 5.4 --}}
     <h2 id="cap-5.4" class="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">5.4 Gerenciamento de Alunos</h2>
@@ -139,6 +183,14 @@
         <a href="#cap-5.3" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
             <span class="font-medium">5.3</span>
             <span>Barra de ações e filtros</span>
+        </a>
+
+        <a href="#cap-5.3-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
+            <span>Exportação</span>
+        </a>
+
+        <a href="#cap-5.3-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
+            <span>Importação</span>
         </a>
 
         <a href="#cap-5.4" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
