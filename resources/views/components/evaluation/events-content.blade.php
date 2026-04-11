@@ -289,6 +289,27 @@
                             <x-lucide-trash-2 class="shrink-0 w-4 h-4 text-gray-500 dark:text-gray-200 transition duration-150 ease-in-out"/>
                         </button>
                     </div>
+                    {{-- Botão de exportação — visível apenas para coordenadores --}}
+                    @can('manage-events')
+                        <div class="flex flex-col w-[180px] md:w-[200px]">
+                            <x-legend class="uppercase text-xs font-light mb-2">Exportar</x-legend>
+
+                            <a
+                                id="exportBtn"
+                                href="#"
+                                x-data
+                                x-on:click.prevent="
+                                    $dispatch('export-simbaju-calendar')
+                                "
+                                class="w-full flex appearance-none border border-gray-300 dark:border-gray-400 rounded-lg
+                                px-6 py-2.5 mb-2 text-sm text-gray-700 dark:text-gray-200 focus:ring-1 focus:ring-secondary-blue
+                                focus:border-secondary-blue cursor-pointer items-center justify-between gap-2 transition duration-150 ease-in-o"
+                                                >
+                                Exportar Excel
+                                <x-lucide-download class="shrink-0 w-4 h-4 text-gray-500 dark:text-gray-200"/>
+                            </a>
+                        </div>
+                    @endcan
                 </div>
 
                 <!-- Barra superior -->

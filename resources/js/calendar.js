@@ -186,6 +186,29 @@ document.addEventListener('alpine:initialized', function () {
         }
     });
 
+    // Listener para exportar o calendário do SIMBAJU
+    window.addEventListener('export-simbaju-calendar', () => {
+        // Pega a data atual que o calendário está mostrando
+        const currentDate = calendar.getDate();
+        const year = currentDate.getFullYear();
+
+        // Pegar o semestre
+        const month = currentDate.getMonth() + 1;
+        const semester = (month <= 6) ? 1 : 2;
+
+        // pegar o prefixo da rota
+        const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
+
+        // Montamos o título
+        const title = encodeURIComponent(`SIMBAJU ${year}/${semester}`);
+
+        // Montamos a URL de exportação
+        const exportUrl = `calendar/export/simbaju?year=${year}&semester=${semester}&title=${title}`;
+
+        // Redireciona para iniciar o download
+        window.location.href = exportUrl;
+    });
+
     calendar.render();
 
     // Forçar view com base na largura da tela

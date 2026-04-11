@@ -2,6 +2,7 @@
 // Common
 use App\Http\Controllers\AxisController;
 use App\Http\Controllers\CriteriaController;
+use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ManualController;
 use App\Http\Controllers\RubricController;
 use Illuminate\Support\Facades\Route;
@@ -59,6 +60,7 @@ Route::middleware([
     Route::get('/users/professors/generate-file', [ProfessorController::class, 'generateFile'])->name('users.professors-generate-file');
     Route::get('/users/coordinators/generate-file', [CoordinatorController::class, 'generateFile'])->name('users.coordinators-generate-file');
     Route::get('/evaluation/criteria/generate-file', [CriteriaController::class, 'generateFile'])->name('evaluation.criteria-generate-file');
+    Route::get('/calendar/export/simbaju', [ExportController::class, 'simbaju'])->name('export.simbaju-calendar'); // Apenas coordenadores
 
     // Rota para baixar o arquivo de exemplo para importação
     Route::get('/users/students/download-template', [StudentController::class, 'downloadTemplate'])->name('users.students.download-template');
