@@ -190,15 +190,33 @@ class SimbajuCourseSheet implements FromArray, WithTitle, WithEvents
         $col = 2;
         foreach ($groups as $paper) {
             $cell  = $this->colLetter($col) . $row;
-
             $sheet->setCellValue($cell, $paper->group->theme ?? '');
-            $sheet->getStyle($cell)->getAlignment()
-                ->setHorizontal('center')
-                ->setWrapText(true);
+            $sheet->getStyle($cell)->applyFromArray([
+                'font'      => ['bold' => true, 'size' => 11],
+                'alignment' => ['horizontal' => 'center', 'vertical' => 'center', 'wrapText' => true],
+            ]);
             $this->applyBorders($sheet, $cell);
             $col++;
         }
-//        $sheet->getRowDimension($row)->setRowHeight(30.5);
+        $row++;
+
+        // Linha: Arquivo
+        $sheet->setCellValue("A{$row}", 'Arquivo:');
+        $sheet->getStyle("A{$row}")->getFont()->setBold(true);
+        $this->applyBorders($sheet, "A{$row}");
+        $sheet->getStyle("A{$row}")->getAlignment()->setHorizontal('right');
+
+        $col = 2;
+        foreach ($groups as $paper) {
+            $cell  = $this->colLetter($col) . $row;
+            $sheet->setCellValue($cell, $paper->title ?? '');
+            $sheet->getStyle($cell)->applyFromArray([
+                'font'      => ['bold' => true, 'size' => 11],
+                'alignment' => ['horizontal' => 'center', 'vertical' => 'center', 'wrapText' => true],
+            ]);
+            $this->applyBorders($sheet, $cell);
+            $col++;
+        }
         $row++;
 
         // Linha: DATA

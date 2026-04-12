@@ -20,7 +20,12 @@ class SimbajuCalendarExport implements WithMultipleSheets
         // Busca todos os cursos que têm papers no semestre/ano informados
         $courses = Course::whereHas('papers', function ($q) {
             $q->where('year', $this->year)
-                ->where('semester', $this->semester);
+                ->where('semester', $this->semester)
+            //só papers com banca e com data de início
+                ->whereHas('committee', function ($queryBanca) {
+                    $queryBanca->whereNotNull('start')
+                    ->where('state', 1);
+                });
         })->get();
 
         $sheets = [];
@@ -32,6 +37,10 @@ class SimbajuCalendarExport implements WithMultipleSheets
                 ->where('course_id', $course->id)
                 ->where('year', $this->year)
                 ->where('semester', $this->semester)
+                ->whereHas('committee', function ($queryBanca) {
+                    $queryBanca->whereNotNull('start')
+                        ->where('state', 1);
+                })
                 ->get()
                 ->groupBy('project'); // project = 1..6 (coluna de grupo de apresentação)
 
