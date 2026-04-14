@@ -242,7 +242,7 @@
                     x-transition:enter="transition ease-out duration-500 delay-200"
                     x-transition:enter-start="opacity-0 translate-y-20"
                     x-transition:enter-end="opacity-100"
-                    class="text-white mt-3 mb-0 text-[3.5rem] xlg::text-[4.5rem] font-bold leading-tight">
+                    class="text-white mt-3 mb-0 text-[3.5rem] xlg:text-[4.5rem] font-bold leading-tight">
                     SIRUS
                 </h1>
                 <span
@@ -426,13 +426,12 @@
                 <div class="flex flex-col  sm:flex-row items-center gap-3 sm:gap-4 sm:me-auto">
                     <a target="_blank"
                        href="{{ route('policy.show') }}"
-                       class="underline text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 text-sm 2xl:text-base transition duration-150 ease-in-out">
+                       class="hover:underline text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 text-sm 2xl:text-base transition duration-150 ease-in-out">
                         Política de Privacidade
                     </a>
-
                     <a target="_blank"
                        href="{{ route('terms.show') }}"
-                       class="underline text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 text-sm 2xl:text-base transition duration-150 ease-in-out">
+                       class="hover:underline text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 text-sm 2xl:text-base transition duration-150 ease-in-out">
                         Termos de Uso
                     </a>
                 </div>
@@ -469,4 +468,5 @@
             </div>
         </div>
     </footer>
+    <x-back-to-top-button />
 </x-guest-layout>

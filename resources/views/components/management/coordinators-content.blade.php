@@ -112,10 +112,15 @@
                 <x-table.td x-text="item.name"></x-table.td>
                 <x-table.td class="hidden sm:table-cell" x-text="item.email"></x-table.td>
                 <x-table.td class="hidden lg:table-cell"
-                            x-text="Object.values(item.education).reduce((t, e) => t + e.length, 0) > 0 ?
-                    Object.values(item.education).reduce((t, e) => t + e.length, 0) + ' Níveis':
-                    ''
-                ">
+                    x-text="
+                        (() => {
+                            let value = Object.values(item.education).reduce((t, e) => t + e.length, 0);
+                            return value > 0
+                                ? value + (value === 1 ? ' Titulação' : ' Titulações')
+                                : ''
+                        })()
+                    "
+                >
                 </x-table.td>
                 <x-table.td class="hidden sm:table-cell" x-text="item.state ? 'Ativo' : 'Inativo'"></x-table.td>
             </x-slot>

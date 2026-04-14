@@ -1,15 +1,15 @@
 # Política de Privacidade - Sistema de Rubricas para Gestão Avaliação do SIMBAJU
 
-**Última atualização:** 13/07/2025
+**Última atualização:** 14/04/2026
 
 ## 1. Introdução
 
-A FATEC Franco da Rocha está comprometida com a proteção da privacidade e dos dados pessoais dos usuários do Sistema de Avaliação de Simpósios. Esta Política de Privacidade descreve como coletamos, usamos, armazenamos e protegemos suas informações pessoais, em conformidade com a Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018).
+A FATEC Franco da Rocha está comprometida com a proteção da privacidade e dos dados pessoais dos usuários do SIRUS. Esta Política de Privacidade descreve como coletamos, usamos, armazenamos e protegemos suas informações pessoais, em conformidade com a Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018).
 
 ## 2. Definições
 
 ### 2.1 Controlador de Dados
-A FATEC Franco da Rocha é o controlador dos dados pessoais coletados através do sistema.
+A FATEC Franco da Rocha é o controlador dos dados pessoais coletados por meio do sistema.
 
 ### 2.2 Dados Pessoais
 Qualquer informação relacionada a pessoa natural identificada ou identificável.
@@ -19,29 +19,30 @@ Toda operação realizada com dados pessoais, como coleta, produção, recepçã
 
 ## 3. Dados Coletados
 
+Coletamos apenas os dados estritamente necessários para o funcionamento do sistema, em conformidade com o princípio da minimização de dados previsto na LGPD.
+
 ### 3.1 Dados de Identificação
 - **Nome completo:** Para identificação do usuário no sistema
-- **Endereço de e-mail:** Para comunicação e autenticação
-- **CPF (Coordenadores e Professores):** Para identificação única
-- **RA - Registro Acadêmico (Estudantes):** Para identificação acadêmica
+- **Endereço de e-mail:** Para autenticação e comunicação
 
 ### 3.2 Dados Acadêmicos
-- **Semestre (Estudantes):** Para organização acadêmica
-- **Curso (Estudantes):** Para categorização adequada
-- **Grupo (Estudantes):** Para organização de turmas
-- **Nível de acesso:** Para controle de permissões no sistema
+- **RA (Registro Acadêmico):** Para identificação de estudantes
+- **Curso:** Para organização acadêmica
+- **Grupo:** Para vinculação a trabalhos e avaliações
+- **Nível de acesso:** Para controle de permissões (coordenador, professor ou estudante)
+- **Formação acadêmica dos docentes:** Para qualificação profissional, organização institucional e exibição de informações acadêmicas
 
-### 3.3 Dados de Segurança
-- **Senha criptografada:** Para autenticação segura
-- **Token de recuperação de senha:** Para redefinição segura
-- **Dados de autenticação de dois fatores:** Quando habilitado
+### 3.3 Dados de Autenticação e Segurança
+- **Senha criptografada:** Armazenada de forma segura (hash)
+- **Token de redefinição de senha:** Para recuperação de acesso
+- **Dados de autenticação em dois fatores (2FA):** Quando habilitado pelo usuário
 - **Tokens de acesso pessoal:** Para funcionalidades específicas
 
-### 3.4 Dados de Sessão
+### 3.4 Dados de Sessão e Acesso
 - **Endereço IP:** Para segurança e auditoria
-- **User Agent (navegador):** Para compatibilidade e segurança
-- **Data e hora de acesso:** Para logs de auditoria
-- **Dados de sessão:** Para manter o usuário logado
+- **User Agent (navegador/dispositivo):** Para compatibilidade e segurança
+- **Data e hora de acesso:** Para registros de atividade
+- **Sessões de autenticação:** Para manter o usuário logado
 
 ### 3.5 Dados de Uso
 - **Foto de perfil:** Quando fornecida pelo usuário
@@ -56,8 +57,7 @@ Os dados pessoais são coletados e tratados para:
 - Identificar e autenticar usuários
 - Gerenciar contas de usuário
 - Facilitar a comunicação relacionada aos simpósios
-- Gerar certificados e relatórios acadêmicos
-- Organizar e categorizar usuários por tipo e função
+- Gerar relatórios acadêmicos
 
 ### 4.2 Finalidades Secundárias
 - Melhorar a segurança do sistema
@@ -68,19 +68,13 @@ Os dados pessoais são coletados e tratados para:
 
 ## 5. Base Legal para o Tratamento
 
-O tratamento dos dados pessoais é realizado com base nas seguintes hipóteses legais da LGPD:
+## 5. Base Legal para o Tratamento
 
-### 5.1 Execução de Contrato (Art. 7º, V)
-Para execução dos Termos de Uso aceitos pelo usuário.
+O tratamento de dados pessoais no SIRUS é realizado com base nas seguintes hipóteses da LGPD:
 
-### 5.2 Exercício Regular de Direitos (Art. 7º, VI)
-Para exercício de direitos em processo judicial, administrativo ou arbitral.
-
-### 5.3 Legítimo Interesse (Art. 7º, IX)
-Para garantir a segurança do sistema e prevenir fraudes.
-
-### 5.4 Cumprimento de Obrigação Legal (Art. 7º, II)
-Para atender exigências legais e regulamentares aplicáveis à instituição de ensino.
+- **Execução de contrato (Art. 7º, V):** Para viabilizar o uso do sistema conforme os Termos de Uso
+- **Cumprimento de obrigação legal (Art. 7º, II):** Para atender exigências acadêmicas e institucionais
+- **Legítimo interesse (Art. 7º, IX):** Para segurança do sistema, prevenção de fraudes e auditoria
 
 ## 6. Compartilhamento de Dados
 
@@ -98,19 +92,31 @@ Os dados podem ser compartilhados apenas nas seguintes situações:
 ### 6.3 Prestadores de Serviço
 Podemos compartilhar dados com prestadores de serviços que nos auxiliam na operação do sistema, sempre mediante contratos que garantam a proteção adequada dos dados.
 
+### 6.4 Acesso Interno aos Dados
+
+Os dados pessoais podem ser acessados por:
+- Coordenadores do sistema, conforme nível de permissão
+- Professores, apenas em relação aos grupos e trabalhos sob sua responsabilidade
+- Administradores técnicos, quando necessário para manutenção e suporte
+
+O acesso é sempre limitado ao mínimo necessário para o desempenho das funções.
+
 ## 7. Armazenamento e Segurança
 
 ### 7.1 Localização dos Dados
 Os dados são armazenados em servidores localizados no Brasil, em conformidade com a LGPD.
 
 ### 7.2 Medidas de Segurança
-Implementamos medidas técnicas e organizacionais para proteger os dados:
-- Criptografia de senhas usando algoritmos seguros
-- Controle de acesso baseado em funções
-- Monitoramento de atividades suspeitas
-- Backups regulares e seguros
-- Firewall e proteção contra ataques
-- Atualizações regulares de segurança
+
+O sistema utiliza práticas modernas de segurança, incluindo:
+
+- Hash seguro de senhas (bcrypt/argon2)
+- Proteção contra CSRF (Cross-Site Request Forgery)
+- Controle de autenticação via Laravel Fortify
+- Gerenciamento de sessões seguras
+- Proteção contra requisições automatizadas e não autorizadas
+- Logs de auditoria de atividades relevantes
+- Backups periódicos dos dados
 
 ### 7.3 Acesso Restrito
 O acesso aos dados pessoais é restrito apenas a funcionários autorizados que necessitam das informações para desempenhar suas funções.
@@ -125,20 +131,20 @@ Os dados pessoais são mantidos pelo tempo necessário para:
 
 ### 8.2 Critérios de Retenção
 - **Dados de usuários ativos:** Mantidos enquanto a conta estiver ativa
-- **Dados de usuários inativos:** Mantidos por até 5 anos após a última atividade
+- **Dados de usuários inativos:** Mantidos por pelo menos 5 anos após a última atividade
 - **Dados de auditoria:** Mantidos conforme exigências legais
 - **Trabalhos acadêmicos:** Mantidos conforme políticas institucionais
 
 ### 8.3 Eliminação
-Após o período de retenção, os dados são eliminados de forma segura e irreversível.
+Após o período de retenção, os dados podem ser eliminados de forma segura e irreversível.
 
 ## 9. Cookies e Tecnologias Similares
 
 ### 9.1 Tipos de Cookies Utilizados
 - **Cookies essenciais:** Necessários para o funcionamento básico do sistema
 - **Cookies de sessão:** Para manter o usuário autenticado
-- **Cookies de preferências:** Para lembrar configurações do usuário
-- **Cookies de segurança:** Para detectar atividades suspeitas
+- **Cookies de segurança:** Para proteção contra acessos não autorizados e ataques (ex: CSRF)
+- **Cookies de preferências:** Utilizados quando disponíveis para lembrar configurações do usuário
 
 ### 9.2 Gerenciamento de Cookies
 Você pode gerenciar cookies através das configurações do seu navegador, mas isso pode afetar o funcionamento do sistema.
@@ -147,7 +153,6 @@ Você pode gerenciar cookies através das configurações do seu navegador, mas 
 O sistema não utiliza cookies de terceiros para rastreamento ou publicidade.
 
 ## 10. Direitos dos Titulares
-
 Conforme a LGPD, você tem os seguintes direitos:
 
 ### 10.1 Direito de Acesso
@@ -175,7 +180,7 @@ Obter informações sobre entidades com as quais compartilhamos dados.
 
 ### 11.1 Canais de Contato
 Para exercer seus direitos, entre em contato através de:
-- E-mail: [EMAIL_DPO]
+- E-mail: sirus.simbaju@gmail.com
 - Formulário no sistema
 - Atendimento presencial na FATEC Franco da Rocha
 
@@ -210,17 +215,6 @@ Em casos excepcionais, transferências podem ocorrer apenas:
 - Para países com nível adequado de proteção
 - Mediante garantias adequadas de proteção
 
-## 14. Menores de Idade
-
-### 14.1 Tratamento de Dados de Menores
-O sistema pode ser utilizado por menores de idade (estudantes). Nestes casos:
-- O tratamento é realizado no melhor interesse do menor
-- Dados são coletados apenas quando necessário para a finalidade educacional
-- Medidas especiais de proteção são implementadas
-
-### 14.2 Consentimento dos Responsáveis
-Para menores de 16 anos, pode ser necessário o consentimento dos pais ou responsáveis legais.
-
 ## 15. Incidentes de Segurança
 
 ### 15.1 Notificação à ANPD
@@ -238,7 +232,7 @@ Implementaremos imediatamente medidas para mitigar os efeitos do incidente.
 Esta Política de Privacidade pode ser atualizada periodicamente para refletir mudanças em nossas práticas ou na legislação.
 
 ### 16.2 Notificação
-Usuários serão notificados sobre alterações significativas através do e-mail cadastrado e/ou aviso no sistema.
+Usuários serão notificados sobre alterações significativas através do e-mail cadastrado ou aviso no sistema.
 
 ### 16.3 Vigência
 A versão atualizada entrará em vigor imediatamente após sua publicação.
@@ -252,14 +246,13 @@ Esta Política de Privacidade é regida pela legislação brasileira, especialme
 
 ## 18. Contato
 
-Para questões sobre esta Política de Privacidade ou sobre o tratamento de seus dados pessoais:
+Para questões sobre esta Política de Privacidade ou sobre o tratamento de seus dados pessoais, entre em contato:
 
 **FATEC Franco da Rocha**  
-**Encarregado de Proteção de Dados**  
-E-mail: [EMAIL_DPO]  
-E-mail: sirus@fatec.sp.gov.br  
+**Sistema de Rubricas para Gestão Avaliação do SIMBAJU**  
+E-mail: sirus.simbaju@gmail.com  
 Endereço: Rod. Pref. Luiz Salomão Chamma, 240 - entrada principal pela, Rua Nelson Rodrigues, s/n - Pouso Alegre, Franco da Rocha - SP, 07857-050  
-Telefone: (11) 4449-2007
+Telefone: (11) 4811-8505
 
 **Autoridade Nacional de Proteção de Dados (ANPD)**  
 Site: https://www.gov.br/anpd/  
@@ -268,7 +261,8 @@ E-mail: comunicacao@anpd.gov.br
 ---
 
 *Esta Política de Privacidade foi elaborada em conformidade com a Lei Geral de Proteção de Dados e reflete nosso compromisso com a proteção de seus dados pessoais.*
+*Ao usar o Sistema de Avaliação de Simpósios da FATEC Franco da Rocha, você reconhece que leu e compreendeu estes Termos de Uso e concorda em cumpri-los.*
 
-**Última revisão:** 13/07/2025
+**Última revisão:** 14/04/2026
 ```
 

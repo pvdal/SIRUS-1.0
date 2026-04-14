@@ -781,6 +781,8 @@ class CommitteeController extends Controller
                 'state' => (int) $r->rubric->state,
                 ])->values() ?? [],
             'state' => (int) $committee->state,
+            'start' => $committee->start,
+            'end' => $committee->end,
             'created_at' => $committee->created_at,
             'updated_at' => $committee->updated_at,
             // Indica se o usuário autenticado pertence à comissão

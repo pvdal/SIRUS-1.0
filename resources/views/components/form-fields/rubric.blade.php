@@ -85,7 +85,7 @@
     <div x-show="axes.length > 0" class="pt-4">
         <h4 class="font-medium text-gray-700 dark:text-gray-200">Eixos selecionados:</h4>
         <ul class="space-y-1 mt-1">
-            {{-- Para cada eixo na nossa lista 'axes'... --}}
+            {{-- Para cada eixo na lista 'axes'... --}}
             <template x-for="(axis, index) in axes" :key="axis.id">
                 <div>
                     {{-- O item da lista agora usa flex para alinhar tudo na mesma linha --}}

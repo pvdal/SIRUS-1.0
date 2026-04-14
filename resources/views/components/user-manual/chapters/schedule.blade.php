@@ -33,7 +33,7 @@
 
     <h3 id="cap-4.2-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Filtros</h3>
     <p class="mb-2">
-        No canto superior esquerdo do calendário, há um botão identificado como <strong>"Filtros"</strong>,
+        No canto superior esquerdo do calendário, há um botão identificado como <strong>"Opções"</strong>,
         que ao ser clicado exibe filtros de busca de eventos (bancas) por
         termo, curso ou projeto.
     </p>

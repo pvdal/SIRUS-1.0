@@ -630,9 +630,17 @@ export function committeesData() {
             type = type.toLowerCase();
             switch (type){
                 case 'confirmação':
+                    let committee = this.committees.find(c => c.id === id);
+                    let message = '';
+                    if (committee.start && committee.end) {
+                        message = 'Essa ação pode afetar uma avaliação já agendada.';
+                    } else if (committee.paper.evaluation.submitted) {
+                        message = 'Essa ação afetará uma avaliação que já foi realizada.';
+                    }
+
                     type = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
                     this.warningType = type;
-                    this.warningContent = `Tem certeza que deseja ${action} a banca ${name}?`;
+                    this.warningContent = `Tem certeza que deseja ${action} a banca ${name}? ${message}`;
                     this.committeeId = id;
                     this.warningAction = action;
                     break;

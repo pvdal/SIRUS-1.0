@@ -25,7 +25,8 @@
             dark:prose-li:text-gray-400
             dark:prose-headings:text-gray-200
             dark:prose-p:text-gray-300
-            dark:prose-strong:text-gray-300">
+            dark:prose-strong:text-gray-300
+            dark:prose-a:text-gray-300">
                 {!! $terms !!}
             </div>
         </div>

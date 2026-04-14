@@ -169,13 +169,13 @@
                     }"
                 >
                     <x-lucide-sliders-horizontal class="w-4 h-4"/>
-                    <span class="text-sm">Filtros</span>
+                    <span class="text-sm">Opções</span>
                 </button>
             </div>
             {{-- Filtros | animação de loading | calendário --}}
             <div class="relative">
                 <div x-show="filters" class="flex flex-wrap gap-4 justify-center sm:justify-start px-4 py-2 pb-3 w-full dark:bg-gray-900/40 transition">
-                    <div class="flex flex-col max-w-[180px] xs:max-w-full xs:flex-1 xs:min-w-[170px] mb-2">
+                    <div class="flex flex-col max-w-[180px] xs:max-w-full xs:flex-1 xs:min-w-[200px] mb-2">
                         <x-label for="search" class="uppercase text-xs font-light mb-2">Buscar</x-label>
                         <div class="relative">
                             <x-input
@@ -191,7 +191,7 @@
                                     $el.blur();
                                     loadEvents();
                                 "
-                                class="hidden lg:block absolute p-[0.65em] hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md right-[0.15em] top-[0.15em]"
+                                class="hidden lg:block absolute p-[0.65em] hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md right-[2px] top-1/2 -translate-y-1/2"
                             >
                                 <x-lucide-search class="w-4 h-4 text-gray-800 dark:text-gray-300 transition"/>
                             </button>

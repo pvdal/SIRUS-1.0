@@ -39,7 +39,8 @@
         <h3 id="cap-7.2-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Critérios</h3>
         <p class="mb-2">
             A aba de critérios apresenta uma visualização em tabela, contendo paginação e barra de ações, com
-            botão de cadastro, campo de busca, filtros, botão de limpar filtros e botão de Importação/Exportação de critérios em massa.
+            botão de cadastro, campo de busca, filtros, botão de limpar filtros e botão de importação e exportação
+            de critérios em massa, cujo funcionamento é explicado no capítulo 5.3 deste manual.
         </p>
         <p class="mb-2">
             O modal de criação e edição de critérios contém os seguintes campos:

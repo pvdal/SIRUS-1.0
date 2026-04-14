@@ -7,6 +7,7 @@ use App\Models\Course;
 use App\Models\Paper;
 use App\Models\UserCommittee;
 use App\Utils\TokenGenerator;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
@@ -217,13 +218,34 @@ class EventController extends Controller
             'time_end'   => 'required|date_format:H:i:s',
         ]);
 
-        $start = strtotime($request->date_start . ' ' . $request->time_start);
-        $end = strtotime($request->date_end . ' ' . $request->time_end);
+        $start = Carbon::createFromFormat(
+            'Y-m-d H:i:s',
+            $request->date_start . ' ' . $request->time_start
+        );
+        $end = Carbon::createFromFormat(
+            'Y-m-d H:i:s',
+            $request->date_end . ' ' . $request->time_end
+        );
+        $startSemester = $start->month <= 6 ? 1 : 2;
+        $endSemester = $end->month <= 6 ? 1 : 2;
 
         if ($end <= $start) {
             return response()->json([
                 'success' => false,
                 'message' => 'O horário de término deve ser maior que o horário de início.'
+            ], 422);
+        }
+        if ($start->year !== $event->paper->year || $end->year !== $event->paper->year) {
+            return response()->json([
+                'success' => false,
+                'message' => 'O ano de avaliação do trabalho deve ser o mesmo informado no cadastrado do arquivo.'
+            ], 422);
+        }
+
+        if ($startSemester !== $event->paper->semester || $endSemester !== $event->paper->semester) {
+            return response()->json([
+                'success' => false,
+                'message' => 'O semestre de avaliação do trabalho deve ser o mesmo informado no cadastrado do arquivo.'
             ], 422);
         }
         #endregion

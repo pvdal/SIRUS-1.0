@@ -1,6 +1,6 @@
 # Termos de Uso - Sistema de Rubricas para Gestão Avaliação do SIMBAJU
 
-**Última atualização:** 01/04/2026
+**Última atualização:** 02/04/2026
 
 ## 1. Aceitação dos Termos
 
@@ -21,17 +21,15 @@ e rastreabilidade do processo avaliativo.
 ### 2.1 Funcionalidades
 O sistema oferece, entre outras, as seguintes funcionalidades:
 - Cadastro e gerenciamento de usuários (coordenadores, professores e estudantes)
-- Cadastro de cursos, grupos e trabalhos acadêmicos
-- Upload e armazenamento de documentos dos trabalhos
+- Cadastro de cursos e grupos de alunos
+- Upload e armazenamento de trabalhos acadêmicos
 - Criação e gerenciamento de critérios, eixos e rubricas de avaliação
-- Vinculação de rubricas a bancas avaliadoras
+- Vinculação de rubricas às bancas avaliadoras
 - Submissão dos trabalhos acadêmicos dos grupos
 - Designação de bancas avaliadoras
 - Avaliação de trabalhos com base em rubricas padronizadas
 - Registro de comentários e feedback dos avaliadores
 - Acompanhamento do processo de avaliação pelos coordenadores
-- Autenticação de usuários com verificação de e-mail e autenticação em dois fatores (2FA)
-- Envio de notificações por e-mail relacionadas ao processo avaliativo
 
 ## 3. Tipos de Usuários
 
@@ -44,7 +42,6 @@ O sistema oferece, entre outras, as seguintes funcionalidades:
 
 ### 3.2 Professores
 - Responsáveis pela avaliação de trabalhos
-- Acompanham o andamento das avaliações
 - Realizam avaliações utilizando rubricas previamente definidas
 - Podem registrar comentários para os trabalhos avaliados
 - Podem visualizar informações dos grupos e trabalhos sob sua responsabilidade
@@ -60,8 +57,8 @@ Para criar uma conta, você deve fornecer:
 - Nome completo
 - Endereço de e-mail válido da instituição
 - Informações específicas conforme seu tipo de usuário:
-    - **Coordenadores e professores:** Principal curso de graduação, especialização, mestrado e doutorado
-    - **Estudantes:** RA (Registro Acadêmico), semestre e curso
+    - **Coordenadores e professores:** Cursos de graduação, especialização, mestrado e doutorado
+    - **Estudantes:** RA (Registro Acadêmico), grupo e curso
 
 ### 4.2 Responsabilidades da Conta
 
@@ -140,7 +137,7 @@ Recomenda-se que os autores mantenham cópias próprias de todos os arquivos env
 ## 7. Avaliações e Rubricas
 
 ### 7.1 Processo de Avaliação
-O sistema registra avaliações realizadas por professores e membros de bancas
+O sistema registra avaliações realizadas por membros de bancas
 com base em rubricas previamente definidas pela organização do evento.
 As avaliações registradas representam a opinião técnica dos avaliadores,
 não sendo responsabilidade do sistema o conteúdo das avaliações realizadas.
@@ -173,7 +170,7 @@ rastreabilidade do processo avaliativo e melhoria do sistema.
 ### 9.1 Coleta de Dados
 Coletamos apenas os dados necessários para o funcionamento do sistema:
 - Dados de identificação (nome, e-mail e RA)
-- Dados acadêmicos (curso, semestre, grupo)
+- Dados acadêmicos (curso, grupo e formações)
 - Dados de acesso, sessão e autenticação
 - Registros de atividades no sistema
 - Cookies para manter sessões e melhorar a experiência do usuário
@@ -384,6 +381,6 @@ Telefone: (11) 4811-8505
 
 *Ao usar o Sistema de Avaliação de Simpósios da FATEC Franco da Rocha, você reconhece que leu e compreendeu estes Termos de Uso e concorda em cumpri-los.*
 
-**Última revisão:** 01/04/2026
+**Última revisão:** 02/04/2026
 ```
 

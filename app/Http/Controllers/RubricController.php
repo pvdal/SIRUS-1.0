@@ -83,21 +83,39 @@ class RubricController extends Controller
             ]);
         }
 
+        #region Verificação de eixos com critérios iguais
         // Busca critérios de todos os eixos informados
-        $allCriteria = Axis::whereIn('id', collect($validatedData['axes'])->pluck('id'))
-            ->with('criteria:id') // assumindo relação Axis->criteria()
-            ->get()
-            ->pluck('criteria.*.id')
-            ->flatten();
+        $axes = collect($validatedData['axes']);
 
-        $duplicated = $allCriteria->duplicates()->first();
+        $allCriteria = Axis::whereIn('id', $axes->pluck('id'))
+            ->with('criteria:id')
+            ->get();
 
-        // Retorna exceção caso hajam eixos com critérios iguais
-        if ($allCriteria->duplicates()->isNotEmpty()) {
+        // cria um mapa: [index => [criteria_ids]]
+        $criteriaByIndex = $allCriteria->mapWithKeys(function ($axis) use ($axes) {
+            $index = $axes->search(fn ($a) => $a['id'] == $axis->id);
+            return [$index => $axis->criteria->pluck('id')];
+        });
+
+        $seen = [];
+        $errorIndex = null;
+
+        foreach ($criteriaByIndex as $index => $criteriaList) {
+            foreach ($criteriaList as $criterionId) {
+                if (in_array($criterionId, $seen)) {
+                    $errorIndex = $index;
+                    break 2;
+                }
+                $seen[] = $criterionId;
+            }
+        }
+
+        if ($errorIndex !== null) {
             throw \Illuminate\Validation\ValidationException::withMessages([
-                "axes.$duplicated.id" => 'Não é possível cadastrar eixos com critérios iguais em uma rubrica.'
+                "axes.$errorIndex.id" => 'Não é possível cadastrar eixos com critérios em comum em uma rubrica.'
             ]);
         }
+        #endregion
 
         // 2. TRANSAÇÃO: Garante que a operação seja "tudo ou nada".
         try {
@@ -257,21 +275,40 @@ class RubricController extends Controller
                 'axes' => ['A soma dos pesos dos eixos deve ser exatamente 100%.'],
             ]);
         }
+
+        #region Verificação de eixos com critérios iguais
         // Busca critérios de todos os eixos informados
-        $allCriteria = Axis::whereIn('id', collect($validatedData['axes'])->pluck('id'))
-            ->with('criteria:id') // assumindo relação Axis->criteria()
-            ->get()
-            ->pluck('criteria.*.id')
-            ->flatten();
+        $axes = collect($validatedData['axes']);
 
-        $duplicated = $allCriteria->duplicates()->first();
+        $allCriteria = Axis::whereIn('id', $axes->pluck('id'))
+            ->with('criteria:id')
+            ->get();
 
-        // Retorna exceção caso hajam eixos com critérios iguais
-        if ($allCriteria->duplicates()->isNotEmpty()) {
+        // cria um mapa: [index => [criteria_ids]]
+        $criteriaByIndex = $allCriteria->mapWithKeys(function ($axis) use ($axes) {
+            $index = $axes->search(fn ($a) => $a['id'] == $axis->id);
+            return [$index => $axis->criteria->pluck('id')];
+        });
+
+        $seen = [];
+        $errorIndex = null;
+
+        foreach ($criteriaByIndex as $index => $criteriaList) {
+            foreach ($criteriaList as $criterionId) {
+                if (in_array($criterionId, $seen)) {
+                    $errorIndex = $index;
+                    break 2;
+                }
+                $seen[] = $criterionId;
+            }
+        }
+
+        if ($errorIndex !== null) {
             throw \Illuminate\Validation\ValidationException::withMessages([
-                "axes.$duplicated.id" => 'Não é possível cadastrar eixos com critérios iguais em uma rubrica.'
+                "axes.$errorIndex.id" => 'Não é possível cadastrar eixos com critérios em comum em uma rubrica.'
             ]);
         }
+        #endregion
 
         // 2. TRANSAÇÃO: Novamente, para garantir a integridade.
         DB::transaction(function () use ($validatedData, $rubric) {

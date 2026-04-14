@@ -25,7 +25,9 @@
     </p>
 
     {{-- Capítulo 5.3 --}}
-    <h2 id="cap-5.3" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">5.3 Barra de ações e filtros</h2>
+    <h2 id="cap-5.3" class="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">5.3 Barra de ações e filtros</h2>
+
+    <h3 id="cap-5.3-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Visão geral</h3>
     <p class="mb-2">
         Abaixo da subnavegação, encontra-se uma barra de ações organizada em layout flexível,
         que se adapta a diferentes resoluções de tela.
@@ -46,16 +48,17 @@
         de manipulação de dados em massa, localizadas junto à barra de ações.
     </p>
 
-    <h3 id="cap-5.3-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Exportação</h3>
+    <h3 id="cap-5.3-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Exportação</h3>
     <p class="mb-2">
-        O botão <strong>"Exportar"</strong> gera um arquivo no formato <code class="px-1.5 py-0.5 rounded font-mono text-sm bg-slate-100 text-slate-800 border border-slate-200">.xlsx</code> (Excel) contendo todos os registros exibidos
+        O botão <strong>"Exportar"</strong> gera um arquivo no formato <code class="px-1.5 py-0.5 rounded font-mono text-sm bg-slate-100 dark:bg-slate-300 text-slate-800 border border-slate-200 dark:border-slate-400">.xlsx</code> (Excel) contendo todos os registros exibidos
         na listagem atual.
     </p>
     <ul class="list-disc pl-6 space-y-1 mb-4">
         <li><strong>Comportamento:</strong> o arquivo gerado respeita os filtros aplicados no momento do clique (ex: se o filtro "Ativo" estiver selecionado, apenas usuários ativos serão exportados).</li>
         <li><strong>Utilização:</strong> ideal para auditorias externas, geração de relatórios de matrículas ou backups rápidos.</li>
     </ul>
-    <h3 id="cap-5.3-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Importação</h3>
+
+    <h3 id="cap-5.3-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Importação</h3>
     <p class="mb-2">
         O botão <strong>"Importar"</strong> abre um modal dedicado para a inserção de novos registros via planilha.
     </p>
@@ -180,16 +183,17 @@
             <span>Subnavegação entre tipos de usuários</span>
         </a>
 
-        <a href="#cap-5.3" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
+        <a href="#cap-5.3" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
             <span class="font-medium">5.3</span>
             <span>Barra de ações e filtros</span>
         </a>
-
         <a href="#cap-5.3-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
+            <span>Visão geral</span>
+        </a>
+        <a href="#cap-5.3-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
             <span>Exportação</span>
         </a>
-
-        <a href="#cap-5.3-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
+        <a href="#cap-5.3-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-600 dark:text-gray-400">
             <span>Importação</span>
         </a>
 
