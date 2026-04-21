@@ -22,6 +22,6 @@ class ManualController extends Controller
     */
     public function show(): View
     {
-        return view("user-manual.user-manual");
+        return view("user-manual.index");
     }
 }

@@ -1,4 +1,16 @@
 <div>
+    <div class="flex justify-end w-full mb-4">
+        <a  rel="noreferrer noopener"
+            href="/manual#api-tokens"
+            target="_blank"
+            class="inline-flex items-center gap-2 px-4 py-2 sm:mt-0 rounded-md text-sm xl:text-base font-medium
+            bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700
+            text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-800/40
+            transition duration-150 ease-in-out">
+            <x-lucide-circle-question-mark class="h-4"/>
+            Ajuda
+        </a>
+    </div>
     <!-- Generate API Token -->
     <x-form-section submit="createApiToken">
         <x-slot name="title">

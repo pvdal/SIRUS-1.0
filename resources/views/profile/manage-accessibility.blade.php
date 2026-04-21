@@ -33,7 +33,7 @@
                             a visualização conforme cada tipo de daltonismo.
                             <a
                                 rel="noreferrer noopener"
-                                href="/manual?#accessibility"
+                                href="/manual#accessibility"
                                 class="text-secondary-blue dark:text-blue-400 font-medium hover:underline
                                     transition ease-in-out duration-150"
                             >Ler mais.</a>
@@ -102,7 +102,7 @@
                             e partes do conteúdo multimídia para Libras por meio de um avatar animado.
                             <a
                                 rel="noreferrer noopener"
-                                href="/manual?#accessibility"
+                                href="/manual#accessibility"
                                 class="text-secondary-blue dark:text-blue-400 font-medium hover:underline
                                 transition duration-150 ease-in-out"
                             >Ler mais.</a>

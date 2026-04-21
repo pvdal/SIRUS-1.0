@@ -10,6 +10,7 @@
         ['label' => '8. Trabalhos','page' => 'paper'],
         ['label' => '9. Perfil','page' => 'profile'],
         ['label' => '10. Acessibilidade','page' => 'accessibility'],
+        ['label' => '11. Tokens de API', 'page' => 'api-tokens']
 
     ];
 @endphp

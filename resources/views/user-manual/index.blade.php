@@ -6,6 +6,7 @@
 
     {{-- Menu superior de navegação --}}
     <x-user-manual.navigation-menu/>
+
     {{-- Inicia contexto alpine --}}
     <div
         x-data="{
@@ -78,7 +79,7 @@
                             class="inline-flex px-3 py-1 rounded-lg text-xs lg:text-sm font-light text-gray-600
                             dark:text-gray-400 "
                         >
-                            Última atualização: 04/04/2026
+                            Última atualização: 21/04/2026
                         </span>
                     </div>
                 </div>
@@ -102,7 +103,7 @@
                                     &copy; <strong>SIRUS –</strong> Sistema de Rubricas para Gestão avaliativa do SIMBAJU
                                 </p>
                                 <p class="text-xs text-center">
-                                    Versão 1.0 | 2026
+                                    Versão 1.1.2 | 2026
                                 </p>
                             </div>
                         </div>
@@ -167,7 +168,7 @@
                     el.classList.add('hidden-chapter-aside');
                 });
             }
-            {{-- Fização da sideBar --}}
+            {{-- Fixação da sideBar --}}
             if(sn) {
                 document.querySelectorAll('.chapter-aside').forEach(el => {
                     el.classList.add('sticky-chapter-aside');

@@ -32,7 +32,8 @@
             'rubrics-evaluation',
             'paper',
             'profile',
-            'accessibility'
+            'accessibility',
+            'api-tokens'
         ];
     @endphp
     {{-- Capítulos do manual --}}
@@ -41,7 +42,7 @@
         @foreach($chapters as $chapter)
             <!-- Capítulo {{ $loop->iteration }} -->
             @if(
-                ($loop->iteration === 5 || $loop->iteration === 8)
+                ($loop->iteration === 5 || $loop->iteration === 8 || $loop->iteration === 11)
                 && !auth()->user()->isAdmin()
             )
             @else
