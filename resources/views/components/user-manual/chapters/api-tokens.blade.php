@@ -38,7 +38,7 @@
         Para que o sistema aceite a conexão do Power BI ou de outra ferramenta, você deve enviar o token através de um
         <strong>"cabeçalho"</strong> (header) na requisição HTTP.
     </p>
-    <div class="mb-6 bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+    <div class="mb-6 bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
         <code>Authorization: Bearer SEU_TOKEN_AQUI</code>
     </div>
     <p class="mb-10">
@@ -53,9 +53,9 @@
     </p>
     <h3 id="cap-11.4-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Exemplos de rotas</h3>
     <ul class="list-disc pl-6 space-y-1 mb-10">
-        <li><code class="bg-gray-50 dark:bg-gray-800 px-2 py-1 rounded-md">GET /api/user</code> Validar usuário autenticado</li>
-        <li><code class="bg-gray-50 dark:bg-gray-800 px-2 py-1 rounded-md">GET /api/events/show</code> Listar eventos</li>
-        <li><code class="bg-gray-50 dark:bg-gray-800 px-2 py-1 rounded-md">GET /api/students/show</code> Listar estudantes</li>
+        <li><code class="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-md">GET /api/user</code> Validar usuário autenticado</li>
+        <li><code class="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-md">GET /api/events/show</code> Listar eventos</li>
+        <li><code class="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-md">GET /api/students/show</code> Listar estudantes</li>
     </ul>
 
     {{-- Capítulo 11.5 --}}
@@ -93,7 +93,7 @@
     <p class="mb-2">
         Útil para testar a conexão rapidamente.
     </p>
-    <div class="mb-6 bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+    <div class="mb-6 bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
         <code>
             curl -X GET https://192.168.1.153/api/user \<br>
             &nbsp;&nbsp;-H "Authorization: Bearer SEU_TOKEN" \<br>

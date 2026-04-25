@@ -3,11 +3,6 @@
 namespace App\Http\Controllers;
 
 // Common
-use App\Exports\ProfessorsExport;
-use App\Exports\ProfessorsResultExport;
-use App\Exports\ProfessorsTemplateExport;
-use App\Imports\ProfessorsImport;
-use App\Models\FacultyEducation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -22,12 +17,20 @@ use Illuminate\Support\Facades\DB;
 //use Illuminate\Support\Facades\Log;
 
 // Static Classes and utils
-use Maatwebsite\Excel\Facades\Excel;
-use PhpOffice\PhpSpreadsheet\Exception;
 use Random\RandomException;
 use App\Utils\TokenGenerator;
 use App\Utils\PasswordGenerator;
 use Throwable;
+use Carbon\Carbon;
+
+// Excel
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Exception;
+use App\Imports\ProfessorsImport;
+use App\Exports\ProfessorsExport;
+use App\Exports\ProfessorsResultExport;
+use App\Exports\ProfessorsTemplateExport;
+
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ProfessorController extends Controller
@@ -59,7 +62,7 @@ class ProfessorController extends Controller
     }
 
     // Exibição de professores com aplicação de filtros ou troca de página (‘READ’)
-    public function show(Request $request): JsonResponse
+    public function filter(Request $request): JsonResponse
     {
         //DB::enableQueryLog();
 
@@ -87,6 +90,9 @@ class ProfessorController extends Controller
         // registerPeriod: período de cadastro
         if ($request->filled('period')) {
             $period = $request->input('period');
+            $personalized_start_period = $request->input('personalized_start_period');
+            $personalized_end_period = $request->input('personalized_end_period');
+
             $query->when($period === 'today', function ($q) {
                 $q->whereDate('created_at', today());
             });
@@ -96,6 +102,15 @@ class ProfessorController extends Controller
             $query->when($period === 'month', function ($q) {
                 $q->whereBetween('created_at', [now()->subDays(30), now()]);
             });
+
+            if ($personalized_start_period && $personalized_end_period) {
+                $query->when($period === 'personalized', function ($q) use ($personalized_start_period, $personalized_end_period) {
+                    $q->whereBetween('created_at', [
+                        Carbon::parse($personalized_start_period)->startOfDay(),
+                        Carbon::parse($personalized_end_period)->endOfDay(),
+                    ]);
+                });
+            }
         }
         #endregion
 
@@ -298,43 +313,6 @@ class ProfessorController extends Controller
         ]);
     }
 
-    /**
-     * @throws Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     */
-    public function generateFile(Request $request): BinaryFileResponse
-    {
-        $filters = [
-            'search'   => $request->query('searchTerm'),
-            'status'    => $request->query('status'),
-            'period'    => $request->query('period'),
-        ];
-        return Excel::download(new ProfessorsExport($filters), 'relatorio-professores.xlsx');
-    }
-
-    /**
-     * @throws Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     */
-    public function downloadTemplate(): BinaryFileResponse
-    {
-        return Excel::download(new ProfessorsTemplateExport, 'modelo-importacao-professores.xlsx');
-    }
-
-    /**
-     * @throws Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     */
-    public function import(Request $request): BinaryFileResponse
-    {
-        $request->validate(['file' => 'required|mimes:xlsx,csv']);
-        $import = new ProfessorsImport;
-        Excel::import($import, $request->file('file'));
-
-        return Excel::download(
-            new ProfessorsResultExport($import->rowsProcessed), 'resultado-importacao.xlsx');
-    }
-
     private function mapProfessor($professor): array
     {
         $user = $professor->user;
@@ -359,5 +337,43 @@ class ProfessorController extends Controller
             'created_at' => $professor->created_at ?? $user->created_at,
             'updated_at' => $professor->updated_at ?? $user->updated_at,
         ];
+    }
+
+    /**
+     * @throws Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function generateFile(Request $request): BinaryFileResponse
+    {
+        $filters = [
+            'search' => $request->query('searchTerm'),
+            'status' => $request->query('status'),
+            'period' => $request->query('period'),
+        ];
+
+        return Excel::download(new ProfessorsExport($filters), 'relatorio-professores.xlsx');
+    }
+
+    /**
+     * @throws Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function downloadTemplate(): BinaryFileResponse
+    {
+        return Excel::download(new ProfessorsTemplateExport, 'modelo-importacao-professores.xlsx');
+    }
+
+    /**
+     * @throws Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function import(Request $request): BinaryFileResponse
+    {
+        $request->validate(['file' => 'required|mimes:xlsx,csv']);
+        $import = new ProfessorsImport;
+        Excel::import($import, $request->file('file'));
+
+        return Excel::download(
+            new ProfessorsResultExport($import->rowsProcessed), 'resultado-importacao.xlsx');
     }
 }

@@ -38,6 +38,10 @@ export function axesData() {
             value: '',
             name: '',
             drop: false,
+
+            personalized: false,
+            startDate: '',
+            endDate: '',
         },
 
         // --- LISTAS DE DADOS ---
@@ -113,9 +117,11 @@ export function axesData() {
                     search: this.searchTerm,
                     status: this.statusFilter.value,
                     period: this.registerPeriod.value,
+                    personalized_start_period: this.registerPeriod.startDate,
+                    personalized_end_period: this.registerPeriod.endDate,
                 };
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
-                const response = await axios.get(`/${requestPrefix}/axis/show`, {params});
+                const response = await axios.get(`/${requestPrefix}/axis/filter`, {params});
 
                 this.axes = response.data.data;
                 this.page = response.data.page;

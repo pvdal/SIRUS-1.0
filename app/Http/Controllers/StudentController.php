@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 // Common
-use App\Exports\StudentsResultExport;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -21,18 +19,21 @@ use Illuminate\Support\Facades\DB;
 //use Illuminate\Support\Facades\Log;
 
 // Static Classes and utils
-use Illuminate\Validation\ValidationException;
 use Random\RandomException;
 use App\Utils\TokenGenerator;
 use App\Utils\PasswordGenerator;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
+use Carbon\Carbon;
 
 // Excel
-use App\Exports\StudentsExport;
-use App\Imports\StudentsImport;
 use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Exception;
+use App\Imports\StudentsImport;
+use App\Exports\StudentsExport;
+use App\Exports\StudentsResultExport;
 use App\Exports\StudentsTemplateExport;
+
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class StudentController extends Controller
 {
@@ -95,7 +96,7 @@ class StudentController extends Controller
     }
 
     // Exibição de alunos com aplicação de filtros ou troca de página (‘READ’)
-    public function show(Request $request): JsonResponse
+    public function filter(Request $request): JsonResponse
     {
         //DB::enableQueryLog();
         $query = Student::with(
@@ -135,6 +136,9 @@ class StudentController extends Controller
 
         if ($request->filled('period')) {
             $period = $request->input('period');
+            $personalized_start_period = $request->input('personalized_start_period');
+            $personalized_end_period = $request->input('personalized_end_period');
+
             $query->when($period === 'today', function ($q) {
                 $q->whereDate('created_at', today());
             });
@@ -144,6 +148,15 @@ class StudentController extends Controller
             $query->when($period === 'month', function ($q) {
                 $q->whereBetween('created_at', [now()->subDays(30), now()]);
             });
+
+            if ($personalized_start_period && $personalized_end_period) {
+                $query->when($period === 'personalized', function ($q) use ($personalized_start_period, $personalized_end_period) {
+                    $q->whereBetween('created_at', [
+                        Carbon::parse($personalized_start_period)->startOfDay(),
+                        Carbon::parse($personalized_end_period)->endOfDay(),
+                    ]);
+                });
+            }
         }
         #endregion
 
@@ -334,24 +347,37 @@ class StudentController extends Controller
     }
 
     //Classes para ações excel
+
+    /**
+     * @throws Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function generateFile(Request $request): BinaryFileResponse
     {
         $filters = [
-            'search'   => $request->query('searchTerm'),
+            'search'    => $request->query('searchTerm'),
             'course_id' => $request->query('courseId'),
             'group_id'  => $request->query('groupId'),
             'status'    => $request->query('status'),
             'period'    => $request->query('period'),
         ];
 
-    return Excel::download(new StudentsExport($filters), 'relatorio-alunos.xlsx');
+        return Excel::download(new StudentsExport($filters), 'relatorio-alunos.xlsx');
     }
 
+    /**
+     * @throws Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function downloadTemplate(): BinaryFileResponse
     {
         return Excel::download(new StudentsTemplateExport, 'modelo_alunos_sirus.xlsx');
     }
 
+    /**
+     * @throws Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function import(Request $request): BinaryFileResponse
     {
         $request->validate([
@@ -359,6 +385,7 @@ class StudentController extends Controller
         ]);
         $import = new StudentsImport;
         Excel::import($import, $request->file('file'));
+
         return Excel::download(
             new StudentsResultExport($import->rowsProcessed),'resultado-importacao.xlsx');
     }

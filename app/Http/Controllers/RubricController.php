@@ -2,19 +2,26 @@
 
 namespace App\Http\Controllers;
 
+// Common
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
+// Models
 use App\Models\Axis;
 use App\Models\Criterion;
 use App\Models\Rubric;
-use App\Utils\TokenGenerator;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+
+// Transações no banco
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
-use Illuminate\View\View;
+
+// Log
 use Illuminate\Support\Facades\Log;
+
+// Static Classes and utils
+use Illuminate\View\View;
 use Random\RandomException;
-
-
+use App\Utils\TokenGenerator;
+use Carbon\Carbon;
 
 class RubricController extends Controller
 {
@@ -41,6 +48,77 @@ class RubricController extends Controller
             'page' => $rubrics->currentPage(),
             'totalPages' => $rubrics->lastPage(),
         ]));
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function filter(Request $request): JsonResponse
+    {
+        // Cria a query inicial, trazendo rubrica com eixos e critérios
+        $query = Rubric::with([
+            'axes', // relacionamento Rubric -> RubricAxis -> Axis
+            'axes.criteria' // relacionamento Axis -> AxisCriteria -> Criteria
+        ])->orderBy('id');
+
+        // ===== Filtros =====
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhereHas('axes', function ($sub) use ($search) {
+                        $sub->where('name', 'like', "%{$search}%")
+                            ->orWhereHas('criteria', function ($sub2) use ($search) {
+                                $sub2->where('name', 'like', "%{$search}%");
+                            });
+                    });
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('state', $request->input('status'));
+        }
+
+        if ($request->filled('period')) {
+            $period = $request->input('period');
+            $personalized_start_period = $request->input('personalized_start_period');
+            $personalized_end_period = $request->input('personalized_end_period');
+
+            $query->when($period === 'today', function ($q) {
+                $q->whereDate('created_at', today());
+            });
+            $query->when($period === 'week', function ($q) {
+                $q->whereBetween('created_at', [now()->subDays(7), now()]);
+            });
+            $query->when($period === 'month', function ($q) {
+                $q->whereBetween('created_at', [now()->subDays(30), now()]);
+            });
+
+            if ($personalized_start_period && $personalized_end_period) {
+                $query->when($period === 'personalized', function ($q) use ($personalized_start_period, $personalized_end_period) {
+                    $q->whereBetween('created_at', [
+                        Carbon::parse($personalized_start_period)->startOfDay(),
+                        Carbon::parse($personalized_end_period)->endOfDay(),
+                    ]);
+                });
+            }
+        }
+
+        // Paginação
+        $rubrics = $query->paginate(12);
+
+        $data = $rubrics->getCollection()->map(function ($rubric) {
+            return $this->mapRubric($rubric);
+        })->values();
+
+        return response()->json([
+            'data' => $data,
+            'current_page' => $rubrics->currentPage(),
+            'last_page' => $rubrics->lastPage(),
+            'per_page' => $rubrics->perPage(),
+            'total' => $rubrics->total(),
+        ]);
     }
 
     /**
@@ -176,64 +254,6 @@ class RubricController extends Controller
             ->get();
 
         return response()->json($axes);
-    }
-    /**
-     * Display the specified resource.
-     */
-    public function show(Request $request): JsonResponse
-    {
-        // Cria a query inicial, trazendo rubrica com eixos e critérios
-        $query = Rubric::with([
-            'axes', // relacionamento Rubric -> RubricAxis -> Axis
-            'axes.criteria' // relacionamento Axis -> AxisCriteria -> Criteria
-        ])->orderBy('id');
-
-        // ===== Filtros =====
-        if ($request->filled('search')) {
-            $search = $request->input('search');
-
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhereHas('axes', function ($sub) use ($search) {
-                        $sub->where('name', 'like', "%{$search}%")
-                            ->orWhereHas('criteria', function ($sub2) use ($search) {
-                                $sub2->where('name', 'like', "%{$search}%");
-                            });
-                    });
-            });
-        }
-
-        if ($request->filled('status')) {
-            $query->where('state', $request->input('status'));
-        }
-
-        if ($request->filled('period')) {
-            $period = $request->input('period');
-            $query->when($period === 'today', function ($q) {
-                $q->whereDate('created_at', today());
-            });
-            $query->when($period === 'week', function ($q) {
-                $q->whereBetween('created_at', [now()->subDays(7), now()]);
-            });
-            $query->when($period === 'month', function ($q) {
-                $q->whereBetween('created_at', [now()->subDays(30), now()]);
-            });
-        }
-
-        // Paginação
-        $rubrics = $query->paginate(12);
-
-        $data = $rubrics->getCollection()->map(function ($rubric) {
-            return $this->mapRubric($rubric);
-        })->values();
-
-        return response()->json([
-            'data' => $data,
-            'current_page' => $rubrics->currentPage(),
-            'last_page' => $rubrics->lastPage(),
-            'per_page' => $rubrics->perPage(),
-            'total' => $rubrics->total(),
-        ]);
     }
 
     /**

@@ -100,24 +100,51 @@
             <ul x-show="registerPeriod.drop"
                 @click.outside="registerPeriod.drop = false"
                 class="absolute min-w-[170px] md:max-w-[200px] w-full border bg-white dark:bg-gray-700 dark:border-gray-900 mt-1 rounded-lg max-h-60 overflow-auto z-50 scrollbar-custom py-5 px-1 transition duration-150 ease-in-out">
-                <hr />
-                <li @click="registerPeriod.value = ''; registerPeriod.name = 'Todas as datas'; registerPeriod.drop = false; {{ $loadFunction }}"
-                    class="px-4 py-1 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 break-words cursor-pointer rounded-sm transition duration-150 ease-in-out">
-                    Todas as datas
-                </li>
-                <li @click="registerPeriod.value = 'today'; registerPeriod.name = 'Cadastrados hoje'; registerPeriod.drop = false; {{ $loadFunction }}"
-                    class="px-4 py-1 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 break-words cursor-pointer rounded-sm transition duration-150 ease-in-out"
-                    x-text="'Cadastrados hoje'">
-                </li>
-                <li @click="registerPeriod.value = 'week'; registerPeriod.name = 'Últimos 7 dias'; registerPeriod.drop = false; {{ $loadFunction }}"
-                    class="px-4 py-1 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 break-words cursor-pointer rounded-sm transition duration-150 ease-in-out"
-                    x-text="'Últimos 7 dias'">
-                </li>
-                <li @click="registerPeriod.value = 'month'; registerPeriod.name = 'Últimos 30 dias'; registerPeriod.drop = false; {{ $loadFunction }}"
-                    class="px-4 py-1 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 break-words cursor-pointer rounded-sm transition duration-150 ease-in-out"
-                    x-text="'Últimos 30 dias'">
-                </li>
-                <hr />
+
+                <div class="flex flex-col gap-5">
+                    <div>
+                        <hr />
+                        <li @click="registerPeriod.value = ''; registerPeriod.name = 'Todas as datas'; registerPeriod.drop = false; registerPeriod.personalized = false; {{ $loadFunction }}"
+                            class="px-4 py-1 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 break-words cursor-pointer rounded-sm transition duration-150 ease-in-out">
+                            Todas as datas
+                        </li>
+                        <li @click="registerPeriod.value = 'today'; registerPeriod.name = 'Cadastrados hoje'; registerPeriod.drop = false; registerPeriod.personalized = false; {{ $loadFunction }}"
+                            class="px-4 py-1 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 break-words cursor-pointer rounded-sm transition duration-150 ease-in-out"
+                            x-text="'Cadastrados hoje'">
+                        </li>
+                        <li @click="registerPeriod.value = 'week'; registerPeriod.name = 'Últimos 7 dias'; registerPeriod.drop = false; registerPeriod.personalized = false; {{ $loadFunction }}"
+                            class="px-4 py-1 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 break-words cursor-pointer rounded-sm transition duration-150 ease-in-out"
+                            x-text="'Últimos 7 dias'">
+                        </li>
+                        <li @click="registerPeriod.value = 'month'; registerPeriod.name = 'Últimos 30 dias'; registerPeriod.drop = false; registerPeriod.personalized = false; {{ $loadFunction }}"
+                            class="px-4 py-1 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 break-words cursor-pointer rounded-sm transition duration-150 ease-in-out"
+                            x-text="'Últimos 30 dias'">
+                        </li>
+                        <li @click="registerPeriod.value = 'personalized'; registerPeriod.name = 'Personalizado'; registerPeriod.personalized = true;"
+                            class="px-4 py-1 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 break-words cursor-pointer rounded-sm transition duration-150 ease-in-out"
+                            x-text="'Personalizado'">
+                        </li>
+                        <hr />
+                    </div>
+                    <div x-show="registerPeriod.personalized">
+                        <hr />
+                        <div class="w-full px-4 mt-4">
+                            <x-custom-banner/>
+                            <div class="mt-2">
+                                <x-label value="Início"/>
+                                <x-input type="date" x-model="registerPeriod.startDate" class="w-full text-gray-700 dark:text-gray-200" />
+                            </div>
+                            <div class="mt-2">
+                                <x-label value="Final"/>
+                                <x-input type="date" x-model="registerPeriod.endDate"  class="w-full text-gray-700 dark:text-gray-200" />
+                            </div>
+                            <x-button x-on:click="registerPeriod.value = 'personalized'; registerPeriod.name = 'Personalizado'; registerPeriod.drop = false; {{ $loadFunction }}" class="w-full mt-4"
+                                x-bind:disabled="registerPeriod.startDate === '' || registerPeriod.endDate === ''">
+                                Pesquisar
+                            </x-button>
+                        </div>
+                    </div>
+                </div>
             </ul>
         </div>
     @endisset

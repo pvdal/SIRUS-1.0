@@ -14,6 +14,10 @@ export function coordinatorsData() {
             value: '',
             name: '',
             drop: false,
+
+            personalized: false,
+            startDate: '',
+            endDate: '',
         },
 
         name: '',
@@ -87,9 +91,11 @@ export function coordinatorsData() {
                     search: this.searchTerm,
                     status: this.statusFilter.value,
                     period: this.registerPeriod.value,
+                    personalized_start_period: this.registerPeriod.startDate,
+                    personalized_end_period: this.registerPeriod.endDate,
                 };
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
-                const response = await axios.get(`/${requestPrefix}/coordinators/show`, {params})
+                const response = await axios.get(`/${requestPrefix}/coordinators/filter`, {params})
 
                 this.coordinators = response.data.data;
                 this.page = response.data.page;

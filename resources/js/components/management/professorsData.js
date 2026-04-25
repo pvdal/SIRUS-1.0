@@ -14,6 +14,10 @@ export function professorsData() {
             value: '',
             name: '',
             drop: false,
+
+            personalized: false,
+            startDate: '',
+            endDate: '',
         },
 
         name: '',
@@ -58,8 +62,6 @@ export function professorsData() {
             this.page = page;
             this.totalPages = totalPages;
 
-            console.log(this.professors);
-
             this.empty.data = !Array.isArray(professors) || professors.length === 0;
 
             this.$watch('showCreateModal', (value) => {
@@ -89,9 +91,11 @@ export function professorsData() {
                     search: this.searchTerm,
                     status: this.statusFilter.value,
                     period: this.registerPeriod.value,
+                    personalized_start_period: this.registerPeriod.startDate,
+                    personalized_end_period: this.registerPeriod.endDate,
                 };
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
-                const response = await axios.get(`/${requestPrefix}/professors/show`, { params });
+                const response = await axios.get(`/${requestPrefix}/professors/filter`, { params });
 
                 this.professors = response.data.data;
                 this.page = response.data.page;

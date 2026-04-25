@@ -50,7 +50,7 @@
 
     <h3 id="cap-5.3-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Exportação</h3>
     <p class="mb-2">
-        O botão <strong>"Exportar"</strong> gera um arquivo no formato <code class="px-2 py-1 rounded-md font-mono text-sm bg-gray-50 dark:bg-gray-800">.xlsx</code> (Excel) contendo todos os registros exibidos
+        O botão <strong>"Exportar"</strong> gera um arquivo no formato <code class="px-2 py-1 rounded-md font-mono text-sm bg-gray-100 dark:bg-gray-800">.xlsx</code> (Excel) contendo todos os registros exibidos
         na listagem atual.
     </p>
     <ul class="list-disc pl-6 space-y-1 mb-4">

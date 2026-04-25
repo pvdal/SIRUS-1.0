@@ -5,6 +5,7 @@ export function criteriaData() {
         showImportModal: false,
         edit: false, // Define se o modal vai para store ou update
         showWarningModal: false,
+        // Variáveis relacionadas ao actions-table-bar.
         searchTerm: '',
         statusFilter: {
             value: '',
@@ -14,7 +15,11 @@ export function criteriaData() {
         registerPeriod: {
             value: '',
             name: '',
-            drop: false
+            drop: false,
+
+            personalized: false,
+            startDate: '',
+            endDate: '',
         },
 
         // Variáveis dos campos do formulário de Critério
@@ -115,10 +120,11 @@ export function criteriaData() {
                     search: this.searchTerm,
                     status: this.statusFilter.value,
                     period: this.registerPeriod.value,
-
+                    personalized_start_period: this.registerPeriod.startDate,
+                    personalized_end_period: this.registerPeriod.endDate,
                 };
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
-                const response = await axios.get(`/${requestPrefix}/criteria/show`, {params})
+                const response = await axios.get(`/${requestPrefix}/criteria/filter`, {params})
 
                 this.criteria = response.data.data;
                 this.page = response.data.page;

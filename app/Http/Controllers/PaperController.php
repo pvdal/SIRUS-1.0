@@ -2,25 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Committee;
+// Common
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
+// Models
 use App\Models\Course;
 use App\Models\Group;
 use App\Models\Paper;
-use App\Models\Student;
+
+// Transações no banco
+use Illuminate\Support\Facades\DB;
+
+// Log
+use Illuminate\Support\Facades\Log;
+
+// Static Classes and utils
+use Illuminate\View\View;
+use Exception;
+use Random\RandomException;
+use App\Utils\TokenGenerator;
 use App\Services\PaperService;
 use App\Utils\StringResolve;
-use App\Utils\TokenGenerator;
-use Exception;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
-use Illuminate\View\View;
-use Random\RandomException;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Support\Facades\Storage;
 use Throwable;
+use Carbon\Carbon;
+
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
 
 class PaperController extends Controller
 {
@@ -112,7 +122,7 @@ class PaperController extends Controller
         ]);
     }
 
-    public function show(Request $request): JsonResponse
+    public function filter(Request $request): JsonResponse
     {
         //DB::enableQueryLog();
         $query = Paper::with([
@@ -145,6 +155,9 @@ class PaperController extends Controller
 
         if ($request->filled('period')) {
             $period = $request->input('period');
+            $personalized_start_period = $request->input('personalized_start_period');
+            $personalized_end_period = $request->input('personalized_end_period');
+
             $query->when($period === 'today', function ($q) {
                 $q->whereDate('created_at', today());
             });
@@ -154,6 +167,15 @@ class PaperController extends Controller
             $query->when($period === 'month', function ($q) {
                 $q->whereBetween('created_at', [now()->subDays(30), now()]);
             });
+
+            if ($personalized_start_period && $personalized_end_period) {
+                $query->when($period === 'personalized', function ($q) use ($personalized_start_period, $personalized_end_period) {
+                    $q->whereBetween('created_at', [
+                        Carbon::parse($personalized_start_period)->startOfDay(),
+                        Carbon::parse($personalized_end_period)->endOfDay(),
+                    ]);
+                });
+            }
         }
 
         if($request->filled('year')) {

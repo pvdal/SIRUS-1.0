@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 // Common
-use App\Models\CommitteeRubric;
-use App\Models\Paper;
-use App\Models\Rubric;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 // Models
+use App\Models\CommitteeRubric;
+use App\Models\Paper;
+use App\Models\Rubric;
 use App\Models\Committee;
 use App\Models\Coordinator;
 use App\Models\Group;
@@ -26,12 +26,11 @@ use Illuminate\Support\Facades\DB;
 
 // Static Classes and utils
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
 use Random\RandomException;
 use App\Utils\TokenGenerator;
-
 use Illuminate\Validation\Rule;
 use Throwable;
+use Carbon\Carbon;
 
 class CommitteeController extends Controller
 {
@@ -225,7 +224,7 @@ class CommitteeController extends Controller
     }
 
     // Exibição de bancas com aplicação de filtros ou troca de página (‘READ’)
-    public function show(Request $request): JsonResponse
+    public function filter(Request $request): JsonResponse
     {
         //DB::enableQueryLog();
         $query = Committee::with([
@@ -288,6 +287,9 @@ class CommitteeController extends Controller
 
         if ($request->filled('period')) {
             $period = $request->input('period');
+            $personalized_start_period = $request->input('personalized_start_period');
+            $personalized_end_period = $request->input('personalized_end_period');
+
             $query->when($period === 'today', function ($q) {
                 $q->whereDate('created_at', today());
             });
@@ -297,6 +299,15 @@ class CommitteeController extends Controller
             $query->when($period === 'month', function ($q) {
                 $q->whereBetween('created_at', [now()->subDays(30), now()]);
             });
+
+            if ($personalized_start_period && $personalized_end_period) {
+                $query->when($period === 'personalized', function ($q) use ($personalized_start_period, $personalized_end_period) {
+                    $q->whereBetween('created_at', [
+                        Carbon::parse($personalized_start_period)->startOfDay(),
+                        Carbon::parse($personalized_end_period)->endOfDay(),
+                    ]);
+                });
+            }
         }
         #endregion
 

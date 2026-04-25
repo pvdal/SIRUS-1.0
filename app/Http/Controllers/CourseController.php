@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\DB;
 // Static Classes and utils
 use Random\RandomException;
 use App\Utils\TokenGenerator;
+use Carbon\Carbon;
 
 class CourseController extends Controller
 {
@@ -75,7 +76,7 @@ class CourseController extends Controller
     }
 
     // Exibição de cursos com aplicação de filtros ou troca de página (‘READ’)
-    public function show (Request $request): jsonResponse
+    public function filter(Request $request): jsonResponse
     {
         //DB::enableQueryLog();
         $query = Course::with('coordinator.user:id,name,state')->orderBy('id');
@@ -98,6 +99,9 @@ class CourseController extends Controller
 
         if ($request->filled('period')) {
             $period = $request->input('period');
+            $personalized_start_period = $request->input('personalized_start_period');
+            $personalized_end_period = $request->input('personalized_end_period');
+
             $query->when($period === 'today', function ($q) {
                 $q->whereDate('created_at', today());
             });
@@ -107,6 +111,15 @@ class CourseController extends Controller
             $query->when($period === 'month', function ($q) {
                 $q->whereBetween('created_at', [now()->subDays(30), now()]);
             });
+
+            if ($personalized_start_period && $personalized_end_period) {
+                $query->when($period === 'personalized', function ($q) use ($personalized_start_period, $personalized_end_period) {
+                    $q->whereBetween('created_at', [
+                        Carbon::parse($personalized_start_period)->startOfDay(),
+                        Carbon::parse($personalized_end_period)->endOfDay(),
+                    ]);
+                });
+            }
         }
         #endregion
 

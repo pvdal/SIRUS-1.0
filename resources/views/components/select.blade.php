@@ -15,7 +15,7 @@
     </select>
 
     <x-lucide-chevron-down
-        class="absolute right-2 top-[50%] -translate-y-1/2 w-4 h-4
+        class="absolute right-2 top-[50%]  w-4 h-4
                text-gray-600 dark:text-gray-200 pointer-events-none"
     />
 </div>

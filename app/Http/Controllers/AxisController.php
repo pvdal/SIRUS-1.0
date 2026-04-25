@@ -2,13 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Axis;
-use App\Utils\TokenGenerator;
+// Common
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+
+// Models
+use App\Models\Axis;
+
+// Log
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rule;
+
+// Static Classes and utils
 use Random\RandomException;
+use App\Utils\TokenGenerator;
+use Illuminate\Validation\Rule;
+use Carbon\Carbon;
 
 class AxisController extends Controller
 {
@@ -45,6 +53,70 @@ class AxisController extends Controller
             'amount' => $totalAmount,
             'page' => $axisCollection->currentPage(),
             'totalPages' => $axisCollection->lastPage(),
+        ]);
+    }
+
+    public function filter(Request $request): JsonResponse
+    {
+        $query = Axis::query()->orderBy('id');
+
+        // Filtro por busca (nome do eixo)
+        if ($request->filled('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('name', 'like', "%{$searchTerm}%");
+        }
+
+        // Filtro por status
+        if ($request->filled('status')) {
+            $status = $request->input('status');
+            $query->where('state', $status);
+        }
+
+        // Filtro por período de cadastro
+        if ($request->filled('period')) {
+            $period = $request->input('period');
+            $personalized_start_period = $request->input('personalized_start_period');
+            $personalized_end_period = $request->input('personalized_end_period');
+
+            $query->when($period === 'today', function ($q) {
+                $q->whereDate('created_at', today());
+            });
+            $query->when($period === 'week', function ($q) {
+                $q->whereBetween('created_at', [now()->subDays(7), now()]);
+            });
+            $query->when($period === 'month', function ($q) {
+                $q->whereBetween('created_at', [now()->subDays(30), now()]);
+            });
+
+            if ($personalized_start_period && $personalized_end_period) {
+                $query->when($period === 'personalized', function ($q) use ($personalized_start_period, $personalized_end_period) {
+                    $q->whereBetween('created_at', [
+                        Carbon::parse($personalized_start_period)->startOfDay(),
+                        Carbon::parse($personalized_end_period)->endOfDay(),
+                    ]);
+                });
+            }
+        }
+
+        // Paginação
+        $axes = $query->paginate(30);
+
+        $axisData = $axes->getCollection()->map(function ($axis) {
+            return [
+                'id' => $axis->id,
+                'name' => $axis->name,
+                'amount' => $axis->amount, // Lendo diretamente da coluna do banco.
+                'state' => (int) $axis->state,
+                'created_at' => $axis->created_at,
+                'updated_at' => $axis->updated_at,
+                'criteria' => $axis->criteria, // Necessário para o modal de edição
+            ];
+        })->values();
+
+        return response()->json([
+            'data' => $axisData,
+            'page' => $axes->currentPage(),
+            'totalPages' => $axes->lastPage(),
         ]);
     }
 
@@ -132,59 +204,6 @@ class AxisController extends Controller
                 'updated_at' => $axis->updated_at,
                 'criteria' => $axis->criteria,
             ],
-        ]);
-    }
-
-
-    public function show(Request $request): \Illuminate\Http\JsonResponse
-    {
-        $query = Axis::query()->orderBy('id');
-
-        // Filtro por busca (nome do eixo)
-        if ($request->filled('search')) {
-            $searchTerm = $request->input('search');
-            $query->where('name', 'like', "%{$searchTerm}%");
-        }
-
-        // Filtro por status
-        if ($request->filled('status')) {
-            $status = $request->input('status');
-            $query->where('state', $status);
-        }
-
-        // Filtro por período de cadastro
-        if ($request->filled('period')) {
-            $period = $request->input('period');
-            $query->when($period === 'today', function ($q) {
-                $q->whereDate('created_at', today());
-            });
-            $query->when($period === 'week', function ($q) {
-                $q->whereBetween('created_at', [now()->subDays(7), now()]);
-            });
-            $query->when($period === 'month', function ($q) {
-                $q->whereBetween('created_at', [now()->subDays(30), now()]);
-            });
-        }
-
-        // Paginação
-        $axes = $query->paginate(30);
-
-        $axisData = $axes->getCollection()->map(function ($axis) {
-            return [
-                'id' => $axis->id,
-                'name' => $axis->name,
-                'amount' => $axis->amount, // Lendo diretamente da coluna do banco.
-                'state' => (int) $axis->state,
-                'created_at' => $axis->created_at,
-                'updated_at' => $axis->updated_at,
-                'criteria' => $axis->criteria, // Necessário para o modal de edição
-            ];
-        })->values();
-
-        return response()->json([
-            'data' => $axisData,
-            'page' => $axes->currentPage(),
-            'totalPages' => $axes->lastPage(),
         ]);
     }
 

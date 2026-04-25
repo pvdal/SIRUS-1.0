@@ -10,11 +10,14 @@ export function rubricsData() {
             name: '',
             drop: false,
         },
-
         registerPeriod: {
             value: '',
             name: '',
             drop: false,
+
+            personalized: false,
+            startDate: '',
+            endDate: '',
         },
         searchRubric:'',
 
@@ -163,11 +166,6 @@ export function rubricsData() {
             //this.filteredAxes = [];
         },
 
-        // addAxis(axis) {
-        //     if (!this.axes.some(a => a.id === axis.id)) {
-        //         this.axes.push({id: axis.id, name: axis.name, weight: axis.weight });
-        //     }
-        // },
         /**
          * Remove um eixo da lista de eixos selecionados pelo seu ID.
          */
@@ -215,9 +213,11 @@ export function rubricsData() {
                     search: this.searchTerm,
                     status: this.statusFilter.value,
                     period: this.registerPeriod.value,
+                    personalized_start_period: this.registerPeriod.startDate,
+                    personalized_end_period: this.registerPeriod.endDate,
                 };
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
-                const response = await axios.get(`/${requestPrefix}/rubrics/show`, { params });
+                const response = await axios.get(`/${requestPrefix}/rubrics/filter`, { params });
 
                 // const response = await axios.get(`{/${requestPrefix}/rubrics/show`, {params});
 

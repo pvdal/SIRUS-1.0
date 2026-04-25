@@ -15,6 +15,10 @@ export function papersData(){
             value: '',
             name: '',
             drop: false,
+
+            personalized: false,
+            startDate: '',
+            endDate: '',
         },
         groupFilter: {
             value: '',
@@ -544,11 +548,13 @@ export function papersData(){
                     search: this.searchTerm,
                     status: this.statusFilter.value,
                     period: this.registerPeriod.value,
+                    personalized_start_period: this.registerPeriod.startDate,
+                    personalized_end_period: this.registerPeriod.endDate,
                     group: this.groupFilter.id,
                     version: this.versionFilter.value,
                 };
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
-                const response = await axios.get(`/${requestPrefix}/papers/show`, {params});
+                const response = await axios.get(`/${requestPrefix}/papers/filter`, {params});
 
                 this.papers = response.data.data;
                 this.page = response.data.page;

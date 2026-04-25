@@ -16,6 +16,10 @@ export function committeesData() {
             value: '',
             name: '',
             drop: false,
+
+            personalized: false,
+            startDate: '',
+            endDate: '',
         },
         historyFilter: false,
         toggleHistory(){
@@ -342,9 +346,11 @@ export function committeesData() {
                     status: this.statusFilter.value,
                     period: this.registerPeriod.value,
                     history: this.historyFilter,
+                    personalized_start_period: this.registerPeriod.startDate,
+                    personalized_end_period: this.registerPeriod.endDate,
                 }
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
-                const response = await axios.get(`/${requestPrefix}/committees/show`, {params});
+                const response = await axios.get(`/${requestPrefix}/committees/filter`, {params});
 
                 this.committees = response.data.data;
                 this.page = response.data.page;

@@ -15,6 +15,10 @@ export function studentsData() {
             value: '',
             name: '',
             drop: false,
+
+            personalized: false,
+            startDate: '',
+            endDate: '',
         },
         groupFilter: {
             id:'',
@@ -99,7 +103,6 @@ export function studentsData() {
             });
 
             this.$watch('group.search', (value) => {
-                console.log('chegou');
                 value = value.trim();
                 if(value) {
                     this.searchGroups();
@@ -177,11 +180,13 @@ export function studentsData() {
                     search: this.searchTerm,
                     status: this.statusFilter.value,
                     period: this.registerPeriod.value,
+                    personalized_start_period: this.registerPeriod.startDate,
+                    personalized_end_period: this.registerPeriod.endDate,
                     course: this.courseFilter.id,
                     group: this.groupFilter.id,
                 };
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
-                const response = await axios.get(`/${requestPrefix}/students/show`, {params})
+                const response = await axios.get(`/${requestPrefix}/students/filter`, {params})
 
                 this.students = response.data.data;
                 this.groups = response.data.groups;

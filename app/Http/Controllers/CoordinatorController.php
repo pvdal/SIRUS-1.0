@@ -3,10 +3,6 @@
 namespace App\Http\Controllers;
 
 // Common
-use App\Exports\CoordinatorsExport;
-use App\Exports\ProfessorsResultExport;
-use App\Exports\ProfessorsTemplateExport;
-use App\Imports\CoordinatorsImport;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -21,14 +17,22 @@ use Illuminate\Support\Facades\DB;
 //use Illuminate\Support\Facades\Log;
 
 // Static Classes and utils
-use Illuminate\Support\Facades\Log;
-use Maatwebsite\Excel\Facades\Excel;
-use PhpOffice\PhpSpreadsheet\Exception;
 use Random\RandomException;
 use App\Utils\TokenGenerator;
 use App\Utils\PasswordGenerator;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
+use Carbon\Carbon;
+
+// Excel
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Exception;
+use App\Imports\CoordinatorsImport;
+use App\Exports\CoordinatorsExport;
+use App\Exports\ProfessorsResultExport;
+use App\Exports\ProfessorsTemplateExport;
+
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+
 
 class CoordinatorController extends Controller
 {
@@ -59,7 +63,7 @@ class CoordinatorController extends Controller
     }
 
     // Exibição de coordenadores com aplicação de filtros ou troca de página (‘READ’)
-    public function show (Request $request): jsonResponse
+    public function filter (Request $request): jsonResponse
     {
         //DB::enableQueryLog();
         // Consulta no banco, join user com alguns campos ordenados por id
@@ -87,6 +91,9 @@ class CoordinatorController extends Controller
         // registerPeriod: período de cadastro
         if ($request->filled('period')) {
             $period = $request->input('period');
+            $personalized_start_period = $request->input('personalized_start_period');
+            $personalized_end_period = $request->input('personalized_end_period');
+
             $query->when($period === 'today', function ($q) {
                 $q->whereDate('created_at', today());
             });
@@ -96,6 +103,15 @@ class CoordinatorController extends Controller
             $query->when($period === 'month', function ($q) {
                 $q->whereBetween('created_at', [now()->subDays(30), now()]);
             });
+
+            if ($personalized_start_period && $personalized_end_period) {
+                $query->when($period === 'personalized', function ($q) use ($personalized_start_period, $personalized_end_period) {
+                    $q->whereBetween('created_at', [
+                        Carbon::parse($personalized_start_period)->startOfDay(),
+                        Carbon::parse($personalized_end_period)->endOfDay(),
+                    ]);
+                });
+            }
         }
         #endregion
 
@@ -302,12 +318,42 @@ class CoordinatorController extends Controller
         ]);
     }
 
+    private function mapCoordinator($coordinator): array
+    {
+        $user = $coordinator->user;
+        return [
+            'id' => $coordinator->id,
+            'user_id' => $coordinator->user_id,
+            'name' => $user->name ?? '-',
+            'email' => $user->email ?? '-',
+            'education' => $coordinator->user->education->isNotEmpty() ?
+                $coordinator->user->education
+                    ->groupBy('level')
+                    ->map(function ($items) {
+                        return $items->map(function ($item) {
+                            return [
+                                'id' => $item->id,
+                                'course' => $item->course,
+                                'institution' => $item->institution,
+                            ];
+                        });
+                    }) : [],
+            'state' => isset($user->state) ? (int) $user->state : 0,
+            'created_at' => $coordinator->created_at ?? $user->created_at,
+            'updated_at' => $coordinator->updated_at ?? $user->updated_at,
+        ];
+    }
+
+    /**
+     * @throws Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function generateFile(Request $request): BinaryFileResponse
     {
         $filters = [
-            'search'   => $request->query('searchTerm'),
-            'status'    => $request->query('status'),
-            'period'    => $request->query('period'),
+            'search' => $request->query('searchTerm'),
+            'status' => $request->query('status'),
+            'period' => $request->query('period'),
         ];
         return Excel::download(new CoordinatorsExport($filters), 'relatorio-Coordenadores.xlsx');
     }
@@ -333,31 +379,5 @@ class CoordinatorController extends Controller
 
         return Excel::download(
             new ProfessorsResultExport($import->rowsProcessed), 'resultado-importacao.xlsx');
-    }
-
-    private function mapCoordinator($coordinator): array
-    {
-        $user = $coordinator->user;
-        return [
-            'id' => $coordinator->id,
-            'user_id' => $coordinator->user_id,
-            'name' => $user->name ?? '-',
-            'email' => $user->email ?? '-',
-            'education' => $coordinator->user->education->isNotEmpty() ?
-                $coordinator->user->education
-                    ->groupBy('level')
-                    ->map(function ($items) {
-                        return $items->map(function ($item) {
-                            return [
-                                'id' => $item->id,
-                                'course' => $item->course,
-                                'institution' => $item->institution,
-                            ];
-                        });
-                    }) : [],
-            'state' => isset($user->state) ? (int) $user->state : 0,
-            'created_at' => $coordinator->created_at ?? $user->created_at,
-            'updated_at' => $coordinator->updated_at ?? $user->updated_at,
-        ];
     }
 }

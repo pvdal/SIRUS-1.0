@@ -16,6 +16,10 @@ export function groupsData() {
             value: '',
             name: '',
             drop: false,
+
+            personalized: false,
+            startDate: '',
+            endDate: '',
         },
         // Variáveis dos campos do formulário
         theme: '',
@@ -207,9 +211,11 @@ export function groupsData() {
                     search: this.searchTerm,
                     status: this.statusFilter.value,
                     period: this.registerPeriod.value,
+                    personalized_start_period: this.registerPeriod.startDate,
+                    personalized_end_period: this.registerPeriod.endDate,
                 }
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
-                const response = await axios.get(`/${requestPrefix}/groups/show`, {params});
+                const response = await axios.get(`/${requestPrefix}/groups/filter`, {params});
 
                 this.groups = response.data.data;
                 this.page = response.data.page;

@@ -2,18 +2,30 @@
 
 namespace App\Http\Controllers;
 
+// Common
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
+// Models
+use App\Models\Criterion;
+
+// Log
+// use Illuminate\Support\Facades\Log;
+
+// Static Classes and utils
+use Illuminate\View\View;
+use Random\RandomException;
+use App\Utils\TokenGenerator;
+use Carbon\Carbon;
+
+// Excel
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Exception;
+use App\Imports\CriteriaImport;
 use App\Exports\CriteriaExport;
 use App\Exports\CriteriaResultExport;
 use App\Exports\CriteriaTemplateExport;
-use App\Imports\CriteriaImport;
-use App\Utils\TokenGenerator;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\View\View;
-use App\Models\Criterion;
-use Maatwebsite\Excel\Facades\Excel;
-use Random\RandomException;
+
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class CriteriaController extends Controller
@@ -55,7 +67,7 @@ class CriteriaController extends Controller
      * Exibição com filtros via AJAX
      * 'READ'
      */
-    public function show(Request $request): JsonResponse
+    public function filter(Request $request): JsonResponse
     {
         $query = Criterion::query()->orderBy('id', 'asc');
 
@@ -92,6 +104,9 @@ class CriteriaController extends Controller
         // Filtro por período
         if ($request->filled('period')) {
             $period = $request->input('period');
+            $personalized_start_period = $request->input('personalized_start_period');
+            $personalized_end_period = $request->input('personalized_end_period');
+
             $query->when($period === 'today', function ($q) {
                 $q->whereDate('created_at', today());
             });
@@ -101,6 +116,15 @@ class CriteriaController extends Controller
             $query->when($period === 'month', function ($q) {
                 $q->whereBetween('created_at', [now()->subDays(30), now()]);
             });
+
+            if ($personalized_start_period && $personalized_end_period) {
+                $query->when($period === 'personalized', function ($q) use ($personalized_start_period, $personalized_end_period) {
+                    $q->whereBetween('created_at', [
+                        Carbon::parse($personalized_start_period)->startOfDay(),
+                        Carbon::parse($personalized_end_period)->endOfDay(),
+                    ]);
+                });
+            }
         }
 
         // Paginação
@@ -269,6 +293,11 @@ class CriteriaController extends Controller
     }
 
     //Funções para Excel
+
+    /**
+     * @throws Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function generateFile(Request $request): BinaryFileResponse
     {
         $filters = [
@@ -279,11 +308,19 @@ class CriteriaController extends Controller
         return Excel::download(new CriteriaExport($filters), 'relatorio-criterio.xlsx');
     }
 
+    /**
+     * @throws Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function downloadTemplate(): BinaryFileResponse
     {
         return Excel::download(new CriteriaTemplateExport(), 'modelo-importacao-criterios.xlsx');
     }
 
+    /**
+     * @throws Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function import(Request $request): BinaryFileResponse
     {
         $request->validate(['file' => 'required|mimes:xlsx,csv']);

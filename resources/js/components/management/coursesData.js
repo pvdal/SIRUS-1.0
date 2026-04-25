@@ -13,6 +13,10 @@ export function coursesData(){
             value: '',
             name: '',
             drop: false,
+
+            personalized: false,
+            startDate: '',
+            endDate: '',
         },
 
         name: '',
@@ -90,9 +94,11 @@ export function coursesData(){
                     search: this.searchTerm,
                     status: this.statusFilter.value,
                     period: this.registerPeriod.value,
+                    personalized_start_period: this.registerPeriod.startDate,
+                    personalized_end_period: this.registerPeriod.endDate,
                 };
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
-                const response = await axios.get(`/${requestPrefix}/courses/show`, {params})
+                const response = await axios.get(`/${requestPrefix}/courses/filter`, {params})
 
                 if(!Array.isArray(response.data.data)) {
                     this.courses = [];

@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 // Common
-use App\Models\Course;
-use App\Services\PaperService;
-use App\Utils\StringResolve;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 // Models
+use App\Models\Course;
+use App\Services\PaperService;
+use App\Utils\StringResolve;
 use App\Models\Paper;
 use App\Models\Group;
 use App\Models\Student;
@@ -19,14 +18,14 @@ use App\Models\Student;
 use Illuminate\Support\Facades\DB;
 
 // Log
-//use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Log;
 
 // Static Classes and utils
-use Illuminate\Support\Facades\Log;
+use Exception;
 use Random\RandomException;
 use App\Utils\TokenGenerator;
-
 use Throwable;
+use Carbon\Carbon;
 
 class GroupController extends Controller
 {
@@ -108,7 +107,7 @@ class GroupController extends Controller
     }
 
     // Exibição de grupos com aplicação de filtros ou troca de página (‘READ’)
-    public function show(Request $request): JsonResponse
+    public function filter(Request $request): JsonResponse
     {
         //DB::enableQueryLog();
         $query = Group::with([
@@ -140,6 +139,9 @@ class GroupController extends Controller
 
         if ($request->filled('period')) {
             $period = $request->input('period');
+            $personalized_start_period = $request->input('personalized_start_period');
+            $personalized_end_period = $request->input('personalized_end_period');
+
             $query->when($period === 'today', function ($q) {
                 $q->whereDate('created_at', today());
             });
@@ -149,6 +151,15 @@ class GroupController extends Controller
             $query->when($period === 'month', function ($q) {
                 $q->whereBetween('created_at', [now()->subDays(30), now()]);
             });
+
+            if ($personalized_start_period && $personalized_end_period) {
+                $query->when($period === 'personalized', function ($q) use ($personalized_start_period, $personalized_end_period) {
+                    $q->whereBetween('created_at', [
+                        Carbon::parse($personalized_start_period)->startOfDay(),
+                        Carbon::parse($personalized_end_period)->endOfDay(),
+                    ]);
+                });
+            }
         }
         #endregion
 

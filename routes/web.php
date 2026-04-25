@@ -105,35 +105,35 @@ Route::middleware([
 
         // Students -> StudentController/Student.php
         Route::get('/groups/search', [StudentController::class, 'search'])->name('students.search-groups');
-        Route::get('/students/show', [StudentController::class, 'show'])->name('students.show');
+        Route::get('/students/filter', [StudentController::class, 'filter'])->name('students.filter');
         Route::post('/students/save', [StudentController::class, 'store'])->name('students.store');
         Route::put('/students/{id}/update', [StudentController::class, 'update'])->name('students.update');
         Route::put('/students/{id}/{action}', [StudentController::class, 'toggleStatus'])->name('students.toggle-status');
 
         // Professors -> ProfessorController/Professor.php
-        Route::get('/professors/show', [ProfessorController::class, 'show'])->name('professors.show');
+        Route::get('/professors/filter', [ProfessorController::class, 'filter'])->name('professors.filter');
         Route::post('/professors/save', [ProfessorController::class, 'store'])->name('professors.store');
         Route::put('/professors/{id}/update', [ProfessorController::class, 'update'])->name('professors.update');
         Route::put('/professors/{id}/{action}', [ProfessorController::class, 'toggleStatus'])->name('professors.toggle-status');
 
         // Coordinators -> CoordinatorController/Coordinator.php
-        Route::get('/coordinators/show', [CoordinatorController::class, 'show'])->name('coordinators.show');
+        Route::get('/coordinators/filter', [CoordinatorController::class, 'filter'])->name('coordinators.filter');
         Route::post('/coordinators/save', [CoordinatorController::class, 'store'])->name('coordinators.store');
         Route::put('/coordinators/{id}/update', [CoordinatorController::class, 'update'])->name('coordinators.update');
         Route::put('/coordinators/{id}/{action}', [CoordinatorController::class, 'toggleStatus'])->name('coordinators.toggle-status');
 
-        // Groups -> GroupController/Group.php
-        Route::get('/students/search', [GroupController::class, 'search'])->name('groups.search-students');
-        Route::get('/groups/show', [GroupController::class, 'show'])->name('groups.show');
-        Route::post('/groups/save', [GroupController::class, 'store'])->name('groups.store');
-        Route::put('/groups/{id}/update', [GroupController::class, 'update'])->name('groups.update');
-        Route::put('/groups/{id}/{action}', [GroupController::class, 'toggleStatus'])->name('groups.toggle-status');
-
         // Courses -> CourseController/Course.php
-        Route::get('/courses/show', [CourseController::class, 'show'])->name('courses.show');
+        Route::get('/courses/filter', [CourseController::class, 'filter'])->name('courses.filter');
         Route::post('/courses/save', [CourseController::class, 'store'])->name('courses.store');
         Route::put('/courses/{id}/update', [CourseController::class,'update'])->name('courses.update');
         Route::put('/courses/{id}/{action}', [CourseController::class, 'toggleStatus'])->name('courses.toggle-status');
+
+        // Groups -> GroupController/Group.php
+        Route::get('/students/search', [GroupController::class, 'search'])->name('groups.search-students');
+        Route::get('/groups/filter', [GroupController::class, 'filter'])->name('groups.filter');
+        Route::post('/groups/save', [GroupController::class, 'store'])->name('groups.store');
+        Route::put('/groups/{id}/update', [GroupController::class, 'update'])->name('groups.update');
+        Route::put('/groups/{id}/{action}', [GroupController::class, 'toggleStatus'])->name('groups.toggle-status');
 
         // Committees -> CommitteeController/Committee.php
         Route::get('/rubrics/search', [CommitteeController::class, 'searchRubrics'])->name('committees.search-rubrics');
@@ -143,27 +143,27 @@ Route::middleware([
         Route::put('/committees/{id}/{action}', [CommitteeController::class, 'toggleStatus'])->name('committees.toggle-status');
 
         // Criterion -> CriteriaController/Criterion.php
-        Route::get('/criteria/show', [CriteriaController::class, 'show'])->name('criteria.show');
+        Route::get('/criteria/filter', [CriteriaController::class, 'filter'])->name('criteria.filter');
         Route::post('/criteria/save', [CriteriaController::class, 'store'])->name('criteria.store');
         Route::put('/criteria/{id}/update', [CriteriaController::class, 'update'])->name('criteria.update');
         Route::put('/criteria/{id}/{action}', [CriteriaController::class, 'toggleStatus'])->name('criteria.toggle-status');
         Route::get('/criteria/search', [CriteriaController::class, 'search'])->name('search-criteria');
 
         // Axis -> AxisController/Axes.php
-        Route::get('/axis/show', [AxisController::class, 'show'])->name('axis.show');
+        Route::get('/axis/filter', [AxisController::class, 'filter'])->name('axis.filter');
         Route::post('/axis/save', [AxisController::class, 'store'])->name('axis.store');
         Route::put('/axis/{id}/update', [AxisController::class, 'update'])->name('axis.update');
         Route::put('/axis/{id}/{action}', [AxisController::class, 'toggleStatus'])->name('axis.toggle-status');
         Route::get('/axis/search', [AxisController::class, 'search'])->name('axis.search-axes');
 
         // Rubric -> RubricController/Rubric.php
-        Route::get('/rubrics/show', [RubricController::class, 'show'])->name('rubric.show');
+        Route::get('/rubrics/filter', [RubricController::class, 'filter'])->name('rubric.filter');
         Route::post('/rubrics/save', [RubricController::class, 'store'])->name('rubric.store');
         Route::put('/rubrics/{id}/update', [RubricController::class, 'update'])->name('rubric.update');
         Route::put('/rubrics/{id}/{action}', [RubricController::class, 'toggleStatus'])->name('rubric.toggle-status');
 
         // Paper -> PaperController/Paper.php
-        Route::get('/papers/show', [PaperController::class, 'show'])->name('paper.show');
+        Route::get('/papers/filter', [PaperController::class, 'filter'])->name('paper.filter');
         Route::get('/papers/years', [PaperController::class, 'years'])->name('paper.years');
         Route::post('/papers/save', [PaperController::class, 'store'])->name('paper.store');
         Route::put('/papers/{id}/update', [PaperController::class, 'update'])->name('paper.update');
@@ -211,6 +211,6 @@ Route::middleware([
         Route::get('/events/show', [EventController::class, 'show'])->name('events.show');
 
         // Committees -> CommitteeController/Committee.php
-        Route::get('/committees/show', [CommitteeController::class, 'show'])->name('committees.show');
+        Route::get('/committees/filter', [CommitteeController::class, 'filter'])->name('committees.filter');
     });
 });
