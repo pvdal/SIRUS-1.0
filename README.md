@@ -1,18 +1,16 @@
 <p align="center">
-  <img src="./public/img/Logo_SIRUS.png" width="130" alt="SIRUS Logo" style="vertical-align: middle;"><br>
-  <strong style="font-size: 48px; vertical-align: middle;">
-    SIRUS
-  </strong><br>
-  <span>Plataforma de avaliação acadêmica</span>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="public/img/logo_readme_dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="public/img/logo_readme_light.svg">
+    <img src="public/img/Logo_readme_light.svg" width="250" alt="SIRUS Logo">
+  </picture>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Laravel-12-FF2D20?style=for-the-badge&logo=laravel&logoColor=red&labelColor=020114">
-  <img src="https://img.shields.io/badge/PHP-8.3-777BB4?style=for-the-badge&logo=php&logoColor=777BB4&labelColor=020114">
-  <img src="https://img.shields.io/badge/License-Proprietary-2f2f2f?style=for-the-badge&logo=github&logoColor=white&labelColor=020114">
+  <a href="https://laravel.com/"><img src="https://img.shields.io/badge/Laravel-12-FF2D20?style=for-the-badge&logo=laravel&logoColor=red"></a>
+  <a href="https://www.php.net/"><img src="https://img.shields.io/badge/PHP-8.3-777BB4?style=for-the-badge&logo=php&logoColor=777BB4"></a>
+  <a href="https://docs.github.com/pt/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository"><img src="https://img.shields.io/badge/License-Proprietary-2f2f2f?style=for-the-badge&logo=github&logoColor=white"></a>
 </p>
-
----
 
 ## Sobre o projeto
 
@@ -114,7 +112,7 @@ O SIRUS segue o padrão MVC do Laravel, com organização voltada à separação
 
 ```md
 
-SIRUS-1.0
+📁 SIRUS-1.0
 ├── 📁 app
 │ ├── 📁 Http
 │ │ ├── 📁 Controllers # Fluxo das requisições e regras de negócio
@@ -164,4 +162,4 @@ Este repositório é disponibilizado **sem concessão de licença de uso**. De a
 
 ## Autores
 
-Feito por [Pedro Lima](https://github.com/pvdal) e [Felipe Rocha](https://github.com/FelipRNS).
+Desenvolvido por [Pedro Lima](https://github.com/pvdal) e [Felipe Rocha](https://github.com/FelipRNS).
