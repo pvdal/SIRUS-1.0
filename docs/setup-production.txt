@@ -1,0 +1,31 @@
+/**
+ * Preparando o ambiente de produção
+ */
+
+# Dependências PHP
+composer install --no-dev --optimize-autoloader
+
+# Build frontend
+npm run build
+
+# Limpa caches antigos
+php artisan optimize:clear
+
+# Migrations (caso hajam pendências)
+php artisan migrate --force
+
+# (Opcional) seed controlado
+php artisan db:seed --class=ProductionSeeder --force
+
+# Recria caches otimizados
+php artisan optimize
+
+# Reinicia serviços
+sudo systemctl restart php8.3-fpm
+sudo systemctl restart nginx
+
+sudo supervisorctl reread
+sudo supervisorctl update
+sudo supervisorctl restart laravel-queue:*
+
+# Antes de rodar, configure o arquivo .env manualmente (ver arquivo "Configuração do .env para produção")

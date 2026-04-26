@@ -1,0 +1,48 @@
+/**
+ * Supervisor (queues)
+ */
+
+-> /etc/supervisor/conf.d/laravel-queue.conf
+
+/**
+ * Código
+ */
+
+[program:laravel-queue]
+process_name=%(program_name)s_%(process_num)02d
+command=/usr/bin/php /var/www/SIRUS-1.0/artisan queue:work --queue=default --tries=3 --sleep=3 --timeout=90 --max-time=3600
+directory=/var/www/SIRUS-1.0
+
+autostart=true
+autorestart=true
+user=www-data
+numprocs=2
+
+redirect_stderr=true
+stdout_logfile=/var/log/supervisor/laravel-queue.log
+stdout_logfile_maxbytes=50MB
+stdout_logfile_backups=5
+
+stopwaitsecs=120
+stopasgroup=true
+killasgroup=true
+
+
+sudo supervisorctl reread
+sudo supervisorctl update
+
+/**
+ * Comandos úteis
+ */
+
+# Logs:
+tail -f /var/log/supervisor/laravel-queue.log
+
+# Tratamentos de fails:
+php artisan queue:failed            # lista
+php artisan queue:retry all         # tenta reprocessar todos
+php artisan queue:forget <id>       # remove um failed job
+php artisan queue:flush             # limpa todos os faileds
+
+# Limpar dados do arquivo:
+sudo truncate -s 0 /var/log/supervisor/laravel-queue.log

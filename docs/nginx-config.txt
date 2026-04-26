@@ -1,0 +1,85 @@
+/**
+ * Configurações do nginx (caminhos no ubuntu desktop)
+ */
+
+sudo nano /etc/nginx/sites-available/sirus.conf
+
+# Configuração para nginx.conf
+-> /etc/nginx/
+limit_req_zone $binary_remote_addr zone=one:10m rate=15r/s; # (opcional) pode ser adicionado em http {}
+
+# Configuração para laravel
+-> /etc/nginx/sites-available/
+server {
+        listen 80;
+        listen [::]:80;
+        server_name 192.168.1.105;
+
+        root /var/www/SIRUS-1.0/public;
+        index index.php index.html;
+
+        client_max_body_size 80M;
+
+        client_body_timeout 60s;
+        client_header_timeout 60s;
+        send_timeout 300s;
+
+        add_header X-Frame-Options "SAMEORIGIN";
+        add_header X-Content-Type-Options "nosniff";
+
+        location / {
+                limit_req zone=one burst=10 nodelay;
+                try_files $uri $uri/ /index.php?$query_string;
+        }
+
+        location /pdfjs/ {
+                alias /var/www/SIRUS-1.0/public/pdfjs/;
+                index index.html;
+                autoindex off;
+                try_files $uri $uri/ =404;
+                add_header Cache-Control "no-store, no-cache, must-revalidate";
+
+                types {
+                        application/javascript js mjs;
+                        text/html html;
+                        text/css css;
+                        application/json json;
+                        image/svg+xml svg svgz;
+                }
+        }
+
+        # nginx serve o arquivo após resposta do laravel
+        location /internal_papers/ {
+                internal;
+                alias /var/www/SIRUS-1.0/storage/app/public/papers/;
+                autoindex off;
+                types { application/pdf pdf; }
+        }
+
+        # opcional, uma alternativa para evitar o acesso a essa arquivo default do pdf.js
+        location /pdfjs/web/compressed.tracemonkey-pldi-09.pdf {
+                return 403;
+        }
+
+        location ~ \.php$ {
+                include snippets/fastcgi-php.conf;
+                fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+        }
+
+        location ~ /\.ht {
+                deny all;
+        }
+}
+
+sudo ln -s /etc/nginx/sites-available/sirus.conf /etc/nginx/sites-enabled/
+ls /etc/nginx/sites-enabled/
+
+sudo nginx -t
+sudo systemctl reload nginx
+
+sudo chown -R www-data:www-data /var/www/SIRUS-1.0
+sudo chmod -R 755 /var/www/SIRUS-1.0
+sudo chmod -R 775 /var/www/SIRUS-1.0/storage
+sudo chmod -R 775 /var/www/SIRUS-1.0/bootstrap/cache
+
+# OBS.: O objetivo deste guia é apresentar um servidor funcional. Informações sobre implementação de criptografia devem ser buscadas em outras fontes.

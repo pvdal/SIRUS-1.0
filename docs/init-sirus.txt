@@ -1,0 +1,100 @@
+/**
+ * Inicializando o SIRUS
+ */
+
+# Windows: garantir path do node, php e mysql nas variáveis de ambiente (exemplo com xampp):
+C:\Program Files\nodejs\
+C:\xampp8.2\php
+C:\xampp8.2\mysql\bin
+
+# Configurar php (ver "Guia de configuração do PHP")
+
+/**
+ * Clonando o projeto
+ */
+
+# Linux
+cd /var/www
+git clone https://github.com/pvdal/SIRUS-1.0
+cd SIRUS-1.0
+
+# Windows
+cd C:\caminho\para\projetos
+git clone https://github.com/pvdal/SIRUS-1.0
+cd SIRUS-1.0
+
+/**
+ * Configuração do ambiente
+ */
+
+# Linux
+cp .env.example .env
+
+# Windows
+copy .env.example .env
+
+# Configurar no .env:
+APP_NAME=SIRUS
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://localhost
+
+DB_DATABASE=sirus
+DB_USERNAME=usuario
+DB_PASSWORD=senha
+
+ADMIN_PASSWORD=senha_segura
+
+/**
+ * Dependências
+ */
+
+# Instalar composer caso não tenha (ver "setup-ubuntu")
+composer install # Executar comando no diretório principal do projeto 'SIRUS-1.0'
+
+Caso haja problema de corrupção do composer.lock:
+# Linux -> rm composer.lock
+# Windows -> del composer.lock
+# composer install
+
+/**
+ * Frontend
+ */
+
+npm install
+
+# caso haja problemas, siga os passos indicados no terminal e verifique a versão do node e do npm
+- node -v
+ -npm -v
+
+/**
+ * Inicialização do Laravel
+ */
+
+php artisan key:generate
+php artisan storage:link
+php artisan migrate --seed
+
+/**
+ * Otimização
+ */
+
+composer dump-autoload
+npm run build
+php artisan optimize:clear
+
+/**
+ * Ambiente de desenvolvimento
+ */
+
+php artisan serve # incia o servidor dev do artisan
+php artisan queue:work --verbose --tries=3 --timeout=90 --sleep=3 # inicia uma fila de processos básica para testes de envio de e-mails
+
+/**
+ * Observações
+ */
+
+- Não utilizar "composer update" ou "npm update" neste passo (pode quebrar dependências)
+- O arquivo .env deve ser configurado corretamente antes de rodar o sistema
+- Em produção, seeders com dados fictícios (factories) podem causar inconsistências ou erros na aplicação

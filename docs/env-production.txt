@@ -1,0 +1,39 @@
+/**
+ * Configuração para produção (.env)
+ */
+
+# Configurações do arquivo .env
+APP_NAME=SIRUS
+APP_ENV=production
+APP_KEY=base64:... # Gerar com: php artisan key:generate
+APP_DEBUG=false
+APP_URL=http://192.168.1.105 # A URL deve ser ajustada caso tenha um domínio ou criptografia HTTPS
+
+ADMIN_PASSWORD=senha_segura # senha do usuário que será cadastrado com a seeder de produção
+
+# Define o uso de logs rotacionados diariamente (um arquivo por dia)
+# Isso evita que um único arquivo cresça indefinidamente
+# Quantidade de dias de logs armazenados (controlado via config/logging.php)
+LOG_CHANNEL=stack
+LOG_STACK=daily
+LOG_DAILY_DAYS=30
+LOG_DEPRECATIONS_CHANNEL=null
+LOG_LEVEL=debug
+
+# Banco de dados
+DB_DATABASE=nome_do_banco
+DB_USERNAME=usuario
+DB_PASSWORD=senha
+
+# Configure corretamente o email do sistema
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.seuprovedor.com
+MAIL_PORT=587
+MAIL_USERNAME=email@seuprovedor.com
+MAIL_PASSWORD= # senha de aplicativo (não use sua senha pessoal)
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=email@seuprovedor.com
+MAIL_FROM_NAME="${APP_NAME}"
+
+# Opcional
+MAIL_TIMEOUT=30

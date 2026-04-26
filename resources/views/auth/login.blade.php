@@ -20,10 +20,10 @@
         </x-slot>
 
         <div class="flex flex-col items-center mb-10">
-            <h1 class="text-center text-2xl font-semibold text-gray-800 dark:text-white">
+            <h1 class="text-center text-2xl xl:text-3xl font-semibold text-gray-800 dark:text-white">
                 Faça login para continuar
             </h1>
-            <h2 class="text-center text-base text-gray-500 dark:text-gray-400">
+            <h2 class="text-center text-base xl:text-lg text-gray-500 dark:text-gray-400">
                 Insira suas credenciais
             </h2>
         </div>

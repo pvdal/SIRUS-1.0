@@ -1,61 +1,167 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="./public/img/Logo_SIRUS.png" width="130" alt="SIRUS Logo" style="vertical-align: middle;"><br>
+  <strong style="font-size: 48px; vertical-align: middle;">
+    SIRUS
+  </strong><br>
+  <span>Plataforma de avaliação acadêmica</span>
 </p>
 
-## About Laravel
+<p align="center">
+  <img src="https://img.shields.io/badge/Laravel-12-FF2D20?style=for-the-badge&logo=laravel&logoColor=red&labelColor=020114">
+  <img src="https://img.shields.io/badge/PHP-8.3-777BB4?style=for-the-badge&logo=php&logoColor=777BB4&labelColor=020114">
+  <img src="https://img.shields.io/badge/License-Proprietary-2f2f2f?style=for-the-badge&logo=github&logoColor=white&labelColor=020114">
+</p>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Sobre o projeto
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+O SIRUS é uma plataforma web desenvolvida para otimizar e padronizar o processo de avaliação acadêmica dos trabalhos apresentados no SIMBAJU (Simpósio da Bacia do Juquery), evento realizado semestralmente na FATEC Franco da Rocha.
 
-## Learning Laravel
+O sistema soluciona a fragmentação de dados ao centralizar o gerenciamento das avaliações, permitindo que coordenadores, professores e alunos interajam em um ambiente unificado e confiável.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Funcionalidades principais
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- **Gestão de Rubricas:** Estruturação de critérios e eixos avaliativos (individual e em grupo) com pesos percentuais.
+- **Agenda Interativa:** Calendário dinâmico para agendamento e visualização de bancas examinadoras.
+- **Segurança Avançada:** Implementação de Autenticação em Dois Fatores (2FA) via aplicativos autenticadores e gestão de sessões ativas.
+- **Gestão de Arquivos:** Upload e visualização de trabalhos acadêmicos em formato PDF.
+- **Acessibilidade:** Filtros para daltonismo e integração com VLibras.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Tecnologias Utilizadas
 
-## Laravel Sponsors
+<p align="left">
+  <img src="https://skillicons.dev/icons?i=php,laravel,mysql,js,tailwind,nodejs,nginx,git,github&theme=dark" />
+</p>
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Como rodar o projeto (Desenvolvimento)
 
-### Premium Partners
+Este guia assume que você está em um ambiente de desenvolvimento local.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 1. Requisitos do Sistema
 
-## Contributing
+Antes de começar, certifique-se de ter instalado:
+- PHP 8.3+ (com extensões: fpm, mysql, xml, curl, mbstring, zip, bcmath, gd).
+- Node.js (versão 22.x recomendada) e npm.
+- Composer (Gerenciador de dependências PHP).
+- MySQL/MariaDB.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 2. Instalação e Configuração Local
 
-## Code of Conduct
+Siga os passos abaixo no terminal dentro do diretório do projeto.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1. Clonar o repositório
+```bash
+git clone https://github.com/pvdal/SIRUS-1.0
+cd SIRUS-1.0
+```
 
-## Security Vulnerabilities
+2. Configurar o arquivo de ambiente  
+  - No Linux
+  ```bash    
+  cp .env.example .env
+  ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+  - No Windows
+  ```bash    
+  copy .env.example .env
+  ```
 
-## License
+  > [!IMPORTANT]
+  > Edite o arquivo .env com suas credenciais de banco de dados.
+    
+3. Instalar dependências do Backend (PHP)
+  ```bash    
+  composer install
+  ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+4. Instalar dependências do Frontend (Javascript/CSS)
+  ```bash    
+  npm install
+  ```
+
+5. Inicializar o Laravel e Banco de Dados
+  ```bash  
+  php artisan key:generate
+  php artisan storage:link
+  php artisan migrate --seed
+  ```
+6. Build e otimização (cache)
+  ```bash  
+  npm run build
+  php artisan optimize:clear
+  php artisan optimize
+  ```
+
+> [!NOTE]
+> O sistema exige permissões de escrita nos diretórios `storage` e `bootstrap/cache` para o usuário do servidor (ex: www-data no Linux).
+
+### 3. Executando em Desenvolvimento
+
+Para rodar o sistema localmente, você precisará de dois processos rodando em terminais separados.
+  - Servidor Web (acessível em http://localhost:8000)
+  ```bash    
+  php artisan serve
+  ```
+  - Processamento de Filas (obrigatório para envio de e-mails)
+  ```bash    
+  php artisan queue:work --verbose --tries=3 --timeout=90 --sleep=3
+  ```
+
+## Estrutura do Projeto
+
+O SIRUS segue o padrão MVC do Laravel, com organização voltada à separação clara das responsabilidades.
+
+```md
+
+SIRUS-1.0
+├── 📁 app
+│ ├── 📁 Http
+│ │ ├── 📁 Controllers # Fluxo das requisições e regras de negócio
+│ │ └── 📁 Middleware # Regras de interceptação
+│ ├── 📁 Services # Regras de negócio
+│ ├── 📁 Models # Entidades do sistema (Aluno, Professor, etc)
+│ └── 📁 Livewire # Componentes interativos
+│
+├── 📁 resources
+│ └── 📁 views # Interface (Blade + componentes)
+│
+├── 📁 routes # Rotas do sistema
+├── 📁 database
+│ ├── 📁 migrations # Estrutura do banco
+│ └── 📁 seeders # Dados iniciais
+│
+├── 📁 storage # Logs e arquivos (PDFs)
+├── 📁 public # Entrada da aplicação
+├── 📁 docs # Guias técnicos
+
+```  
+
+## Documentação Técnica
+
+Este repositório conta com guias detalhados para configuração e preparação do ambiente do sistema.
+
+- [Inicialização do projeto](docs/init-sirus.txt)
+- [Preparação de ambiente (Ubuntu)](docs/setup-ubuntu.txt)
+- [Configuração do PHP](docs/php-config.txt)
+- [Configuração do Nginx](docs/nginx-config.txt)
+- [Configuração de filas (Supervisor)](docs/queues-config.txt)
+- [Configuração do .env para produção](docs/env-production.txt)
+- [Preparação para produção](docs/setup-production.txt)
+
+## Contribuição
+
+Este é um projeto estritamente **acadêmico** desenvolvido como parte do currículo da faculdade. No momento, o repositório serve apenas para fins de exibição de portfólio e não está aberto a contribuições externas ou modificações.
+
+## Licença e Direitos Autorais (Copyright)
+
+**Este software NÃO é de código aberto (Open Source).**
+
+Este repositório é disponibilizado **sem concessão de licença de uso**. De acordo com a **Lei Brasileira de Direitos Autorais (Lei nº 9.610/98)**, os programas de computador são obras intelectuais protegidas e sua proteção independe de registro.
+- **Propriedade:** Todos os direitos patrimoniais e morais pertencem exclusivamente aos autores deste grupo acadêmico.
+- **Uso Proibido:** É terminantemente proibida a reprodução, distribuição, modificação ou **utilização comercial (lucro direto ou indireto)** deste código sem autorização prévia e expressa.
+- **Portfólio:** A publicação no GitHub visa apenas a demonstração de competências técnicas. O direito de "fork" permitido pelos Termos de Serviço do GitHub restringe-se à visualização e não confere permissão para uso, compartilhamento ou exploração econômica.
+
+## Autores
+
+Feito por [Pedro Lima](https://github.com/pvdal) e [Felipe Rocha](https://github.com/FelipRNS).

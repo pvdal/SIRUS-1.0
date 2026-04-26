@@ -116,4 +116,5 @@ return [
         'expire' => 1440, // 24 horas em minutos
     ],
 
+    'admin_password' => env('ADMIN_PASSWORD', 'admin'),
 ];
