@@ -22,8 +22,8 @@ O sistema soluciona a fragmentação de dados ao centralizar o gerenciamento das
 
 - **Gestão de Rubricas:** Estruturação de critérios e eixos avaliativos (individual e em grupo) com pesos percentuais.
 - **Agenda Interativa:** Calendário dinâmico para agendamento e visualização de bancas examinadoras.
-- **Segurança Avançada:** Implementação de Autenticação em Dois Fatores (2FA) via aplicativos autenticadores e gestão de sessões ativas.
-- **Gestão de Arquivos:** Upload e visualização de trabalhos acadêmicos em formato PDF.
+- **Segurança:** Implementação de Autenticação em Dois Fatores (2FA) via aplicativos autenticadores e gestão de sessões ativas.
+- **Gestão de Arquivos:** Upload, organização e visualização de trabalhos acadêmicos em formato PDF.
 - **Acessibilidade:** Filtros para daltonismo e integração com VLibras.
 
 ### Tecnologias Utilizadas
@@ -118,8 +118,7 @@ O SIRUS segue o padrão MVC do Laravel, com organização voltada à separação
 │ │ ├── 📁 Controllers # Fluxo das requisições e regras de negócio
 │ │ └── 📁 Middleware # Regras de interceptação
 │ ├── 📁 Services # Regras de negócio
-│ ├── 📁 Models # Entidades do sistema (Aluno, Professor, etc)
-│ └── 📁 Livewire # Componentes interativos
+│ └── 📁 Models # Entidades do sistema (Aluno, Professor, etc)
 │
 ├── 📁 resources
 │ └── 📁 views # Interface (Blade + componentes)
@@ -162,4 +161,10 @@ Este repositório é disponibilizado **sem concessão de licença de uso**. De a
 
 ## Autores
 
-Desenvolvido por [Pedro Lima](https://github.com/pvdal) e [Felipe Rocha](https://github.com/FelipRNS).
+**Desenvolvimento**
+- [Pedro Lima](https://github.com/pvdal)
+- [Felipe Rocha](https://github.com/FelipRNS)
+
+**Contribuições em Pesquisa e Modelagem**
+- [Pedro Borges](https://github.com/PedroG2224)
+- [Rennan Melo](https://github.com/rennans-afk)
