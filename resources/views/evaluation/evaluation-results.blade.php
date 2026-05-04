@@ -334,30 +334,55 @@
                             </div>
 
                             <!-- Tabela Consolidada -->
-                            <div class="overflow-x-auto overflow-y-hidden scrollbar-custom mt-6 rounded-lg border border-gray-400/70 dark:border-gray-700 transition duration-150 ease-in-out">
-                                <table class="min-w-full text-sm text-gray-700 dark:text-gray-300 transition duration-150 ease-in-out rounded-lg overflow-hidden">
-                                    <thead class="bg-gray-100 dark:bg-gray-700/50 transition duration-150 ease-in-out text-xs uppercase font-semibold">
-                                        <tr>
-                                            <th class="text-xs lg:text-sm py-3 px-4 text-left">Aluno</th>
-                                            <template x-for="evaluation in evaluations" :key="evaluation.evaluatorName">
-                                                <th class="text-xs lg:text-sm py-3 px-4 text-center" x-text="evaluation.evaluatorName"></th>
-                                            </template>
-                                            <th class="text-xs lg:text-sm py-3 px-4 text-center">Média Final</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                                        <template x-for="student in consolidatedResults" :key="student.id">
-                                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition">
-                                                <td class="text-xs lg:text-sm xl:text-base py-3 px-4 font-medium" x-text="student.name"></td>
-                                                <template x-for="evalScore in student.evaluators" :key="evalScore.name">
-                                                    <td class="text-xs lg:text-sm xl:text-base py-3 px-4 text-center" x-text="evalScore.score.toFixed(2)"></td>
+                            <div
+                                :style="`min-height: ${getTableMinHeight()}px`"
+                            >
+                                <template x-if="renderTable">
+                                    <div class="overflow-x-auto overflow-y-hidden scrollbar-custom mt-6 rounded-lg border border-gray-400/70 dark:border-gray-700 transition duration-150 ease-in-out">
+                                        <table class="min-w-full text-sm text-gray-700 dark:text-gray-300 transition duration-150 ease-in-out rounded-lg overflow-hidden">
+                                            <thead class="bg-gray-100 dark:bg-gray-700/50 transition duration-150 ease-in-out text-xs uppercase font-semibold">
+                                            <tr>
+                                                <th class="text-xs lg:text-sm py-3 px-4 text-left">Aluno</th>
+                                                <template x-for="evaluation in consolidatedResults.evaluations" :key="evaluation.evaluatorId">
+                                                    <th class="text-xs lg:text-sm py-3 px-4 text-center" x-text="evaluation.evaluatorName"></th>
                                                 </template>
-                                                <td class="text-xs lg:text-sm xl:text-base py-3 px-4 text-center font-semibold text-blue-600 dark:text-blue-400 transition duration-150 ease-in-out"
-                                                    x-text="student.average.toFixed(2)"></td>
+                                                <th class="text-xs lg:text-sm py-3 px-4 text-center">Média Final</th>
                                             </tr>
-                                        </template>
-                                    </tbody>
-                                </table>
+                                            </thead>
+                                            <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                                            <template x-for="student in consolidatedResults.results" :key="student.id">
+                                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+                                                    <td class="text-xs lg:text-sm xl:text-base py-3 px-4 font-medium" x-text="student.name"></td>
+                                                    <template x-for="evalScore in student.evaluators" :key="evalScore.name">
+                                                        <td class="text-xs lg:text-sm xl:text-base py-3 px-4 text-center" x-text="evalScore.score.toFixed(2)"></td>
+                                                    </template>
+                                                    <td class="text-xs lg:text-sm xl:text-base py-3 px-4 text-center font-semibold text-blue-600 dark:text-blue-400 transition duration-150 ease-in-out"
+                                                        x-text="student.average.toFixed(2)"></td>
+                                                </tr>
+                                            </template>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <div class="flex flex-wrap gap-4">
+                                <template x-for="evaluation in evaluations" :key="evaluation.evaluatorId">
+                                    <x-label class="flex items-center mb-2">
+                                        <x-checkbox checked class="me-2"
+                                                    x-on:click="
+                                                const id = evaluation.evaluatorId;
+                                                if (remove.ids.includes(id)) {
+                                                    remove.ids = remove.ids.filter(r => r !== id);
+                                                } else {
+                                                    remove.ids.push(id);
+                                                }
+                                                generateConsolidatedResults();
+                                            "
+                                        />
+                                        <span x-text="evaluation.evaluatorName"></span>
+                                    </x-label>
+                                </template>
                             </div>
                         </div>
                     </div>

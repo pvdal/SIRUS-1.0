@@ -29,8 +29,7 @@ class AxisController extends Controller
         // Inicializa o DynamicToken
         TokenGenerator::initializeTab();
 
-        // MUDANÇA IMPORTANTE:
-        // Não precisamos mais de withCount(). Apenas with('criteria') para o modal de edição.
+        // Traz eixos com critérios
         $axisCollection = Axis::with('criteria')->orderBy('id')->paginate(30);
 
         $totalAmount = $axisCollection->total();
@@ -131,10 +130,10 @@ class AxisController extends Controller
             'criteria.*' => 'exists:criteria,id'
         ]);
 
-        // MUDANÇA IMPORTANTE: Contamos os critérios antes de criar.
+        // Conta os critérios
         $criteriaCount = count($validatedData['criteria'] ?? []);
 
-        // Criamos o eixo já com o nome e a contagem.
+        // Cria o eixo já com o nome e a contagem.
         $axis = Axis::create([
             'name' => $validatedData['name'],
             'amount' => $criteriaCount,
@@ -178,10 +177,9 @@ class AxisController extends Controller
             ], 422);
         }
 
-        // MUDANÇA IMPORTANTE: Recontamos os critérios.
         $criteriaCount = count($validatedData['criteria'] ?? []);
 
-        // Atualizamos o eixo com o nome e a nova contagem.
+        // Atualiza o eixo com o nome e a nova contagem.
         $axis->update([
             'name' => $validatedData['name'],
             'amount' => $criteriaCount
@@ -227,8 +225,6 @@ class AxisController extends Controller
                 'message' => 'Ação inválida!'
             ], 422);
         }
-
-        $axis->touch();
 
         return response()->json([
             'success' => true,

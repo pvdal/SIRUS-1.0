@@ -18,13 +18,17 @@ class GroupEvaluation extends Model
         'comment',
     ];
 
+    #region Relacionamentos
+    // Relacionamento com Criterion
     public function criterion(): belongsTo
     {
         return $this->belongsTo(Criterion::class);
     }
 
+    // Relacionamento com UserCommittee
     public function userCommittee(): belongsTo
     {
         return $this->belongsTo(UserCommittee::class);
     }
+    #endregion
 }

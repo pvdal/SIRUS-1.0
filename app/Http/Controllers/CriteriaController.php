@@ -262,7 +262,9 @@ class CriteriaController extends Controller
         $criterion = Criterion::find($id);
 
         if (!$criterion) {
-            return response()->json(['message' => 'Critério não encontrado!'], 404);
+            return response()->json([
+                'message' => 'Critério não encontrado!'
+            ], 404);
         }
 
         if ($action === 'inactivate') {
@@ -270,7 +272,9 @@ class CriteriaController extends Controller
         } elseif ($action === 'activate') {
             $criterion->update(['state' => 1]);
         } else {
-            return response()->json(['message' => 'Ação inválida!'], 422);
+            return response()->json([
+                'message' => 'Ação inválida!'
+            ], 422);
         }
 
         return response()->json([

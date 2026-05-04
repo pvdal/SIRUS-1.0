@@ -29,24 +29,24 @@ upload_max_filesize = 5M       ; tamanho máximo de cada arquivo
 post_max_size = 80M            ; deve ser maior que a soma dos arquivos + overhead da requisição
 memory_limit = 256M            ; memória máxima por processo PHP (importante para uploads e processamento)
 max_execution_time = 90        ; tempo máximo de execução do script (em segundos)
-max_input_time = 120           ; tempo que o php demora pra processar os dados recebidos
-max_file_uploads = 12          ; número máximo de arquivos que é possível upar
+max_input_time = 120           ; tempo que o php demora para processar os dados recebidos
+max_file_uploads = 12          ; número máximo de arquivos que podem ser enviados
 
 OBS: M significa megabyte
 
 # Configuração para www.conf:
 -> /etc/php/8.3/fpm/pool.d/           ; www.conf define como os processos PHP-FPM são gerenciados (pool de execução)
 
-pm = dynamic                          ; define que os processos serão terminados e inciados dinamicamente
+pm = dynamic                          ; define que os processos serão terminados e iniciados dinamicamente
 pm.max_children = 15                  ; ajustar conforme a memória disponível no servidor (cada processo pode consumir 30MB–80MB)
-pm.start_servers = 5                  ; quantos processos iniciam e ficam prontos pra serem utilizdos quando o FPM inicia
+pm.start_servers = 5                  ; quantos processos iniciam e ficam prontos pra serem utilizados quando o FPM inicia
 
 ; mantém de 5 a 10 processos ociosos, prontos para requisições sem criar processo extras a cada acesso
 pm.min_spare_servers = 5
 pm.max_spare_servers = 10
 pm.max_requests = 500
 
-listen = /run/php/php8.3-fpm.sock     ; como o nginx vai se conectar so PHP
+listen = /run/php/php8.3-fpm.sock     ; como o nginx vai se conectar ao PHP
 
 ; usuário e grupo (deve estar como no nginx)
 listen.owner = www-data

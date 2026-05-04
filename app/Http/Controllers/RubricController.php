@@ -22,6 +22,7 @@ use Illuminate\View\View;
 use Random\RandomException;
 use App\Utils\TokenGenerator;
 use Carbon\Carbon;
+use Throwable;
 
 class RubricController extends Controller
 {
@@ -33,6 +34,7 @@ class RubricController extends Controller
         TokenGenerator::initializeTab();
 
         $axesAvailable = Axis::all(['name']);
+
         $rubrics = Rubric::with(['axes.criteria']) // eager load: axes -> criteria (cada criteria terá pivot axis_criteria)
             ->select(['id','name','type','state','created_at','updated_at'])
             ->orderBy('id') // Ordenar por mais recente é comum
@@ -114,33 +116,14 @@ class RubricController extends Controller
 
         return response()->json([
             'data' => $data,
-            'current_page' => $rubrics->currentPage(),
-            'last_page' => $rubrics->lastPage(),
-            'per_page' => $rubrics->perPage(),
-            'total' => $rubrics->total(),
-        ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-
-        // 1. Busca todos os eixos cadastrados no banco de dados.
-        $axesAvailables = Axis::all();
-
-        // 2. Retorna a view 'rubricas.create' e passa a variável
-        return view('evaluation.rubrics', [
-            'eixosDisponiveis' => $axesAvailables
+            'page' => $rubrics->currentPage(),
+            'totalPages' => $rubrics->lastPage(),
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-
-
     public function store(Request $request): JsonResponse
     {
         // 1. VALIDAÇÃO: O "filtro de segurança" que garante que os dados estão corretos.
@@ -258,6 +241,7 @@ class RubricController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * @throws Throwable
      */
     public function update(Request $request, String $id): JsonResponse
     {
@@ -361,15 +345,7 @@ class RubricController extends Controller
             'success' => true,
             'message' => 'Rubrica atualizada com sucesso!',
             'data' =>  $this->mapRubric($rubric)
-        ], 200);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        ]);
     }
 
     private function mapRubric(Rubric $rubric): array
@@ -420,8 +396,6 @@ class RubricController extends Controller
             ], 422);
         }
 
-        $rubric->touch();
-
         return response()->json([
             'success' => true,
             'message' => 'Rubrica atualizada com sucesso!',
@@ -436,7 +410,7 @@ class RubricController extends Controller
         // Carrega os eixos e, para cada eixo, carrega os seus critérios.
         $rubric->load('axes.criteria');
 
-        // Retorna a nova view passando a rúbrica com todos os dados carregados.
+        // Retorna view com a pré-visualização de uma rúbrica.
         return view('components.evaluation.rubric-preview', [
             'rubric' => $rubric,
         ]);

@@ -22,14 +22,18 @@ class CommitteeRubric extends Pivot
         'state' => 'boolean',
     ];
 
+    #region Relacionamentos
+    // Relacionamento com Rubric
     public function rubric(): BelongsTo
     {
         return $this->belongsTo(Rubric::class);
     }
 
+    // Relacionamento com Committee
     public function committee(): BelongsTo
     {
         return $this->belongsTo(Committee::class);
     }
+    #endregion
 }
 

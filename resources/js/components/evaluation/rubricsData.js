@@ -219,7 +219,7 @@ export function rubricsData() {
                 const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
                 const response = await axios.get(`/${requestPrefix}/rubrics/filter`, { params });
 
-                // const response = await axios.get(`{/${requestPrefix}/rubrics/show`, {params});
+                // const response = await axios.get(`{/${requestPrefix}/rubrics/filter`, {params});
 
                 this.rubrics = response.data.data;
                 this.page = response.data.page;

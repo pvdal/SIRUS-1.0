@@ -39,6 +39,11 @@ class PaperController extends Controller
         $path = "papers/$filepath";
         $paper = Paper::where('file_path', $path)->first();
 
+        // Caso o paper esteja inativo e o usuário não seja um coordenador, não é possível ver o arquivo
+        if (!auth()->user()->isAdmin() && $paper->state === 0) {
+            abort(403);
+        }
+
         $this->authorize('view-paper', $paper);
 
         if(!auth()->check()) {
@@ -57,7 +62,7 @@ class PaperController extends Controller
         $displayName = preg_replace('/_[a-f0-9]{10}(\.pdf)$/', '$1', $filename);
 
         /*
-         * Trecho que deve ser aplicado nem substituição ao return padrão nos casos de uso em host local ser servidor web
+         * Trecho que deve ser aplicado em substituição ao return padrão nos casos de uso em host local, ser servidor web
          *
          * Retorno da função = StreamedResponse
          *

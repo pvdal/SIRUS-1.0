@@ -46,7 +46,7 @@ class StudentController extends Controller
         // Inicializa o DynamicToken
         TokenGenerator::initializeTab();
 
-        // Query inicial da tabela 'students' (15 por página). Faz join com as tabelas com as quais se relaciona.
+        // Query inicial da tabela 'students'.
         $students = Student::with(
             'user:id,name,email,state,updated_at,created_at',
             'group:id,theme,state',
@@ -254,7 +254,10 @@ class StudentController extends Controller
             'course_id' => 'nullable|exists:courses,id',
         ]);
 
-        $student = Student::with('user:id,name,email,state,updated_at,created_at')->where('user_id', $id)->first();
+        $student = Student::with(
+            'user:id,name,email,state,updated_at,created_at'
+        )->where('user_id', $id)
+            ->first();
 
         if (!$student || !$student->user) {
             return response()->json([
@@ -292,7 +295,10 @@ class StudentController extends Controller
     // Atualização do status do registro no banco (ativo/inativo)
     public function toggleStatus($id,$action): JsonResponse
     {
-        $student = Student::with('user:id,state,created_at,updated_at')->where('user_id', $id)->first();
+
+        $student = Student::with(
+            'user:id,state,created_at,updated_at'
+        )->where('user_id', $id)->first();
 
         if (!$student || !$student->user) {
             return response()->json([
@@ -346,8 +352,7 @@ class StudentController extends Controller
         ];
     }
 
-    //Classes para ações excel
-
+    // Métodos para ações excel
     /**
      * @throws Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
@@ -389,18 +394,17 @@ class StudentController extends Controller
         return Excel::download(
             new StudentsResultExport($import->rowsProcessed),'resultado-importacao.xlsx');
     }
+    /*
+    public function import(Request $request)
+    {
+        $request->validate(['file' => 'required|mimes:xlsx,csv']);
+        $import = new StudentsImport;
+        Excel::import($import, $request->file('file'));
+        return Excel::download(
+            new StudentsResultExport($import->rowsProcessed),
+            'resultado-importacao.xlsx'
+        );
 
-//    public function import(Request $request)
-//    {
-//
-//
-//            $request->validate(['file' => 'required|mimes:xlsx,csv']);
-//            $import = new StudentsImport;
-//            Excel::import($import, $request->file('file'));
-//            return Excel::download(
-//                new StudentsResultExport($import->rowsProcessed),
-//                'resultado-importacao.xlsx'
-//            );
-//
-//    }
+    }
+    */
 }

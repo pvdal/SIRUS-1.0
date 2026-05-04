@@ -36,9 +36,11 @@ class GroupController extends Controller
     public function index(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         TokenGenerator::initializeTab();// Inicializa o DynamicToken
+
         $groupsData = null;
         $groups = null;
         $courses = null;
+
         if(auth()->user()->isAdmin()) {
             $groups = Group::with([ // Faz uma query no banco trazendo 15 registros paginados
                 'papers',
@@ -452,7 +454,7 @@ class GroupController extends Controller
                         if($paperToUpdate->submitted_at && $paperToUpdate->isDirty()) {
                             throw \Illuminate\Validation\ValidationException::withMessages([
                                 "papers.$i.file" => ['Este trabalho já foi submetido à banca.
-                Apenas a associação com a versão corrigida pode ser modificada.']
+                                Apenas a associação com a versão corrigida pode ser modificada.']
                             ]);
                         }
 
@@ -514,8 +516,6 @@ class GroupController extends Controller
             ], 422);
         }
 
-        $group->touch();
-
         return response()->json([
             'success' => true,
             'message' => 'Grupo atualizado com sucesso!',
@@ -523,28 +523,6 @@ class GroupController extends Controller
             'created_at' => $group->created_at,
             'updated_at' => $group->updated_at,
         ]);
-    }
-
-    /**
-     * @param Request $request
-     * @return void
-     */
-    private function extractPapersTitle(Request $request): void
-    {
-        if ($request->papers) {
-            foreach ($request->papers as $i => $paper) {
-                if ($request->hasFile("papers.$i.file")) {
-                    $originalName = pathinfo(
-                        $request->file("papers.$i.file")->getClientOriginalName(),
-                        PATHINFO_FILENAME
-                    );
-
-                    $request->merge([
-                        "papers.$i.title" => $originalName,
-                    ]);
-                }
-            }
-        }
     }
 
     /**

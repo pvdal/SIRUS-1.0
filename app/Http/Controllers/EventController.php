@@ -41,7 +41,7 @@ class EventController extends Controller
         ]);
     }
 
-    public function show(Request $request): JsonResponse
+    public function events(Request $request): JsonResponse
     {
         $query = Committee::with([
             'paper.group.students.user:id,name',

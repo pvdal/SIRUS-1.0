@@ -40,7 +40,7 @@ document.addEventListener('alpine:initialized', function () {
                 events: function (info, successCallback, failureCallback) {
                     const requestPrefix = document.querySelector('meta[name="request-prefix"]')?.content || '';
                     axios({
-                        url: `${requestPrefix}/events/show`,
+                        url: `${requestPrefix}/events`,
                         method: 'GET',
                         params: {
                             start: info.startStr,

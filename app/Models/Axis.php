@@ -8,9 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Axis extends Model
 {
-    /**
-     * @var bool|mixed
-     */
+
     /**
      * The attributes that are mass assignable.
      *
@@ -52,9 +50,6 @@ class Axis extends Model
      * Este método é chamado automaticamente quando tentamos acessar a propriedade 'amount'.
      * Ele calcula a contagem de critérios relacionados.
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
-
-
-
 }

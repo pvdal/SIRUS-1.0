@@ -28,4 +28,4 @@ sudo supervisorctl reread
 sudo supervisorctl update
 sudo supervisorctl restart laravel-queue:*
 
-# Antes de rodar, configure o arquivo .env manualmente (ver arquivo "Configuração do .env para produção")
+# Antes de rodar, configure o arquivo .env manualmente (ver arquivo "env-production")

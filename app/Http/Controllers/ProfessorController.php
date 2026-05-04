@@ -43,7 +43,8 @@ class ProfessorController extends Controller
     {
         // Inicializa o DynamicToken
         TokenGenerator::initializeTab();
-        // Faz uma query no banco trazendo 15 registros paginados
+
+        // Faz uma query no banco trazendo registros paginados
         $professors = Professor::with([
             'user:id,name,email,state,updated_at,created_at',
             'user.education'
@@ -238,6 +239,7 @@ class ProfessorController extends Controller
             $professor->touch(); // Atualiza timestamps do professor
         }
 
+        #region Professor education
         $currentEducation = $professor->user->education
             ->map(fn ($item) => [
                 'level' => $item->level,
@@ -264,6 +266,7 @@ class ProfessorController extends Controller
 
             $professor->touch();
         }
+        #endregion
 
         if($professor->isDirty()) {
             $professor->save();

@@ -2,9 +2,9 @@
     @php
         $links = [
             ['label' => 'Início', 'href' => route('home'), 'route' => 'home'],
-            ['label' => 'Manual', 'href' => route('manual.show','introduction'), 'route' => 'manual.show'],
-            ['label' => 'Termos', 'href' => route('terms.show'), 'route' => 'terms.show'],
-            ['label' => 'Privacidade', 'href' => route('policy.show'), 'route' => 'policy.show']
+            ['label' => 'Manual', 'href' => route('manual.index','introduction'), 'route' => 'manual.index'],
+            ['label' => 'Termos', 'href' => route('terms.index'), 'route' => 'terms.index'],
+            ['label' => 'Privacidade', 'href' => route('policy.index'), 'route' => 'policy.index']
         ];
     @endphp
     <div class="flex items-center mx-auto max-w-[1850px] h-16 px-4 sm:px-6 lg:px-8">

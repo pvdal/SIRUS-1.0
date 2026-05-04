@@ -6,23 +6,6 @@
 [x-cloak] {
     display: none;
 }
-:root {
-    --primary-blue: #1E3A5F;
-    --secondary-blue: #3B5D82;
-    --primary-orange: #C75B12;
-    --secondary-orange: #E07B3C;
-    --neutral-dark: #2D2D2D;
-    --neutral-light: #B0B0B0;
-}
-
-:root {
-    --primary-color: #2563eb;
-    --secondary-color: #1e40af;
-    --accent-color: #3b82f6;
-    --dark: #1f2937;
-    --light: #6b7280;
-    --shadow: #ccc;
-}
 
 /*********************************
     Retirar setas do campo number

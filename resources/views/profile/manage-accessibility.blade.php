@@ -26,6 +26,7 @@
                         <label for="type-daltonism" class="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-[0.5px] transition duration-150 ease-in-out">Filtros de daltonismo</label>
                     </div>
 
+                    {{-- Texto informativo --}}
                     <div class="max-w-xl mb-4">
                         <p class="text-sm text-gray-600 dark:text-gray-300 transition duration-150 ease-in-out">
                             O daltonismo é uma condição visual que altera a forma como as cores são percebidas.
@@ -40,6 +41,7 @@
                         </p>
                     </div>
 
+                    {{-- Seleção de tipo de daltonismo --}}
                     <x-select id="daltonism-select" data-daltonism-select class="mt-auto w-full !h-[40px]">
                         <option value="normal">Padrão</option>
                         <option value="achromatomaly">Acromatomalia</option>
@@ -52,9 +54,8 @@
                         <option value="tritanopia">Tritanopia</option>
                     </x-select>
 
-                    <hr class="my-2 border-transparent"/>
-
-                    <div class="flex flex-wrap items-center gap-2">
+                    {{-- Ações --}}
+                    <div class="flex flex-wrap items-center gap-2 mt-4">
                         <x-button
                             id="showDaltonismIcon"
                             type="button"
@@ -79,6 +80,7 @@
                 </div>
             @endif
             @if(config('accessibility.libras'))
+                {{-- Container do VLibras --}}
                 <div
                     x-data="{ vlibras_enabled: true }"
                     x-init="
@@ -95,6 +97,7 @@
                         <label for="type-daltonism" class="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-[0.5px] transition duration-150 ease-in-out">Assistente de libras</label>
                     </div>
 
+                    {{-- Texto informativo --}}
                     <div class="max-w-xl mb-4">
                         <p class="text-sm text-gray-600 dark:text-gray-300 transition duration-150 ease-in-out">
                             Libras (Língua Brasileira de Sinais) é a língua natural da comunidade surda.
@@ -109,6 +112,7 @@
                         </p>
                     </div>
 
+                    {{-- Ações --}}
                     <div class="flex flex-wrap items-center gap-2">
                         <x-button
                             id="showVlibrasIcon"

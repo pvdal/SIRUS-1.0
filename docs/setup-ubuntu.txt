@@ -1,5 +1,5 @@
 /**
- * Preparando o ambiente ubuntu
+ * Preparando o ambiente Ubuntu
  */
 
 # PHP:

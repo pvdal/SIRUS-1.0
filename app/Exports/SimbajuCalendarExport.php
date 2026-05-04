@@ -8,7 +8,7 @@ use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
 class SimbajuCalendarExport implements WithMultipleSheets
 {
-    // Usando Constructor Property Promotion deixa o código muito mais limpo
+    // Usa Constructor Property Promotion
     public function __construct(
         protected string $eventTitle,
         protected int $year,
@@ -21,7 +21,8 @@ class SimbajuCalendarExport implements WithMultipleSheets
         $courses = Course::whereHas('papers', function ($q) {
             $q->where('year', $this->year)
                 ->where('semester', $this->semester)
-            //só papers com banca e com data de início
+
+                //só papers com banca e com data de início
                 ->whereHas('committee', function ($queryBanca) {
                     $queryBanca->whereNotNull('start')
                     ->where('state', 1);
@@ -53,11 +54,8 @@ class SimbajuCalendarExport implements WithMultipleSheets
             );
         }
 
-        // ==========================================
-        // A CORREÇÃO ENTRA AQUI
-        // ==========================================
         // Se após o loop o array $sheets continuar vazio,
-        // geramos uma aba de fallback para o Excel não quebrar.
+        // gera uma aba de fallback para o Excel não quebrar.
         if (empty($sheets)) {
             $sheets[] = new SimbajuCourseSheet(
                 courseName:  'Sem Registros', // Nome que vai aparecer na aba do Excel

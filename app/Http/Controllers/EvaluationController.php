@@ -173,6 +173,7 @@ class EvaluationController extends Controller
 
 
             return [
+                'evaluatorId' => $eval->user->id,
                 'evaluatorName' => $eval->user->name,
                 'evaluatedAt' => $eval->evaluated_at->format('d/m/Y \à\s H:i'),
                 'groupSelections' => $groupSels,
