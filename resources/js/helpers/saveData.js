@@ -91,10 +91,7 @@ export async function saveData({
                 }
             }));
         } else if(error.response?.status === 404) {
-            const message = (error.response?.data?.success === false && error.response?.data?.message)
-                || 'Erro inesperado ao salvar!';
-
-            if(error.response?.data?.success === false) {
+            if(error.response?.data?.success === false && error.response?.data?.message) {
                 contexto.showMessage('warning', error.response?.data?.message);
             } else {
                 contexto.showMessage('danger', error.response?.data?.message);

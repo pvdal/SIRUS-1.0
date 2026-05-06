@@ -15,7 +15,7 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
-    Route::get('/events/show', [EventController::class, 'show']);
+    Route::get('/events', [EventController::class, 'events']);
 
-    Route::get('/students/show', [StudentController::class, 'show']);
+    Route::get('/students/filter', [StudentController::class, 'filter']);
 });

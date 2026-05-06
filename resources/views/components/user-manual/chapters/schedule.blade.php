@@ -31,12 +31,17 @@
         4.2 Interação com o Calendário
     </h2>
 
-    <h3 id="cap-4.2-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Filtros</h3>
+    <h3 id="cap-4.2-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Ações</h3>
     <p class="mb-2">
         No canto superior esquerdo do calendário, há um botão identificado como <strong>"Opções"</strong>,
-        que ao ser clicado exibe filtros de busca de eventos (bancas) por
-        termo, curso ou projeto.
+        que ao ser clicado exibe filtros de busca de eventos (bancas) por termo, curso ou projeto.
     </p>
+    @if(auth()->user()->isAdmin())
+        <p class="mb-4">
+            Ao selecionar a opção <strong>"Exportar Excel"</strong>, é realizado o download da programação do SIMBAJU
+            referente ao semestre atual, em formato de planilha Excel.
+        </p>
+    @endif
 
     <h3 id="cap-4.2-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Alternância de visualização</h3>
     <p class="mb-4">
@@ -212,7 +217,7 @@
             <span>Interação com o Calendário</span>
         </a>
         <a href="#cap-4.2-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Filtros</span>
+            <span>Ações</span>
         </a>
         <a href="#cap-4.2-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
             <span>Alternância de visualização</span>

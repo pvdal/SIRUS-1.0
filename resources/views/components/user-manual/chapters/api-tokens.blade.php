@@ -104,10 +104,39 @@
     <h3 id="cap-11.7-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Exemplo no Postman</h3>
     <ol class="list-decimal pl-6 space-y-1 mb-10">
         <li>Abra o Postman e crie uma nova requisição GET</li>
-        <li>Cole a URL da rota protegida (ex: https://192.168.1.153/api/user)</li>
+        <li>Cole a URL da rota protegida (ex: <code>https://192.168.1.153/api/user</code>)</li>
         <li>Na aba <strong>"Authorization"</strong>, escolha o tipo <strong>"Bearer Token"</strong></li>
         <li>Cole o seu token gerado no campo <strong>"Token"</strong></li>
         <li>Clique em <strong>"Enviar"</strong> para visualizar os dados</li>
+    </ol>
+
+    <h3 id="cap-11.7-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Exemplo no Power BI</h3>
+
+    <p class="mb-2">
+        Permite consumir a API diretamente e visualizar os dados em dashboards.
+    </p>
+
+    <ol class="list-decimal pl-6 space-y-1 mb-4">
+        <li>Abra o Power BI Desktop</li>
+        <li>Clique em <strong>"Obter Dados"</strong> → <strong>"Web"</strong></li>
+        <li>Selecione a opção <strong>"Avançado"</strong></li>
+        <li>Insira a URL da API:
+            <code>https://192.168.1.153/api/user</code>
+        </li>
+        <li>Adicione o cabeçalho HTTP:</li>
+    </ol>
+
+    <div class="mb-4 bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
+        <code>
+            Authorization: Bearer SEU_TOKEN
+        </code>
+    </div>
+
+    <ol class="list-decimal pl-6 space-y-1 mb-10" start="6">
+        <li>Clique em <strong>"OK"</strong></li>
+        <li>Os dados serão carregados no Power Query</li>
+        <li>Faça os tratamentos necessários e clique em <strong>"Fechar e Aplicar"</strong></li>
+        <li>Use os dados para criar relatórios e dashboards</li>
     </ol>
 </div>
 <aside class="chapter-aside hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
