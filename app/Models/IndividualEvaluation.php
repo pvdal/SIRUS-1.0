@@ -16,19 +16,24 @@ class IndividualEvaluation extends Model
         'comment',
     ];
 
+    #region Relacionamentos
+    // Relacionamento baseado na chave UserCommittee
     public function userCommittee(): belongsTo
     {
         return $this->belongsTo(UserCommittee::class, 'user_committee_id');
     }
 
+    // Relacionamento baseado na chave Student
     public function student(): belongsTo
     {
         // Relacionamento baseado na chave 'ra'
         return $this->belongsTo(Student::class, 'ra', 'ra');
     }
 
+    // Relacionamento baseado na chave Criterion
     public function criterion(): belongsTo
     {
         return $this->belongsTo(Criterion::class, 'criteria_id');
     }
+    #endregion
 }

@@ -44,7 +44,8 @@ class CoordinatorController extends Controller
     {
         // Inicializa o DynamicToken
         TokenGenerator::initializeTab();
-        // Faz uma query no banco trazendo 15 registros paginados
+
+        // Faz uma query no banco trazendo registros paginados
         $coordinators = Coordinator::with([
             'user:id,name,email,state,updated_at,created_at',
             'user.education'
@@ -239,6 +240,7 @@ class CoordinatorController extends Controller
             $coordinator->touch(); // Atualiza timestamps do coordenador
         }
 
+        #region Professor education
         $currentEducation = $coordinator->user->education
             ->map(fn ($item) => [
                 'level' => $item->level,
@@ -265,6 +267,7 @@ class CoordinatorController extends Controller
 
             $coordinator->touch();
         }
+        #endregion
 
         if($coordinator->isDirty()) {
             $coordinator->save();

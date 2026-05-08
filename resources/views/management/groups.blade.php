@@ -67,7 +67,7 @@
                 @endif
                 @if(auth()->user()->access_level === 1)
                     <template x-if="groups">
-                        <x-management.studentView-group-content
+                        <x-management.student-view-group-content
                             :courses="$courses"
                         />
                     </template>

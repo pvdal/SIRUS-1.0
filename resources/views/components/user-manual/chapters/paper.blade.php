@@ -48,6 +48,13 @@
         <li><strong>Grupo do trabalho</strong></li>
     </ul>
 
+    <div class="mb-4 bg-blue-50/60 dark:bg-blue-900/10 border border-blue-400/60 dark:border-blue-500/50 rounded-lg p-4 text-blue-800 dark:text-blue-300">
+        <p class="font-semibold mb-1">Observação</p>
+        <p class="text-sm text-gray-800 dark:text-gray-300">
+            Após inativar um trabalho, ele só poderá ser visualizado por coordenadores.
+        </p>
+    </div>
+
     <h3 id="cap-8.3-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Edição de Trabalhos</h3>
     <p class="mb-2">
         No modal de edição, é disponibilizado o botão <strong>"Alterar PDF"</strong>.

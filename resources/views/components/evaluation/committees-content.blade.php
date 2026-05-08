@@ -262,15 +262,26 @@
                         <template x-if="item?.paper?.evaluation && selectedVersion[item.id] === 'evaluation'">
                             <x-card.link-button
                                 x-on:click="showPaper(item.paper.evaluation.file_path)"
+                                x-bind:class="{
+                                    'pointer-events-none': !item?.paper.evaluation.file_path
+                                }"
                             >
                                 <x-lucide-file-text class="w-4 h-4 text-gray-600 dark:text-gray-200 transition duration-150 ease-in-out flex-shrink-0"/>
-                                <span class="text-sm text-gray-800 dark:text-gray-200 transition duration-150 ease-in-out font-semibold truncate" x-text="item.paper.evaluation.title"></span>
+                                <span
+                                    class="text-sm text-gray-800 dark:text-gray-200 transition duration-150 ease-in-out font-semibold truncate" x-text="item.paper.evaluation.title"
+                                    :class="{
+                                        'line-through': !item.paper.evaluation.file_path
+                                    }"
+                                ></span>
 
                                 <x-slot name="optionsButton">
                                     <button
                                         type="button"
                                         class="flex items-center ms-auto max-w-full justify-start rounded-md gap-2 px-3 py-2 hover:bg-gray-200 dark:hover:bg-gray-600/30 dark:hover:border-gray-700 transition duration-150 ease-in-out cursor-pointer"
                                         x-on:click.stop="paperOptions[item.id] = !paperOptions[item.id]"
+                                        x-bind:class="{
+                                            'pointer-events-none': !item?.paper.evaluation.file_path
+                                        }"
                                     >
                                         <x-lucide-ellipsis-vertical
                                             class="w-4 h-4 text-gray-600 dark:text-gray-200 flex-shrink-0 ms-auto transition duration-150 ease-in-out"/>
@@ -278,7 +289,12 @@
                                 </x-slot>
 
                                 <x-slot name="actions">
-                                    <div x-show="paperOptions[item.id]" class="flex flex-wrap w-full justify-around">
+                                    <div x-show="paperOptions[item.id]"
+                                         class="flex flex-wrap w-full justify-around"
+                                         x-bind:class="{
+                                            'pointer-events-none': !item?.paper.evaluation.file_path
+                                        }"
+                                    >
                                         <button
                                             type="button"
                                             class="flex items-center min-w-0 max-w-full w-1/3 rounded-md justify-center gap-2 px-4 py-1 hover:bg-gray-200 dark:hover:bg-gray-600/30 dark:hover:border-gray-700 transition duration-150 ease-in-out cursor-pointer"

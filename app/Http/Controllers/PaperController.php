@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 // Common
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 // Models
 use App\Models\Course;
@@ -34,10 +35,15 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PaperController extends Controller
 {
-    public function showPaper($filepath): \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+    public function showPaper($filepath): Response
     {
         $path = "papers/$filepath";
         $paper = Paper::where('file_path', $path)->first();
+
+        // Caso o paper esteja inativo e o usuário não seja um coordenador, não é possível ver o arquivo
+        if (!auth()->user()->isAdmin() && $paper->state === 0) {
+            abort(403);
+        }
 
         $this->authorize('view-paper', $paper);
 
@@ -57,17 +63,18 @@ class PaperController extends Controller
         $displayName = preg_replace('/_[a-f0-9]{10}(\.pdf)$/', '$1', $filename);
 
         /*
-         * Trecho que deve ser aplicado nem substituição ao return padrão nos casos de uso em host local ser servidor web
-         *
-         * Retorno da função = StreamedResponse
-         *
+        Log::info('Ambiente da aplicação', [
+            'environment()' => app()->environment(),
+            'config_env' => config('app.env'),
+        ]);
+        */
+        if (app()->environment('local')) {
             return Storage::disk('public')->response("papers/{$filepath}", null, [
                 'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="' . $filepath . '"',
                 'Content-Disposition' => 'inline; filename="' . $displayName . '"',
                 'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
             ]);
-          */
+        }
 
         // Retorna resposta com X-Accel-Redirect para Nginx
         return response('', 200, [

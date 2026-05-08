@@ -29,12 +29,12 @@ Route::get('/', function () {
 })->name('home');
 
 // Rotas para políticas de privacidade e termos de uso
-Route::get('/legal/policy', [LegalController::class, 'showPolicies'])->name('policy.show');
-Route::get('/legal/terms', [LegalController::class, 'showTerms'])->name('terms.show');
+Route::get('/legal/policy', [LegalController::class, 'policiesIndex'])->name('policy.index');
+Route::get('/legal/terms', [LegalController::class, 'termsIndex'])->name('terms.index');
 
 //  Rota para as páginas do manual do usuário
-Route::get('/manual', [ManualController::class, 'show'])
-    ->middleware('auth:sanctum')->name('manual.show');
+Route::get('/manual', [ManualController::class, 'index'])
+    ->middleware('auth:sanctum')->name('manual.index');
 
 // Rotas comuns de login e logout. Isso sobrepõe as rotas laravel padrão, é possível setar elas globalmente em /config/fortify.php
 // OBS: Isso sobrescreve as rotas default do vendor e será mantido de lado por enquanto não é necessário uma tela diferente para
@@ -180,7 +180,9 @@ Route::middleware([
     /*Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');*/
+    // Exibe um modelo de rubrica
     Route::get('/rubrics/{rubric}/model-view', [RubricController::class, 'showModelView'])->name('rubrics.model_view');
+
     // Groups -> PaperController/Paper.php -> Quem chama essa rota é o iframe em groups.blade.php
     Route::get('/papers/{filepath}', [PaperController::class, 'showPaper'])
         ->where('filepath', '.*')
@@ -208,7 +210,7 @@ Route::middleware([
         Route::post('/evaluation/store', [EvaluationController::class, 'store'])->name('evaluations.store');
 
         // Calendar -> EventController/Committee.php
-        Route::get('/events/show', [EventController::class, 'show'])->name('events.show');
+        Route::get('/events', [EventController::class, 'events'])->name('events');
 
         // Committees -> CommitteeController/Committee.php
         Route::get('/committees/filter', [CommitteeController::class, 'filter'])->name('committees.filter');

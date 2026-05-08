@@ -20,6 +20,17 @@ php artisan db:seed --class=ProductionSeeder --force
 # Recria caches otimizados
 php artisan optimize
 
+# IMPORTANTE:
+# Antes de rodar o 'optimize', configure o arquivo .env manualmente (ver "env-production")
+#
+# Após definir APP_ENV=production e executar o comando acima,
+# o Laravel passará a utilizar as configurações em cache.
+#
+# Nesse cenário, a aplicação delega ao Nginx a entrega de arquivos PDF
+# através do header X-Accel-Redirect.
+#
+# Sem a configuração adequada no Nginx, os arquivos não serão exibidos.
+
 # Reinicia serviços
 sudo systemctl restart php8.3-fpm
 sudo systemctl restart nginx
@@ -27,5 +38,3 @@ sudo systemctl restart nginx
 sudo supervisorctl reread
 sudo supervisorctl update
 sudo supervisorctl restart laravel-queue:*
-
-# Antes de rodar, configure o arquivo .env manualmente (ver arquivo "Configuração do .env para produção")

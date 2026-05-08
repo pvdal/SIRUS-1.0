@@ -29,7 +29,7 @@
         x-init='init(@json($papers), @json($courses), @json($groups),{{ $page }}, {{ $totalPages }}, {{ $totalItems }})'
     >
         {{-- Div exibida enquanto os dados não chegam no front --}}
-        {{-- Grupos cadastrados --}}
+        {{-- Trabalhos cadastrados --}}
         <div x-show="showGroupCards">
             {{-- Conteúdo principal --}}
             <x-main-content>
@@ -220,7 +220,7 @@
                 </template>
             </x-main-content>
         </div>
-        {{-- Trabalhos cadastrados --}}
+        {{-- Visualizar trabalhos --}}
         <template x-if="showGroupPaper">
             <div class="relative">
                 {{-- Carregando... --}}

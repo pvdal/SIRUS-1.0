@@ -354,7 +354,7 @@ export function papersData(){
                     document.querySelector('meta[name="request-prefix"]')?.content || '';
 
                 const response = await axios.get(
-                    `${requestPrefix}/papers/show`,
+                    `${requestPrefix}/papers/filter`,
                     { params: { year } }
                 );
 

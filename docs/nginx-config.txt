@@ -1,5 +1,5 @@
 /**
- * Configurações do nginx (caminhos no ubuntu desktop)
+ * Configurações do Nginx (caminhos no Ubuntu desktop)
  */
 
 sudo nano /etc/nginx/sites-available/sirus.conf
@@ -8,7 +8,7 @@ sudo nano /etc/nginx/sites-available/sirus.conf
 -> /etc/nginx/
 limit_req_zone $binary_remote_addr zone=one:10m rate=15r/s; # (opcional) pode ser adicionado em http {}
 
-# Configuração para laravel
+# Configuração para Laravel
 -> /etc/nginx/sites-available/
 server {
         listen 80;
@@ -48,7 +48,7 @@ server {
                 }
         }
 
-        # nginx serve o arquivo após resposta do laravel
+        # Nginx serve o arquivo após resposta do Laravel
         location /internal_papers/ {
                 internal;
                 alias /var/www/SIRUS-1.0/storage/app/public/papers/;

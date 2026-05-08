@@ -39,12 +39,13 @@ Este guia assume que você está em um ambiente de desenvolvimento local.
 ### 1. Requisitos do Sistema
 
 Antes de começar, certifique-se de ter instalado:
-- PHP 8.3+ (com extensões: fpm, mysql, xml, curl, mbstring, zip, bcmath, gd).
+- PHP 8.3+ (com extensões: `fpm`, `mysql`, `xml`, `curl`, `mbstring`, `zip`, `bcmath`, `intl`, `gd`, `soap`).
 - Node.js (versão 22.x recomendada) e npm.
 - Composer (Gerenciador de dependências PHP).
 - MySQL/MariaDB.
+- Git.
 
-### 2. Instalação e Configuração Local
+### 2. Instalação e Configuração Local  
 
 Siga os passos abaixo no terminal dentro do diretório do projeto.
 
@@ -66,7 +67,8 @@ cd SIRUS-1.0
   ```
 
   > [!IMPORTANT]
-  > Edite o arquivo .env com suas credenciais de banco de dados.
+  > Edite o arquivo `.env` com suas credenciais de banco de dados e SMTP.
+  > Consulte os guias em [`/docs`](/docs) para configuração detalhada do ambiente.
     
 3. Instalar dependências do Backend (PHP)
   ```bash    
@@ -92,7 +94,7 @@ cd SIRUS-1.0
   ```
 
 > [!NOTE]
-> O sistema exige permissões de escrita nos diretórios `storage` e `bootstrap/cache` para o usuário do servidor (ex: www-data no Linux).
+> O sistema exige permissões de escrita nos diretórios `storage` e `bootstrap/cache` para o usuário do servidor (ex: `www-data` no Linux).
 
 ### 3. Executando em Desenvolvimento
 

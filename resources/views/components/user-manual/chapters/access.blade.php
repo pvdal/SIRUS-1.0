@@ -125,9 +125,8 @@
         e como os seus dados serão tratados.
     </p>
     <p class="mb-2">
-        Antes de aceitar, é possível clicar nos termos destacados em azul e sublinhados —
-        <strong>Termos de Uso</strong> e <strong>Política de Privacidade</strong> — e ter acesso
-        a esses documentos.
+        Antes de aceitar, é possível clicar nos termos destacados em azul — <strong>Termos de Uso</strong> e
+        <strong>Política de Privacidade</strong> — e ter acesso a esses documentos.
     </p>
     <p class="mb-4">
         Caso concorde com a Política e os Termos, marque a opção <strong>"Eu concordo com os Termos de uso e com a Política

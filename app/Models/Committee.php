@@ -4,13 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\HigherOrderCollectionProxy;
 
 class Committee extends Model
 {
     /**
-     * @var \Illuminate\Support\HigherOrderCollectionProxy|mixed
+     * @var HigherOrderCollectionProxy|mixed
      */
     protected $fillable = [
         'name',

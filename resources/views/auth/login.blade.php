@@ -93,13 +93,13 @@
             <div class="text-sm text-center text-gray-500 dark:text-gray-400">
                 Ao continuar, você concorda com nossos
                 <a target="_blank"
-                   href="{{ route('terms.show') }}"
+                   href="{{ route('terms.index') }}"
                    class="hover:underline font-bold hover:text-gray-800 dark:hover:text-gray-200">
                     Termos de Uso
                 </a>
                 e
                 <a target="_blank"
-                   href="{{ route('policy.show') }}"
+                   href="{{ route('policy.index') }}"
                    class="hover:underline font-bold hover:text-gray-800 dark:hover:text-gray-200">
                     Política de Privacidade<span class="font-normal">.</span>
                 </a>

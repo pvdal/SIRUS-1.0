@@ -7,9 +7,9 @@
         @php
             $links = [
                 ['label' => 'Início', 'href' => route('home'), 'route' => 'home'],
-                ['label' => 'Manual', 'href' => route('manual.show','#introduction'), 'route' => 'manual.show'],
-                ['label' => 'Termos', 'href' => route('terms.show'), 'route' => 'terms.show'],
-                ['label' => 'Privacidade', 'href' => route('policy.show'), 'route' => 'policy.show']
+                ['label' => 'Manual', 'href' => route('manual.index','#introduction'), 'route' => 'manual.index'],
+                ['label' => 'Termos', 'href' => route('terms.index'), 'route' => 'terms.index'],
+                ['label' => 'Privacidade', 'href' => route('policy.index'), 'route' => 'policy.index']
             ];
         @endphp
         {{-- Menu primário --}}
@@ -203,7 +203,7 @@
                         focus:ring-secondary-blue focus:ring-offset-2 disabled:opacity-50
                         self-center sm:self-start hover:shadow-[0_2px_5px_rgba(0,0,0,0.28)] overflow-hidden sm:max-w-fit
                         transition duration-150 ease-in-out"
-                        href="{{ route('manual.show','#introduction') }}"
+                        href="{{ route('manual.index','#introduction') }}"
                     >
                         <x-lucide-book-text class="flex-shrink-0 h-5 w-5 lg:h-6 lg:w-6 transition-all"/>
                         <span class="block text-left">
@@ -419,18 +419,18 @@
 
                 <!-- Copyright -->
                 <p class="text-sm lg:text-base text-gray-500 dark:text-gray-400 text-center sm:text-left transition">
-                    &copy; 2026. Todos os direitos reservados.
+                    &copy; 2026 Todos os direitos reservados.
                 </p>
 
                 <!-- Links + Tema -->
                 <div class="flex flex-col  sm:flex-row items-center gap-3 sm:gap-4 sm:me-auto">
                     <a target="_blank"
-                       href="{{ route('policy.show') }}"
+                       href="{{ route('policy.index') }}"
                        class="hover:underline text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 text-sm 2xl:text-base transition duration-150 ease-in-out">
                         Política de Privacidade
                     </a>
                     <a target="_blank"
-                       href="{{ route('terms.show') }}"
+                       href="{{ route('terms.index') }}"
                        class="hover:underline text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 text-sm 2xl:text-base transition duration-150 ease-in-out">
                         Termos de Uso
                     </a>

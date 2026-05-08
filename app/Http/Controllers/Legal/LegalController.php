@@ -16,7 +16,7 @@ class LegalController extends Controller
     /**
      * @throws FileNotFoundException
      */
-    public function showPolicies(): View
+    public function policiesIndex(): View
     {
         $policy = Str::markdown(File::get(resource_path('markdown/policy.md')));
         return view('policy', compact('policy'));
@@ -25,7 +25,7 @@ class LegalController extends Controller
     /**
      * @throws FileNotFoundException
      */
-    public function showTerms(): View
+    public function termsIndex(): View
     {
         $terms = Str::markdown(File::get(resource_path('markdown/terms.md')));
         return view('terms', compact('terms'));

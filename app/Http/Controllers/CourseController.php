@@ -32,7 +32,7 @@ class CourseController extends Controller
     {
         // Inicializa o DynamicToken
         TokenGenerator::initializeTab();
-        // Faz uma query no banco trazendo 15 registros paginados
+        // Faz uma query no banco trazendo registros paginados
         $courses = Course::with(
             'coordinator.user:id,name,state'
         )->orderBy('id')->paginate(30);
@@ -270,8 +270,6 @@ class CourseController extends Controller
                 'message' => 'Ação inválida!'
             ], 422);
         }
-
-        $course->touch();
 
         return response()->json([
             'success' => true,

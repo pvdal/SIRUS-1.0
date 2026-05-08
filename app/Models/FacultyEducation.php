@@ -20,6 +20,7 @@ class FacultyEducation extends Model
         'updated_at' => 'datetime',
     ];
 
+    // Relacionamento com User
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

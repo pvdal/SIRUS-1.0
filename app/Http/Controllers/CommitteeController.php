@@ -87,11 +87,8 @@ class CommitteeController extends Controller
             return $this->mapCommittee($committee);
         })->values();
 
-        $coordinators = [];
-        $professors = [];
         $member_types = [];
         $groups = [];
-        $rubrics = [];
 
         #region Dados auxiliares
         if(Gate::allows('manage-events')){
@@ -672,23 +669,6 @@ class CommitteeController extends Controller
             }
         });
 
-        /*
-        $professorsCommittees = UserCommittee::with([
-            'user:id,name,state',
-            'committee.coordinator.user:id,name',
-            'committee.paper.group.students' => function ($query) {
-                $query->whereHas('user', function ($q) {
-                    $q->where('state', 1);
-                })
-                    ->with(['user:id,name,state']);
-            },
-            'memberType',
-        ])->where('committee_id', $committee->id)
-            ->get();
-
-        $group = $committee->paper->group;
-        */
-
         $committee->load([
             'coordinator.user:id,name',
             'members.user:id,name,state,access_level',
@@ -726,8 +706,6 @@ class CommitteeController extends Controller
             ], 422);
         }
 
-        $committee->touch();
-
         return response()->json([
             'success' => true,
             'message' => 'Grupo atualizado com sucesso!',
@@ -740,6 +718,7 @@ class CommitteeController extends Controller
     private function mapCommittee($committee): array
     {
         $group = $committee->paper?->group;
+        $user = auth()->user();
 
         return [
             'id' => $committee->id,
@@ -772,7 +751,7 @@ class CommitteeController extends Controller
                 'evaluation' => $committee->paper ? [
                     'id' => $committee->paper->id,
                     'title' => $committee->paper->title,
-                    'file_path' => $committee->paper->file_path,
+                    'file_path' => $user->isAdmin() ? $committee->paper->file_path : ($committee->paper?->state ? $committee->paper->file_path : null),
                     'version' => $committee->paper->version,
                     'submitted' => $committee->paper->submitted_at !== null,
                 ] : null,

@@ -7,7 +7,7 @@ C:\Program Files\nodejs\
 C:\xampp8.2\php
 C:\xampp8.2\mysql\bin
 
-# Configurar php (ver "Guia de configuração do PHP")
+# Configurar php (ver "php-config")
 
 /**
  * Clonando o projeto

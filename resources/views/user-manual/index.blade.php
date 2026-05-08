@@ -79,7 +79,7 @@
                             class="inline-flex px-3 py-1 rounded-lg text-xs lg:text-sm font-light text-gray-600
                             dark:text-gray-400 "
                         >
-                            Última atualização: 21/04/2026
+                            Última atualização: 04/05/2026
                         </span>
                     </div>
                 </div>
@@ -103,7 +103,7 @@
                                     &copy; <strong>SIRUS –</strong> Sistema de Rubricas para Gestão avaliativa do SIMBAJU
                                 </p>
                                 <p class="text-xs text-center">
-                                    Versão 1.1.2 | 2026
+                                    Versão 1.2.2 | 2026
                                 </p>
                             </div>
                         </div>

@@ -25,7 +25,7 @@
 --}}
 @foreach($links as $link)
     @if(
-        ($loop->iteration === 5 || $loop->iteration === 8)
+        ($loop->iteration === 5 || $loop->iteration === 8 || $loop->iteration === 11)
         && !auth()->user()->isAdmin()
     )
     @else

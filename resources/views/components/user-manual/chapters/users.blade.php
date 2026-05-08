@@ -15,14 +15,11 @@
     <p class="mb-2">
         A subnavegação apresenta três abas:
     </p>
-    <ul class="list-disc pl-6 space-y-1 mb-4">
+    <ul class="list-disc pl-6 space-y-1 mb-10">
         <li><strong>Alunos</strong></li>
         <li><strong>Professores</strong></li>
         <li><strong>Coordenadores</strong></li>
     </ul>
-    <p class="mb-10">
-        Por padrão, a aba <strong>Alunos</strong> é exibida inicialmente.
-    </p>
 
     {{-- Capítulo 5.3 --}}
     <h2 id="cap-5.3" class="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">5.3 Barra de ações e filtros</h2>
@@ -45,7 +42,7 @@
 
     <p class="mb-2">
         Para facilitar a gestão de grandes volumes de informações, o sistema disponibiliza ferramentas
-        de manipulação de dados em massa, localizadas junto à barra de ações.
+        de manipulação de dados em massa, localizadas junto à barra de ações (importação e exportação de dados).
     </p>
 
     <h3 id="cap-5.3-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Exportação</h3>
@@ -117,7 +114,15 @@
         <li>Curso</li>
         <li>Grupo</li>
         <li>Estado (ativo ou inativo)</li>
-        <li>Período de cadastro (hoje, últimos 7 dias, últimos 30 dias)</li>
+        <li>
+            <span>Período de cadastro:</span>
+            <ul class="list-[circle] pl-6 space-y-1 mb-4">
+                <li>Hoje</li>
+                <li>Últimos 7 dias</li>
+                <li>Últimos 30 dias</li>
+                <li>Intervalo personalizado</li>
+            </ul>
+        </li>
     </ul>
 
     <h3 id="cap-5.4-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Edição, inativação e paginação</h3>
@@ -155,8 +160,8 @@
 
     <h3 id="cap-5.5-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Filtros disponíveis</h3>
     <ul class="list-disc pl-6 space-y-1 mb-4">
-        <li>Estado (ativo ou inativo)</li>
-        <li>Período de cadastro (hoje, últimos 7 dias, últimos 30 dias)</li>
+        <li>Estado</li>
+        <li>Período de cadastro</li>
     </ul>
     <div class="bg-blue-50/60 dark:bg-blue-900/10 border border-blue-400/60 dark:border-blue-500/50 rounded-lg p-4 text-blue-800 dark:text-blue-300">
         <p class="font-semibold">

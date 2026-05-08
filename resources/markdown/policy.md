@@ -68,8 +68,6 @@ Os dados pessoais são coletados e tratados para:
 
 ## 5. Base Legal para o Tratamento
 
-## 5. Base Legal para o Tratamento
-
 O tratamento de dados pessoais no SIRUS é realizado com base nas seguintes hipóteses da LGPD:
 
 - **Execução de contrato (Art. 7º, V):** Para viabilizar o uso do sistema conforme os Termos de Uso

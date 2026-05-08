@@ -8,19 +8,7 @@ use Illuminate\View\View;
 
 class ManualController extends Controller
 {
-    /*
-    public function show(string $page): View
-    {
-        $view = "user-manual.$page";
-
-        if (!view()->exists($view)) {
-            abort(404);
-        }
-
-        return view("$view");
-    }
-    */
-    public function show(): View
+    public function index(): View
     {
         return view("user-manual.index");
     }
