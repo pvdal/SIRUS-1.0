@@ -164,8 +164,8 @@ class AxisController extends Controller
             'criteria.*' => 'exists:criteria,id'
         ]);
 
-        $hasEvaluation = $axis
-            ->whereHas('rubrics.committees.committee.paper', function ($q) {
+        $hasEvaluation = $axis->rubrics()
+            ->whereHas('committees.committee.paper', function ($q) {
                 $q->whereNotNull('submitted_at');
             })
             ->exists();

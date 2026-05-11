@@ -102,7 +102,7 @@ class EvaluationController extends Controller
     private function validateCommitteeSchedule($committee)
     {
         $now = Carbon::now();
-        $start = Carbon::parse($committee->start);
+        $start = Carbon::parse($committee->start)->subMinutes(30);
         $end = Carbon::parse($committee->end)->addHours(4);
 
         if(is_null($committee->start) && is_null($committee->end)){
@@ -231,9 +231,16 @@ class EvaluationController extends Controller
 
         $isPresident = $userCommittee->memberType->id === 1;
 
+        /*
+        if (now() < $committee->start) {
+            session()->flash('flash.banner', 'Você está iniciando a avaliação antes do horário marcado.');
+            session()->flash('flash.bannerStyle', 'warning');
+        }
+        */
+
         return view('evaluation.evaluation', [
             'evaluationData' => $data,
-            'isCreator' => $committee->coordinator_id === auth()->user()?->coordinator?->id ? true : false,
+            'isCreator' => $committee->coordinator_id === auth()->user()?->coordinator?->id,
             'isPresident' => $isPresident,
             'timed' => $committee->evaluation_time !== null && $committee->presentation_time !== null,
         ]);

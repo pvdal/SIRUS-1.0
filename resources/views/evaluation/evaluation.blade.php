@@ -61,22 +61,38 @@
             </template>
             {{-- Cabeçalho da ficha avaliativa --}}
             <div class="bg-gray-50 dark:bg-gray-700/30 rounded-lg p-4 mb-6 border border-gray-300 dark:border-gray-600 transition duration-150 ease-in-out justify-around">
-                <div class="flex flex-wrap md:flex-nowrap items-start justify-start gap-4 lg:gap-6">
-                    <div class="flex flex-col max-w-full overflow-hidden">
-                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400 transition uppercase tracking-wide whitespace-nowrap">Avaliador</span>
-                        <p class="font-semibold text-lg md:line-clamp-2" x-text="evaluatorName"></p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-12 gap-4 lg:gap-2">
+                    <div class="xl:col-span-2 flex flex-col min-w-0 overflow-hidden">
+                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400 transition uppercase tracking-wide whitespace-nowrap">
+                            Avaliador
+                        </span>
+                        <p class="font-semibold text-lg md:line-clamp-2 hyphens-auto break-words"
+                            x-text="evaluatorName"
+                        ></p>
                     </div>
-                    <div class="flex flex-col items-center">
-                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400 transition uppercase tracking-wide whitespace-nowrap">Projeto</span>
-                        <p class="font-semibold text-lg md:line-clamp-2" x-text="paperProject"></p>
+                    <div class="xl:col-span-2 flex flex-col min-w-0 overflow-hidden">
+                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400 transition uppercase tracking-wide whitespace-nowrap">
+                            Projeto
+                        </span>
+                        <p class="font-semibold text-lg md:line-clamp-2"
+                            x-text="paperProject"
+                        ></p>
                     </div>
-                    <div class="flex flex-col max-w-full overflow-hidden">
-                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400 transition uppercase tracking-wide">Grupo</span>
-                        <p class="font-semibold text-lg" x-text="groupName"></p>
+                    <div class="xl:col-span-4 flex flex-col min-w-0 overflow-hidden">
+                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400 transition uppercase tracking-wide">
+                            Grupo
+                        </span>
+                        <p class="font-semibold text-lg md:line-clamp-2"
+                            x-text="groupName"
+                        ></p>
                     </div>
-                    <div class="flex flex-col max-w-full overflow-hidden">
-                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400 transition uppercase tracking-wide">Trabalho</span>
-                        <p class="font-semibold text-lg line-clamp-2 break-all" x-text="paperTitle"></p>
+                    <div class="xl:col-span-4 flex flex-col min-w-0 overflow-hidden">
+                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400 transition uppercase tracking-wide">
+                            Trabalho
+                        </span>
+                        <p class="font-semibold text-lg line-clamp-2 break-all"
+                            x-text="paperTitle"
+                        ></p>
                     </div>
                 </div>
             </div>
@@ -364,7 +380,7 @@
                     </x-secondary-button>
                 </template>
 
-                <x-danger-button x-on:click="window.location = document.referrer || '/calendar';">
+                <x-danger-button x-on:click="goBack()">
                     Voltar
                 </x-danger-button>
             </div>

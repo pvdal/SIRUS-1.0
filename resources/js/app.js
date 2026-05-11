@@ -1,5 +1,6 @@
 import './bootstrap';
 import './calendar.js';
+//import 'mathjax/es5/tex-mml-chtml.js';
 //import './accessibility.js';
 
 /**

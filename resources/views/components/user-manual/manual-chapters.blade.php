@@ -7,10 +7,11 @@
         ['label' => '5. Gerenciamento de Usuários','page' => 'users'],
         ['label' => '6. Configurações Institucionais','page' => 'institutional'],
         ['label' => '7. Rubricas e Processo de Avaliação','page' => 'rubrics-evaluation'],
-        ['label' => '8. Trabalhos','page' => 'paper'],
-        ['label' => '9. Perfil','page' => 'profile'],
-        ['label' => '10. Acessibilidade','page' => 'accessibility'],
-        ['label' => '11. Tokens de API', 'page' => 'api-tokens']
+        ['label' => '8. Cálculos das avaliações','page' => 'evaluations-calculations'],
+        ['label' => '9. Trabalhos','page' => 'paper'],
+        ['label' => '10. Perfil','page' => 'profile'],
+        ['label' => '11. Acessibilidade','page' => 'accessibility'],
+        ['label' => '12. Tokens de API', 'page' => 'api-tokens']
 
     ];
 @endphp
@@ -25,7 +26,7 @@
 --}}
 @foreach($links as $link)
     @if(
-        ($loop->iteration === 5 || $loop->iteration === 8 || $loop->iteration === 11)
+        ($loop->iteration === 5 || $loop->iteration === 8 || $loop->iteration === 9 || $loop->iteration === 12)
         && !auth()->user()->isAdmin()
     )
     @else

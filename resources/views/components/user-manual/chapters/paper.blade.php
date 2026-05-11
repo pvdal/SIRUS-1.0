@@ -1,9 +1,9 @@
-<div class="max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
-    {{-- Capítulo 8 --}}
-    <h1 class="text-3xl font-bold mb-14 text-gray-900 dark:text-gray-100">8. Trabalhos</h1>
+<div class="min-w-0 max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
+    {{-- Capítulo 9 --}}
+    <h1 class="text-3xl font-bold mb-14 text-gray-900 dark:text-gray-100">9. Trabalhos</h1>
 
-    {{-- Capítulo 8.1 --}}
-    <h2 id="cap-8.1" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">8.1 Visão Geral</h2>
+    {{-- Capítulo 9.1 --}}
+    <h2 id="cap-9.1" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">9.1 Visão geral</h2>
     <p class="mb-10">
         A aba <strong>"Trabalhos"</strong> é responsável pelo gerenciamento dos arquivos acadêmicos
         submetidos no sistema, incluindo versões para avaliação e versões corrigidas.
@@ -11,8 +11,8 @@
         de forma estruturada.
     </p>
 
-    {{-- Capítulo 8.2 --}}
-    <h2 id="cap-8.2" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">8.2 Visualização em Tabela</h2>
+    {{-- Capítulo 9.2 --}}
+    <h2 id="cap-9.2" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">9.2 Visualização em tabela</h2>
     <p class="mb-2">
         A visualização padrão da aba <strong>"Trabalhos"</strong> é realizada em formato de tabela.
         No topo da tela está disponível uma barra de ações contendo:
@@ -24,7 +24,7 @@
         <li>Botão de limpar filtros</li>
     </ul>
 
-    <h3 id="cap-8.2-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Status de Avaliação</h3>
+    <h3 id="cap-9.2-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Status de avaliação</h3>
     <p class="mb-2">
         A coluna <strong>"Avaliação"</strong> da tabela varia conforme o estado atual do trabalho no processo de avaliação:
     </p>
@@ -33,8 +33,8 @@
         <li><strong>Trabalho avaliado:</strong> data e hora da avaliação</li>
     </ul>
 
-    {{-- Capítulo 8.3 --}}
-    <h2 id="cap-8.3" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">8.3 Cadastro e Edição de Trabalhos</h2>
+    {{-- Capítulo 9.3 --}}
+    <h2 id="cap-9.3" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">9.3 Cadastro e edição de trabalhos</h2>
     <p class="mb-2">
         O cadastro e a edição de trabalhos são realizados por meio de um modal.
         No cadastro inicial, é necessário selecionar um arquivo PDF e preencher os seguintes campos:
@@ -49,13 +49,13 @@
     </ul>
 
     <div class="mb-4 bg-blue-50/60 dark:bg-blue-900/10 border border-blue-400/60 dark:border-blue-500/50 rounded-lg p-4 text-blue-800 dark:text-blue-300">
-        <p class="font-semibold mb-1">Observação</p>
-        <p class="text-sm text-gray-800 dark:text-gray-300">
+        <p class="font-semibold uppercase">Lembre-se</p>
+        <p class="text-gray-800 dark:text-gray-300">
             Após inativar um trabalho, ele só poderá ser visualizado por coordenadores.
         </p>
     </div>
 
-    <h3 id="cap-8.3-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Edição de Trabalhos</h3>
+    <h3 id="cap-9.3-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Edição de trabalhos</h3>
     <p class="mb-2">
         No modal de edição, é disponibilizado o botão <strong>"Alterar PDF"</strong>.
         Ao selecionar um novo arquivo, o sistema exibe:
@@ -70,7 +70,7 @@
         Tanto o arquivo salvo quanto o novo arquivo podem ser visualizados a qualquer momento.
     </p>
 
-    <h3 id="cap-8.3-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Informações de Avaliação</h3>
+    <h3 id="cap-9.3-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Informações de avaliação</h3>
     <p class="mb-2">
         O modal exibe informações específicas conforme o estado da avaliação:
     </p>
@@ -89,8 +89,8 @@
         Por meio do modal é possível alterar o grupo associado a um trabalho.
     </p>
 
-    {{-- Capítulo 8.4 --}}
-    <h2 id="cap-8.4" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">8.4 Visualização em Diretório</h2>
+    {{-- Capítulo 9.4 --}}
+    <h2 id="cap-9.4" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">9.4 Visualização em diretório</h2>
     <p class="mb-2">
         Acima da barra de ações, há um botão de alternância que permite escolher
         entre a visualização em tabela ou em diretório.
@@ -119,7 +119,7 @@
         <li><strong>Inativar ou ativar</strong></li>
     </ul>
 
-    <h3 id="cap-8.4-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Download por Diretório</h3>
+    <h3 id="cap-9.4-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Download por diretório</h3>
     <p class="mb-2">
         Ao acessar um diretório do nível <strong>"Ano"</strong>, o sistema exibe a lista
         de semestres disponíveis para aquele período.
@@ -135,47 +135,45 @@
         respeitando a organização interna de versões, cursos e projetos.
     </p>
     <div class="bg-blue-50/60 dark:bg-blue-900/10 border border-blue-400/60 dark:border-blue-500/50 rounded-lg p-4 text-blue-800 dark:text-blue-300">
-        <p class="font-semibold mb-1">Observação</p>
-        <p class="text-sm text-gray-800 dark:text-gray-300">
-            O download por diretório está disponível apenas no nível <strong>"Ano"</strong>, no qual são exibidos os semestres.
+        <p class="font-semibold uppercase">
+            Lembre-se
+        </p>
+        <p class="text-gray-800 dark:text-gray-300">
+            O download por diretório está disponível apenas no nível <strong class="font-semibold">"Ano"</strong>, no qual são exibidos os semestres.
         </p>
     </div>
 </div>
-<aside class="chapter-aside hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
-    <h2 class="font-semibold uppercase tracking-wider [word-spacing:0] text-gray-700 dark:text-gray-300 mb-4">
+<aside class="chapter-aside flex-1 hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
+    <h2 class="font-bold uppercase tracking-wider [word-spacing:0] text-gray-700 dark:text-gray-300 mb-4">
         Neste capítulo
     </h2>
-    <nav class="leading-relaxed tracking-normal [word-spacing:0] text-gray-700 dark:text-gray-300 overflow-y-auto max-h-[calc(100vh-86px-2.5rem)] scrollbar-custom">
-        <a href="#cap-8.1" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
-            <span class="font-medium">8.1</span>
-            <span>Visão Geral</span>
+    <nav class="leading-relaxed tracking-normal [word-spacing:0] text-gray-500 dark:text-gray-400 overflow-y-auto max-h-[calc(100vh-86px-2.5rem)] scrollbar-custom">
+        <a href="#cap-9.1" class="sub-chapter-link block mb-3 font-semibold text-gray-700 dark:text-gray-300">
+            9.1 Visão geral
         </a>
 
-        <a href="#cap-8.2" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
-            <span class="font-medium">8.2</span>
-            <span>Visualização em Tabela</span>
+        <a href="#cap-9.2" class="sub-chapter-link block mb-1 font-semibold text-gray-700 dark:text-gray-300">
+            9.2 Visualização em tabela
         </a>
-        <a href="#cap-8.2-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Status de Avaliação</span>
-        </a>
-
-        <a href="#cap-8.3" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
-            <span class="font-medium">8.3</span>
-            <span>Cadastro e Edição de Trabalhos</span>
-        </a>
-        <a href="#cap-8.3-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Edição de Trabalhos</span>
-        </a>
-        <a href="#cap-8.3-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Informações de Avaliação</span>
+        <a href="#cap-9.2-a" class="sub-chapter-link block mb-3 !pl-10">
+            Status de avaliação
         </a>
 
-        <a href="#cap-8.4" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
-            <span class="font-medium">8.4</span>
-            <span>Visualização em Diretório</span>
+        <a href="#cap-9.3" class="sub-chapter-link block mb-1 font-semibold text-gray-700 dark:text-gray-300">
+            9.3 Cadastro e edição de trabalhos
         </a>
-        <a href="#cap-8.4-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Download por Diretório</span>
+        <a href="#cap-9.3-a" class="sub-chapter-link block mb-1 !pl-10">
+            Edição de trabalhos
+        </a>
+        <a href="#cap-9.3-b" class="sub-chapter-link block mb-3 !pl-10">
+            Informações de avaliação
+        </a>
+
+        <a href="#cap-9.4" class="sub-chapter-link block mb-1 font-semibold text-gray-700 dark:text-gray-300">
+            9.4 Visualização em diretório
+        </a>
+        <a href="#cap-9.4-a" class="sub-chapter-link block mb-3 !pl-10">
+            Download por diretório
         </a>
     </nav>
 </aside>
