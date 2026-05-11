@@ -1,9 +1,9 @@
-<div class="max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
+<div class="min-w-0 max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
     {{-- Capítulo 3 --}}
     <h1 class="text-3xl font-bold mb-14 text-gray-900 dark:text-gray-100">3. Segurança</h1>
 
     {{-- Capítulo 3.1 --}}
-    <h2 id="cap-3.1" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">3.1 Recuperação de Senha</h2>
+    <h2 id="cap-3.1" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">3.1 Recuperação de senha</h2>
     <p class="mb-2">
         Caso tenha esquecido sua senha, siga o procedimento abaixo para recuperá-la:
     </p>
@@ -31,10 +31,10 @@
         </li>
     </ol>
     <div class="mb-10 bg-amber-50 dark:bg-stone-800/80 border border-amber-700 dark:border-amber-400/60 rounded-lg p-4 text-amber-800 dark:text-amber-300">
-        <p class="font-semibold">
-            Atenção
+        <p class="font-semibold uppercase">
+            Importante
         </p>
-        <p class="text-sm text-gray-800 dark:text-gray-300">
+        <p class="text-gray-800 dark:text-gray-300">
             O link de recuperação de senha expira em 1 hora. Se expirar, será necessário solicitar novamente.
             Sua nova senha deve ter no mínimo 8 caracteres, incluindo letras maiúsculas, minúsculas, números e caracteres especiais.
         </p>
@@ -70,7 +70,7 @@
     </ol>
 
     {{-- Capítulo 3.3 --}}
-    <h2 id="cap-3.3" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">3.3 Gerenciamento de Sessões e Dispositivos</h2>
+    <h2 id="cap-3.3" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">3.3 Gerenciamento de sessões e dispositivos</h2>
     <p class="mb-4">
         Monitore e controle os dispositivos e sessões ativas em sua conta, conhecendo o endereço IP, sistema operacional e navegador
     </p>
@@ -101,14 +101,14 @@
     <p class="mb-4">
         <strong>OBS.:</strong> Ao selecionar a opção <strong>"Manter conectado"</strong>, sua sessão não será submetida
         a limite de tempo de inatividade, permanecendo ativa no navegador até que você decida encerrá-la, por meio de
-        funcionalidade específica do sistema, conforme disposto no <strong>capítulo 9.1</strong> desde manual.
+        funcionalidade específica do sistema, conforme disposto no <strong>capítulo 10.1</strong> desde manual.
     </p>
     <div class="mb-10 bg-red-50/60 dark:bg-red-900/10 border border-red-400/60 dark:border-red-500/50 rounded-lg p-4 text-red-800 dark:text-red-300">
-        <p class="font-semibold">
+        <p class="font-semibold uppercase">
             Atividade Suspeita?
         </p>
-        <p class="text-sm text-gray-800 dark:text-gray-300">
-            Se vir um dispositivo ou navegador desconhecido, clique em <strong>"Sair de outras sessões do navegador"</strong>
+        <p class="text-gray-800 dark:text-gray-300">
+            Se vir um dispositivo ou navegador desconhecido, clique em <strong class="font-semibold">"Sair de outras sessões do navegador"</strong>
             para encerrar outras sessões além da atual imediatamente. Se você acha que sua conta foi comprometida, você
             também deve atualizar sua senha.
         </p>
@@ -118,8 +118,7 @@
     <h2 id="cap-3.4" class="text-2xl font-semibold mb-2">3.4 Tentativas de Acesso</h2>
     <p class="mb-10">
         Para proteger as contas contra tentativas de acesso indevidas, o sistema aplica
-        um limite de tentativas consecutivas de login. Caso esse limite de
-        <strong>5 tentativas por minuto</strong>
+        um limite de tentativas consecutivas de login. Caso esse limite
         seja excedido, novas tentativas serão automaticamente bloqueadas.
         Após o período de bloqueio, o acesso poderá ser tentado novamente.
         Essa medida contribui para a prevenção de ataques de força bruta.
@@ -135,43 +134,38 @@
         <li>Verifique regularmente os dispositivos conectados à sua conta</li>
     </ul>
 </div>
-<aside class="chapter-aside hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
-    <h2 class="font-semibold uppercase tracking-wider [word-spacing:0] text-gray-700 dark:text-gray-300 mb-4">
+<aside class="chapter-aside flex-1 hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
+    <h2 class="font-bold uppercase tracking-wider [word-spacing:0] text-gray-700 dark:text-gray-300 mb-4">
         Neste capítulo
     </h2>
-    <nav class="leading-relaxed tracking-normal [word-spacing:0] text-gray-700 dark:text-gray-300 overflow-y-auto max-h-[calc(100vh-86px-2.5rem)] scrollbar-custom">
-        <a href="#cap-3.1" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
-            <span class="font-medium">3.1</span>
-            <span>Recuperação de Senha</span>
+    <nav class="leading-relaxed tracking-normal [word-spacing:0] text-gray-500 dark:text-gray-400 overflow-y-auto max-h-[calc(100vh-86px-2.5rem)] scrollbar-custom">
+        <a href="#cap-3.1" class="sub-chapter-link block mb-3 font-semibold text-gray-700 dark:text-gray-300">
+            3.1 Recuperação de senha
         </a>
 
-        <a href="#cap-3.2" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
-            <span class="font-medium">3.2</span>
-            <span>Autenticação em Dois Fatores (2FA)</span>
+        <a href="#cap-3.2" class="sub-chapter-link block mb-1 font-semibold text-gray-700 dark:text-gray-300">
+            3.2 Autenticação em Dois Fatores (2FA)
         </a>
-        <a href="#cap-3.2-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Como funciona</span>
+        <a href="#cap-3.2-a" class="sub-chapter-link block mb-1 !pl-10">
+            Como funciona
         </a>
-        <a href="#cap-3.2-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Configurando 2FA</span>
-        </a>
-
-        <a href="#cap-3.3" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
-            <span class="font-medium">3.3</span>
-            <span>Gerenciamento de Sessões e Dispositivos</span>
-        </a>
-        <a href="#cap-3.3-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Sessão inativa</span>
+        <a href="#cap-3.2-b" class="sub-chapter-link block mb-3 !pl-10">
+            Configurando 2FA
         </a>
 
-        <a href="#cap-3.4" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
-            <span class="font-medium">3.4</span>
-            <span>Tentativas de acesso</span>
+        <a href="#cap-3.3" class="sub-chapter-link block mb-3 font-semibold text-gray-700 dark:text-gray-300">
+            3.3 Gerenciamento de sessões e dispositivos
+        </a>
+        <a href="#cap-3.3-a" class="sub-chapter-link block mb-3 !pl-10">
+            Sessão inativa
         </a>
 
-        <a href="#cap-3.5"  class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
-            <span class="font-medium">3.5</span>
-            <span>Boas práticas de segurança</span>
+        <a href="#cap-3.4" class="sub-chapter-link block mb-3 font-semibold text-gray-700 dark:text-gray-300">
+            3.4 Tentativas de acesso
+        </a>
+
+        <a href="#cap-3.5" class="sub-chapter-link block mb-3 font-semibold text-gray-700 dark:text-gray-300">
+            3.5 Boas práticas de segurança
         </a>
     </nav>
 </aside>

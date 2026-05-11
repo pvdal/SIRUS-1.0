@@ -43,7 +43,7 @@
                 <x-label for="email" value="{{ __('Email') }}" />
                 <x-input
                     id="email"
-                    class="block mt-1 w-full dark:border-gray-500 dark:bg-gray-900/50"
+                    class="block mt-1 w-full dark:border-gray-500 dark:bg-gray-900/50 dark:placeholder-gray-400"
                     type="email"
                     name="email"
                     :value="old('email')"
@@ -55,7 +55,7 @@
                 <x-label for="password" value="{{ __('Password') }}" />
                 <x-input
                     id="password"
-                    class="block mt-1 w-full dark:border-gray-500 dark:bg-gray-900/50"
+                    class="block mt-1 w-full dark:border-gray-500 dark:bg-gray-900/50 dark:placeholder-gray-400"
                     type="password"
                     name="password"
                     required autocomplete="current-password"

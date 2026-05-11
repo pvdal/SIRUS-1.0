@@ -1,4 +1,4 @@
-export function evaluationFormData(initialData) { // <<<< NOVA VERSÃO
+export function evaluationFormData(initialData) {
 
     return {
         // --- DADOS DINÂMICOS (Vindos do Controller) ---
@@ -301,6 +301,25 @@ export function evaluationFormData(initialData) { // <<<< NOVA VERSÃO
 
         get formattedTime() {
             return this.format(this.time)
+        },
+
+        goBack() {
+            const fallback = '/calendar';
+
+            if (!document.referrer) {
+                window.location = fallback;
+                return;
+            }
+
+            const current = new URL(window.location.href);
+            const referrer = new URL(document.referrer);
+
+            const samePage =
+                current.pathname === referrer.pathname;
+
+            window.location = samePage
+                ? fallback
+                : referrer.href;
         }
     }
 }

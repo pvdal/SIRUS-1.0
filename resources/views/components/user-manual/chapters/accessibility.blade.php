@@ -1,9 +1,9 @@
-<div class="max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
-    {{-- Capítulo 10 --}}
-    <h1 class="text-3xl font-bold mb-14 text-gray-900 dark:text-gray-100">10. Acessibilidade</h1>
+<div class="min-w-0 max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
+    {{-- Capítulo 11 --}}
+    <h1 class="text-3xl font-bold mb-14 text-gray-900 dark:text-gray-100">11. Acessibilidade</h1>
 
-    {{-- Capítulo 10.1 --}}
-    <h2 id="cap-10.1" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">10.1 Tema escuro</h2>
+    {{-- Capítulo 11.1 --}}
+    <h2 id="cap-11.1" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">11.1 Tema escuro</h2>
     <p class="mb-2">
         O tema escuro reduz o cansaço visual em ambientes com pouca iluminação e melhora o conforto
         durante o uso prolongado do sistema. Embora não seja classificado como um recurso direto de
@@ -14,8 +14,8 @@
         descrito no <strong>capítulo 2.5</strong>.
     </p>
 
-    {{-- Capítulo 10.2 --}}
-    <h2 id="cap-10.2" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">10.2 Filtros para Daltonismo</h2>
+    {{-- Capítulo 11.2 --}}
+    <h2 id="cap-11.2" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">11.2 Filtros para daltonismo</h2>
     <p class="mb-4">
         O SIRUS oferece filtros especiais para usuários com deficiência de visão de cores.
         O daltonismo é uma condição visual que altera a forma como as cores são percebidas.
@@ -23,7 +23,7 @@
         oferecemos filtros de simulação que ajudam a ajustar a visualização conforme cada tipo de daltonismo.
     </p>
 
-    <h3 id="cap-10.2-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Filtros disponíveis</h3>
+    <h3 id="cap-11.2-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Filtros disponíveis</h3>
     <ul class="list-disc pl-6 space-y-1 mb-4">
         <li><strong>Padrão:</strong> Visualização sem alterações</li>
         <li><strong>Acromatomalia:</strong> Redução geral da intensidade das cores</li>
@@ -36,7 +36,7 @@
         <li><strong>Tritanopia:</strong> Dificuldade severa na distinção entre azul e amarelo</li>
     </ul>
 
-    <h3 id="cap-10.2-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Ativação pelo Perfil</h3>
+    <h3 id="cap-11.2-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Ativação pelo perfil</h3>
     <ol class="list-decimal pl-6 space-y-1 mb-4">
         <li>
             Na página de perfil — acessível pelo menu superior, conforme exposto no capítulo 2.5 deste manual —,
@@ -46,7 +46,7 @@
         <li>Opcionalmente, ative a opção <strong>"Exibir ícone de daltonismo"</strong></li>
     </ol>
 
-    <h3 id="cap-10.2-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Ícone flutuante de Daltonismo</h3>
+    <h3 id="cap-11.2-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Ícone flutuante de daltonismo</h3>
     <p class="mb-2">
         Ao ativar a exibição do ícone de daltonismo, um botão flutuante é apresentado na interface,
         permitindo acesso rápido às configurações sem a necessidade de retornar ao perfil. Esse botão
@@ -62,8 +62,8 @@
         pelas opções correspondentes no menu de acessibilidade.
     </p>
 
-    {{-- Capítulo 10.3 --}}
-    <h2 id="cap-10.3" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">10.3 Assistente de Libras (VLibras)</h2>
+    {{-- Capítulo 11.3 --}}
+    <h2 id="cap-11.3" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">11.3 Assistente de Libras (VLibras)</h2>
     <p class="mb-4">
         Libras (Língua Brasileira de Sinais) é a língua natural da comunidade surda. Nosso sistema
         disponibiliza o VLibras, uma tecnologia desenvolvida pelo Ministério da Economia e pela
@@ -73,14 +73,14 @@
         acessibilidade para pessoas surdas.
     </p>
 
-    <h3 id="cap-10.3-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Acesso e visibilidade</h3>
+    <h3 id="cap-11.3-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Acesso e visibilidade</h3>
     <ul class="list-disc pl-6 space-y-1 mb-4">
         <li>O acesso ao VLibras é feito exclusivamente por meio do ícone flutuante</li>
         <li>O ícone pode ser exibido ou ocultado na seção de Acessiblidade do perfil</li>
         <li>Sem o ícone visível, o assistente não pode ser utilizado</li>
     </ul>
 
-    <h3 id="cap-10.3-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Utilização</h3>
+    <h3 id="cap-11.3-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Utilização</h3>
     <ol class="list-decimal pl-6 space-y-1 mb-4">
         <li>
             Ative o assistente clicando no ícone VLibras exibido na tela
@@ -101,39 +101,36 @@
         retornam ao padrão.
     </p>
 </div>
-<aside class="chapter-aside hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
-    <h2 class="font-semibold uppercase tracking-wider [word-spacing:0] text-gray-700 dark:text-gray-300 mb-4">
+<aside class="chapter-aside flex-1 hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
+    <h2 class="font-bold uppercase tracking-wider [word-spacing:0] text-gray-700 dark:text-gray-300 mb-4">
         Neste capítulo
     </h2>
-    <nav class="leading-relaxed tracking-normal [word-spacing:0] text-gray-700 dark:text-gray-300 overflow-y-auto max-h-[calc(100vh-86px-2.5rem)] scrollbar-custom">
-        <a href="#cap-10.1" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
-            <span class="font-semibold">10.1</span>
-            <span>Tema escuro</span>
+    <nav class="leading-relaxed tracking-normal [word-spacing:0] text-gray-500 dark:text-gray-400 overflow-y-auto max-h-[calc(100vh-86px-2.5rem)] scrollbar-custom">
+        <a href="#cap-11.1" class="sub-chapter-link block mb-3 font-semibold text-gray-700 dark:text-gray-300">
+            11.1 Tema escuro
         </a>
 
-        <a href="#cap-10.2" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
-            <span class="font-semibold">10.2</span>
-            <span>Filtros para Daltonismo</span>
+        <a href="#cap-11.2" class="sub-chapter-link block mb-1 font-semibold text-gray-700 dark:text-gray-300">
+            11.2 Filtros para daltonismo
         </a>
-        <a href="#cap-10.2-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Filtros disponíveis</span>
+        <a href="#cap-11.2-a" class="sub-chapter-link block mb-1 !pl-10">
+            Filtros disponíveis
         </a>
-        <a href="#cap-10.2-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Ativação pelo Perfil</span>
+        <a href="#cap-11.2-b" class="sub-chapter-link block mb-1 !pl-10">
+            Ativação pelo perfil
         </a>
-        <a href="#cap-10.2-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Ícone flutuante de Daltonismo</span>
+        <a href="#cap-11.2-c" class="sub-chapter-link block mb-3 !pl-10">
+            Ícone flutuante de daltonismo
         </a>
 
-        <a href="#cap-10.3" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
-            <span class="font-semibold">10.3</span>
-            <span>Assistente de Libras (VLibras)</span>
+        <a href="#cap-11.3" class="sub-chapter-link block mb-1 font-semibold text-gray-700 dark:text-gray-300">
+            11.3 Assistente de Libras (VLibras)
         </a>
-        <a href="#cap-10.3-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Acesso e visibilidade</span>
+        <a href="#cap-11.3-a" class="sub-chapter-link block mb-1 !pl-10">
+            Acesso e visibilidade
         </a>
-        <a href="#cap-10.3-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Utilização</span>
+        <a href="#cap-11.3-b" class="sub-chapter-link block mb-3 !pl-10">
+            Utilização
         </a>
     </nav>
 </aside>

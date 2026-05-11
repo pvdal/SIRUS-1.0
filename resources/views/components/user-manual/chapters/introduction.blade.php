@@ -1,4 +1,4 @@
-<div class="max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
+<div class="min-w-0 max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
     {{-- Capítulo 1 --}}
     <h1 class="text-3xl font-bold mb-14 text-gray-900 dark:text-gray-100">1. Introdução</h1>
 
@@ -13,7 +13,7 @@
         clareza, objetividade e confiabilidade ao processo avaliativo, tanto para avaliadores quanto para alunos.
     </p>
 
-    <h3 id="cap-1.1-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Objetivos Principais</h3>
+    <h3 id="cap-1.1-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Objetivos principais</h3>
     <ul class="list-disc pl-6 space-y-1 mb-10">
         <li>Centralizar o gerenciamento das avaliações acadêmicas em uma única plataforma</li>
         <li>Padronizar critérios, rubricas e métodos de atribuição de notas</li>
@@ -23,7 +23,7 @@
     </ul>
 
     {{-- Capítulo 1.2 --}}
-    <h2 id="cap-1.2" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">1.2 Público-Alvo</h2>
+    <h2 id="cap-1.2" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">1.2 Público-alvo</h2>
     <p class="mb-2">
         O sistema foi projetado para atender às demandas do SIMBAJU, portanto, destina-se aos envolvidos nas
         atividades relacionadas ao evento, sendo eles:
@@ -56,21 +56,21 @@
     {{-- Capítulo 1.4 --}}
     <h2 id="cap-1.4" class="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">1.4 Sobre este Manual do Usuário</h2>
 
-    <h3 id="cap-1.4-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Finalidade do Manual</h3>
+    <h3 id="cap-1.4-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Finalidade do manual</h3>
     <p class="mb-4">
-        Este manual do usuário tem como objetivo orientar os usuários do sistema SIRUS na utilização correta
+        Este Manual do Usuário tem como objetivo orientar os usuários do sistema SIRUS na utilização correta
         e eficiente de suas funcionalidades. O documento apresenta as principais operações disponíveis na plataforma,
         considerando os diferentes perfis de acesso existentes.
     </p>
 
-    <h3 id="cap-1.4-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Conteúdo Abordado</h3>
+    <h3 id="cap-1.4-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Conteúdo abordado</h3>
     <p class="mb-4">
         Ao longo do manual, são descritos os procedimentos necessários para navegação no sistema, realização
         de cadastros, acompanhamento das bancas avaliadoras, visualização de trabalhos e registro ou consulta
         das avaliações, conforme as permissões de cada tipo de usuário.
     </p>
 
-    <h3 id="cap-1.4-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Público e Objetivo de Uso</h3>
+    <h3 id="cap-1.4-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Público e objetivo de uso</h3>
     <p class="mb-8">
         O conteúdo foi elaborado com foco na usabilidade e na compreensão prática do sistema, servindo como
         material de apoio tanto para novos usuários quanto para aqueles que já utilizam a plataforma,
@@ -152,66 +152,60 @@
         ou dispositivo, as configurações retornam ao padrão.
     </p>
 </div>
-<aside class="chapter-aside hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
-    <h2 class="font-semibold uppercase tracking-wider [word-spacing:0] text-gray-700 dark:text-gray-300 mb-4">
+<aside class="chapter-aside flex-1 hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
+    <h2 class="font-bold uppercase tracking-wider [word-spacing:0] text-gray-700 dark:text-gray-300 mb-4">
         Neste capítulo
     </h2>
-    <nav class="leading-relaxed tracking-normal [word-spacing:0] text-gray-700 dark:text-gray-300 overflow-y-auto max-h-[calc(100vh-86px-2.5rem)] scrollbar-custom">
-        <a href="#cap-1.1" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
-            <span class="font-semibold">1.1</span>
-            <span>Sobre o sistema</span>
+    <nav class="leading-relaxed tracking-normal [word-spacing:0] text-gray-500 dark:text-gray-400 overflow-y-auto max-h-[calc(100vh-86px-2.5rem)] scrollbar-custom">
+        <a href="#cap-1.1" class="sub-chapter-link block mb-1 font-semibold text-gray-700 dark:text-gray-300">
+            1.1 Sobre o sistema
         </a>
-        <a href="#cap-1.1-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Objetivos Principais</span>
-        </a>
-
-        <a href="#cap-1.2" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
-            <span class="font-semibold">1.2</span>
-            <span>Público-Alvo</span>
+        <a href="#cap-1.1-a" class="sub-chapter-link block mb-3 !pl-10">
+            Objetivos principais
         </a>
 
-        <a href="#cap-1.3" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
-            <span class="font-semibold">1.3</span>
-            <span>Sobre o SIMBAJU</span>
+        <a href="#cap-1.2" class="sub-chapter-link block mb-3 font-semibold text-gray-700 dark:text-gray-300">
+            1.2 Público-alvo
         </a>
 
-        <a href="#cap-1.4" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
-            <span class="font-semibold">1.4</span>
-            <span>Sobre este Manual do Usuário</span>
-        </a>
-        <a href="#cap-1.4-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Finalidade do Manual</span>
-        </a>
-        <a href="#cap-1.4-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Conteúdo Abordado</span>
-        </a>
-        <a href="#cap-1.4-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Público e Objetivo de Uso</span>
+        <a href="#cap-1.3" class="sub-chapter-link block mb-3 font-semibold text-gray-700 dark:text-gray-300">
+            1.3 Sobre o SIMBAJU
         </a>
 
-        <a href="#cap-1.4.1" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 !pl-7 font-medium">
-            <span class="font-semibold">1.4.1</span>
-            <span>Navegação</span>
+        <a href="#cap-1.4" class="sub-chapter-link block mb-1 font-semibold text-gray-700 dark:text-gray-300">
+            1.4 Sobre este Manual do Usuário
         </a>
-        <a href="#cap-1.4.1-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Navegação do manual</span>
+        <a href="#cap-1.4-a" class="sub-chapter-link block mb-1 !pl-10">
+            Finalidade do manual
         </a>
-        <a href="#cap-1.4.1-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Navegação do capítulo</span>
+        <a href="#cap-1.4-b" class="sub-chapter-link block mb-1 !pl-10">
+            Conteúdo abordado
         </a>
-        <a href="#cap-1.4.1-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Voltar ao topo</span>
+        <a href="#cap-1.4-c" class="sub-chapter-link block mb-1 !pl-10">
+            Público e objetivo de uso
         </a>
 
-        <a href="#cap-1.4.2" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 !pl-7 font-medium">
-            <span class="font-semibold">1.4.1</span>
-            <span>Preferências de leitura</span>
+        <a href="#cap-1.4.1" class="sub-chapter-link block mb-1 !pl-7 font-semibold text-gray-700 dark:text-gray-300">
+            1.4.1 Navegação
         </a>
-        <a href="#cap-1.4.2-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Restaurar configurações</span>
+        <a href="#cap-1.4.1-a" class="sub-chapter-link block mb-1 !pl-10">
+            Navegação do manual
         </a>
-        <a href="#cap-1.4.2-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Opções disponíveis</span>
+        <a href="#cap-1.4.1-b" class="sub-chapter-link block mb-1 !pl-10">
+            Navegação do capítulo
+        </a>
+        <a href="#cap-1.4.1-c" class="sub-chapter-link block mb-1 !pl-10">
+            Voltar ao topo
+        </a>
+
+        <a href="#cap-1.4.2" class="sub-chapter-link block mb-1 !pl-7 font-semibold text-gray-700 dark:text-gray-300">
+            1.4.2 Preferências de leitura
+        </a>
+        <a href="#cap-1.4.2-a" class="sub-chapter-link block mb-1 !pl-10">
+            Restaurar configurações
+        </a>
+        <a href="#cap-1.4.2-b" class="sub-chapter-link block mb-3 !pl-10">
+            Opções disponíveis
         </a>
     </nav>
 </aside>

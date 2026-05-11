@@ -22,10 +22,12 @@
             prose-headings:text-gray-900
             prose-p:text-gray-800
             prose-strong:text-gray-800
+
             dark:prose-li:text-gray-400
             dark:prose-headings:text-gray-200
             dark:prose-p:text-gray-300
-            dark:prose-strong:text-gray-300">
+            dark:prose-strong:text-gray-300
+            dark:prose-a:text-gray-300">
                 {!! $policy !!}
 
                 {{--

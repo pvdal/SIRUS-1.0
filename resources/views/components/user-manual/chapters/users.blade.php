@@ -1,4 +1,4 @@
-<div class="max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
+<div class="min-w-0 max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
     {{-- Capítulo 5 --}}
     <h1 class="text-3xl font-bold mb-14 text-gray-900 dark:text-gray-100">5. Gerenciamento de Usuários</h1>
 
@@ -47,7 +47,7 @@
 
     <h3 id="cap-5.3-b" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Exportação</h3>
     <p class="mb-2">
-        O botão <strong>"Exportar"</strong> gera um arquivo no formato <code class="px-2 py-1 rounded-md font-mono text-sm bg-gray-100 dark:bg-gray-800">.xlsx</code> (Excel) contendo todos os registros exibidos
+        O botão <strong>"Exportar"</strong> gera um arquivo no formato <code class="px-2 py-1 rounded-md font-mono bg-gray-100 dark:bg-gray-800">.xlsx</code> (Excel) contendo todos os registros exibidos
         na listagem atual.
     </p>
     <ul class="list-disc pl-6 space-y-1 mb-4">
@@ -77,16 +77,16 @@
     </ul>
 
     <div class="mb-10 bg-blue-50/60 dark:bg-blue-900/10 border border-blue-400/60 dark:border-blue-500/50 rounded-lg p-4 text-blue-800 dark:text-blue-300">
-        <p class="font-semibold">
+        <p class="font-semibold uppercase">
             Dica
         </p>
-        <p class="text-sm leading-relaxed text-gray-800 dark:text-gray-300">
-            Recomenda-se realizar uma exportação em <code class="px-1.5 py-0.5 rounded font-mono text-xs bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 border border-blue-200 dark:border-blue-700">.xlsx</code> antes de grandes importações para servir como um ponto de restauração manual dos dados.
+        <p class="leading-relaxed text-gray-800 dark:text-gray-300">
+            Recomenda-se realizar uma exportação em <code class="px-1.5 py-0.5 rounded font-mono bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 border border-blue-200 dark:border-blue-700">.xlsx</code> antes de grandes importações para servir como um ponto de restauração manual dos dados.
         </p>
     </div>
 
     {{-- Capítulo 5.4 --}}
-    <h2 id="cap-5.4" class="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">5.4 Gerenciamento de Alunos</h2>
+    <h2 id="cap-5.4" class="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">5.4 Gerenciamento de alunos</h2>
 
     <h3 id="cap-5.4-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Cadastro</h3>
     <p class="mb-2">
@@ -137,7 +137,7 @@
     </p>
 
     {{-- Capítulo 5.5 --}}
-    <h2 id="cap-5.5" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">5.5 Gerenciamento de Professores e Coordenadores</h2>
+    <h2 id="cap-5.5" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">5.5 Gerenciamento de professores e coordenadores</h2>
     <p class="mb-4">
         O gerenciamento de <strong>Professores</strong> e <strong>Coordenadores</strong> segue o mesmo padrão
         de funcionamento da tela de alunos, com diferenças nos campos e filtros.
@@ -164,67 +164,62 @@
         <li>Período de cadastro</li>
     </ul>
     <div class="bg-blue-50/60 dark:bg-blue-900/10 border border-blue-400/60 dark:border-blue-500/50 rounded-lg p-4 text-blue-800 dark:text-blue-300">
-        <p class="font-semibold">
+        <p class="font-semibold uppercase">
             Permissões
         </p>
-        <p class="text-sm leading-relaxed text-gray-800 dark:text-gray-300">
+        <p class="leading-relaxed text-gray-800 dark:text-gray-300">
             Coordenadores possuem acesso a funcionalidades administrativas adicionais, como gerenciamento
             de cursos, grupos, bancas e rubricas.
         </p>
     </div>
 </div>
-<aside class="chapter-aside hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
+<aside class="chapter-aside flex-1 hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
     <h2 class="font-semibold uppercase tracking-wider [word-spacing:0] text-gray-700 dark:text-gray-300 mb-4">
         Neste capítulo
     </h2>
-    <nav class="leading-relaxed tracking-normal [word-spacing:0] text-gray-800 dark:text-gray-300 overflow-y-auto max-h-[calc(100vh-86px-2.5rem)] scrollbar-custom">
-        <a href="#cap-5.1" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
-            <span class="font-medium">5.1</span>
-            <span>Acesso à página</span>
+    <nav class="leading-relaxed tracking-normal [word-spacing:0] text-gray-500 dark:text-gray-400 overflow-y-auto max-h-[calc(100vh-86px-2.5rem)] scrollbar-custom">
+        <a href="#cap-5.1" class="sub-chapter-link block mb-3 font-semibold text-gray-700 dark:text-gray-300">
+            5.1 Acesso à página
         </a>
 
-        <a href="#cap-5.2" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
-            <span class="font-medium">5.2</span>
-            <span>Subnavegação entre tipos de usuários</span>
+        <a href="#cap-5.2" class="sub-chapter-link block mb-3 font-semibold text-gray-700 dark:text-gray-300">
+            5.2 Subnavegação entre tipos de usuários
         </a>
 
-        <a href="#cap-5.3" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
-            <span class="font-medium">5.3</span>
-            <span>Barra de ações e filtros</span>
+        <a href="#cap-5.3" class="sub-chapter-link block mb-1 font-semibold text-gray-700 dark:text-gray-300">
+            5.3 Barra de ações e filtros
         </a>
-        <a href="#cap-5.3-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Visão geral</span>
+        <a href="#cap-5.3-a" class="sub-chapter-link block mb-1 !pl-10">
+            Visão geral
         </a>
-        <a href="#cap-5.3-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Exportação</span>
+        <a href="#cap-5.3-b" class="sub-chapter-link block mb-1 !pl-10">
+            Exportação
         </a>
-        <a href="#cap-5.3-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Importação</span>
-        </a>
-
-        <a href="#cap-5.4" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
-            <span class="font-medium">5.4</span>
-            <span>Gerenciamento de Alunos</span>
-        </a>
-        <a href="#cap-5.4-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Cadastro</span>
-        </a>
-        <a href="#cap-5.4-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Busca, filtros e listagem</span>
-        </a>
-        <a href="#cap-5.4-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Edição, inativação e paginação</span>
+        <a href="#cap-5.3-c" class="sub-chapter-link block mb-3 !pl-10">
+            Importação
         </a>
 
-        <a href="#cap-5.5" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
-            <span class="font-medium">5.5</span>
-            <span>Gerenciamento de Professores e Coordenadores</span>
+        <a href="#cap-5.4" class="sub-chapter-link block mb-1 font-semibold text-gray-700 dark:text-gray-300">
+            5.4 Gerenciamento de alunos
         </a>
-        <a href="#cap-5.5-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Campos de cadastro</span>
+        <a href="#cap-5.4-a" class="sub-chapter-link block mb-1 !pl-10">
+            Cadastro
         </a>
-        <a href="#cap-5.5-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Filtros disponíveis</span>
+        <a href="#cap-5.4-b" class="sub-chapter-link block mb-1 !pl-10">
+            Busca, filtros e listagem
+        </a>
+        <a href="#cap-5.4-c" class="sub-chapter-link block mb-3 !pl-10">
+            Edição, inativação e paginação
+        </a>
+
+        <a href="#cap-5.5" class="sub-chapter-link block mb-1 font-semibold text-gray-700 dark:text-gray-300">
+            5.5 Gerenciamento de professores e coordenadores
+        </a>
+        <a href="#cap-5.5-a" class="sub-chapter-link block mb-1 !pl-10">
+            Campos de cadastro
+        </a>
+        <a href="#cap-5.5-b" class="sub-chapter-link block mb-3 !pl-10">
+            Filtros disponíveis
         </a>
     </nav>
 </aside>

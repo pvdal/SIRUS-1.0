@@ -1,10 +1,10 @@
-<div class="max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
+<div class="min-w-0 max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
     {{-- Capítulo 6 --}}
     <h1 class="text-3xl font-bold mb-14 text-gray-900 dark:text-gray-100">6. Configurações Institucionais</h1>
 
 @can('is-admin')
     {{-- Capítulo 6.1 --}}
-    <h2 id="cap-6.1" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">6.1 Gerenciamento de Cursos</h2>
+    <h2 id="cap-6.1" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">6.1 Gerenciamento de cursos</h2>
     <p class="mb-4">
         A página de <strong>gerenciamento de cursos</strong> é acessada pelo menu superior do sistema,
         por meio da opção <strong>"Cursos"</strong>. A visualização é apresentada em formato de tabela,
@@ -47,7 +47,7 @@
     </p>
 
     {{-- Capítulo 6.2 --}}
-    <h2 id="cap-6.2" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">6.2 Gerenciamento de Grupos</h2>
+    <h2 id="cap-6.2" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">6.2 Gerenciamento de grupos</h2>
     <p class="mb-4">
         O gerenciamento de grupos é acessado pelo menu superior do sistema e apresenta uma interface
         que reune informações acadêmicas, trabalhos associados e membros do grupo.
@@ -163,7 +163,7 @@
     </p>
 
     {{-- Capítulo 6.3 --}}
-    <h2 id="cap-6.3" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">6.3 Gerenciamento de Bancas</h2>
+    <h2 id="cap-6.3" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">6.3 Gerenciamento de bancas</h2>
     <p class="mb-4">
         A aba <strong>"Bancas"</strong> apresenta as bancas avaliadoras em formato de
         <strong>cartões responsivos</strong>, seguindo o mesmo padrão visual e funcional da
@@ -177,7 +177,7 @@
         e a <strong>visualização do grupo</strong> associado àquela banca.
     </p>
 
-    <h3 id="cap-6.3.1-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Alternância entre Bancas e Grupos</h3>
+    <h3 id="cap-6.3.1-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Alternância entre bancas e grupos</h3>
     <p class="mb-2">
         Logo abaixo da barra de ações, estão disponíveis os botões <strong>"Bancas"</strong>
         e <strong>"Grupos"</strong>. Esses botões alternam <strong>globalmente</strong> a
@@ -337,7 +337,7 @@
     </p>
 @endcan
     <h2 id="cap-6.4" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">
-        6.4 Visualização do Grupo pelo Aluno
+        6.4 Visualização do grupo pelo aluno
     </h2>
     <p class="mb-4">
         Essa página apresenta exclusivamente as informações referentes ao grupo ao qual
@@ -410,120 +410,113 @@
         na organização da página.
     </p>
 </div>
-<aside class="chapter-aside hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
-    <h2 class="font-semibold uppercase tracking-wider [word-spacing:0] text-gray-700 dark:text-gray-300 mb-4">
+<aside class="chapter-aside flex-1 hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
+    <h2 class="font-bold uppercase tracking-wider [word-spacing:0] text-gray-700 dark:text-gray-300 mb-4">
         Neste capítulo
     </h2>
-    <nav class="leading-relaxed tracking-normal [word-spacing:0] text-gray-800 dark:text-gray-300 overflow-y-auto max-h-[calc(100vh-86px-2.5rem)] scrollbar-custom">
-    @can('is-admin')
-        <a href="#cap-6.1" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
-            <span class="font-medium">6.1</span>
-            <span>Gerenciamento de Cursos</span>
-        </a>
-        <a href="#cap-6.1-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Estrutura da tabela</span>
-        </a>
-        <a href="#cap-6.1-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Barra de ações e filtros</span>
-        </a>
-        <a href="#cap-6.1-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Cadastro e edição</span>
+    <nav class="leading-relaxed tracking-normal [word-spacing:0] text-gray-500 dark:text-gray-400 overflow-y-auto max-h-[calc(100vh-86px-2.5rem)] scrollbar-custom">
+        @can('is-admin')
+            <a href="#cap-6.1" class="sub-chapter-link block mb-1 font-semibold text-gray-700 dark:text-gray-300">
+                6.1 Gerenciamento de cursos
+            </a>
+            <a href="#cap-6.1-a" class="sub-chapter-link block mb-1 !pl-10">
+                Estrutura da tabela
+            </a>
+            <a href="#cap-6.1-b" class="sub-chapter-link block mb-1 !pl-10">
+                Barra de ações e filtros
+            </a>
+            <a href="#cap-6.1-c" class="sub-chapter-link block mb-3 !pl-10">
+                Cadastro e edição
+            </a>
+
+            <a href="#cap-6.2" class="sub-chapter-link block mb-1 font-semibold text-gray-700 dark:text-gray-300">
+                6.2 Gerenciamento de grupos
+            </a>
+
+            <a href="#cap-6.2.1" class="sub-chapter-link block mb-1 !pl-7 font-semibold text-gray-700 dark:text-gray-300">
+                6.2.1 Visualização dos grupos
+            </a>
+            <a href="#cap-6.2.1-a" class="sub-chapter-link block mb-1 !pl-10">
+                Estrutura do cartão
+            </a>
+            <a href="#cap-6.2.1-b" class="sub-chapter-link block mb-1 !pl-10">
+                Trabalho associado ao grupo
+            </a>
+            <a href="#cap-6.2.1-c" class="sub-chapter-link block mb-3 !pl-10">
+                Estado e ações do grupo
+            </a>
+
+            <a href="#cap-6.2.2" class="sub-chapter-link block mb-1 !pl-7 font-semibold text-gray-700 dark:text-gray-300">
+                6.2.2 Cadastro e edição de grupos
+            </a>
+            <a href="#cap-6.2.2-a" class="sub-chapter-link block mb-1 !pl-10">
+                Atribuição de trabalhos ao grupo
+            </a>
+            <a href="#cap-6.2.2-b" class="sub-chapter-link block mb-1 !pl-10">
+                Lista de trabalhos do grupo
+            </a>
+            <a href="#cap-6.2.2-c" class="sub-chapter-link block mb-3 !pl-10">
+                Seleção de membros do grupo
+            </a>
+
+            <a href="#cap-6.3" class="sub-chapter-link block mb-1 font-semibold text-gray-700 dark:text-gray-300">
+                6.3 Gerenciamento de bancas
+            </a>
+
+            <a href="#cap-6.3.1" class="sub-chapter-link block mb-1 !pl-7 font-semibold text-gray-700 dark:text-gray-300">
+                6.3.1 Visualização das bancas
+            </a>
+            <a href="#cap-6.3.1-a" class="sub-chapter-link block mb-1 !pl-10">
+                Alternância entre bancas e grupos
+            </a>
+            <a href="#cap-6.3.1-b" class="sub-chapter-link block mb-1 !pl-10">
+                Visualização da banca
+            </a>
+            <a href="#cap-6.3.1-c" class="sub-chapter-link block mb-1 !pl-10">
+                Visualização do grupo associado à banca
+            </a>
+            <a href="#cap-6.3.1-d" class="sub-chapter-link block mb-3 !pl-10">
+                Trabalho avaliado pela banca
+            </a>
+
+            <a href="#cap-6.3.2" class="sub-chapter-link block mb-1 !pl-7 font-semibold text-gray-700 dark:text-gray-300">
+                6.3.2 Cadastro e edição de bancas
+            </a>
+            <a href="#cap-6.3.2-a" class="sub-chapter-link block mb-1 !pl-10">
+                Campos do formulário
+            </a>
+            <a href="#cap-6.3.2-b" class="sub-chapter-link block mb-1 !pl-10">
+                Rubricas
+            </a>
+            <a href="#cap-6.3.2-c" class="sub-chapter-link block mb-1 !pl-10">
+                Tipo de membro
+            </a>
+            <a href="#cap-6.3.2-d" class="sub-chapter-link block mb-1 !pl-10">
+                Membros da banca
+            </a>
+            <a href="#cap-6.3.2-e" class="sub-chapter-link block mb-1 !pl-10">
+                Botão Avaliar / Avaliação
+            </a>
+            <a href="#cap-6.3.2-f" class="sub-chapter-link block mb-3 !pl-10">
+                Notificação por e-mail
+            </a>
+        @endcan
+
+        <a href="#cap-6.4" class="sub-chapter-link block mb-1 font-semibold text-gray-700 dark:text-gray-300">
+            6.4 Visualização do grupo pelo aluno
         </a>
 
-        <a href="#cap-6.2" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
-            <span class="font-medium">6.2</span>
-            <span>Gerenciamento de Grupos</span>
+        <a href="#cap-6.4.1" class="sub-chapter-link block mb-1 !pl-7 font-semibold text-gray-700 dark:text-gray-300">
+            6.4.1 Estrutura da página
         </a>
-        <a href="#cap-6.2.1" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 !pl-7 font-medium">
-            <span class="font-medium">6.2.1</span>
-            <span>Visualização dos grupos</span>
+        <a href="#cap-6.4.1-a" class="sub-chapter-link block mb-1 !pl-10">
+            Informações do grupo
         </a>
-        <a href="#cap-6.2.1-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Estrutura do cartão</span>
+        <a href="#cap-6.4.1-b" class="sub-chapter-link block mb-1 !pl-10">
+            Membros do grupo
         </a>
-        <a href="#cap-6.2.1-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Trabalho associado ao grupo</span>
-        </a>
-        <a href="#cap-6.2.1-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Estado e ações do grupo</span>
-        </a>
-
-        <a href="#cap-6.2.2" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 !pl-7 font-medium">
-            <span class="font-medium">6.2.2</span>
-            <span>Cadastro e edição de grupos</span>
-        </a>
-        <a href="#cap-6.2.2-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Atribuição de trabalhos ao grupo</span>
-        </a>
-        <a href="#cap-6.2.2-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Lista de trabalhos do grupo</span>
-        </a>
-        <a href="#cap-6.2.2-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Seleção de membros do grupo</span>
-        </a>
-
-        <a href="#cap-6.3" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
-            <span class="font-medium">6.3</span>
-            <span>Gerenciamento de Bancas</span>
-        </a>
-
-        <a href="#cap-6.3.1" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 !pl-7 font-medium">
-            <span class="font-medium">6.3.1</span>
-            <span>Visualização das bancas</span>
-        </a>
-        <a href="#cap-6.3.1-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Alternância entre Bancas e Grupos</span>
-        </a>
-        <a href="#cap-6.3.1-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Visualização da banca</span>
-        </a>
-        <a href="#cap-6.3.1-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Visualização do grupo associado à banca</span>
-        </a>
-        <a href="#cap-6.3.1-d" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Trabalho avaliado pela banca</span>
-        </a>
-
-        <a href="#cap-6.3.2" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 !pl-7 font-medium">
-            <span class="font-medium">6.3.2</span>
-            <span>Cadastro e edição de bancas</span>
-        </a>
-        <a href="#cap-6.3.2-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Campos do formulário</span>
-        </a>
-        <a href="#cap-6.3.2-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Rubricas</span>
-        </a>
-        <a href="#cap-6.3.2-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Tipo de membro</span>
-        </a>
-        <a href="#cap-6.3.2-d" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Membros da banca</span>
-        </a>
-        <a href="#cap-6.3.2-e" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Botão Avaliar / Avaliação</span>
-        </a>
-        <a href="#cap-6.3.2-f" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Notificação por e-mail</span>
-        </a>
-    @endcan
-        <a href="#cap-6.4" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
-            <span class="font-medium">6.4</span>
-            <span>Visualização do Grupo pelo Aluno</span>
-        </a>
-
-        <a href="#cap-6.4.1" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 !pl-7 font-medium">
-            <span class="font-medium">6.4.1</span>
-            <span>Estrutura da página</span>
-        </a>
-        <a href="#cap-6.4.1-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Informações do grupo</span>
-        </a>
-        <a href="#cap-6.4.1-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Membros do grupo</span>
-        </a>
-        <a href="#cap-6.4.1-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-600 dark:text-gray-400">
-            <span>Trabalhos do grupo</span>
+        <a href="#cap-6.4.1-c" class="sub-chapter-link block mb-3 !pl-10">
+            Trabalhos do grupo
         </a>
     </nav>
 </aside>

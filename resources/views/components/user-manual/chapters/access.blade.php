@@ -1,4 +1,4 @@
-<div class="max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
+<div class="min-w-0 max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
     {{-- Capítulo 2 --}}
     <h1 class="text-3xl font-bold mb-14 text-gray-900 dark:text-gray-100">2. Acesso ao Sistema</h1>
 
@@ -56,7 +56,7 @@
     </p>
 
     {{-- Capítulo 2.3 --}}
-    <h2 id="cap-2.3" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">2.3 Autenticação de Usuário</h2>
+    <h2 id="cap-2.3" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">2.3 Autenticação de usuário</h2>
     <p class="mb-2">
         Na tela de login, você deverá:
     </p>
@@ -82,7 +82,7 @@
         o login novamente nesse navegador, a menos que os dados de navegação sejam limpos.
     </p>
 
-    <h3 id="cap-2.3-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Autenticação em dois fatores (2FA)</h3>
+    <h3 id="cap-2.3-c" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Autenticação em Dois Fatores (2FA)</h3>
     <p class="mb-4">
         Caso a <strong>autenticação em dois fatores (2FA)</strong> esteja ativada, após informar
         o e-mail e a senha na tela de login, você também deverá inserir o código gerado pelo
@@ -91,20 +91,20 @@
         e o funcionamento dessa funcionalidade.
     </p>
     <div class="mb-10 bg-amber-50 dark:bg-stone-800/80 border border-amber-700 dark:border-amber-400/60 rounded-lg p-4 text-amber-800 dark:text-amber-300">
-        <p class="font-semibold">
+        <p class="font-semibold uppercase">
             Dica de segurança
         </p>
-        <p class="text-sm leading-relaxed text-gray-800 dark:text-gray-300">
+        <p class="leading-relaxed text-gray-800 dark:text-gray-300">
             Nunca compartilhe sua senha com outras pessoas, pois isso compromete a segurança da sua conta.
             Para aumentar o nível de segurança da conta, recomenda-se a ativação da autenticação em dois fatores.
             Caso esqueça sua senha, siga os procedimentos
-            descritos no <strong> capítulo 3.1</strong> deste manual para recuperá-la. Persistindo o problema,
+            descritos no <strong class="font-semibold"> capítulo 3.1</strong> deste manual para recuperá-la. Persistindo o problema,
             entre em contato com o administrador do sistema.
         </p>
     </div>
 
     {{-- Capítulo 2.4 --}}
-    <h2 id="cap-2.4" class="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">2.4 Primeiro Acesso</h2>
+    <h2 id="cap-2.4" class="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">2.4 Primeiro acesso</h2>
 
     <h3 id="cap-2.4-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Autenticação de e-mail</h3>
     <p class="mb-2">
@@ -133,18 +133,18 @@
         de Privacidade"</strong> e, em seguida, clique em <strong>"Aceitar e continuar"</strong>.
     </p>
     <div class="mb-10 bg-blue-50/60 dark:bg-blue-900/10 border border-blue-400/60 dark:border-blue-500/50 rounded-lg p-4 text-blue-800 dark:text-blue-300">
-        <p class="font-semibold">
+        <p class="font-semibold uppercase">
             Lembre-se
         </p>
-        <p class="text-sm text-gray-800 dark:text-gray-300">
-            O link de validação possui validade de <strong>24 horas</strong>. Após esse período, será necessário
+        <p class="text-gray-800 dark:text-gray-300">
+            O link de validação possui validade de <strong class="font-semibold">24 horas</strong>. Após esse período, será necessário
             solicitar um novo link ao realizar o login novamente.
         </p>
     </div>
 
     {{-- Capítulo 2.5 --}}
     <h2 id="cap-2.5" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">
-        2.5 Interface e Navegação
+        2.5 Interface e navegação
     </h2>
     <p class="mb-4">
         Após a autenticação, você será é direcionado à interface principal do SIRUS.
@@ -201,73 +201,68 @@
         apresentada nos capítulos específicos deste manual.
     </p>
 </div>
-<aside class="chapter-aside hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
-    <h2 class="font-semibold uppercase tracking-wider [word-spacing:0] text-gray-700 dark:text-gray-300 mb-4">
+<aside class="chapter-aside flex-1 hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
+    <h2 class="font-bold uppercase tracking-wider [word-spacing:0] text-gray-700 dark:text-gray-300 mb-4">
         Neste capítulo
     </h2>
-    <nav class="leading-relaxed tracking-normal [word-spacing:0] text-gray-700 dark:text-gray-300 overflow-y-auto max-h-[calc(100vh-86px-2.5rem)] scrollbar-custom">
-        <a href="#cap-2.1" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
-            <span class="font-semibold">2.1</span>
-            <span>Requisitos de acesso</span>
+    <nav class="leading-relaxed tracking-normal [word-spacing:0] text-gray-500 dark:text-gray-400 overflow-y-auto max-h-[calc(100vh-86px-2.5rem)] scrollbar-custom">
+        <a href="#cap-2.1" class="sub-chapter-link block mb-3 font-semibold text-gray-700 dark:text-gray-300">
+            2.1 Requisitos de acesso
         </a>
 
-        <a href="#cap-2.2" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
-            <span class="font-semibold">2.2</span>
-            <span>Página Inicial</span>
+        <a href="#cap-2.2" class="sub-chapter-link block mb-1 font-semibold text-gray-700 dark:text-gray-300">
+            2.2 Página Inicial
         </a>
-        <a href="#cap-2.2-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Boas-vindas</span>
+        <a href="#cap-2.2-a" class="sub-chapter-link block mb-1 !pl-10">
+            Boas-vindas
         </a>
-        <a href="#cap-2.2-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Navegação</span>
+        <a href="#cap-2.2-b" class="sub-chapter-link block mb-1 !pl-10">
+            Navegação
         </a>
-        <a href="#cap-2.2-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Conteúdo complementar</span>
+        <a href="#cap-2.2-c" class="sub-chapter-link block mb-1 !pl-10">
+            Conteúdo complementar
         </a>
-        <a href="#cap-2.2-d" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Rodapé</span>
-        </a>
-
-        <a href="#cap-2.3" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
-            <span class="font-semibold">2.3</span>
-            <span>Autenticação de Usuário</span>
-        </a>
-        <a href="#cap-2.3-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Visibilidade da senha</span>
-        </a>
-        <a href="#cap-2.3-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Manter conectado</span>
-        </a>
-        <a href="#cap-2.3-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Autenticação em dois fatores (2FA)</span>
+        <a href="#cap-2.2-d" class="sub-chapter-link block mb-3 !pl-10">
+            Rodapé
         </a>
 
-        <a href="#cap-2.4" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
-            <span class="font-semibold">2.4</span>
-            <span>Primeiro Acesso</span>
+        <a href="#cap-2.3" class="sub-chapter-link block mb-1 font-semibold text-gray-700 dark:text-gray-300">
+            2.3 Autenticação de usuário
         </a>
-        <a href="#cap-2.4-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Autenticação de e-mail</span>
+        <a href="#cap-2.3-a" class="sub-chapter-link block mb-1 !pl-10">
+            Visibilidade da senha
         </a>
-        <a href="#cap-2.4-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Aceite dos Temos de Uso e Política de Privacidade</span>
+        <a href="#cap-2.3-b" class="sub-chapter-link block mb-1 !pl-10">
+            Manter conectado
+        </a>
+        <a href="#cap-2.3-c" class="sub-chapter-link block mb-3 !pl-10">
+            Autenticação em Dois Fatores (2FA)
         </a>
 
-        <a href="#cap-2.5" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
-            <span class="font-semibold">2.5</span>
-            <span>Interface e Navegação</span>
+        <a href="#cap-2.4" class="sub-chapter-link block mb-3 font-semibold text-gray-700 dark:text-gray-300">
+            2.4 Primeiro acesso
         </a>
-        <a href="#cap-2.5-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Navegação disponível</span>
+        <a href="#cap-2.4-a" class="sub-chapter-link block mb-1 !pl-10">
+            Autenticação de e-mail
         </a>
-        <a href="#cap-2.5-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Acesso ao perfil</span>
+        <a href="#cap-2.4-b" class="sub-chapter-link block mb-3 !pl-10">
+            Aceite dos Temos de Uso e Política de Privacidade
         </a>
-        <a href="#cap-2.5-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Cabeçalho da página</span>
+
+        <a href="#cap-2.5" class="sub-chapter-link block mb-1 font-semibold text-gray-700 dark:text-gray-300">
+            2.5 Interface e navegação
         </a>
-        <a href="#cap-2.5-d" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Escopo e disponibilidade das funcionalidades</span>
+        <a href="#cap-2.5-a" class="sub-chapter-link block mb-1 !pl-10">
+            Navegação disponível
+        </a>
+        <a href="#cap-2.5-b" class="sub-chapter-link block mb-1 !pl-10">
+            Acesso ao perfil
+        </a>
+        <a href="#cap-2.5-c" class="sub-chapter-link block mb-1 !pl-10">
+            Cabeçalho da página
+        </a>
+        <a href="#cap-2.5-d" class="sub-chapter-link block mb-3 !pl-10">
+            Escopo e disponibilidade das funcionalidades
         </a>
     </nav>
 </aside>

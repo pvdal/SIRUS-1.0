@@ -1,9 +1,9 @@
-<div class="max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
+<div class="min-w-0 max-w-4xl w-full xl:pe-24" :class="{ {{ $textSettings }} }">
     {{-- Capítulo 4 --}}
     <h1 class="text-3xl font-bold mb-14 text-gray-900 dark:text-gray-100">4. Agenda de Avaliações</h1>
 
     {{-- Capítulo 4.1 --}}
-    <h2 id="cap-4.1" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.1 Visão Geral da Agenda</h2>
+    <h2 id="cap-4.1" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.1 Visão geral da agenda</h2>
     <p class="mb-4">
         A <strong>Agenda de Avaliações</strong> é a primeira tela exibida ao usuário após o login no sistema.
         Ela centraliza o agendamento e a visualização das bancas avaliadoras do evento SIMABJU.
@@ -28,7 +28,7 @@
 
     {{-- Capítulo 4.2 --}}
     <h2 id="cap-4.2" class="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
-        4.2 Interação com o Calendário
+        4.2 Interação com o calendário
     </h2>
 
     <h3 id="cap-4.2-a" class="font-semibold mb-2 text-gray-900 dark:text-gray-100">Ações</h3>
@@ -71,9 +71,11 @@
         responde de acordo com o contexto:
     </p>
     <ul class="list-disc pl-6 space-y-1 mb-10">
-        <li>
-            Horários livres permitem iniciar um <strong>novo agendamento</strong>
-        </li>
+        @if(auth()->user()->isAdmin())
+            <li>
+                Horários livres permitem iniciar um <strong>novo agendamento</strong>
+            </li>
+        @endif
         <li>
             Eventos já cadastrados exibem os <strong>detalhes da banca agendada</strong>
         </li>
@@ -81,7 +83,7 @@
 
     @if(auth()->user()->isAdmin())
         {{-- Capítulo 4.3 --}}
-        <h2 id="cap-4.3" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.3 Agendamento de Nova Banca</h2>
+        <h2 id="cap-4.3" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.3 Agendamento de nova banca</h2>
         <p class="mb-2">
             A criação de novos agendamentos é uma funcionalidade <strong>exclusiva do coordenador acadêmico</strong>.
             Ao clicar em um horário disponível no calendário, é aberto um <strong>modal de agendamento</strong>, onde o coordenador deve:
@@ -111,7 +113,7 @@
         </p>
     @endif
     {{-- Capítulo 4.4 --}}
-    <h2 id="cap-4.4" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.4 Visualização de Bancas Agendadas</h2>
+    <h2 id="cap-4.4" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.4 Visualização de bancas agendadas</h2>
     <p class="mb-4">
         Ao clicar em uma banca já agendada, o sistema abre um modal de visualização, exibindo as mesmas
         informações do agendamento.
@@ -128,7 +130,7 @@
 
     @if(auth()->user()->isAdmin())
         {{-- Capítulo 4.5 --}}
-        <h2 id="cap-4.5" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.5 Edição e Cancelamento de Agendamentos</h2>
+        <h2 id="cap-4.5" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.5 Edição e cancelamento de agendamentos</h2>
         <p class="mb-2">
             O coordenador pode <strong>editar</strong> ou <strong>cancelar</strong> um agendamento existente,
             desde que <strong>nenhuma avaliação tenha sido submetida</strong> para aquela banca. No modal de
@@ -149,7 +151,7 @@
     @endif
 
     {{-- Capítulo 4.6 --}}
-    <h2 id="cap-4.6" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.6 Controle de Acesso e Permissões</h2>
+    <h2 id="cap-4.6" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.6 Controle de acesso e permissões</h2>
     <p class="mb-2">
         O comportamento da agenda varia conforme o perfil do usuário:
     </p>
@@ -176,21 +178,21 @@
             </ul>
         </li>
     </ul>
-    <div class="mb-10 bg-blue-50/60 dark:bg-blue-900/10 border border-blue-400/60 dark:border-blue-500/50 rounded-lg p-4 text-blue-800 dark:text-blue-300">
-        <p class="font-semibold">
+    <div class="mb-10 bg-amber-50 dark:bg-stone-800/80 border border-amber-700 dark:border-amber-400/60 rounded-lg p-4 text-amber-800 dark:text-amber-300">
+        <p class="font-semibold uppercase">
             Importante
         </p>
-        <p class="text-sm text-gray-800 dark:text-gray-300">
+        <p class="text-gray-800 dark:text-gray-300">
             Tentativas de acesso as avaliações de bancas não autorizadas são automaticamente bloqueadas pelo sistema.
         </p>
     </div>
 
     {{-- Capítulo 4.7 --}}
-    <h2 id="cap-4.7" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.7 Considerações Importantes</h2>
+    <h2 id="cap-4.7" class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">4.7 Considerações importantes</h2>
     <ul class="list-disc pl-6 space-y-1 mb-4">
         <li>A agenda é o ponto central de organização das avaliações do evento</li>
         <li>Todas as ações são registradas e controladas conforme permissões</li>
-        <li>A edição de horários é restrita para evitar inconsistências após o início das avaliações</li>
+        <li>A edição de horários é restrita, para evitar inconsistências, após o início das avaliações</li>
     </ul>
     @if(auth()->user()->isAdmin() || auth()->user()->access_level === 2)
         <p>
@@ -199,66 +201,59 @@
         </p>
     @endif
 </div>
-<aside class="chapter-aside hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
-    <h2 class="font-semibold uppercase tracking-wider [word-spacing:0] text-gray-700 dark:text-gray-300 mb-4">
+<aside class="chapter-aside flex-1 hidden xl:block text-sm min-w-60 border-l border-gray-300 dark:border-gray-700" :class="{ 'sticky-chapter-aside': stickyNav, 'hidden-chapter-aside': !showChapterNav }">
+    <h2 class="font-bold uppercase tracking-wider [word-spacing:0] text-gray-700 dark:text-gray-300 mb-4">
         Neste capítulo
     </h2>
-    <nav class="leading-relaxed tracking-normal [word-spacing:0] text-gray-700 dark:text-gray-300 overflow-y-auto max-h-[calc(100vh-86px-2.5rem)] scrollbar-custom">
-        <a href="#cap-4.1" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
-            <span class="font-medium">4.1</span>
-            <span>Visão Geral da Agenda</span>
+    <nav class="leading-relaxed tracking-normal [word-spacing:0] text-gray-500 dark:text-gray-400 overflow-y-auto max-h-[calc(100vh-86px-2.5rem)] scrollbar-custom">
+        <a href="#cap-4.1" class="sub-chapter-link block mb-1 font-semibold text-gray-700 dark:text-gray-300">
+            4.1 Visão geral da agenda
         </a>
-        <a href="#cap-4.1-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Exibição</span>
+        <a href="#cap-4.1-a" class="sub-chapter-link block mb-3 !pl-10">
+            Exibição
         </a>
 
-        <a href="#cap-4.2" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
-            <span class="font-medium">4.2</span>
-            <span>Interação com o Calendário</span>
+        <a href="#cap-4.2" class="sub-chapter-link block mb-1 font-semibold text-gray-700 dark:text-gray-300">
+            4.2 Interação com o calendário
         </a>
-        <a href="#cap-4.2-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Ações</span>
+        <a href="#cap-4.2-a" class="sub-chapter-link block mb-1 !pl-10">
+            Ações
         </a>
-        <a href="#cap-4.2-b" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Alternância de visualização</span>
+        <a href="#cap-4.2-b" class="sub-chapter-link block mb-1 !pl-10">
+            Alternância de visualização
         </a>
-        <a href="#cap-4.2-c" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-1 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Navegação por datas</span>
+        <a href="#cap-4.2-c" class="sub-chapter-link block mb-1 !pl-10">
+            Navegação por datas
         </a>
-        <a href="#cap-4.2-d" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Seleção de datas e horários</span>
+        <a href="#cap-4.2-d" class="sub-chapter-link block mb-3 !pl-10">
+            Seleção de datas e horários
         </a>
 
         @if(auth()->user()->isAdmin())
-            <a href="#cap-4.3" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
-                <span class="font-medium">4.3</span>
-                <span>Agendamento de Nova Banca</span>
+            <a href="#cap-4.3" class="sub-chapter-link block mb-3 font-semibold text-gray-700 dark:text-gray-300">
+                4.3 Agendamento de nova banca
             </a>
         @endif
 
-        <a href="#cap-4.4" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-1 font-medium">
-            <span class="font-medium">4.4</span>
-            <span>Visualização de Bancas Agendadas</span>
+        <a href="#cap-4.4" class="sub-chapter-link block mb-1 font-semibold text-gray-700 dark:text-gray-300">
+            4.4 Visualização de bancas agendadas
         </a>
-        <a href="#cap-4.4-a" class="sub-chapter-link grid grid-cols-[auto_1fr] mb-3 !pl-10 text-gray-500 dark:text-gray-400">
-            <span>Modo visualização</span>
+        <a href="#cap-4.4-a" class="sub-chapter-link block mb-3 !pl-10">
+            Modo visualização
         </a>
 
         @if(auth()->user()->isAdmin())
-            <a href="#cap-4.5" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
-                <span class="font-medium">4.5</span>
-                <span>Edição e Cancelamento de Agendamentos</span>
+            <a href="#cap-4.5" class="sub-chapter-link block mb-3 font-semibold text-gray-700 dark:text-gray-300">
+                4.5 Edição e cancelamento de agendamentos
             </a>
         @endif
 
-        <a href="#cap-4.6" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
-            <span class="font-medium">4.6</span>
-            <span>Controle de Acesso e Permissões</span>
+        <a href="#cap-4.6" class="sub-chapter-link block mb-3 font-semibold text-gray-700 dark:text-gray-300">
+            4.6 Controle de acesso e permissões
         </a>
 
-        <a href="#cap-4.7" class="sub-chapter-link grid grid-cols-[auto_1fr] gap-x-2 mb-3 font-medium">
-            <span class="font-medium">4.7</span>
-            <span>Considerações Importantes</span>
+        <a href="#cap-4.7" class="sub-chapter-link block mb-3 font-semibold text-gray-700 dark:text-gray-300">
+            4.7 Considerações importantes
         </a>
     </nav>
 </aside>

@@ -183,8 +183,8 @@ export function evaluationResultTabs(initialData) {
 
             this.currentCommentText = existingComment;
 
-            console.log('Comentário carregado:', this.currentCommentText);
-            console.log('Tipo:', axisType);
+            //console.log('Comentário carregado:', this.currentCommentText);
+            //console.log('Tipo:', axisType);
 
             // this.isCommentReadOnly = !!this.isReadOnly;
         },
@@ -193,6 +193,25 @@ export function evaluationResultTabs(initialData) {
             this.showCommentModal = false;
             this.currentCommentText = '';
             this.currentCommentTarget = { axisType: null, criterionId: null, studentId: null };
+        },
+
+        goBack() {
+            const fallback = '/calendar';
+
+            if (!document.referrer) {
+                window.location = fallback;
+                return;
+            }
+
+            const current = new URL(window.location.href);
+            const referrer = new URL(document.referrer);
+
+            const samePage =
+                current.pathname === referrer.pathname;
+
+            window.location = samePage
+                ? fallback
+                : referrer.href;
         }
     };
 }
