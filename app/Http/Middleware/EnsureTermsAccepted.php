@@ -31,8 +31,8 @@ class EnsureTermsAccepted
             $livewireRequest = $request->header('X-Livewire') !== null;
             $allowedRoutes = [
                 'livewire.update',
-                'policy.show',
-                'terms.show',
+                'policy.index',
+                'terms.index',
                 'verification.send',
                 'verification.notice',
                 'login',
