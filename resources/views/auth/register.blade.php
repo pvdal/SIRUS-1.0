@@ -1,7 +1,19 @@
 <x-guest-layout>
     <x-authentication-card>
         <x-slot name="logo">
-            <x-authentication-card-logo size="60"/>
+            <div class="flex justify-center">
+                <a href="{{ route('home') }}">
+                    <x-application-logo
+                        size="60"
+                        class="block dark:hidden"
+                    />
+
+                    <x-authentication-card-logo
+                        size="60"
+                        class="hidden dark:block"
+                    />
+                </a>
+            </div>
         </x-slot>
 
         <x-validation-errors class="mb-4" />

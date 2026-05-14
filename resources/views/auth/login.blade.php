@@ -62,8 +62,8 @@
                     placeholder="Digite sua senha" />
                 <button id="showPass" type="button"
                         class="absolute right-[2px] top-[26px] flex w-9 h-[38px] items-center justify-center rounded-s-sm rounded-e-md hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <x-lucide-eye id="icoShow" class="h-4 w-4 text-gray-700 dark:text-gray-300" />
-                    <x-lucide-eye-off id="icoHide" class="h-4 w-4 hidden" />
+                    <x-lucide-eye id="icoShow" class="h-4 w-4 text-gray-700 dark:text-gray-400" />
+                    <x-lucide-eye-off id="icoHide" class="h-4 w-4 hidden text-gray-700 dark:text-gray-400" />
                 </button>
             </div>
             <div class="flex flex-wrap gap-2 mt-6">

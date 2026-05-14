@@ -27,10 +27,11 @@ server {
         add_header X-Frame-Options "SAMEORIGIN";
         add_header X-Content-Type-Options "nosniff";
 
-        location / {
-                limit_req zone=one burst=10 nodelay;
-                try_files $uri $uri/ /index.php?$query_string;
-        }
+        # (Opcional) Configuração para usar junto ao limit_req_zone adicionado em http {}
+        # location / {
+        #        limit_req zone=one burst=10 nodelay;
+        #        try_files $uri $uri/ /index.php?$query_string;
+        #}
 
         location /pdfjs/ {
                 alias /var/www/SIRUS-1.0/public/pdfjs/;
