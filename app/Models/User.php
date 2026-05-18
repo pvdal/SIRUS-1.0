@@ -79,6 +79,18 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+    /*
+     * Níveis de acesso
+     */
+    public const int STUDENT = 1;
+    public const int PROFESSOR = 2;
+    public const int COORDINATOR = 3;
+
+    public function hasAccessLevel(int $level): bool
+    {
+        return $this->access_level === $level;
+    }
+
     public function isAdmin(): bool
     {
         return $this->getAttribute('access_level') === 3; // só coordenadores podem ver

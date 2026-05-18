@@ -7,7 +7,7 @@
         @php
             $links = [
                 ['label' => 'Início', 'href' => route('home'), 'route' => 'home'],
-                ['label' => 'Manual', 'href' => route('manual.index','#introduction'), 'route' => 'manual.index'],
+                ['label' => 'Manual', 'href' => route('manual.index','introduction'), 'route' => 'manual.index'],
                 ['label' => 'Termos', 'href' => route('terms.index'), 'route' => 'terms.index'],
                 ['label' => 'Privacidade', 'href' => route('policy.index'), 'route' => 'policy.index']
             ];

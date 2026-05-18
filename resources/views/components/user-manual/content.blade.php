@@ -21,37 +21,18 @@
             '[word-spacing:0.1em]': wordSpacing === 3,
             '[word-spacing:0.2em]': wordSpacing === 4,
         ";
-
-        $chapters = [
-            'introduction',
-            'access',
-            'security',
-            'schedule',
-            'users',
-            'institutional',
-            'rubrics-evaluation',
-            'evaluations-calculations',
-            'paper',
-            'profile',
-            'accessibility',
-            'api-tokens'
-        ];
     @endphp
-    {{-- Capítulos do manual --}}
-    <div class="space-y-2">
-        @foreach($chapters as $chapter)
-            <!-- Capítulo {{ $loop->iteration }} -->
-            @if(
-                ($loop->iteration === 5 || $loop->iteration === 8 || $loop->iteration === 9 || $loop->iteration === 12)
-                && !auth()->user()->isAdmin()
-            )
-            @else
-            <article id="{{ $chapter }}" class="chapter flex bg-white shadow md:rounded-sm border border-white px-8 py-12 md:py-14 md:px-12 lg:py-20 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0 text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-400 lg:scroll-mt-[4rem]">
-                <x-dynamic-component :component="'user-manual.chapters.' . $chapter" :text-settings="$textSettings"/>
-            </article>
-            @endif
-        @endforeach
-    </div>
+    {{-- Capítulos do manual: método de páginas múltiplas --}}
+    <article id="{{ $chapter }}"
+         class="chapter flex bg-white border border-white shadow px-8 py-12
+            md:rounded-sm md:py-14 md:px-12 lg:py-20 lg:p-16 lg:ps-24 lg:pt-20 xl:pe-0
+            text-gray-800 dark:bg-gray-900 dark:border-gray-900  dark:text-gray-400
+            lg:scroll-mt-[4rem]"
+    >
+        @include('user-manual.chapters.' . $chapter, [
+            'textSettings' => $textSettings
+        ])
+    </article>
     {{-- Atribui scroll margin a todos os títulos, e estilização de navegação interna --}}
     <style>
         article.chapter h2,
@@ -85,54 +66,56 @@
         }
     </style>
     {{-- Controla paginação interna dos capítulos --}}
-    <script>
-        window.addEventListener("load", () => {
-            const sections = [...document.querySelectorAll('[id^="cap-"]')];
-            const links = document.querySelectorAll('.sub-chapter-link');
+    @push('scripts')
+        <script>
+            window.addEventListener("load", () => {
+                const sections = [...document.querySelectorAll('[id^="cap-"]')];
+                const links = document.querySelectorAll('.sub-chapter-link');
 
-            let lockScroll = false;
+                let lockScroll = false;
 
-            function highlight(id) {
-                links.forEach(link => {
-                    link.classList.toggle(
-                        'active',
-                        link.getAttribute('href') === `#${id}`
-                    );
-                });
-            }
-
-            const observer = new IntersectionObserver(
-                (entries) => {
-                    if (lockScroll) return;
-
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            highlight(entry.target.id);
-                        }
+                function highlight(id) {
+                    links.forEach(link => {
+                        link.classList.toggle(
+                            'active',
+                            link.getAttribute('href') === `#${id}`
+                        );
                     });
-                },
-                {
-                    root: null,
-                    // cria uma "linha" a 150px do topo
-                    rootMargin: '-25% 0px -75% 0px',
-                    threshold: 0
                 }
-            );
 
-            sections.forEach(section => observer.observe(section));
+                const observer = new IntersectionObserver(
+                    (entries) => {
+                        if (lockScroll) return;
 
-            links.forEach(link => {
-                link.addEventListener('click', () => {
-                    const id = link.getAttribute('href').replace('#', '');
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                highlight(entry.target.id);
+                            }
+                        });
+                    },
+                    {
+                        root: null,
+                        // cria uma "linha" a 150px do topo
+                        rootMargin: '-25% 0px -75% 0px',
+                        threshold: 0
+                    }
+                );
 
-                    lockScroll = true;
-                    highlight(id);
+                sections.forEach(section => observer.observe(section));
 
-                    setTimeout(() => {
-                        lockScroll = false;
-                    }, 120);
+                links.forEach(link => {
+                    link.addEventListener('click', () => {
+                        const id = link.getAttribute('href').replace('#', '');
+
+                        lockScroll = true;
+                        highlight(id);
+
+                        setTimeout(() => {
+                            lockScroll = false;
+                        }, 120);
+                    });
                 });
             });
-        });
-    </script>
+        </script>
+    @endpush
 </div>
