@@ -1,0 +1,73 @@
+/*
+ * Texto do manual
+ */
+@layer components {
+    .manual-content h1 {
+        @apply text-3xl font-bold mb-14 text-gray-900 dark:text-gray-100;
+    }
+
+    .manual-content h2 {
+        @apply text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100;
+    }
+
+    .manual-content h3 {
+        @apply text-lg font-semibold mb-2 mt-4 text-gray-900 dark:text-gray-100;
+    }
+
+    .manual-content p {
+        @apply mb-2;
+    }
+
+    .manual-content ul {
+        @apply list-disc pl-6 space-y-1 mb-4;
+    }
+
+    .manual-content ol {
+        @apply list-decimal pl-6 space-y-1 mb-4;
+    }
+
+    .manual-content > section {
+        @apply mb-10;
+    }
+
+    .manual-content section section {
+        @apply mb-8;
+    }
+
+    .manual-content > *:last-child,
+    .manual-content section > *:last-child {
+        margin-bottom: 0 !important;
+    }
+}
+
+/*
+ * Blocos de alerta e avisos
+ */
+@layer components {
+    .manual-alert {
+        @apply rounded-lg border p-4 mb-6 mt-4;
+    }
+
+    .manual-alert-title {
+        @apply font-semibold uppercase mb-2;
+    }
+
+    .manual-alert-message {
+        @apply leading-relaxed text-gray-800 dark:text-gray-300;
+    }
+
+    .manual-alert-warning {
+        @apply bg-amber-50 border-amber-700 text-amber-800
+        dark:bg-stone-800/80 dark:border-amber-400/60 dark:text-amber-300;
+    }
+
+    .manual-alert-info {
+        @apply bg-blue-50/60 border-blue-400/60 text-blue-800
+        dark:bg-blue-900/10 dark:border-blue-500/50 dark:text-blue-300;
+    }
+
+    .manual-alert-danger {
+        @apply bg-red-50/60 border-red-400/60 text-red-800
+        dark:bg-red-900/10 dark:border-red-500/50 dark:text-red-300;
+    }
+}

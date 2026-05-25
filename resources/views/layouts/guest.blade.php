@@ -110,7 +110,10 @@
         </main>
 
         @livewireScripts
+
+        <!-- Stack de scripts adicionais -->
         @stack('scripts')
+
         @if(config('accessibility.libras'))
             <!-- Assistente de libras -->
             <div x-data="{ vlActive: localStorage.getItem('vlibras_enabled') === 'true' }"

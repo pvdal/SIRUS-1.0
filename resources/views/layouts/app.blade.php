@@ -173,8 +173,12 @@
                 {{ $slot }}
             </main>
         </div>
+
         @livewireScripts
+
+        <!-- Stack de scripts adicionais -->
         @stack('scripts')
+
         @if(config('accessibility.libras'))
             <div x-data="{ vlActive: localStorage.getItem('vlibras_enabled') === 'true' }"
                  x-on:toggle-vlibras.window="vlActive = !vlActive"
