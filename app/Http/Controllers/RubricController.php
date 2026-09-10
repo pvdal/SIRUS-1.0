@@ -270,6 +270,19 @@ class RubricController extends Controller
             'axes.*.id' => 'required|integer|exists:axes,id',
             'axes.*.weight' => 'required|numeric|min:1',
         ]);
+        // Verifica se a rubrica ja foi usada
+        $hasEvaluation = $rubric->committees()
+            ->whereHas('committee.paper', function ($q) {
+                $q->whereNotNull('submitted_at');
+            })
+            ->exists();
+        // Caso já usada, não pode ser atualizada
+        if ($hasEvaluation) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Não é possível alterar rubricas atreladas a rubricas já utilizadas.',
+            ], 422);
+        }
 
         // Verificar se a soma dos pesos é exatamente 100
         $totalWeight = collect($validatedData['axes'])->sum('weight');
