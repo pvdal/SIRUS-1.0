@@ -52,6 +52,10 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 
         // Fatos
         Route::get('/flat-facts', [EvaluationBiController::class, 'getFlatFacts']);
+
+        // Bancas
+        Route::get('/committees', [EvaluationBiController::class, 'getCommittees']);
+
     });
 
     /**

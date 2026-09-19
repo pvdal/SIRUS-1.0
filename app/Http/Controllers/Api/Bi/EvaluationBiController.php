@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Bi;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class EvaluationBiController extends Controller
 {
@@ -54,20 +55,24 @@ class EvaluationBiController extends Controller
             ->join('user_committees', 'individual_evaluations.user_committee_id', '=', 'user_committees.id')
             ->join('committees', 'user_committees.committee_id', '=', 'committees.id')
             ->join('papers', 'committees.paper_id', '=', 'papers.id')
+            ->join('groups', 'papers.group_id', '=', 'groups.id')
             ->join('criteria', 'individual_evaluations.criteria_id', '=', 'criteria.id')
             ->select(
+                'students.ra as student_ra',
                 'users.name as student_name',
                 'courses.name as course',
                 'papers.year',
                 'papers.semester',
                 'papers.project',
+                'groups.id as group_id',
+                'groups.theme as group_theme',
                 'criteria.name as criteria_name',
                 DB::raw('ROUND(AVG(individual_evaluations.grade), 2) as individual_avg')
             )
             ->where('users.state', 1)
-            ->groupBy('users.name', 'courses.name', 'criteria.name', 'papers.year', 'papers.semester', 'papers.project')
+            ->groupBy('students.ra', 'users.name', 'courses.name', 'criteria.name', 'papers.year', 'papers.semester', 'papers.project', 'groups.id', 'groups.theme')
             ->get();
-
+        Log::info($data);
         return response()->json([
             'success' => true,
             'dataset' => $data
@@ -169,7 +174,10 @@ class EvaluationBiController extends Controller
             ->join('criteria as cr',        'ge.criteria_id',       '=', 'cr.id')
             ->select(
                 DB::raw("'Grupo' as tipo_avaliacao"),
+                'c.id as committee_id',
                 'ge.grade as nota',
+                'c.presentation_time',
+                'c.evaluation_time',
                 'ge.created_at as data_avaliacao',
                 'cr.name as criterio',
                 'avaliador.name as avaliador',
@@ -198,7 +206,10 @@ class EvaluationBiController extends Controller
             ->join('users as aluno_user',   's.user_id',            '=', 'aluno_user.id')
             ->select(
                 DB::raw("'Individual' as tipo_avaliacao"),
+                'c.id as committee_id',
                 'ie.grade as nota',
+                'c.presentation_time',
+                'c.evaluation_time',
                 'ie.created_at as data_avaliacao',
                 'cr.name as criterio',
                 'avaliador.name as avaliador',
@@ -216,6 +227,20 @@ class EvaluationBiController extends Controller
 
         $data = $group->unionAll($individual)->get();
 
+        return response()->json(['success' => true, 'dataset' => $data]);
+    }
+
+    /**
+     * Tabela Bancas
+     */
+    public function getCommittees(): JsonResponse
+    {
+        $data = DB::table('user_committees as uc')
+            ->join('committees as c',       'uc.committee_id',      '=', 'c.id')
+            ->join('papers', 'c.paper_id', '=', 'papers.id')
+            ->whereNotNull('papers.submitted_at')
+            ->get();
+        Log::info($data);
         return response()->json(['success' => true, 'dataset' => $data]);
     }
 }
