@@ -387,8 +387,8 @@ class PaperController extends Controller
         if($paperToUpdate->submitted_at && $paperToUpdate->isDirty()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Este trabalho já foi submetido à banca.
-                Apenas a associação com a versão corrigida pode ser modificada.',
+                'message' => 'Este trabalho já foi submetido à banca, não pode ser alterado.'
+                /*Apenas a associação com a versão corrigida pode ser modificada.',*/
             ],422);
         }
 

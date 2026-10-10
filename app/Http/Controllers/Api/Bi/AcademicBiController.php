@@ -45,12 +45,13 @@ class AcademicBiController extends Controller
                 'papers.semester',
                 'courses.name as course',
                 'papers.version',
+                'papers.submitted_at',
                 DB::raw('COUNT(DISTINCT papers.id) as total_papers'),
                 DB::raw('COUNT(DISTINCT committees.id) as papers_with_committee'),
                 DB::raw('SUM(CASE WHEN committees.id IS NULL THEN 1 ELSE 0 END) as papers_without_committee')
             )
             ->where('papers.state', 1)
-            ->groupBy('papers.year', 'papers.semester', 'courses.id', 'courses.name', 'papers.version')
+            ->groupBy('papers.year', 'papers.semester', 'courses.id', 'courses.name', 'papers.version', 'papers.submitted_at')
             ->orderBy('papers.year')
             ->orderBy('papers.semester')
             ->get();

@@ -1,7 +1,7 @@
 <div>
     <div class="flex justify-end w-full mb-4">
         <a  rel="noreferrer noopener"
-            href="/manual#api-tokens"
+            href="/manual/api-tokens"
             target="_blank"
             class="inline-flex items-center gap-2 px-4 py-2 sm:mt-0 rounded-md text-sm xl:text-base font-medium
             bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700
